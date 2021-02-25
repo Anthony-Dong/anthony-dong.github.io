@@ -38,7 +38,7 @@ code {
   padding: 2px 4px;
   border-radius: 4px;
   margin: 0 2px;
-  color: #120000;
+  color: #3090e4;
 }
 ::-webkit-scrollbar {
   width: 6px;
@@ -765,7 +765,7 @@ pre[class*=language-] {
   border-radius: 0.3em;
 }
 pre[class*=language-] span {
-  font-size: 1em;
+  font-size: 0.5em;
   line-height: 1.5;
 }
 :not(pre) > code[class*=language-],
@@ -934,8 +934,8 @@ pre .line-number,
 pre code {
   display: block;
   padding: 0 0.2em;
-  color: #000;
-  font: Courier New, Courier, Monospace;
+  color: #120000;
+  font: Consolas, Monaco, Andale Mono, Ubuntu Mono, Monospace;
   font-size: 0.8em;
 }
 pre .line-number {
