@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Nginx | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/nginx/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Nginx</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/nginx/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/FDJxOVwJI_i/"
+								class="tag">linux</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1593字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1概念">1.概念:</h2>
+<blockquote>
+<p>nginx是一款自由的、开源的、高性能的HTTP服务器和反向代理服务器；同时也是一个IMAP、POP3、SMTP代理服务器；nginx可以作为一个HTTP服务器进行网站的发布处理，另外nginx可以作为反向代理进行负载均衡的实现。 我们将静态资源放到nginx中，静态资源可以转发到服务器FS, 动态请求可以代理到tomcat之类的服务器</p>
+<p>网站 http://nginx.org/</p>
+</blockquote>
+<h2 id="2-对代理服务器而言的正向代理与反向代理">2. 对代理服务器而言的正向代理与反向代理</h2>
+<h4 id="1正向代理">1.正向代理</h4>
+<figure data-type="image" tabindex="1"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82MTUyNTk1LWQ3OGJiOWE3NzZiYmUxMmIucG5nP2ltYWdlTW9ncjIvYXV0by1vcmllbnQvc3RyaXAlN0NpbWFnZVZpZXcyLzIvdy8xMjQw" alt="image" loading="lazy"></figure>
+<pre><code>客户端想要访问一个服务器，但是它可能无法直接访问这台服务器，这时候这可找一台可以访问目标服务器的另外一台服务器，而这台服务器就被当做是代理人的角色 ，称之为代理服务器，于是客户端把请求发给代理服务器，由代理服务器获得目标服务器的数据并返回给客户端。客户端是清楚目标服务器的地址的，而目标服务器是不清楚来自客户端，它只知道来自哪个代理服务器，所以正向代理可以屏蔽或隐藏客户端的信息。
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82MTUyNTk1LWYxZTdlZTA5MDdiZjJhMTUucG5nP2ltYWdlTW9ncjIvYXV0by1vcmllbnQvc3RyaXAlN0NpbWFnZVZpZXcyLzIvdy8xMjQw" alt="image" loading="lazy"></figure>
+<h4 id="2反向代理">2.反向代理</h4>
+<p>从上面的正向代理，你会大概知道代理服务器是为客户端作代理人，它是站在客户端这边的。<br>
+其实反向代理就是代理服务器为服务器作代理人，站在服务器这边，它就是对外屏蔽了服务器的信息，常用的场景就是多台服务器分布式部署，像一些大的网站，由于访问人数很多，就需要多台服务器来解决人数多的问题，这时这些服务器就由一个反向代理服务器来代理，客户端发来请求，先由反向代理服务器，然后按一定的规则分发到明确的服务器，而客户端不知道是哪台服务器。常常用nginx来作反向代理。</p>
+<figure data-type="image" tabindex="3"><img src="https://imgconvert.csdnimg.cn/aHR0cHM6Ly91cGxvYWQtaW1hZ2VzLmppYW5zaHUuaW8vdXBsb2FkX2ltYWdlcy82MTUyNTk1LWYxZTdlZTA5MDdiZjJhMTUucG5nP2ltYWdlTW9ncjIvYXV0by1vcmllbnQvc3RyaXAlN0NpbWFnZVZpZXcyLzIvdy8xMjQw" alt="image" loading="lazy"></figure>
+<h2 id="3负载均衡的实现">3.负载均衡的实现</h2>
+<blockquote>
+<ul>
+<li>轮询</li>
+<li>权重</li>
+<li>ip_hash</li>
+<li>rt速度</li>
+<li>url_hash</li>
+</ul>
+</blockquote>
+<pre><code class="language-shell">// 一般默认采用的轮询方式;但是也可以设置为ip_hash
+
+// 1.轮询（默认）每个请求按时间顺序逐一分配到不同的后端服务器，如果后端服务器down掉，能自动剔除。
+
+// 2.weight 指定轮询几率，weight和访问比率成正比，用于后端服务器性能不均的情况。
+upstream bakend {  
+  server 192.168.0.14 weight=10;  
+  server 192.168.0.15 weight=10;  
+}
+
+// 3.ip_hash  每个请求按访问ip的hash结果分配，这样每个访客固定访问一个后端服务器，可以解决session的问题。
+upstream bakend {  
+  ip_hash;  
+  server 192.168.0.14:88;  
+  server 192.168.0.15:80;  
+}
+
+// 4.fair 按后端服务器的响应时间来分配请求，响应时间短的优先分配。
+upstream backend {  
+  fair;  
+  server server1;  
+  server server2;  	  
+}
+
+// 5. url_hash 按访问url的hash结果来分配请求，使每个url定向到同一个后端服务器，后端服务器为缓存时比较有效。
+upstream backend {  
+  server squid1:3128;  
+  server squid2:3128;  
+  hash $request_uri;  
+  hash_method crc32;  
+}
+</code></pre>
+<h2 id="4nginx配置nginxconf">4.Nginx配置(nginx.conf)</h2>
+<h3 id="1-基本格式">1. 基本格式</h3>
+<pre><code>	main                                # 全局配置 main只是一个代表的意思;写的时候不用往上写main
+	 
+	events {                            # nginx工作模式配置
+
+	}
+	http {                              # http设置
+	    server {                        # 服务器主机配置
+	        listen       80;
+            server_name  localhost;
+	        ....
+	        location /static{                    # 路由配置
+	           alias  /opt/img;
+	           index  404.html
+             }
+	 
+	        location path {
+	            ....
+	        }
+	 
+	        location otherpath {
+	            ....
+	        }
+	    }	 
+	    upstream name {                    # 负载均衡配置
+	        ....
+	    }
+	}
+	https{} https配置
+</code></pre>
+<h3 id="2-区域作用">2. 区域作用</h3>
+<pre><code>main：用于进行nginx全局信息的配置
+events：用于nginx工作模式的配置
+http：用于进行http协议信息的一些配置
+server：用于进行服务器访问信息的配置
+location：用于进行访问路由的配置
+upstream：用于进行负载均衡的配置
+</code></pre>
+<h3 id="3-main区域">3. Main区域</h3>
+<pre><code class="language-properties"># user nobody nobody;  // 当前操作的用户
+worker_processes 2;  // 工作线程=当前CPU的core
+# error_log logs/error.log
+# error_log logs/error.log notice
+# error_log logs/error.log info
+# pid logs/nginx.pid
+worker_rlimit_nofile 1024;
+</code></pre>
+<h3 id="4-events-模块">4. events 模块</h3>
+<pre><code>event {
+    worker_connections 1024;
+    multi_accept on;
+    use epoll;
+}
+worker_connections 指定最大可以同时接收的连接数量,最大连接数 = worker_connections*worker_processes
+multi_accept 配置指定nginx在收到一个新连接通知后尽可能多的接受更多的连接
+use epoll 配置指定了线程轮询的方法，如果是linux2.6+，使用epoll，如果是BSD如Mac请使用Kqueue
+</code></pre>
+<h3 id="5-http-server区域">5. http - server区域</h3>
+<h4 id="1-http-配置">1. http 配置</h4>
+<p>配置一些媒体类型, 已经压缩方式 , 和超时 , 日志记录</p>
+<h4 id="2-静态资源代理">2. 静态资源代理</h4>
+<p>比如我们现在有一个需求就是 , 我们服务器上有一个图片库 , 比如在 <code>opt/static/img</code> 目录下面 ,我们要求我们访问<code>http://www.xxx.com/static/a.png</code> 可以代理到我们 <code>opt/static/img/a.png</code> , 可以这么配置</p>
+<pre><code class="language-java">server {
+    listen       80;  // 监听的端口 ,浏览器在未指定端口的前提下, 默认访问的是80端口
+    server_name  localhost; //指定ip地址或者域名，多个配置之间用空格分隔 manage.tyut.com
+
+    #charset koi8-r;
+
+    #access_log  logs/host.access.log  main;
+
+    location /static {
+      alias opt/static/img;
+      index error.png;
+    }
+}
+</code></pre>
+<h4 id="3-配置个别404-重定向">3. 配置个别404 重定向</h4>
+<p>还是上诉的那个代理 .我们可以将它访问 <code>http://www.xxx.com/static</code> 下面所有为找到的资源,重定向到 <code>opt/static/img/404.html</code> ,</p>
+<pre><code class="language-java">location /static {
+  alias /opt/test/img/;
+  index error.png;
+  error_page 404 404.html;
+}
+</code></pre>
+<h4 id="4-配置全局-404">4. 配置全局 404</h4>
+<pre><code class="language-shell">error_page  500 502 503 504  /50x.html;
+location = /50x.html {
+    root   html;
+}
+</code></pre>
+<p>这个意思就是 , 我访问的错误码如果是 <code>500 502 503 504</code> 之类的, 会将请求转发到 <code>/50x.html</code>中 , 然后去当前目录下的 nginx/html文件中找 到 <code>50x.html</code>,  就是这么玩了</p>
+<pre><code class="language-java">[xxx html]# pwd
+/opt/nginx/nginx-1.14.2/html
+[xxx html]# ls
+50x.html  index.html
+</code></pre>
+<p>比如 404 哇, 你也可以这么配置</p>
+<pre><code class="language-java">error_page  404  /404.html;
+location = /404.html {
+    root   html;
+}
+</code></pre>
+<p>然后 <code>/opt/nginx/nginx-1.14.2/html</code> 中新建一个 404.html 文件</p>
+<h4 id="5-正则匹配">5. 正则匹配</h4>
+<p>正则表达式中 <code>^</code>表示以什么开头, <code>$</code> 以什么结束 , <code>*</code>代表任意字符  <code>~</code> 区分大小写匹配</p>
+<p><code>~*</code> 不区分大小写匹配</p>
+<p><code>location ~*.(gif|jpg|jpeg)$</code> 匹配以.gif、.jpg 或 .jpeg 结尾的请求</p>
+<pre><code>location ^~/static {
+      alias /opt/test/img;
+      index index.html;
+}
+</code></pre>
+<h4 id="6-请求转发">6. 请求转发</h4>
+<pre><code>location / {
+    proxy_pass http://www.xxx.com;
+    proxy_connect_timeout 1000;
+    proxy_read_timeout 1000;
+}
+</code></pre>
+<p>​<br>
+upstream www.xxx.com{<br>
+server 127.0.0.1:8050 weight=2;<br>
+server 127.0.0.1:8060 weight=1;<br>
+}</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1%E6%A6%82%E5%BF%B5">1.概念:</a></li>
+<li><a href="#2-%E5%AF%B9%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%80%8C%E8%A8%80%E7%9A%84%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86%E4%B8%8E%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86">2. 对代理服务器而言的正向代理与反向代理</a><br>
+*
+<ul>
+<li><a href="#1%E6%AD%A3%E5%90%91%E4%BB%A3%E7%90%86">1.正向代理</a></li>
+<li><a href="#2%E5%8F%8D%E5%90%91%E4%BB%A3%E7%90%86">2.反向代理</a></li>
+</ul>
+</li>
+<li><a href="#3%E8%B4%9F%E8%BD%BD%E5%9D%87%E8%A1%A1%E7%9A%84%E5%AE%9E%E7%8E%B0">3.负载均衡的实现</a></li>
+<li><a href="#4nginx%E9%85%8D%E7%BD%AEnginxconf">4.Nginx配置(nginx.conf)</a>
+<ul>
+<li><a href="#1-%E5%9F%BA%E6%9C%AC%E6%A0%BC%E5%BC%8F">1. 基本格式</a></li>
+<li><a href="#2-%E5%8C%BA%E5%9F%9F%E4%BD%9C%E7%94%A8">2. 区域作用</a></li>
+<li><a href="#3-main%E5%8C%BA%E5%9F%9F">3. Main区域</a></li>
+<li><a href="#4-events-%E6%A8%A1%E5%9D%97">4. events 模块</a></li>
+<li><a href="#5-http-server%E5%8C%BA%E5%9F%9F">5. http - server区域</a>
+<ul>
+<li><a href="#1-http-%E9%85%8D%E7%BD%AE">1. http 配置</a></li>
+<li><a href="#2-%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E4%BB%A3%E7%90%86">2. 静态资源代理</a></li>
+<li><a href="#3-%E9%85%8D%E7%BD%AE%E4%B8%AA%E5%88%AB404-%E9%87%8D%E5%AE%9A%E5%90%91">3. 配置个别404 重定向</a></li>
+<li><a href="#4-%E9%85%8D%E7%BD%AE%E5%85%A8%E5%B1%80-404">4. 配置全局 404</a></li>
+<li><a href="#5-%E6%AD%A3%E5%88%99%E5%8C%B9%E9%85%8D">5. 正则匹配</a></li>
+<li><a href="#6-%E8%AF%B7%E6%B1%82%E8%BD%AC%E5%8F%91">6. 请求转发</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring -  Transaction为啥不支持多数据源,不支持异步? | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/xt7U3LGrL/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring -  Transaction为啥不支持多数据源,不支持异步?</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-15</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/xt7U3LGrL/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1551字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>我们知道加一个 <code>org.springframework.transaction.annotation.Transactional</code> 注解便可以让改方法实现事务管理(提交/回滚),  但是我们知道一个如何用编码的方式实现事务如何回滚的 . 抛开动态代理 , 其实事务就是动态代理实现, 但是不是我们的重点 , 我们要讲讲他为啥只支持单个数据源 还有不支持 异步操作(这里的意思是在事务里开启一个新线程执行业务)</p>
+<h2 id="前言">前言</h2>
+<p>一般操作都是下面这样子 , 基本流程</p>
+<pre><code class="language-java">// 获取连接
+Connection connection = dataSource1.getConnection();
+try {
+    // 设置事务隔离等级
+    connection.setTransactionIsolation(3);
+    // 设置自动提交为false
+    connection.setAutoCommit(false);
+    
+    // 业务
+    PreparedStatement statement = connection.prepareStatement();
+    statement.execute();
+    
+    // 成功提交
+    connection.commit();
+} catch (Exception e) {    
+    // 异常rollback
+    connection.rollback();
+} finally {
+    // 设置为true
+    connection.setAutoCommit(true);
+    // 关闭
+    connection.close();
+}
+</code></pre>
+<p>所以Spring帮助我们做的就是这个, 那么它一定也是这么实现的 .</p>
+<p>如何启动事务呢 ,</p>
+<p>首先需要加入依赖</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-tx&lt;/artifactId&gt;
+    &lt;version&gt;5.0.8.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>SpringBoot 可以使用这个 <code>org.springframework.transaction.annotation.EnableTransactionManagement</code>  ,对于XML配置可以去看看这个类, 他会教你咋配置 .</p>
+<p>方法控制是依靠 <code>@Transactional(transactionManager = &quot;TransactionManager&quot;)</code>  ,</p>
+<p>然后我们需要自己自定义实现一个 <code>org.springframework.transaction.PlatformTransactionManager</code> Bean , 告诉spring事务处理的使用哪个</p>
+<p>那么为啥加了个注解就会自动给你管理事务了呢 , 他难道不是这么做的吗.</p>
+<p>其实看 <code>org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration</code> 这个地方</p>
+<pre><code class="language-java">@Configuration
+// 前提你只有一个数据源
+@ConditionalOnSingleCandidate(DataSource.class)
+static class DataSourceTransactionManagerConfiguration {
+	...........
+    // 这里PlatformTransactionManager前提你不实现
+    @Bean
+    @ConditionalOnMissingBean(PlatformTransactionManager.class)
+    public DataSourceTransactionManager transactionManager(DataSourceProperties properties) {
+        DataSourceTransactionManager transactionManager = new DataSourceTransactionManager(this.dataSource);
+        return transactionManager;
+    }
+}
+</code></pre>
+<p>在你单数据源的情况下, 同时自动注入情况下, 他会默认给你生成一个<code>DataSourceTransactionManager</code></p>
+<p>所以默认情况下, 就是走这个, 现在我们绝地不看这个 . 我们要自己实现 .</p>
+<h2 id="正文">正文'</h2>
+<p>我们的问题 .</p>
+<pre><code class="language-java">@Configuration
+public class DataConfig {
+
+    @Bean(&quot;datasource1&quot;)
+    public DataSource dataSource() {
+        try {
+            Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        MysqlDataSource dataSource = new MysqlDataSource();
+        dataSource.setURL(&quot;jdbc:mysql://localhost:3306/jpa?useSSL=false&quot;);
+        dataSource.setUser(&quot;root&quot;);
+        dataSource.setPassword(&quot;123456&quot;);
+        return dataSource;
+    }
+    // 还有一个 datasource2
+    @Bean(name = &quot;TransactionManager1&quot;)
+    public DataSourceTransactionManager clusterTransactionManager(@Qualifier(&quot;datasource1&quot;) DataSource dataSource) {
+        return new DataSourceTransactionManager(dataSource);
+    }
+    // 还有一个 TransactionManager2,地方有限
+}
+</code></pre>
+<p>我们定义俩数据源, 其中就需要俩 <code>DataSourceTransactionManager</code></p>
+<p>那么写我们的service</p>
+<pre><code class="language-java">@Service
+public class TestService {
+    @Autowired
+    @Qualifier(&quot;datasource1&quot;)
+    private DataSource dataSource1;
+
+    @Transactional
+    public void test() throws SQLException {
+        Connection connection1 = dataSource1.getConnection();
+        Statement statement1 = connection1.createStatement();
+        int i = statement1.executeUpdate(&quot;INSERT INTO go_user (`name`,`password`) VALUES ('name12345','p5')&quot;);
+        System.out.println(&quot;成功 : &quot; + i);
+        int x = 1 / 0;
+        // 连接二也是如此 . 懒得写 , 我测试的时候写的俩数据源
+    }
+}
+</code></pre>
+<p>这样子启动绝对会GG , 因为你没指定有哪个<code>TransactionManager</code> .</p>
+<p>那么我们怎么做,</p>
+<pre><code class="language-java">@Transactional(transactionManager = &quot;TransactionManager2&quot;)
+</code></pre>
+<p>但是事务处理的时候 <code>org.springframework.jdbc.datasource.DataSourceTransactionManager#doRollback</code></p>
+<pre><code class="language-java">@Override
+protected void doRollback(DefaultTransactionStatus status) {
+    DataSourceTransactionObject txObject = (DataSourceTransactionObject) status.getTransaction();
+    Connection con = txObject.getConnectionHolder().getConnection();
+    try {
+        con.rollback();
+    }
+    catch (SQLException ex) {
+    }
+}
+</code></pre>
+<p>他有一个<code>Connection</code>  , 那么不和我们的connection一样 , 那么绝对回滚不了哇.  因为你不是一个连接, 所以根本题绝对提交成功了 , 那么为啥<code>Mybatis</code>可以呢 . 所以借鉴一下,</p>
+<p>我们看MyBatis的实现  <code>org.mybatis.spring.transaction.SpringManagedTransaction</code> 在这里, 这里缩进不了了 , 他的tab是俩空格, 我是四个, 哎 . 就这么看吧</p>
+<pre><code class="language-java">  @Override
+  public Connection getConnection() throws SQLException {
+      // 连接为null
+    if (this.connection == null) {
+        // 打开一个
+      openConnection();
+    }
+    return this.connection;
+  }
+  private void openConnection() throws SQLException {
+     // 获取Connection , 原来如此 这么获取
+    this.connection = DataSourceUtils.getConnection(this.dataSource);
+    this.autoCommit = this.connection.getAutoCommit();
+    this.isConnectionTransactional = DataSourceUtils.isConnectionTransactional(this.connection, this.dataSource);
+  }
+</code></pre>
+<p>所以就是在获取这里 <code>DataSourceUtils</code> -&gt; <code>org.springframework.jdbc.datasource.DataSourceUtils#getConnection</code></p>
+<pre><code class="language-java">public static Connection getConnection(DataSource dataSource) throws CannotGetJdbcConnectionException {
+    try {
+        return doGetConnection(dataSource);
+    }
+    catch (SQLException ex) {
+        ///
+    }
+}
+</code></pre>
+<p><code>doGetConnection(dataSource)</code>-&gt;<code>org.springframework.jdbc.datasource.DataSourceUtils#doGetConnection</code></p>
+<pre><code class="language-java">public static Connection doGetConnection(DataSource dataSource) throws SQLException {
+    // 获取一个 ConnectionHolder 持有对象 . 奥原来这样子 . 
+    // 通过 TransactionSynchronizationManager
+    ConnectionHolder  conHolder = (ConnectionHolder) TransactionSynchronizationManager.getResource(dataSource);
+    if (conHolder != null &amp;&amp; (conHolder.hasConnection() || conHolder.isSynchronizedWithTransaction())) {
+        conHolder.requested();
+        if (!conHolder.hasConnection()) {
+            conHolder.setConnection(fetchConnection(dataSource));
+        }
+        return conHolder.getConnection();
+    }
+	/// .... 
+}
+</code></pre>
+<p><code>TransactionSynchronizationManager.getResource(dataSource);</code> -&gt;   <code>org.springframework.transaction.support.TransactionSynchronizationManager#getResource</code></p>
+<pre><code class="language-java">@Nullable
+public static Object getResource(Object key) {
+    // key 
+    Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);
+    // 获取值
+    Object value = doGetResource(actualKey);
+    //...
+    return value;
+}
+</code></pre>
+<p><code>doGetResource(actualKey);</code>-&gt;<code>org.springframework.transaction.support.TransactionSynchronizationManager#doGetResource</code></p>
+<pre><code class="language-java">@Nullable
+private static Object doGetResource(Object actualKey) {
+    // 获取map
+    Map&lt;Object, Object&gt; map = resources.get();
+    // map拿value
+    Object value = map.get(actualKey);
+   	// ...
+    return value;
+}
+</code></pre>
+<p>其实 <code>resources</code> 就是啥, 就是一个 ThreadLocal 维护的一个线程对象,</p>
+<pre><code class="language-java">private static final ThreadLocal&lt;Map&lt;Object, Object&gt;&gt; resources =
+        new NamedThreadLocal&lt;&gt;(&quot;Transactional resources&quot;);
+</code></pre>
+<p>所以这就是为啥说事务不支持异步的原因了, 只能一个线程执行一个事务  , 不能俩线程执行 , 比如说这种,绝对不行.</p>
+<pre><code class="language-java">new Thread(() -&gt; mapper.findByName(&quot;tom&quot;)).start();
+</code></pre>
+<p>其实到这里我们就拿到了 <code>ConnectionHolder</code>了   , <code>org.springframework.jdbc.datasource.ConnectionHolder</code>其实就是一个连接持有者, 一层封装罢了  , 多了一些额外信息.</p>
+<p>那么到这里他是如何加入进去的呢, 那就是</p>
+<p><code>org.springframework.jdbc.datasource.DataSourceTransactionManager#doBegin</code> 这个方法了</p>
+<pre><code class="language-java">@Override
+protected void doBegin(Object transaction, TransactionDefinition definition) {
+    // 无所谓..
+    DataSourceTransactionObject txObject = (DataSourceTransactionObject) transaction;
+    Connection con = null;
+    try {
+        if (!txObject.hasConnectionHolder() ||
+                txObject.getConnectionHolder().isSynchronizedWithTransaction()) {
+            // 没有就newCon
+            Connection newCon = obtainDataSource().getConnection();
+            txObject.setConnectionHolder(new ConnectionHolder(newCon), true);
+        }
+        txObject.getConnectionHolder().setSynchronizedWithTransaction(true);
+        // 获取连接
+        con = txObject.getConnectionHolder().getConnection();
+	
+        // 获取事务隔离等级
+        Integer previousIsolationLevel = DataSourceUtils.prepareConnectionForTransaction(con, definition);
+        txObject.setPreviousIsolationLevel(previousIsolationLevel);
+		// 自动提交关闭
+        if (con.getAutoCommit()) {
+            txObject.setMustRestoreAutoCommit(true);
+            con.setAutoCommit(false);
+        }
+
+       // ... 这里就是保存对象了 .  
+        if (txObject.isNewConnectionHolder()) {
+            //  这里就是添加进去
+            TransactionSynchronizationManager.bindResource(obtainDataSource(), txObject.getConnectionHolder());
+        }
+    }
+}
+</code></pre>
+<p><code>org.springframework.transaction.support.TransactionSynchronizationManager#bindResource</code></p>
+<pre><code class="language-java">public static void bindResource(Object key, Object value) throws IllegalStateException {
+    // key
+    Object actualKey = TransactionSynchronizationUtils.unwrapResourceIfNecessary(key);
+    Map&lt;Object, Object&gt; map = resources.get();
+    if (map == null) {
+        map = new HashMap&lt;&gt;();
+        resources.set(map);
+    }
+    // 添加进去
+    Object oldValue = map.put(actualKey, value);
+}
+</code></pre>
+<p>所以前前后后就是这个, 所以懂了吗</p>
+<pre><code class="language-java">// 通过 DataSourceUtils.getConnection(dataSource1); 获取当前线程的连接
+Connection connection2 = DataSourceUtils.getConnection(dataSource1);
+// 执行 ...
+Statement statement1 = connection1.createStatement();
+int i = statement1.executeUpdate(&quot;INSERT INTO go_user (`name`,`password`) VALUES ('name12345','p5')&quot;);
+</code></pre>
+<p>所以这就是  transaction 的内容 ,</p>
+<h2 id="总结">总结</h2>
+<p>我们观察源码 发现 Transaction 不支持异步操作 ,  不支持单任务(单个请求)多数据源,  所以不能保证多数据源的事务相关问题 ,</p>
+<p>因此下一期我讲解多数据源 (分库分表其实也是这样子) , 或者 微服务下多数据源问题 .</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%89%8D%E8%A8%80">前言</a></li>
+<li><a href="#%E6%AD%A3%E6%96%87">正文'</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

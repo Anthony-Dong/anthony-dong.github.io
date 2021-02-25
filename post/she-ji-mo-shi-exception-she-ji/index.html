@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>设计模式 - Exception设计 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/she-ji-mo-shi-exception-she-ji/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>设计模式 - Exception设计</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/she-ji-mo-shi-exception-she-ji/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/hWcBwQyHp2o/"
+								class="tag">设计模式</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1032字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-java异常分类">1. Java异常分类</h2>
+<p>Java异常顶层是 <code>Throwable</code> , 下来分为了 <code>Exception</code> 和 <code>Error</code> , 这个是JDK源码包的范畴 , 不代表第三方包的规则,</p>
+<h4 id="throwable">Throwable</h4>
+<blockquote>
+<p>​	The Throwable class is the superclass of all errors and exceptions in the Java language.</p>
+</blockquote>
+<p>Throwable是Java语言异常的超类</p>
+<blockquote>
+<p>​	For the purposes of compile-time checking of exceptions, Throwable and any subclass of Throwable that is not also a subclass of either RuntimeException or Error are regarded as checked exceptions.</p>
+</blockquote>
+<p>为了在编译时检查异常， Throwable和任何<code>未被申明RuntimeException或Error的子类</code> 的Throwable子类都被视为被检查的异常对象。</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-07/9026a838-1f0f-4d13-aec9-249c0fd0438a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="error">Error</h4>
+<p>其中 Error 更多的表现为JVM内部异常, 可以称之为系统异常, 为Java程序不可处理的异常 ,<code>不可用try-catch语句抓取</code>的 , 比如常见的 <code>StackOverflowError</code>(栈内存溢出) 和 <code>OutOfMemoryError</code> (堆内存溢出)这俩很常见, 其他的还有很多,</p>
+<h4 id="exception">Exception</h4>
+<p>这个就是我们常见的异常的超级父类了, 他为程序可以抓取的异常 ,此时可能表现在</p>
+<blockquote>
+<p>​	The class Exception and any subclasses that are not also subclasses of RuntimeException are checked exceptions.</p>
+</blockquote>
+<p>程序会自动检测非<code>RuntimeException</code> 的<code>Exception</code>的子类,  并且提示错误</p>
+<blockquote>
+<p>​	Checked exceptions need to be declared in a method or constructor's throws clause if they can be thrown by the execution of the method or constructor and propagate outside the method or constructor boundary.</p>
+</blockquote>
+<p>这些异常必须在 <code>方法</code>上或者<code>构造方法</code>上用throws申明抛出去 ,</p>
+<p>以上就是我们常见的两大父类对象</p>
+<h2 id="2-runtimeexception">2. RuntimeException</h2>
+<blockquote>
+<p>RuntimeException is the superclass of those exceptions that can be thrown during the normal operation of the Java Virtual Machine.<br>
+RuntimeException and its subclasses are<code>unchecked exceptions</code>. Unchecked exceptions do not need to be declared in a method or constructor's throws clause if they can be thrown by the execution of the method or constructor and propagate outside the method or constructor boundary.</p>
+</blockquote>
+<p>RuntimeException 是在JVM正常运行期间可以抛出的异常的超类 .</p>
+<p>RuntimeException及其子类是未检查异常。</p>
+<p>未检查的异常不需要在方法或构造函数的抛出子句中声明，<code>如果它们可以由方法或构造函数的执行抛出并传播到方法或构造函数边界之外。</code></p>
+<pre><code class="language-java">    public static void main(String[] args) {
+        try {
+            testError();
+        } catch (Exception e) {
+            System.out.println(e.getMessage()); // 会输出 error
+        }
+    }
+
+    static void testError() throws Exception{
+        error();
+    }
+    
+    static void error(){
+        try {
+            int i = 1 / 0;
+        } catch (Exception e) {
+            throw new RuntimeException(&quot;error&quot;);
+        }
+    }
+</code></pre>
+<p>异常会具有传递性, 类似于 trace一样, 出现后会找到你throws那里 , 所以不怕断链,</p>
+<h2 id="3-构造方法">3. 构造方法</h2>
+<pre><code class="language-java">protected Throwable(String message,
+                    Throwable cause,
+                    boolean enableSuppression,
+                    boolean writableStackTrace)
+</code></pre>
+<blockquote>
+<p>Constructs a new throwable with the specified detail message, cause, suppression enabled or disabled, and writable stack trace enabled or disabled. <code>If suppression is disabled, getSuppressed for this object will return a zero-length array and calls to addSuppressed that would otherwise append an exception to the suppressed list will have no effect.</code> If the writable stack trace is false, this constructor will not call fillInStackTrace(), a null will be written to the stackTrace field, and subsequent calls to fillInStackTrace and setStackTrace(StackTraceElement[]) will not set the stack trace. If the writable stack trace is false, getStackTrace will return a zero length array.</p>
+<p>Note that the other constructors of Throwable treat suppression as being enabled and the stack trace as being writable. Subclasses of Throwable should document any conditions under which suppression is disabled and document conditions under which the stack trace is not writable. Disabling of suppression should only occur in exceptional circumstances where special requirements exist, such as a virtual machine reusing exception objects under low-memory situations. Circumstances where a given exception object is repeatedly caught and rethrown, such as to implement control flow between two sub-systems, is another situation where immutable throwable objects would be appropriate.</p>
+</blockquote>
+<p>主要是知道 <code>writableStackTrace</code> 当设置为 true的时候会追踪到出现异常的源头 , 而不是我们手动抛出的地方</p>
+<p>默认是 false.</p>
+<h2 id="4-设计异常">4. 设计异常</h2>
+<p>一般来说 ,我们的最内部的核心接口(或者抽象方法)最好继承与 <code>Exception</code>  , 如果外部我们已经我们自定的异常了 , 那么内部处理的异常可以使用 <code>RuntimeException</code>  ,</p>
+<p>对于用户不知道的操作,最好申明异常,   对于接口的定义全部要 <code>throws</code> 抛出异常 , 让使用者来处理 , 而不是你来处理 , 对于程序停止的 , 异常对于程序有正常运行有影响需要使用 <code>e.printstack</code> , 最好打印出去, 然后使用 <code>Runtime.getRuntime().</code> hook 或者 exit 都可以 强制停止 ,</p>
+<h2 id="5-总结">5. 总结</h2>
+<p>对于异常设计上 , 一般对于我们比如说没人帮我们去抓取异常, 此时就用throws,</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-java%E5%BC%82%E5%B8%B8%E5%88%86%E7%B1%BB">1. Java异常分类</a><br>
+*
+<ul>
+<li><a href="#throwable">Throwable</a></li>
+<li><a href="#error">Error</a></li>
+<li><a href="#exception">Exception</a></li>
+</ul>
+</li>
+<li><a href="#2-runtimeexception">2. RuntimeException</a></li>
+<li><a href="#3-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">3. 构造方法</a></li>
+<li><a href="#4-%E8%AE%BE%E8%AE%A1%E5%BC%82%E5%B8%B8">4. 设计异常</a></li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

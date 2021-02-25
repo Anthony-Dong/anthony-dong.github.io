@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>带你走入GRPC (Java版本) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/IsQ51vvCo/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>带你走入GRPC (Java版本)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-29</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/IsQ51vvCo/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/L-xvm-udt-/"
+								class="tag">Google</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2005字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Grpc的优势这里我就不说了, 第一它是基于Http2.0协议的, 可以保持客户端与服务器端长连接, 基于二进制流,也就是字节流, 不是文本流.</p>
+<p>​	同时他提供了跨平台(语言)的开发 , 但是他也有成本就是需要定义他的接口规范, 遵循他的一套规范, 也就是说就算你是Java语言, 你不能随意定义一个接口, 我就能帮你实现RPC , 只是他可以帮助你生成一个符合他规范的接口.</p>
+<p>​	我们还是快速体验一下.   pom配置在文章最后</p>
+</blockquote>
+<h2 id="快速开始">快速开始</h2>
+<h4 id="1依赖">1.依赖 :</h4>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.grpc&lt;/groupId&gt;
+    &lt;artifactId&gt;grpc-all&lt;/artifactId&gt;
+    &lt;version&gt;1.12.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>插件和全部依赖都在文章最后面 . 全局粘贴</p>
+<h4 id="2编写protobuf文件">2.编写protobuf文件</h4>
+<p>idea 介意下载一个 protobuf的插件, 可以有代码提示. 这里直接去pluging里搜就行了.</p>
+<p>我是用的是proto3的版本.</p>
+<p>可以参考一下这个文章 https://www.cnblogs.com/tohxyblog/p/8974763.html</p>
+<p>注意这个文件是在 你的src/proto/XX.proto 中定义的, 文件目录必须写好.</p>
+<pre><code class="language-java">syntax = &quot;proto3&quot;; // 协议版本
+
+// 选项配置
+option java_package = &quot;com.example.grpc.api&quot;;
+option java_outer_classname = &quot;RPCDateServiceApi&quot;;
+option java_multiple_files = true;
+
+// 定义包名
+package com.example.grpc.api;
+
+// 服务接口.定义请求参数和相应结果	
+service RPCDateService {
+    rpc getDate (RPCDateRequest) returns (RPCDateResponse) {
+    }
+}
+
+// 定义请求体
+message RPCDateRequest {
+    string userName = 1;
+}
+
+// 定义相应内容
+message RPCDateResponse {
+    string serverDate = 1;
+}
+</code></pre>
+<p>使用maven插件, 编译.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/2a1fbe3e-64f2-4106-8f6b-52d81865cb83.png" alt="" loading="lazy"></figure>
+<p>第一个命令执行完. 在 target目录里找就行了.  第二个命令也是找就行了. 然后将生成的Java文件拷贝到你的目录里.就可以了, 类似于Mybatis的mapper插件.</p>
+<h4 id="3-编写接口实现类">3. 编写接口实现类.</h4>
+<pre><code class="language-java">package com.example.grpc.service;
+
+// RPCDateServiceGrpc.RPCDateServiceImplBase 这个就是接口. 
+// RPCDateServiceImpl 我们需要继承他的,实现方法回调
+public class RPCDateServiceImpl extends RPCDateServiceGrpc.RPCDateServiceImplBase {
+    @Override
+    public void getDate(RPCDateRequest request, StreamObserver&lt;RPCDateResponse&gt; responseObserver) {
+        // 请求结果,我们定义的
+        RPCDateResponse rpcDateResponse = null;
+        String userName = request.getUserName();
+        String response = String.format(&quot;你好: %s, 今天是%s.&quot;, userName, LocalDate.now().format(DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd&quot;)));
+        try {
+            // 定义响应,是一个builder构造器. 
+            rpcDateResponse = RPCDateResponse
+                    .newBuilder()
+                    .setServerDate(response)
+                    .build();
+        } catch (Exception e) {
+            responseObserver.onError(e);
+        } finally {
+            // 这种写法是observer,异步写法,老外喜欢用这个框架.
+            responseObserver.onNext(rpcDateResponse);
+        }
+        responseObserver.onCompleted();
+    }
+}
+</code></pre>
+<h4 id="定义服务端">定义服务端</h4>
+<pre><code class="language-java">public class GRPCServer {
+    private static final int port = 9999;
+
+    public static void main(String[] args) throws Exception {
+        // 设置service接口.
+        Server server = ServerBuilder.
+                forPort(port)
+                .addService(new RPCDateServiceImpl())
+                .build().start();
+        System.out.println(String.format(&quot;GRpc服务端启动成功, 端口号: %d.&quot;, port));
+        server.awaitTermination();
+    }
+}
+</code></pre>
+<h4 id="定义客户端">定义客户端</h4>
+<pre><code class="language-java">public class GRPCClient {
+    private static final String host = &quot;localhost&quot;;
+    private static final int serverPort = 9999;
+
+    public static void main(String[] args) throws Exception {
+        // 1. 拿到一个通信的channel
+        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress(host, serverPort).usePlaintext().build();
+        try {
+            // 2.拿到道理对象
+            RPCDateServiceGrpc.RPCDateServiceBlockingStub rpcDateService = RPCDateServiceGrpc.newBlockingStub(managedChannel);
+            RPCDateRequest rpcDateRequest = RPCDateRequest
+                    .newBuilder()
+                    .setUserName(&quot;anthony&quot;)
+                    .build();
+            // 3. 请求
+            RPCDateResponse rpcDateResponse = rpcDateService.getDate(rpcDateRequest);
+            // 4. 输出结果
+            System.out.println(rpcDateResponse.getServerDate());
+        } finally {
+            // 5.关闭channel, 释放资源.
+            managedChannel.shutdown();
+        }
+    }
+}
+</code></pre>
+<p>以上就是完整的流程.  启动服务器端, 启动客户端打印一下信息 :</p>
+<p>服务端日志 :</p>
+<pre><code class="language-java">2020-02-29 11:04:50,991 4689   [LG-3-1] DEBUG .grpc.netty.NettyServerHandler  - [id: 0xed01e3fb, L:/127.0.0.1:9999 - R:/127.0.0.1:3994] INBOUND SETTINGS: ack=true
+2020-02-29 11:04:51,075 4773   [LG-3-1] DEBUG .grpc.netty.NettyServerHandler  - [id: 0xed01e3fb, L:/127.0.0.1:9999 - R:/127.0.0.1:3994] INBOUND HEADERS: streamId=3 headers=GrpcHttp2RequestHeaders[:path: /com.example.grpc.api.RPCDateService/getDate, :authority: localhost:9999, :method: POST, :scheme: http, te: trailers, content-type: application/grpc, user-agent: grpc-java-netty/1.12.0, grpc-accept-encoding: gzip, grpc-trace-bin: ] streamDependency=0 weight=16 exclusive=false padding=0 endStream=false
+2020-02-29 11:04:51,125 4823   [LG-3-1] DEBUG .grpc.netty.NettyServerHandler  - [id: 0xed01e3fb, L:/127.0.0.1:9999 - R:/127.0.0.1:3994] INBOUND DATA: streamId=3 padding=0 endStream=true length=14 bytes=00000000090a07616e74686f6e79
+2020-02-29 11:04:51,172 4870   [LG-3-1] DEBUG .grpc.netty.NettyServerHandler  - [id: 0xed01e3fb, L:/127.0.0.1:9999 - R:/127.0.0.1:3994] OUTBOUND HEADERS: streamId=3 headers=GrpcHttp2OutboundHeaders[:status: 200, content-type: application/grpc, grpc-encoding: identity, grpc-accept-encoding: gzip] streamDependency=0 weight=16 exclusive=false padding=0 endStream=false
+2020-02-29 11:04:51,189 4887   [LG-3-1] DEBUG .grpc.netty.NettyServerHandler  - [id: 0xed01e3fb, L:/127.0.0.1:9999 - R:/127.0.0.1:3994] OUTBOUND DATA: streamId=3 padding=0 endStream=false length=44 bytes=00000000270a25e4bda0e5a5bd3a20616e74686f6e792c20e4bb8ae5a4a9e698af323032302d30322d32392e
+2020-02-29 11:04:51,190 4888   [LG-3-1] DEBUG .grpc.netty.NettyServerHandler  - [id: 0xed01e3fb, L:/127.0.0.1:9999 - R:/127.0.0.1:3994] OUTBOUND HEADERS: streamId=3 headers=GrpcHttp2OutboundHeaders[grpc-status: 0] streamDependency=0 weight=16 exclusive=false padding=0 endStream=true
+2020-02-29 11:04:51,204 4902   [LG-3-1] DEBUG .grpc.netty.NettyServerHandler  - [id: 0xed01e3fb, L:/127.0.0.1:9999 - R:/127.0.0.1:3994] INBOUND GO_AWAY: lastStreamId=0 errorCode=0 length=0 bytes=
+</code></pre>
+<p>客户端日志 :</p>
+<pre><code class="language-java">2020-02-29 11:00:43,480 1814   [LG-1-2] DEBUG .grpc.netty.NettyClientHandler  - [id: 0xcdbd6064, L:/127.0.0.1:3817 - R:localhost/127.0.0.1:9999] INBOUND HEADERS: streamId=3 headers=GrpcHttp2ResponseHeaders[grpc-status: 0] streamDependency=0 weight=16 exclusive=false padding=0 endStream=true
+你好: anthony, 今天是20-02-29.
+2020-02-29 11:00:43,487 1821   [LG-1-2] DEBUG .grpc.netty.NettyClientHandler  - [id: 0xcdbd6064, L:/127.0.0.1:3817 - R:localhost/127.0.0.1:9999] OUTBOUND GO_AWAY: lastStreamId=0 errorCode=0 length=0 bytes=
+</code></pre>
+<p>这就是一个Grpc的完整流程.</p>
+<h2 id="分析一下">分析一下.</h2>
+<p>定义都是一个CS模型, GRPC他看到了未来一定是HTTP2的天下(这是必然的趋势), 所以他的没有制定自己的协议, 这里指的是应用层协议. 类似于我们的RestTemplate 一样都是基于http协议.</p>
+<p>所以他考虑到的是 JSON ,这种序列化比较慢的序列化方式. 采用了自己开发的一种Protobuf.</p>
+<p>这里就说明了 GRPC其实只是解决了序列化的方式, 依靠这个Protobuf, 可以解决一系列问题, 比如接口信息的定义, 等等有很多,</p>
+<p>最简单的例子. 比如我Java中写了一个echo() 接口, golang如何调用 ? . 这就是难点,</p>
+<p>我们可以依靠统一的Protobuf文件生成对应的 Golang和Java的接口, 就可以了, 所以说本质上来说他是做了这点.</p>
+<p>我们看看Dubbo做了什么 , 他依靠TCP的可靠性, 自己基于TCP实现了一个应用层协议, dubbo协议. 同时也引用了一堆的序列化方式, 所以整个GRPC也是可行的.</p>
+<p>​</p>
+<p>感兴趣的同学可以做一次抓包, 抓取客户端请求,分析一个GRPC的请求格式.</p>
+<h2 id="pom文件">pom文件</h2>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;groupId&gt;com.examole&lt;/groupId&gt;
+    &lt;artifactId&gt;grpc-study-demo-01&lt;/artifactId&gt;
+    &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;junit&lt;/groupId&gt;
+            &lt;artifactId&gt;junit&lt;/artifactId&gt;
+            &lt;version&gt;4.13&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+            &lt;version&gt;1.7.21&lt;/version&gt;
+        &lt;/dependency&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+            &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+            &lt;version&gt;1.7.21&lt;/version&gt;
+        &lt;/dependency&gt;
+
+        &lt;dependency&gt;
+            &lt;groupId&gt;io.grpc&lt;/groupId&gt;
+            &lt;artifactId&gt;grpc-all&lt;/artifactId&gt;
+            &lt;version&gt;1.12.0&lt;/version&gt;
+        &lt;/dependency&gt;
+
+
+    &lt;/dependencies&gt;
+    &lt;build&gt;
+        &lt;extensions&gt;
+            &lt;extension&gt;
+                &lt;groupId&gt;kr.motd.maven&lt;/groupId&gt;
+                &lt;artifactId&gt;os-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;1.4.1.Final&lt;/version&gt;
+            &lt;/extension&gt;
+        &lt;/extensions&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;version&gt;3.8.0&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;1.8&lt;/source&gt;
+                    &lt;target&gt;1.8&lt;/target&gt;
+                    &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.xolstice.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;protobuf-maven-plugin&lt;/artifactId&gt;
+                &lt;version&gt;0.5.0&lt;/version&gt;
+                &lt;configuration&gt;
+                    &lt;pluginId&gt;grpc-java&lt;/pluginId&gt;
+                    &lt;protocArtifact&gt;com.google.protobuf:protoc:3.0.2:exe:${os.detected.classifier}&lt;/protocArtifact&gt;
+                    &lt;pluginArtifact&gt;io.grpc:protoc-gen-grpc-java:1.2.0:exe:${os.detected.classifier}&lt;/pluginArtifact&gt;
+                &lt;/configuration&gt;
+                &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;compile&lt;/goal&gt;
+                            &lt;goal&gt;compile-custom&lt;/goal&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+                &lt;/executions&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">快速开始</a><br>
+*
+<ul>
+<li><a href="#1%E4%BE%9D%E8%B5%96">1.依赖 :</a></li>
+<li><a href="#2%E7%BC%96%E5%86%99protobuf%E6%96%87%E4%BB%B6">2.编写protobuf文件</a></li>
+<li><a href="#3-%E7%BC%96%E5%86%99%E6%8E%A5%E5%8F%A3%E5%AE%9E%E7%8E%B0%E7%B1%BB">3. 编写接口实现类.</a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E7%AB%AF">定义服务端</a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89%E5%AE%A2%E6%88%B7%E7%AB%AF">定义客户端</a></li>
+</ul>
+</li>
+<li><a href="#%E5%88%86%E6%9E%90%E4%B8%80%E4%B8%8B">分析一下.</a></li>
+<li><a href="#pom%E6%96%87%E4%BB%B6">pom文件</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

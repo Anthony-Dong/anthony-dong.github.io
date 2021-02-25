@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>MyBatis - 简单实现一个PageHelper | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/jian-dan-shi-xian-yi-ge-pagehelper/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>MyBatis - 简单实现一个PageHelper</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-01</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/jian-dan-shi-xian-yi-ge-pagehelper/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/3khXF681Z_v/"
+								class="tag">mybatis</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1026字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-pagehelper">1. <a href="https://github.com/pagehelper/Mybatis-PageHelper">PageHelper</a></h2>
+<p>可以去GitHub上看一下</p>
+<p>原理就是基于 Mybatis 的 Interceptor接口实现的 , 其实很简单 ,Mybatis这个接口可以拓展第三方插件</p>
+<h2 id="1-直接粘代码">1. 直接粘代码</h2>
+<p>注释很详细 ....</p>
+<pre><code class="language-java">import com.mybatis.mapper.DeptMapper;
+import com.mybatis.pojo.Dept;
+import org.apache.ibatis.cache.CacheKey;
+import org.apache.ibatis.datasource.pooled.PooledDataSource;
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.mapping.*;
+import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.session.*;
+import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
+
+import java.util.List;
+import java.util.Properties;
+
+/**
+ * @date:2019/11/30 16:18
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+
+public class MybatisConf {
+
+    public static void main(String[] args) {
+
+        // 1. 创建configuration 对象
+        Configuration configuration = new Configuration(
+                new Environment(&quot;env&quot;,
+                        new JdbcTransactionFactory(),
+                        new PooledDataSource(&quot;com.mysql.jdbc.Driver&quot;,
+                                &quot;jdbc:mysql://127.0.0.1:3306/tyut?useSSL=false&quot;,
+                                &quot;root&quot;, &quot;root&quot;)));
+
+        configuration.addMappers(&quot;com.mybatis.mapper&quot;);
+
+        // 设置一级缓存级别
+        configuration.setLocalCacheScope(LocalCacheScope.SESSION);
+
+		// 添加我们的拦截器对象
+        configuration.addInterceptor(new MyIntercepts());
+
+
+        // 2. 拿到配置创建一个工厂
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+
+        // 3. 通过工厂创建一个 会话对象 SqlSession
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+
+        // 4. 会话建立 执行SQL
+        DeptMapper mapper = sqlSession.getMapper(DeptMapper.class);
+
+
+        System.out.println(&quot;============第一次查询==============&quot;);
+        /**
+         * 第一次查询
+         */
+        PageHelper.limit(2, 4);
+        List&lt;Dept&gt; depts = mapper.selectAll();
+        depts.forEach(e -&gt; {
+            System.out.println(&quot;查询到 : &quot; + e);
+        });
+
+        System.out.println(&quot;============第二次查询==============&quot;);
+        /**
+         * 第二次查询
+         */
+        PageHelper.limit(2, 4);
+        List&lt;Dept&gt; deptss = mapper.selectAll();
+
+        for (Dept dept : deptss) {
+            System.out.println(&quot;查询到 : &quot; + dept);
+        }
+
+    }
+
+
+    /**
+     * 拦截器 ,
+     */
+    @Intercepts(@Signature(type = Executor.class, method = &quot;query&quot;, args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class}))
+    static class MyIntercepts implements Interceptor {
+
+        private static final String PLACE_HOLDER = &quot; &quot;;
+
+        private ThreadLocal&lt;PageHelper&gt; helpers = PageHelper.helpers;
+
+        /**
+         * 整个拦截链路 ,其实就是 创建一个新的 BoundSql .......
+         *
+         * @param invocation
+         * @return
+         * @throws Throwable
+         */
+        @Override
+        public Object intercept(Invocation invocation) throws Throwable {
+            Object[] args = invocation.getArgs();
+            //  mappedStatement
+            MappedStatement ms = (MappedStatement) args[0];
+
+            // parameter
+            Object parameterObject = args[1];
+
+            /**
+             * 我们唯一要做的就是 修改 SQL ,其他都不用管理  其实就是 BoundSql
+             */
+            BoundSql boundSql = ms.getBoundSql(parameterObject);
+            String sql = ms.getBoundSql(parameterObject).getSql();
+
+            // 获取 pageHelper
+            PageHelper pageHelper = helpers.get();
+
+            String afterSql = sql + PLACE_HOLDER + &quot;limit&quot; + PLACE_HOLDER + pageHelper.getStartNum() + &quot;,&quot; + pageHelper.getPageSize();
+
+            // 用完移除 , 防止堆溢出
+            helpers.remove();
+
+            // rowBound
+            RowBounds rowBounds = (RowBounds) args[2];
+
+
+            //resultHandler
+            ResultHandler resultHandler = (ResultHandler) args[3];
+
+
+            // executor
+            Executor executor = (Executor) invocation.getTarget();
+
+
+            // 修改后的 BoundSql
+            BoundSql modifyBoundSql = new BoundSql(ms.getConfiguration(), afterSql, boundSql.getParameterMappings(), parameterObject);
+
+
+            //构建一个CacheKey , 其实这里 的话 MyBatis已经帮我们做了缓存Key的生成,内部维护了缓存 
+            CacheKey cacheKey = executor.createCacheKey(ms, parameterObject, rowBounds, modifyBoundSql);
+
+			// 执行返回结果
+            return executor.query(ms, parameterObject, rowBounds, resultHandler, cacheKey, modifyBoundSql);
+        }
+
+        @Override
+        public Object plugin(Object target) {
+            return Plugin.wrap(target, this);
+        }
+
+        @Override
+        public void setProperties(Properties properties) {
+            //...
+        }
+    }
+
+
+    /**
+     * page Helper 对象
+     */
+    static class PageHelper {
+        /**
+         * 维护了一个 ThreadLocal 对象去维护他
+         */
+        final static ThreadLocal&lt;PageHelper&gt; helpers = new ThreadLocal&lt;&gt;();
+        private int startNum;
+        private int pageSize;
+
+        public int getStartNum() {
+            return startNum;
+        }
+
+        public int getPageSize() {
+            return pageSize;
+        }
+
+
+        public PageHelper(int startNum, int pageSize) {
+            this.startNum = startNum;
+            this.pageSize = pageSize;
+        }
+
+        /**
+         * 执行一般多线程 , 所以不会出现啥意外事故 ... 如果怕出现, 就需要维护更复杂的对象了 , 比如设置 校验值
+         *
+         * 单线程容易出现, 我第一个查询还没拿到第一个查询设置的对象 , 你第二个查询执行到这里把我刚刚设置的对象给覆盖了
+         * @param startNum
+         * @param pageSize
+         */
+        public static void limit(int startNum, int pageSize) {
+            // 设置对象
+            helpers.set(new PageHelper(startNum, pageSize));
+        }
+    }
+}
+
+</code></pre>
+<h2 id="3环境">3.环境</h2>
+<p><strong>pojo</strong>   <code>com.mybatis.pojo.Dept</code></p>
+<pre><code class="language-java">public class Dept {
+
+    private Integer deptno;
+
+    private String dname;
+
+    private String loc;
+
+}
+</code></pre>
+<p>mapper.xml  <code>com.mybatis.mapper.DeptMapper.xml</code></p>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;!DOCTYPE mapper PUBLIC &quot;-//mybatis.org//DTD Mapper 3.0//EN&quot; &quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;&gt;
+&lt;mapper namespace=&quot;com.mybatis.mapper.DeptMapper&quot;&gt;
+
+    &lt;resultMap id=&quot;DeptResultMap&quot; type=&quot;com.mybatis.pojo.Dept&quot;&gt;
+        &lt;id column=&quot;DEPTNO&quot; jdbcType=&quot;INTEGER&quot; property=&quot;deptno&quot;/&gt;
+        &lt;result column=&quot;DNAME&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;dname&quot;/&gt;
+        &lt;result column=&quot;LOC&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;loc&quot;/&gt;
+    &lt;/resultMap&gt;
+
+    &lt;select id=&quot;selectAll&quot; resultType=&quot;com.mybatis.pojo.Dept&quot;&gt;
+        SELECT * from  Dept
+    &lt;/select&gt;
+
+&lt;/mapper&gt;
+</code></pre>
+<p>mapper :  <code>com.mybatis.mapper.DeptMapper</code></p>
+<pre><code class="language-java">@Repository
+public interface DeptMapper {
+
+    List&lt;Dept&gt; selectAll();
+
+}
+</code></pre>
+<p>SQL语句</p>
+<pre><code class="language-java">-- ----------------------------
+-- DATABASE structure for dept
+-- ----------------------------
+
+CREATE DATABASE tyut
+
+USE tyut
+
+-- ----------------------------
+-- Table structure for dept
+-- ----------------------------
+DROP TABLE IF EXISTS `dept`;
+CREATE TABLE `dept` (
+  `DEPTNO` int(2) NOT NULL,
+  `DNAME` varchar(14) DEFAULT NULL,
+  `LOC` varchar(13) DEFAULT NULL,
+  PRIMARY KEY (`DEPTNO`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- Records of dept
+-- ----------------------------
+INSERT INTO `dept` VALUES ('10', 'ACCOUNTING', 'NEW YOURK');
+INSERT INTO `dept` VALUES ('20', 'PostOffice', 'DALLAS');
+INSERT INTO `dept` VALUES ('30', 'government', 'CHICAGO');
+INSERT INTO `dept` VALUES ('40', 'OPERATIONS', 'BOSTON');
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-pagehelper">1. PageHelper</a></li>
+<li><a href="#1-%E7%9B%B4%E6%8E%A5%E7%B2%98%E4%BB%A3%E7%A0%81">1. 直接粘代码</a></li>
+<li><a href="#3%E7%8E%AF%E5%A2%83">3.环境</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

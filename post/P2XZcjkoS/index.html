@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Golang - Goroutine &amp; chan  &amp; context包 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/P2XZcjkoS/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Golang - Goroutine &amp; chan  &amp; context包</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-07</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/P2XZcjkoS/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">4221字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">21 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	<code>Goroutine</code>  和 <code>chan</code> 是golang多线程编程的核心 ,   context是上下文, 链接着 多个goroutine 和 多个chan ,同时还可以保存上下文数据, 所以 context包也很重要, 使用也很重要.</p>
+</blockquote>
+<h2 id="1-goroutine">1. Goroutine</h2>
+<p>在Go语言中，每一个并发的执行单元叫作一个goroutine。Java中叫做Thread ,其实是一回事,大家可以认为go关键字和new thread().start()  是一目一样的效果来说.  所以他是处理并发用的, 他的生命周期由Golang底层管理.</p>
+<pre><code class="language-go">func main() {
+    // 启动一个tcp端口
+	listener, _ := net.Listen(&quot;tcp&quot;, &quot;localhost:8888&quot;)
+	for {
+        //学过Java或者其他语言的都知道 , 一个新的连接过来入口就是一个accept
+		conn, _ := listener.Accept()
+        // 处理新连接
+		handlers(&amp;conn)
+	}
+}
+
+func handlers(conn *net.Conn) {
+    // 其实这个方法不执行, 因为就算客户端断了也会不断的写的,因为下面是个死循环..所以先不考虑这个,处理的话一般得做心跳处理,或者conn.SetDeadline().
+	defer (*conn).Close()
+	for {
+		io.WriteString(*conn, time.Now().Format(&quot;Mon Jan 2 15:04:05 -0700 MST 2006\n\r&quot;))
+		time.Sleep(1 * time.Second)
+	}
+}
+</code></pre>
+<p>此时我们分别俩窗口开启 <code>telnet localhost 8888</code>  , 会发现只会有一个返回数据, 另外一个阻塞了 不会返回数据, 是为啥呢,  Java来说都是开启一个<code>Thread</code>来处理 handler方法, 而Golang是需要创建一个 <code>GoRoutine</code>,  其实目的都是一样的, 区别不解释了.</p>
+<p>因此我们将代码改成 <code>go handlers(&amp;conn)</code>   , 此时俩窗口都收到数据了 , 这就是 GoRoutine, 对于Golang来说,这就是一个编程模型, 对于webhttp服务器还是其他都是这个流程, 不一样的而是不同需求封装, 对于Java来说他可能有BIO,NIO,AIO编程模型, 可能go的强大不需要吧,</p>
+<p>客户端代码也很简单  , <code>dial</code>  意思就是 <code>拨号</code> .</p>
+<pre><code class="language-go">func main() {
+	conn, e := net.Dial(&quot;tcp&quot;, &quot;localhost:8888&quot;)
+	if e != nil {
+		fmt.Println(&quot;error&quot;)
+		os.Exit(1)
+	}
+	defer func() {
+		conn.Close()
+		fmt.Println(&quot;关闭连接&quot;)
+	}()
+	out := os.Stdout
+	io.Copy(out, conn)
+}
+</code></pre>
+<p>这就是一个客户端服务器 , 很简单, 上述就是 goroutine的简单使用, 对于大量不相干的任务 , 为了提供并发性(执行效率), 所以使用goroutine 是很不错的选择 , 但是有些时候 goroutine之间需要协调, 这时候就需要 context了, 下文会讲到 .</p>
+<h2 id="2-channels">2. Channels</h2>
+<p>channle是一个线程安全的阻塞队列, 根据你缓冲的大小可能存在 存阻塞和取阻塞 . 如果你学过Java的BlockingQueue很像 ,   但是Golang会检测channel是否发生死锁, 防止写法上出现问题.</p>
+<p>chan的操作  :</p>
+<pre><code class="language-go">// 1. 定义 , 代表这个chan类型为int,只能存入int类型数据, 缓冲区为0 , ch是一个指针变量
+ch :=make(chan int,0)
+// 2. 存入数据. 用 `&lt;-` 表示 , put操作. 
+ch&lt;-1
+// 3. 读取数据.  用 `&lt;-` 表示 , 返回俩参数, 第一个是读取的数据, 第二个是成功与否. take操作. 如果只写一个是代表读取返回的数据.
+x,ok:=&lt;-ch
+</code></pre>
+<h3 id="无缓冲区的chan">无缓冲区的chan</h3>
+<p>申明 <code>make(chan int)</code> , 后面是类型, 就是最多我只能放一个. 类似于Java的SynchronizedBlockingQueue. 是一个无缓冲区的队列 .</p>
+<pre><code class="language-go">func main() {
+	ch :=make(chan int,0)
+
+	go func() {
+		ch&lt;-1
+	}()
+
+	x,ok:=&lt;-ch
+	fmt.Println(x,ok)
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-go">1 true
+</code></pre>
+<p>其中对于主线程 , golang会检测chan使用是否合理, 不然会抛出 , <code>fatal error: all goroutines are asleep - deadlock!</code> ,比如可能存在下面的代码.</p>
+<pre><code class="language-go">func main() {
+	ch := make(chan int, 0)
+	&lt;-ch
+}
+</code></pre>
+<p>这个会直接抛出上诉异常, 因为不合法. 简称 <code>deadlock</code> , 为死锁的意思 , 什么是死锁 , 就是线程卡着不动了 , 没有办法拯救了 ,使用chan 千万要注意死锁问题 , 就算close()掉chan, 抛出异常,也不能发生死锁(子线程发生死锁可能性很大的) .  不难发现这种检测是有必要的, 在程序启动前做检测 , 是一种很好的编译习惯.</p>
+<h3 id="具有缓冲区的chan">具有缓冲区的chan</h3>
+<blockquote>
+<p>​	有缓冲区的chan , 类似于Java的 ArrayBlockingQueue.  需要指定一个队列大小,</p>
+</blockquote>
+<p>这个代码, 让大家体会一下 chan的缓冲区的概念. 这里会循环6次 , 向里面添加数据, 如果缓冲区大小还有, 就会存入成功. 失败就会自动走default .</p>
+<pre><code class="language-go">func main() {
+	ch := make(chan int, 5)
+
+	for x := 1; x &lt;= 6; x++ {
+		select {
+		case ch &lt;- x:
+			fmt.Println(&quot;save success &quot;, x)
+		default:
+			fmt.Println(&quot;save error &quot;,x)
+		}
+	}
+}
+</code></pre>
+<p>输出 :  确实是缓冲区大小只有5 .</p>
+<pre><code class="language-go">save success  1
+save success  2
+save success  3
+save success  4
+save success  5
+save error  6
+</code></pre>
+<h3 id="只读-只写chan">只读 , 只写chan</h3>
+<blockquote>
+<p>​	这个颗粒度更加高了, 只读只写chan.  一般用来作为参数进行传递,  主要是看一些源码会写一些 chan&lt;- 之类的, 不好理解. 这里解释一下.</p>
+</blockquote>
+<p>实例化一个只读chan . 只读chan,如果用做写, 会直接程序错误,无法编译的 . 其实开发工具会提示的.</p>
+<pre><code class="language-go">r:=make(&lt;-chan int)
+</code></pre>
+<p>实例化一个只写chan . , 只写chan ,如果用做读, 会直接程序错误,无法编译的</p>
+<pre><code class="language-go">w:=make(chan&lt;- int)
+</code></pre>
+<p>其实这俩 r , w 都是 <code>make(chan int)</code> 的子类, 所以不必要担心, 出现问题.</p>
+<p>我们简单的使用一下.</p>
+<pre><code class="language-go">func main() {
+    // 1.创建一个ch
+	ch := make(chan interface{}, 10)
+	// 2.开启一个goroutine执行receive
+	go func() {
+		receive(ch)
+	}()
+    // 3. 发送
+	send(ch)
+	time.Sleep(time.Second)
+}
+func receive(read &lt;-chan interface{}) {
+	for {
+		r := &lt;-read
+		fmt.Println(&quot;receive : &quot;, r)
+	}
+}
+
+func send(write chan&lt;- interface{}) {
+	for x := 1; x &lt; 10; x++ {
+		write &lt;- x
+	}
+}
+</code></pre>
+<p>输出  :</p>
+<pre><code class="language-go">receive :  1
+...
+receive :  9
+</code></pre>
+<h3 id="关闭-chan">关闭 chan</h3>
+<p>有些情况下需要关闭 chan  , 那就涉及到 chan 的状态了 , 这里是几个状态量.  <code>所以一般在写入(也就是sender中)的goroutine中执行 close 操作.</code>  , 关闭chan , 只是为了GC的更好的回收.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/20fe4b2d-6a33-449a-be68-8e43406f6147.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>其实查看close的方法. 也是推荐 只写chan</p>
+<pre><code class="language-go">func close(c chan&lt;- Type)
+</code></pre>
+<p>如何关闭chan .</p>
+<pre><code class="language-go">func main() {
+	ch := make(chan interface{})
+
+	close(ch)
+}
+</code></pre>
+<p>注意点</p>
+<blockquote>
+<p>close没有make的chan会引起panic , 也就是进程直接退出 . 在你没有抓取异常的情况下.</p>
+<p>close以后不能再写入，写入会出现panic</p>
+<p><strong>close之后可以读取数据, 如果没有数据 ，则返回 nil,false</strong></p>
+<p>重复close会引起panic , 看情况要不要抓取.</p>
+<p>只读chan不能close</p>
+<p>不手动	close chan也是可以的，当没有被引用时系统会自动垃圾回收。</p>
+</blockquote>
+<h3 id="select-case-语法">select ... case  语法</h3>
+<p>简单使用 :</p>
+<pre><code class="language-go">func main() {
+	ch1 := make(chan int64)
+	ch2 := make(chan int64)
+	start := time.Now().UnixNano() / 1e6
+	go func() {
+		time.Sleep(time.Millisecond * 500)
+		ch1 &lt;- time.Now().Unix()
+	}()
+	go func() {
+		time.Sleep(time.Millisecond * 300)
+		ch2 &lt;- time.Now().Unix()
+	}()
+
+	select {
+	case x := &lt;-ch1:
+		fmt.Printf(&quot;wait %dms , receive : %d.&quot;, time.Now().UnixNano()/1e6-start, x)
+	case x := &lt;-ch2:
+		fmt.Printf(&quot;wait %dms , receive : %d.&quot;, time.Now().UnixNano()/1e6-start, x)
+	}
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-go">wait 301ms , receive : 1581084448.
+Process finished with exit code 0
+</code></pre>
+<p>对于 : 下面这个语句 , <strong>他会不断的执行下面的语句一 和 语句二(可能是个方法返回的chan, 也可能是个chan) , 直到满足put成功或者tack成功 , 不然不断的轮询</strong>. 当都成功可以他会随机选择一个执行.</p>
+<pre><code class="language-go">select {
+	case 语句一:
+    	..
+    case 语句二:
+    	..
+}
+</code></pre>
+<p>然后就是他 还有一个 default关键字.  这个关键字呢 , 他会执行前俩个 , 如果俩都失败, 那么直接执行default退出select语句.</p>
+<pre><code class="language-go">select {
+	case 语句一:
+    	..
+    case 语句二:
+    	..
+    default:
+		...
+}
+</code></pre>
+<h3 id="简单的使用chan">简单的使用chan</h3>
+<blockquote>
+<p>​	如果我们学了chan , 不学以致用, 那么就很扯淡 , 学了不用学了又有啥用</p>
+<p>​	这个demo . 是我写的一个简单的例子, 比如一个请求, 需要将用户信息存入到数据库中, 同时还要反馈回用户一些信息 , 比如活动信之类的, 所以这俩不冲突, 可以异步执行.</p>
+</blockquote>
+<pre><code class="language-go">// 1.查询服务
+func Query(str string) []string {
+	time.Sleep(time.Second * 2)
+	return strings.Split(str, &quot;.&quot;)
+}
+// 2.保存的数据库
+func SaveUser() {
+	time.Sleep(time.Second * 2)
+}
+// 2. User服务
+func UserServer(str string) []string {
+    // 1.创建一个chan
+	ch := make(chan []string)
+    // 2. 最后关闭, 释放资源
+    defer close(ch)
+    // 3. 异步查询
+	go func() {
+		ch &lt;- Query(str)
+	}()
+    // 然后我们的处理逻辑, 
+    SaveUser()
+    // 处理完返回.
+	return &lt;-ch
+}
+
+func main() {
+	start := time.Now().UnixNano() / 1e6
+	res := UserServer(&quot;hello.world.!&quot;)
+	fmt.Printf(&quot;耗时 %dms , 查询结果 : %v.\n&quot;,time.Now().UnixNano()/1e6-start, res)
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-go">耗时 2001ms , 查询结果 : [hello world !].
+</code></pre>
+<p>​	我们发现上诉的问题在哪, 如果我查询时间特别长, 比如 10m , 20m , 都没有返回 . 用户体验好吗.  显然不可控的东西是程序禁止的 ,这时候就需要伟大的<code>context包</code>了. 下面我们先介绍一下这个包.</p>
+<h2 id="3-context包">3. context包</h2>
+<blockquote>
+<p>​	<code>context.Context</code>这个是一个上下文对象, 他是一个链表形式, 有root节点, 根节点一般是让golang给我们控制的, 我们只需要子节点.  对于快速失败, 也是根节点到子节点不断失败.</p>
+<p>​	context包 提供了对<code>context.Context</code>的操作.</p>
+</blockquote>
+<h4 id="contextbackground"><code>context.Background()</code></h4>
+<pre><code class="language-go">// Background returns a non-nil, empty Context. It is never canceled, has no
+// values, and has no deadline. It is typically used by the main function,
+// initialization, and tests, and as the top-level Context for incoming
+// requests.
+func Background() Context {
+	return background
+}
+</code></pre>
+<p>他是一个根节点, 其实就是一个 <code>as the top-level Context</code> , 懂了吧 .  不推荐自己传入一个top-level context.</p>
+<h4 id="contextwithtimeout"><code>context.WithTimeout()</code></h4>
+<p>是创建一个 超时的ctx , 当超时他的 <code>&lt;-ctx.Done()</code> 会返回一个空数据.</p>
+<pre><code class="language-go">func main() {
+	// ctx是一个指针类型的实现了context.Context接口的变量
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
+	defer cancel()
+
+	select {
+	case &lt;-ctx.Done():
+		fmt.Println(&quot;waiting 2 seconds&quot;)
+	}
+}
+// 2s后输出 : 
+// waiting 2 seconds
+</code></pre>
+<h4 id="contextwithdeadline"><code>context.WithDeadline()</code></h4>
+<p>其实上面那个 <code>context.WithTimeout()</code> 其实就是 <code>time.Now().Add(timeout)</code> , 当前时间加上一个timeout , 所以这个也很好理解.</p>
+<pre><code class="language-go">func WithTimeout(parent Context, timeout time.Duration) (Context, CancelFunc) {
+	return WithDeadline(parent, time.Now().Add(timeout))
+}
+</code></pre>
+<h4 id="contextwithcancel"><code>context.WithCancel()</code></h4>
+<p>这个就是根据你的进程退出与否 ,决定的, 其实就是你调用了 <code>cancel()</code> 方法 , 会回退. 并不是上面那种根据时间来控制 , 这个是根据你执行cancel方法来控制, 我们简单的使用一下. 大家体会一下.</p>
+<pre><code class="language-go">import (
+	&quot;context&quot;
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+func main() {
+	gen := func(ctx context.Context) &lt;-chan int {
+		dst := make(chan int)
+		n := 1
+		go func() {
+			for {
+				select {
+				case &lt;-ctx.Done():
+					fmt.Printf(&quot;down&quot;)
+					return // returning not to leak the goroutine
+				case dst &lt;- n:
+					n++
+				}
+			}
+		}()
+		return dst
+	}
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer func() {
+		fmt.Println(&quot;cancel&quot;)
+		cancel() // cancel when we are finished consuming integers
+		time.Sleep(time.Second)
+	}()
+
+	for n := range gen(ctx) {
+		fmt.Println(n)
+		if n == 5 {
+			break
+		}
+	}
+}
+</code></pre>
+<p>比如这个代码, 我们看看输出 :</p>
+<pre><code class="language-go">1
+2
+3
+4
+5
+cancel // 由于for执行完毕. 所以主程序执行了cancel方法
+down // 然后我们延迟了1s种, 等待子线程执行.
+</code></pre>
+<h4 id="contextwithvalue"><code>context.WithValue()</code></h4>
+<p>这个就是在context上下文中传递对象数据的.  然后返回一个新的上下文对象.  所以就是一个存储数据的东西. 他可以存储多个kv数据  . 并不能只存一个.</p>
+<pre><code class="language-go">import (
+	&quot;context&quot;
+	&quot;fmt&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	// 这个写法比较好 . 不断的赋值这个指针变量
+	var ctx context.Context
+	var cancel context.CancelFunc
+
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
+	defer cancel()
+
+	ctx = context.WithValue(ctx, &quot;k1&quot;, &quot;v1&quot;)
+	ctx = context.WithValue(ctx, &quot;k2&quot;, &quot;v2&quot;)
+	
+	fmt.Printf(&quot;k1 : %s\n&quot;, ctx.Value(&quot;k1&quot;).(string))
+	fmt.Printf(&quot;k1 : %s\n&quot;, ctx.Value(&quot;k2&quot;).(string))
+
+	select {
+	case &lt;-ctx.Done():
+		fmt.Println(&quot;waiting 2 seconds&quot;)
+	}
+}
+</code></pre>
+<p>输出   :</p>
+<pre><code class="language-go">k1 : v1
+k1 : v2
+waiting 2 seconds
+</code></pre>
+<h4 id="cancel-方法"><code>cancel()</code> 方法</h4>
+<blockquote>
+<p>​	他会从上到下调用 .  我们可以这么看看</p>
+</blockquote>
+<pre><code class="language-go">func main() {
+	var ctx context.Context
+	var cancel context.CancelFunc
+
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second*2)
+	defer func() {
+		cancel()
+		time.Sleep(time.Second)
+	}()
+	go func() {
+		select {
+		case &lt;-ctx.Done():
+			fmt.Println(&quot;ctx 1 Done&quot;)
+		}
+	}()
+
+	ctx = context.WithValue(ctx, &quot;k1&quot;, &quot;v1&quot;)
+	go func() {
+		select {
+		case &lt;-ctx.Done():
+			fmt.Println(&quot;ctx 2 Done&quot;)
+		}
+	}()
+
+	ctx = context.WithValue(ctx, &quot;k2&quot;, &quot;v2&quot;)
+	go func() {
+		select {
+		case &lt;-ctx.Done():
+			fmt.Println(&quot;ctx 3 Done&quot;)
+		}
+	}()
+}
+</code></pre>
+<p>输出 :  所以就是从低到上 cancel.  (从下到上)</p>
+<pre><code class="language-go">ctx 3 Done
+ctx 2 Done
+ctx 1 Done
+</code></pre>
+<p>对于以上基本就是 golang的核心了 .</p>
+<h3 id="解决我们的问题">解决我们的问题 .</h3>
+<blockquote>
+<p>​	这里其实还有一个问题, 无法中断query执行.  或者就是无法终端goroutine执行.</p>
+</blockquote>
+<pre><code class="language-go">// 1.查询服务
+func Query(str string, ch chan&lt;- []string) {
+	time.Sleep(time.Second * 3)
+	ch &lt;- strings.Split(str, &quot;.&quot;)
+}
+
+// 2.保存的数据库
+func SaveUser() {
+	time.Sleep(time.Second * 2)
+}
+
+// 2. User服务
+func UserServer(str string) ([]string, error) {
+	// 1.创建一个chan , 有一个缓冲区的目的是为了防止查询服务发生死锁, 比如说我们超时了,那么Query成功死锁
+	ch := make(chan []string,1)
+	// 2. 我们知道我们保存的时间是 2s, 所以我们允许等待最长时间为2s
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
+	defer cancel()
+	go func() {
+		// 执行query 是无法中断的, 所以这里只能等待执行完毕
+		Query(str, ch)
+	}()
+	// 保存
+	SaveUser()
+	select {
+	case &lt;-ctx.Done():
+		return nil, ctx.Err()
+	case rest := &lt;-ch:
+		return rest, nil
+	}
+}
+func main() {
+	start := time.Now().UnixNano() / 1e6
+	res, e := UserServer(&quot;hello.world.!&quot;)
+	if e != nil {
+		fmt.Println(e, time.Now().UnixNano()/1e6-start, &quot;ms&quot;)
+	} else {
+		fmt.Printf(&quot;耗时 %dms , 查询结果 : %v.\n&quot;, time.Now().UnixNano()/1e6-start, res)
+	}
+}
+</code></pre>
+<h3 id="google官文实例代码">Google官文实例代码. .</h3>
+<p><code>com.test/context_example/main.go</code> 文件代码</p>
+<pre><code class="language-go">import (
+	&quot;com.test/context_example/google&quot;
+	&quot;com.test/context_example/userip&quot;
+	&quot;context&quot;
+	&quot;html/template&quot;
+	&quot;log&quot;
+	&quot;net/http&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	http.HandleFunc(&quot;/search&quot;, handleSearch)
+	log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))
+}
+
+// handleSearch handles URLs like /search?q=golang&amp;timeout=1s by forwarding the
+// query to google.Search. If the query param includes timeout, the search is
+// canceled after that duration elapses.
+func handleSearch(w http.ResponseWriter, req *http.Request) {
+	// ctx is the Context for this handler. Calling cancel closes the
+	// ctx.Done channel, which is the cancellation signal for requests
+	// started by this handler.
+	var (
+		ctx    context.Context
+		cancel context.CancelFunc
+	)
+	timeout, err := time.ParseDuration(req.FormValue(&quot;timeout&quot;))
+	if err == nil {
+		// The request has a timeout, so create a context that is
+		// canceled automatically when the timeout expires.
+		ctx, cancel = context.WithTimeout(context.Background(), timeout)
+	} else {
+		ctx, cancel = context.WithCancel(context.Background())
+	}
+	defer cancel() // Cancel ctx as soon as handleSearch returns.
+
+	// Check the search query.
+	query := req.FormValue(&quot;q&quot;)
+	if query == &quot;&quot; {
+		http.Error(w, &quot;no query&quot;, http.StatusBadRequest)
+		return
+	}
+
+	// Store the user IP in ctx for use by code in other packages.
+	userIP, err := userip.FromRequest(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	ctx = userip.NewContext(ctx, userIP)
+
+	// Run the Google search and print the results.
+	start := time.Now()
+	results, err := google.Search(ctx, query)
+	elapsed := time.Since(start)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if err := resultsTemplate.Execute(w, struct {
+		Results          google.Results
+		Timeout, Elapsed time.Duration
+	}{
+		Results: results,
+		Timeout: timeout,
+		Elapsed: elapsed,
+	}); err != nil {
+		log.Print(err)
+		return
+	}
+}
+
+var resultsTemplate = template.Must(template.New(&quot;results&quot;).Parse(`
+&lt;html&gt;
+&lt;head/&gt;
+&lt;body&gt;
+  &lt;ol&gt;
+  {{range .Results}}
+    &lt;li&gt;{{.Title}} - &lt;a href=&quot;{{.URL}}&quot;&gt;{{.URL}}&lt;/a&gt;&lt;/li&gt;
+  {{end}}
+  &lt;/ol&gt;
+  &lt;p&gt;{{len .Results}} results in {{.Elapsed}}; timeout {{.Timeout}}&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+`))
+</code></pre>
+<p><code>com.test/context_example/userip/query.go</code>文件</p>
+<pre><code class="language-go">package userip
+
+import (
+	&quot;context&quot;
+	&quot;fmt&quot;
+	&quot;net&quot;
+	&quot;net/http&quot;
+)
+
+// FromRequest extracts the user IP address from req, if present.
+func FromRequest(req *http.Request) (net.IP, error) {
+	ip, _, err := net.SplitHostPort(req.RemoteAddr)
+	if err != nil {
+		return nil, fmt.Errorf(&quot;userip: %q is not IP:port&quot;, req.RemoteAddr)
+	}
+
+	userIP := net.ParseIP(ip)
+	if userIP == nil {
+		return nil, fmt.Errorf(&quot;userip: %q is not IP:port&quot;, req.RemoteAddr)
+	}
+	return userIP, nil
+}
+
+// The key type is unexported to prevent collisions with context keys defined in
+// other packages.
+type key int
+
+// userIPkey is the context key for the user IP address.  Its value of zero is
+// arbitrary.  If this package defined other context keys, they would have
+// different integer values.
+const userIPKey key = 0
+
+// NewContext returns a new Context carrying userIP.
+func NewContext(ctx context.Context, userIP net.IP) context.Context {
+	return context.WithValue(ctx, userIPKey, userIP)
+}
+
+// FromContext extracts the user IP address from ctx, if present.
+func FromContext(ctx context.Context) (net.IP, bool) {
+	// ctx.Value returns nil if ctx has no value for the key;
+	// the net.IP type assertion returns ok=false for nil.
+	userIP, ok := ctx.Value(userIPKey).(net.IP)
+	return userIP, ok
+}
+</code></pre>
+<p><code>com.test/context_example/google/search.go</code>  文件代码</p>
+<pre><code class="language-go">package google
+
+import (
+	&quot;com.test/context_example/userip&quot;
+	&quot;context&quot;
+	&quot;encoding/json&quot;
+	&quot;net/http&quot;
+)
+
+// Results is an ordered list of search results.
+type Results []Result
+
+// A Result contains the title and URL of a search result.
+type Result struct {
+	Title, URL string
+}
+
+// Search sends query to Google search and returns the results.
+func Search(ctx context.Context, query string) (Results, error) {
+	// Prepare the Google Search API request.
+	req, err := http.NewRequest(&quot;GET&quot;, &quot;https://ajax.googleapis.com/ajax/services/search/web?v=1.0&quot;, nil)
+	if err != nil {
+		return nil, err
+	}
+	q := req.URL.Query()
+	q.Set(&quot;q&quot;, query)
+
+	// If ctx is carrying the user IP address, forward it to the server.
+	// Google APIs use the user IP to distinguish server-initiated requests
+	// from end-user requests.
+	if userIP, ok := userip.FromContext(ctx); ok {
+		q.Set(&quot;userip&quot;, userIP.String())
+	}
+	req.URL.RawQuery = q.Encode()
+
+	// Issue the HTTP request and handle the response. The httpDo function
+	// cancels the request if ctx.Done is closed.
+	var results Results
+	err = httpDo(ctx, req, func(resp *http.Response, err error) error {
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
+
+		// Parse the JSON search result.
+		// https://developers.google.com/web-search/docs/#fonje
+		var data struct {
+			ResponseData struct {
+				Results []struct {
+					TitleNoFormatting string
+					URL               string
+				}
+			}
+		}
+		if err := json.NewDecoder(resp.Body).Decode(&amp;data); err != nil {
+			return err
+		}
+		for _, res := range data.ResponseData.Results {
+			results = append(results, Result{Title: res.TitleNoFormatting, URL: res.URL})
+		}
+		return nil
+	})
+	// httpDo waits for the closure we provided to return, so it's safe to
+	// read results here.
+	return results, err
+}
+
+// httpDo issues the HTTP request and calls f with the response. If ctx.Done is
+// closed while the request or f is running, httpDo cancels the request, waits
+// for f to exit, and returns ctx.Err. Otherwise, httpDo returns f's error.
+func httpDo(ctx context.Context, req *http.Request, f func(*http.Response, error) error) error {
+	// Run the HTTP request in a goroutine and pass the response to f.
+	c := make(chan error, 1)
+	req = req.WithContext(ctx)
+
+	go func() {
+		c &lt;- f(http.DefaultClient.Do(req))
+		}()
+	select {
+	case &lt;-ctx.Done():
+		&lt;-c // Wait for f to return.
+		return ctx.Err()
+	case err := &lt;-c:
+		return err
+	}
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-goroutine">1. Goroutine</a></li>
+<li><a href="#2-channels">2. Channels</a>
+<ul>
+<li><a href="#%E6%97%A0%E7%BC%93%E5%86%B2%E5%8C%BA%E7%9A%84chan">无缓冲区的chan</a></li>
+<li><a href="#%E5%85%B7%E6%9C%89%E7%BC%93%E5%86%B2%E5%8C%BA%E7%9A%84chan">具有缓冲区的chan</a></li>
+<li><a href="#%E5%8F%AA%E8%AF%BB-%E5%8F%AA%E5%86%99chan">只读 , 只写chan</a></li>
+<li><a href="#%E5%85%B3%E9%97%AD-chan">关闭 chan</a></li>
+<li><a href="#select-case-%E8%AF%AD%E6%B3%95">select ... case  语法</a></li>
+<li><a href="#%E7%AE%80%E5%8D%95%E7%9A%84%E4%BD%BF%E7%94%A8chan">简单的使用chan</a></li>
+</ul>
+</li>
+<li><a href="#3-context%E5%8C%85">3. context包</a><br>
+*
+<ul>
+<li><a href="#contextbackground"><code>context.Background()</code></a></li>
+<li><a href="#contextwithtimeout"><code>context.WithTimeout()</code></a></li>
+<li><a href="#contextwithdeadline"><code>context.WithDeadline()</code></a></li>
+<li><a href="#contextwithcancel"><code>context.WithCancel()</code></a></li>
+<li><a href="#contextwithvalue"><code>context.WithValue()</code></a></li>
+<li><a href="#cancel-%E6%96%B9%E6%B3%95"><code>cancel()</code> 方法</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%88%91%E4%BB%AC%E7%9A%84%E9%97%AE%E9%A2%98">解决我们的问题 .</a></li>
+<li><a href="#google%E5%AE%98%E6%96%87%E5%AE%9E%E4%BE%8B%E4%BB%A3%E7%A0%81">Google官文实例代码. .</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

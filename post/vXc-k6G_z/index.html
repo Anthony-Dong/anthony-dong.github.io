@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>GRPC  - Go &amp; Java 混合平台测试项目 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/vXc-k6G_z/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>GRPC  - Go &amp; Java 混合平台测试项目</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-03-31</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/vXc-k6G_z/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/L-xvm-udt-/"
+								class="tag">Google</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/9I75Xc5LxQ/"
+								class="tag">GRPC</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/lvXRknuC3t/"
+								class="tag">ProtoBuf</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1682字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>这个项目链接在 :  https://github.com/Anthony-Dong/protobuf-start  这里, 文章就是这个项目的 ReadMe . 我放到博客里了.</p>
+<p>如果你使用protobuf序列化,此时一定需要统一方式去构建protobuf,并不是随处构建.  protobuf解决了序列化问题, 同时也解决了rpc问题.</p>
+<p>需要学习的两个go 和 Java版本  . 我主要学习这两个版本.</p>
+<p>java的grpc 链接 :  https://github.com/grpc/grpc-java</p>
+<p>go的 grpc 链接 : https://github.com/grpc/grpc-go</p>
+<p>这些都包含了, protobuf的使用  .</p>
+<h3 id="书写规范">书写规范</h3>
+<p>本项目目录 .  src 指的是 package的根目录,</p>
+<pre><code class="language-java">D:\protobuf&gt;tree
+卷 文件盘 的文件夹 PATH 列表
+卷序列号为 40D1-2584
+D:.
+├─bin
+├─demo
+│  ├─go
+│  │  └─com.anthonydong.grpc
+│  └─java
+│      └─grpc-study-demo02
+├─go_out
+├─java_out
+└─src
+    ├─com
+    │  └─anthony
+    │      └─protobuf
+    └─google
+        └─protobuf
+</code></pre>
+<p>项目结构如上图所示 , 其中 <code>google.protobuf</code> 是 google官方的库, 其中已经实现了大部分类.  所以拿来直接用.</p>
+<p><code>go_out</code> 指的是 go编译后的文件输出目录.</p>
+<p><code>java_out</code> 指的是Java编译后的文件输出目录</p>
+<p><code>demo</code>  指的是我下面写的demo.</p>
+<p><code>bin</code>  是两个编译protobuf的 go插件. 记得加入path路径.</p>
+<h3 id="protobuf文件">protobuf文件</h3>
+<p>比如此时我们编译 我自己的项目 .</p>
+<p>比如文件是  <code>D:\protobuf\src\com\anthony\protobuf\RPCServiceProto.proto</code> 在这个目录下面</p>
+<pre><code class="language-java">syntax = &quot;proto3&quot;; // 语法版本
+
+// 当前目录
+package com.anthony.protobuf;
+
+// 导入proto文件
+import &quot;google/protobuf/timestamp.proto&quot;;
+
+// 定义一些属性
+option java_package = &quot;com.anthonydong.grpc.api&quot;;
+option java_outer_classname = &quot;RPCServiceApi&quot;;
+option java_multiple_files = true;
+option go_package = &quot;com.anthonydong.grpc/api&quot;;
+
+
+// 请求体
+message RPCRequest {
+    string msg = 1;
+    int32 code = 2;
+    google.protobuf.Timestamp time=3;
+}
+// 响应头
+message RPCResponse {
+    string msg = 1;
+    int32 code = 2;
+    google.protobuf.Timestamp time = 3;
+}
+
+// 服务接口
+service RPCService{
+    rpc send (RPCRequest) returns (RPCResponse) {
+    }
+}
+</code></pre>
+<p>打开终端执行   , 这里注意使用 go_out , 别使用 gofast_out , 因为官方库使用的是 go_out编译的, 存在出入. 所以如果你使用 go_fast_out , 最后把官方的也事先编译一遍.</p>
+<pre><code class="language-java">D:\protobuf&gt;protoc -I ./src --go_out=plugins=grpc:./go_out ./src/com/anthony/protobuf/RPCServiceProto.proto
+</code></pre>
+<p>这个命令 :</p>
+<p>第一个 :  <code>-I</code> 和 <code>--proto_path</code>  含义一样  . 有些时候我们需要导入别的proto文件. 此时就需要使用这个了 .  这个可以指定多个路径.</p>
+<p>第二个 ,  <code>$DST_DIR</code> 指定的是 <code>go_package</code>的输出路径. 或者<code>java_package</code> 输出路径</p>
+<p>第三个.  <code>SRC_DIR</code> 指的是 我们protobuf源文件的地址.</p>
+<p>第四个 <code>--go_out</code> 指的是 go的输出路径.   如果加上 <code>--go_out=plugins=grpc:</code> 指的是还要生成grpc相关的代码. 懂了吧,  只写 <code>--go_out</code> 只会编译message, 但是如果改成<code>pluging</code> 则会编译其他信息.</p>
+<p>基本就是上诉的四个命令.</p>
+<h3 id="go版本">go版本</h3>
+<p>然后go编写 服务端代码</p>
+<pre><code class="language-go">package main
+
+import (
+	&quot;com.anthonydong.grpc/rpc/api&quot;
+	&quot;context&quot;
+	&quot;fmt&quot;
+	&quot;github.com/golang/protobuf/ptypes/timestamp&quot;
+	&quot;google.golang.org/grpc&quot;
+	&quot;log&quot;
+	&quot;net&quot;
+	&quot;time&quot;
+)
+
+type server struct {
+	api.RPCServiceServer
+}
+
+func (*server) Send(ctx context.Context, req *api.RPCRequest) (*api.RPCResponse, error) {
+	msg := req.Msg
+	s := fmt.Sprintf(&quot;Golang服务器已收到你的消息\&quot;%s\&quot;&quot;, msg)
+	response := &amp;api.RPCResponse{Msg: s, Code: 400, Time: &amp;timestamp.Timestamp{Seconds: int64(time.Now().Second()), Nanos: int32(time.Now().UnixNano())}}
+	//time.Sleep(time.Second * 2)
+	return response, nil
+}
+
+const (
+	port = &quot;:9999&quot;
+)
+
+func main() {
+	// 创建一个 tcp服务器
+	lis, err := net.Listen(&quot;tcp&quot;, port)
+	if err != nil {
+		log.Fatalf(&quot;failed to listen: %v&quot;, err)
+	}
+	// 创建一个server
+	ser := grpc.NewServer()
+	// 注册信息
+	api.RegisterRPCServiceServer(ser, &amp;server{})
+
+	// 启动服务
+	if err := ser.Serve(lis); err != nil {
+		log.Fatalf(&quot;failed to serve: %v&quot;, err)
+	}
+}
+</code></pre>
+<p>客户端代码</p>
+<pre><code class="language-go">package main
+
+import (
+	&quot;com.anthonydong.grpc/rpc/api&quot;
+	&quot;context&quot;
+	&quot;fmt&quot;
+	&quot;google.golang.org/grpc&quot;
+	&quot;log&quot;
+	&quot;time&quot;
+)
+
+const (
+	address = &quot;localhost:9999&quot;
+)
+
+func main() {
+
+	// 1. 创建一个连接
+	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+	if err != nil {
+		log.Fatalf(&quot;did not connect: %v&quot;, err)
+	}
+	defer conn.Close()
+
+	// 2. 然后创建客户端
+	client := api.NewRPCServiceClient(conn)
+
+	// 3. rpc调用
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	response, err := client.Send(ctx, &amp;api.RPCRequest{Msg: &quot;hello world&quot;})
+	if err != nil {
+		fmt.Printf(&quot;超时 , 原因 : %s\n&quot;, err)
+	} else {
+		fmt.Printf(&quot;结果 : %s , 状态码 : %d.\n&quot;, response.Msg, response.Code)
+	}
+}
+</code></pre>
+<p>其中 两个编译器都可以实现这些操作</p>
+<p>其次就是如果手动序列化 , 则需要使用</p>
+<pre><code class="language-go">package main
+
+import (
+	&quot;com.anthonydong.grpc/rpc/api&quot;
+	&quot;encoding/json&quot;
+	&quot;fmt&quot;
+	&quot;github.com/golang/protobuf/proto&quot;
+	&quot;github.com/golang/protobuf/ptypes/timestamp&quot;
+	&quot;time&quot;
+)
+
+func main() {
+
+	res := api.RPCResponse{Msg: &quot;hello protobuf&quot;, Code: 400, Time: &amp;timestamp.Timestamp{Seconds: int64(time.Now().Second()), Nanos: int32(time.Now().UnixNano())}}
+	bytes, _ := proto.Marshal(&amp;res)
+	fmt.Printf(&quot;proto 长度 : %d.\n&quot;, len(bytes))
+
+	marshal, _ := json.Marshal(&amp;res)
+	fmt.Printf(&quot;json 长度 : %d.\n&quot;, len(marshal))
+}
+</code></pre>
+<p>输出  : , 发现 protobuf 还是很短小的. 确实不赖.</p>
+<pre><code class="language-go">proto 长度 : 34.
+json 长度 : 76.
+</code></pre>
+<h3 id="java-版本">Java 版本</h3>
+<p>首先编译protobuf文件</p>
+<pre><code class="language-java">D:\protobuf&gt;protoc -I ./src --java_out=./java_out ./src/com/anthony/protobuf/RPCServiceProto.proto
+</code></pre>
+<p>这里有个问题 就是如何编译 rpc .</p>
+<p>其中根据官方提供的  :  <a href="https://github.com/grpc/grpc-java">https://github.com/grpc/grpc-java</a></p>
+<p>这里有个问题就是 必须使用插件  , 此时我们可以直接将我们的proto文件拷贝到我们的项目目录 , 在 <code>src/main/proto</code> 这个位置</p>
+<p>然后 , 编译就可以了 , 基本就是两个步骤.  生成的文件在 target目录下面.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-30-33/89f29827-9a03-4a73-b77b-b82d090730a2.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此时编写代码 , Java客户端代码</p>
+<pre><code class="language-java">package com.anthonydong.grpc.client;
+
+import com.anthonydong.grpc.api.RPCRequest;
+import com.anthonydong.grpc.api.RPCResponse;
+import com.anthonydong.grpc.api.RPCServiceGrpc;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+
+import java.util.function.IntConsumer;
+import java.util.stream.IntStream;
+
+/**
+ * TODO
+ *
+ * @date:2020/3/31 15:49
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+public class Client {
+
+    private static final String host = &quot;localhost&quot;;
+    private static final int serverPort = 9999;
+
+    public static void main(String[] args) throws Exception {
+        ManagedChannel managedChannel = ManagedChannelBuilder.forAddress(host, serverPort).usePlaintext().build();
+        try {
+            RPCServiceGrpc.RPCServiceBlockingStub service = RPCServiceGrpc.newBlockingStub(managedChannel);
+            IntStream.range(0, 10).forEach(new IntConsumer() {
+                @Override
+                public void accept(int value) {
+                    test(service);
+                }
+            });
+        } finally {
+            managedChannel.shutdown();
+        }
+    }
+
+    private static void test(RPCServiceGrpc.RPCServiceBlockingStub rpcDateService) {
+        RPCRequest rpcDateRequest = RPCRequest
+                .newBuilder()
+                .setMsg(&quot;hello protobuf&quot;)
+                .build();
+        RPCResponse response = rpcDateService.send(rpcDateRequest);
+        System.out.printf(&quot;receive msg : %s, code :%d.\n&quot;, response.getMsg(), response.getCode());
+    }
+}
+</code></pre>
+<p>此时输出</p>
+<pre><code class="language-java">receive msg : 服务器已收到你的消息&quot;hello protobuf&quot;, code :400.
+</code></pre>
+<p>所以还是相当nice的.</p>
+<p>服务器代码  如下 :</p>
+<p>第一个是接口实现类.</p>
+<pre><code class="language-java">public class RPCServiceImpl extends RPCServiceGrpc.RPCServiceImplBase {
+
+    @Override
+    public void send(RPCRequest request, StreamObserver&lt;RPCResponse&gt; responseObserver) {
+        try {
+            String msg = request.getMsg();
+            RPCResponse response = RPCResponse.newBuilder()
+                    .setMsg(String.format(&quot;Java服务器收到你的消息\&quot;%s\&quot;&quot;, msg))
+                    .setCode(400)
+                    .setTime(Timestamp.newBuilder().setSeconds(System.currentTimeMillis()).build())
+                    .build();
+
+            // reactor模型, onNext 就是消费. 记得最后关闭 流
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+
+        } catch (Exception e) {
+            // 异常就发送这个.
+            responseObserver.onError(e);
+        }
+    }
+}
+</code></pre>
+<p>第二个是服务具体实现</p>
+<pre><code class="language-java">package com.anthonydong.grpc.server;
+
+public class server {
+    private static final int port = 10000;
+
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Server server = ServerBuilder.
+                forPort(port)
+                .addService(new RPCServiceImpl())
+                .build();
+        server.start();
+        System.out.println(String.format(&quot;Java服务端启动成功, 端口号: %d.&quot;, port));
+        server.awaitTermination();
+    }
+}
+</code></pre>
+<p>基本就是这些了.</p>
+<p>这个就可以实现相互调用了 .</p>
+<p>其中 protobuf 主要解决的问题是序列化问题,  同时也规范了 rpc调用. 一种契约体.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E4%B9%A6%E5%86%99%E8%A7%84%E8%8C%83">书写规范</a></li>
+<li><a href="#protobuf%E6%96%87%E4%BB%B6">protobuf文件</a></li>
+<li><a href="#go%E7%89%88%E6%9C%AC">go版本</a></li>
+<li><a href="#java-%E7%89%88%E6%9C%AC">Java 版本</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

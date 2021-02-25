@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Netty  - 内存模型原理 (ByteBuf管理) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/PhckRTE4Q/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Netty  - 内存模型原理 (ByteBuf管理)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-30</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/PhckRTE4Q/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/fn4lTiaKxHO/"
+								class="tag">netty</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3999字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">15 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Netty作为一款高性能网络应用程序框架，实现了一套高性能内存管理机制</p>
+<p>​	通过学习其中的实现原理、算法、并发设计，有利于我们写出更优雅、更高性能的代码；当使用Netty时碰到内存方面的问题时，也可以更高效定位排查出来</p>
+<p>本文基于Netty4.1.43.Final介绍其中的内存管理机制</p>
+</blockquote>
+<h2 id="bytebuf-分类">ByteBuf 分类</h2>
+<p>Netty使用ByteBuf对象作为数据容器，进行I/O读写操作，Netty的内存管理也是围绕着ByteBuf对象高效地分配和释放</p>
+<p>当讨论ByteBuf对象管理，主要从以下方面进行分类：</p>
+<ul>
+<li><strong>Pooled 和 Unpooled</strong></li>
+</ul>
+<p><strong>Unpooled</strong>，非池化内存每次分配时直接调用系统 API 向操作系统申请ByteBuf需要的同样大小内存，用完后通过系统调用进行释放<br>
+<strong>Pooled</strong>，池化内存分配时基于预分配的一整块大内存，取其中的部分封装成ByteBuf提供使用，用完后回收到内存池中</p>
+<blockquote>
+<p><strong>tips:</strong> Netty4默认使用Pooled的方式，可通过参数-Dio.netty.allocator.type=unpooled或pooled进行设置</p>
+</blockquote>
+<ul>
+<li><strong>Heap 和 Direct</strong><br>
+<strong>Heap</strong>，指ByteBuf关联的内存JVM堆内分配，分配的内存受GC 管理<br>
+<strong>Direct</strong>，指ByteBuf关联的内存在JVM堆外分配，分配的内存不受GC管理，需要通过系统调用实现申请和释放，底层基于Java NIO的DirectByteBuffer对象</li>
+</ul>
+<blockquote>
+<p><strong>note：</strong> 使用堆外内存的优势在于，Java进行I/O操作时，需要传入数据所在缓冲区起始地址和长度，由于GC的存在，对象在堆中的位置往往会发生移动，导致对象地址变化，系统调用出错。为避免这种情况，当基于堆内存进行I/O系统调用时，需要将内存拷贝到堆外，而直接基于堆外内存进行I/O操作的话，可以节省该拷贝成本</p>
+</blockquote>
+<h2 id="池化pooled-对象管理">池化(Pooled) 对象管理</h2>
+<p>非池化对象(Unpooled)，使用和释放对象仅需要调用底层接口实现，池化对象实现则复杂得多，可以带着以下问题进行研究：</p>
+<ul>
+<li>内存池管理算法是如何实现高效内存分配释放，减少内存碎片</li>
+<li>高负载下内存池不断申请/释放，如何实现弹性伸缩</li>
+<li>内存池作为全局数据，在多线程环境下如何减少锁竞争</li>
+</ul>
+<h2 id="算法设计">算法设计</h2>
+<blockquote>
+<p>​	池化对象算法设计思路</p>
+</blockquote>
+<h3 id="11-整体原理">1.1 整体原理</h3>
+<p>Netty先向系统申请一整块连续内存，称为chunk，默认大小chunkSize = 16Mb，通过PoolChunk对象包装。为了更细粒度的管理，Netty将chunk进一步拆分为page，默认每个chunk包含2048个page(pageSize = 8Kb)</p>
+<p>不同大小池化内存对象的分配策略不同，下面首先介绍申请内存大小在**(pageSize/2, chunkSize]**区间范围内的池化对象的分配原理，其他大对象和小对象的分配原理后面再介绍。在同一个chunk中，Netty将page按照不同粒度进行多层分组管理：</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/39aac5a4-fdfd-4189-98bc-a98ee22cc726.webp" alt="img" loading="lazy"></figure>
+<ul>
+<li>第1层，分组大小size = 1*pageSize，一共有2048个组</li>
+<li>第2层，分组大小size = 2*pageSize，一共有1024个组</li>
+<li>第3层，分组大小size = 4*pageSize，一共有512个组<br>
+...</li>
+</ul>
+<p>当请求分配内存时，将请求分配的内存数向上取值到最接近的分组大小，在该分组大小的相应层级中从左至右寻找空闲分组<br>
+例如请求分配内存对象为1.5 *pageSize，向上取值到分组大小2 * pageSize，在该层分组中找到完全空闲的一组内存进行分配，如下图：</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/b3470a43-13a3-4f73-8cae-78ebe90eba6b.webp" alt="img" loading="lazy"></figure>
+<p>当分组大小2 * pageSize的内存分配出去后，为了方便下次内存分配，分组被标记为<strong>全部已使用</strong>(图中红色标记)，向上更粗粒度的内存分组被标记为<strong>部分已使用</strong>(图中黄色标记)</p>
+<h3 id="12-算法结构">1.2 算法结构</h3>
+<p>Netty基于平衡树实现上面提到的不同粒度的多层分组管理</p>
+<p>当需要创建一个给定大小的ByteBuf，算法需要在PoolChunk中大小为chunkSize的内存中，找到第一个能够容纳申请分配内存的位置</p>
+<p>为了方便快速查找chunk中能容纳请求内存的位置，算法构建一个基于byte数组(memoryMap)存储的完全平衡树，该平衡树的多个层级深度，就是前面介绍的按照不同粒度对chunk进行多层分组：</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/1634a653-415a-48de-a2c0-3fa251b6496c.webp" alt="img" loading="lazy"></figure>
+<p>树的深度depth从0开始计算，各层节点数，每个节点对应的内存大小如下：</p>
+<pre><code class="language-java">depth = 0， 1 node，nodeSize = chunkSize
+depth = 1， 2 nodes，nodeSize = chunkSize/2
+...
+depth = d， 2^d nodes， nodeSize = chunkSize/(2^d)
+...
+depth = maxOrder， 2^maxOrder nodes， nodeSize = chunkSize/2^{maxOrder} = pageSize
+</code></pre>
+<p>树的最大深度为maxOrder(最大阶，默认值11)，通过这棵树，算法在chunk中的查找就可以转换为：</p>
+<p><strong>当申请分配大小为chunkSize/2^k的内存，在平衡树高度为k的层级中，从左到右搜索第一个空闲节点</strong></p>
+<p>数组的使用域从index = 1开始，将平衡树按照层次顺序依次存储在数组中，depth = n的第1个节点保存在memoryMap[2^n] 中，第2个节点保存在memoryMap[2^n+1]中，以此类推(下图代表已分配chunkSize/2)</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/8ee6c0ed-995c-48c5-8e4b-cc5946c825cd.webp" alt="img" loading="lazy"></figure>
+<p>可以根据memoryMap[id]的值得出节点的使用情况，memoryMap[id]值越大，剩余的可用内存越少</p>
+<ul>
+<li>memoryMap[id] = depth_of_id：<strong>id节点空闲</strong>， 初始状态，depth_of_id的值代表id节点在树中的深度</li>
+<li>memoryMap[id] = maxOrder + 1：<strong>id节点全部已使用</strong>，节点内存已完全分配，没有一个子节点空闲</li>
+<li>depth_of_id &lt; memoryMap[id] &lt; maxOrder + 1：<strong>id节点部分已使用</strong>，memoryMap[id] 的值 x，代表<strong>id的子节点中，第一个空闲节点位于深度x，在深度[depth_of_id, x)的范围内没有任何空闲节点</strong></li>
+</ul>
+<h3 id="13-申请释放内存">1.3 申请/释放内存</h3>
+<p>当申请分配内存，会首先将请求分配的内存大小归一化(向上取值)，通过PoolArena#normalizeCapacity()方法，取最近的2的幂的值，例如8000byte归一化为8192byte( chunkSize/2^11 )，8193byte归一化为16384byte(chunkSize/2^10)</p>
+<p>处理内存申请的算法在PoolChunk#allocateRun方法中，当分配已归一化处理后大小为chunkSize/2^d的内存，即需要在depth = d的层级中找到第一块空闲内存，算法<strong>从根节点开始遍历</strong> (根节点depth = 0， id = 1)，具体步骤如下：</p>
+<ul>
+<li>步骤1 <strong>判断是否当前节点值memoryMap[id] &gt; d，或 depth_of_id &gt; d</strong><br>
+如果是，则无法从该chunk分配内存，查找结束</li>
+<li>步骤2 <strong>判断是否节点值memoryMap[id] == d，且depth_of_id &lt;= d</strong><br>
+如果是，当前节点是depth = d的空闲内存，查找结束，更新当前节点值为memoryMap[id] = max_order + 1，代表节点已使用，并遍历当前节点的所有祖先节点，更新节点值为各自的左右子节点值的最小值；如果否，执行步骤3</li>
+<li>步骤3 <strong>判断是否当前节点值memoryMap[id] &lt;= d，且depth_of_id &lt;= d</strong><br>
+如果是，则空闲节点在当前节点的子节点中，则先判断左子节点memoryMap[2 * id] &lt;=d(判断左子节点是否可分配)，如果成立，则当前节点更新为左子节点，否则更新为右子节点，然后重复步骤1，2</li>
+</ul>
+<p>参考示例如下图，申请分配了chunkSize/2的内存</p>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/24e22309-e041-4625-a81d-69f388b168bd.webp" alt="img" loading="lazy"></figure>
+<blockquote>
+<p><strong>note</strong>：图中虽然index = 2的子节点memoryMap[id] = depth_of_id，但实际上节点内存已分配，因为算法是从上往下开始遍历，所以在实际处理中，节点分配内存后仅更新祖先节点的值，并没有更新子节点的值</p>
+</blockquote>
+<p>释放内存时，根据申请内存返回的id，将 memoryMap[id]更新为depth_of_id，同时设置id节点的祖先节点值为各自左右节点的最小值</p>
+<h3 id="14-巨型对象内存管理">1.4 巨型对象内存管理</h3>
+<p>对于申请分配大小超过chunkSize的巨型对象(huge)，Netty采用的是非池化管理策略，在每次请求分配内存时单独创建特殊的非池化PoolChunk对象进行管理，内部memoryMap为null，当对象内存释放时整个Chunk内存释放，相应内存申请逻辑在PoolArena#allocateHuge()方法中，释放逻辑在PoolArena#destroyChunk()方法中</p>
+<h3 id="15-小对象内存管理">1.5 小对象内存管理</h3>
+<p>当请求对象的大小reqCapacity &lt;= 496，归一化计算后方式是向上取最近的16的倍数，例如15规整为16、40规整为48、490规整为496，规整后的大小(normalizedCapacity)小于pageSize的小对象可分为2类：<br>
+微型对象(tiny)：规整后为16的整倍数，如16、32、48、...、496，一共31种规格<br>
+小型对象(small)：规整后为2的幂的，有512、1024、2048、4096，一共4种规格</p>
+<p>这些小对象直接分配一个page会造成浪费，在page中进行平衡树的标记又额外消耗更多空间，因此Netty的实现是：先PoolChunk中申请空闲page，同一个page分为相同大小规格的小内存进行存储</p>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/2f8db19e-5e8d-46dd-9ad8-0408abf86c5c.webp" alt="img" loading="lazy"></figure>
+<p>这些page用PoolSubpage对象进行封装，PoolSubpage内部有记录内存规格大小(elemSize)、可用内存数量(numAvail)和各个小内存的使用情况，通过long[]类型的bitmap相应bit值0或1，来记录内存是否已使用</p>
+<blockquote>
+<p><strong>note</strong>：应该有读者注意到，Netty申请池化内存进行归一化处理后的值更大了，例如1025byte会归一化为2048byte，8193byte归一化为16384byte，这样是不是造成了一些浪费？可以理解为是一种取舍，通过归一化处理，使池化内存分配大小规格化，大大方便内存申请和内存、内存复用，提高效率</p>
+</blockquote>
+<h2 id="弹性伸缩">弹性伸缩</h2>
+<blockquote>
+<p>​		前面的算法原理部分介绍了Netty如何实现内存块的申请和释放，单个chunk比较容量有限，如何管理多个chunk，构建成能够弹性伸缩内存池？</p>
+</blockquote>
+<h3 id="21-poolchunk管理">2.1 PoolChunk管理</h3>
+<p>为了解决单个PoolChunk容量有限的问题，Netty将多个PoolChunk组成链表一起管理，然后用PoolChunkList对象持有链表的head</p>
+<p>将所有PoolChunk组成一个链表的话，进行遍历查找管理效率较低，因此Netty设计了PoolArena对象(arena中文是舞台、场所)，实现对多个PoolChunkList、PoolSubpage的管理，线程安全控制、对外提供内存分配、释放的服务</p>
+<p>PoolArena内部持有6个PoolChunkList，各个PoolChunkList持有的PoolChunk的使用率区间不同：</p>
+<pre><code class="language-java">// 容纳使用率 (0,25%) 的PoolChunk
+private final PoolChunkList&lt;T&gt; qInit;
+// [1%,50%) 
+private final PoolChunkList&lt;T&gt; q000;
+// [25%, 75%) 
+private final PoolChunkList&lt;T&gt; q025;
+// [50%, 100%) 
+private final PoolChunkList&lt;T&gt; q050;
+// [75%, 100%) 
+private final PoolChunkList&lt;T&gt; q075;
+// 100% 
+private final PoolChunkList&lt;T&gt; q100;
+</code></pre>
+<figure data-type="image" tabindex="7"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/5ad227f8-8a16-4866-ae40-075fc535d0de.webp" alt="img" loading="lazy"></figure>
+<p>6个PoolChunkList对象组成双向链表，当PoolChunk内存分配、释放，导致使用率变化，需要判断PoolChunk是否超过所在PoolChunkList的限定使用率范围，如果超出了，需要沿着6个PoolChunkList的双向链表找到新的合适PoolChunkList，成为新的head；同样的，当新建PoolChunk并分配完内存，该PoolChunk也需要按照上面逻辑放入合适的PoolChunkList中</p>
+<p>分配归一化内存normCapacity(大小范围在[pageSize, chunkSize]) 具体处理如下：</p>
+<ul>
+<li>按顺序依次访问q050、q025、q000、qInit、q075，遍历PoolChunkList内PoolChunk链表判断是否有PoolChunk能分配内存</li>
+<li>如果上面5个PoolChunkList有任意一个PoolChunk内存分配成功，PoolChunk使用率发生变更，重新检查并放入合适的PoolChunkList中，结束</li>
+<li>否则新建一个PoolChunk，分配内存，放入合适的PoolChunkList中(PoolChunkList扩容)</li>
+</ul>
+<blockquote>
+<p>**note：**可以看到分配内存依次优先在q050 -&gt; q025 -&gt; q000 -&gt; qInit -&gt; q075的PoolChunkList的内分配，这样做的好处是，使分配后各个区间内存使用率更多处于[75,100)的区间范围内，提高PoolChunk内存使用率的同时也兼顾效率，减少在PoolChunkList中PoolChunk的遍历</p>
+</blockquote>
+<p>当PoolChunk内存释放，同样PoolChunk使用率发生变更，重新检查并放入合适的PoolChunkList中，如果释放后PoolChunk内存使用率为0，则从PoolChunkList中移除，释放掉这部分空间，避免在高峰的时候申请过内存一直缓存在池中(PoolChunkList缩容)</p>
+<figure data-type="image" tabindex="8"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/0c3599b0-ad5d-4029-a179-cb6ee0809f76.webp" alt="img" loading="lazy"></figure>
+<p>PoolChunkList的额定使用率区间存在交叉，这样设计是因为如果基于一个临界值的话，当PoolChunk内存申请释放后的内存使用率在临界值上下徘徊的话，会导致在PoolChunkList链表前后来回移动</p>
+<h3 id="22-poolsubpage管理">2.2 PoolSubpage管理</h3>
+<p>PoolArena内部持有2个PoolSubpage数组，分别存储tiny和small规格类型的PoolSubpage：</p>
+<pre><code class="language-java">// 数组长度32，实际使用域从index = 1开始，对应31种tiny规格PoolSubpage
+private final PoolSubpage&lt;T&gt;[] tinySubpagePools;
+// 数组长度4，对应4种small规格PoolSubpage
+private final PoolSubpage&lt;T&gt;[] smallSubpagePools;
+</code></pre>
+<p>相同规格大小(elemSize)的PoolSubpage组成链表，不同规格的PoolSubpage链表的head则分别保存在tinySubpagePools 或者 smallSubpagePools数组中，如下图：</p>
+<figure data-type="image" tabindex="9"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/8925499d-2aeb-4455-8312-4da9be6d7552.webp" alt="img" loading="lazy"></figure>
+<p>当需要分配小内存对象到PoolSubpage中时，根据归一化后的大小，计算出需要访问的PoolSubpage链表在tinySubpagePools和smallSubpagePools数组的下标，访问链表中的PoolSubpage的申请内存分配，如果访问到的PoolSubpage链表节点数为0，则创建新的PoolSubpage分配内存然后加入链表</p>
+<p>PoolSubpage链表存储的PoolSubpage都是已分配部分内存，当内存全部分配完或者内存全部释放完的PoolSubpage会移出链表，减少不必要的链表节点；当PoolSubpage内存全部分配完后再释放部分内存，会重新将加入链表</p>
+<p>PoolArean内存池弹性伸缩可用下图总结：</p>
+<figure data-type="image" tabindex="10"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/0f961efc-3239-4444-b2ec-20d7e10846c6.webp" alt="img" loading="lazy"></figure>
+<h2 id="并发设计">并发设计</h2>
+<p>内存分配释放不可避免地会遇到多线程并发场景，无论是PoolChunk的平衡树标记或者PoolSubpage的bitmap标记都是多线程不安全，如何在线程安全的前提下尽量提升并发性能？</p>
+<p>首先，为了减少线程间的竞争，Netty会提前创建多个<code>PoolArena</code>(默认生成数量 =  2 * CPU核心数)，当线程首次请求池化内存分配，会找被最少线程持有的PoolArena，并保存线程局部变量<code>PoolThreadCache</code>中，实现线程与<code>PoolArena</code>的关联绑定(<code>PoolThreadLocalCache#initialValue()</code>方法)</p>
+<blockquote>
+<p>**note：**Java自带的ThreadLocal实现线程局部变量的原理是：基于Thread的ThreadLocalMap类型成员变量，该变量中map的key为ThreadLocal，value-为需要自定义的线程局部变量值。调用ThreadLocal#get()方法时，会通过Thread.currentThread()获取当前线程访问Thread的ThreadLocalMap中的值</p>
+<p>Netty设计了ThreadLocal的更高性能替代类：<code>FastThreadLocal</code>，需要配套继承Thread的类FastThreadLocalThread一起使用，基本原理是将原来Thead的基于ThreadLocalMap存储局部变量，扩展为能更快速访问的数组进行存储(Object[] indexedVariables)，每个FastThreadLocal内部维护了一个全局原子自增的int类型的数组index</p>
+</blockquote>
+<p>此外，Netty还设计了缓存机制提升并发性能：当请求对象内存释放，PoolArena并没有马上释放，而是先尝试将该内存关联的PoolChunk和chunk中的偏移位置(handler变量)等信息存入PoolThreadLocalCache中的固定大小缓存队列中(如果缓存队列满了则马上释放内存)；<br>
+当请求内存分配，PoolArena会优先访问PoolThreadLocalCache的缓存队列中是否有缓存内存可用，如果有，则直接分配，提高分配效率</p>
+<h2 id="总结">总结</h2>
+<p>​	Netty池化内存管理的设计借鉴了Facebook的jemalloc，同时也与Linux内存分配算法Buddy算法和Slab算法也有相似之处，很多分布式系统、框架的设计都可以在操作系统的设计中找到原型，学习底层原理是很有价值的</p>
+<h2 id="参考">参考</h2>
+<p>《scalable memory allocation using jemalloc —— Facebook》<br>
+<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fengineering.fb.com%2Fcore-data%2Fscalable-memory-allocation-using-jemalloc%2F">https://engineering.fb.com/core-data/scalable-memory-allocation-using-jemalloc/</a></p>
+<p>《Netty入门与实战：仿写微信 IM 即时通讯系统》<br>
+<a href="https://links.jianshu.com/go?to=https%3A%2F%2Fjuejin.im%2Fbook%2F5b4bc28bf265da0f60130116%3Freferrer%3D598ff735f265da3e1c0f9643">https://juejin.im/book/5b4bc28bf265da0f60130116?referrer=598ff735f265da3e1c0f9643</a></p>
+<h2 id="文章引用">文章引用</h2>
+<p>文章链接 : https://www.jianshu.com/p/7d6fbd3f501e</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#bytebuf-%E5%88%86%E7%B1%BB">ByteBuf 分类</a></li>
+<li><a href="#%E6%B1%A0%E5%8C%96pooled-%E5%AF%B9%E8%B1%A1%E7%AE%A1%E7%90%86">池化(Pooled) 对象管理</a></li>
+<li><a href="#%E7%AE%97%E6%B3%95%E8%AE%BE%E8%AE%A1">算法设计</a>
+<ul>
+<li><a href="#11-%E6%95%B4%E4%BD%93%E5%8E%9F%E7%90%86">1.1 整体原理</a></li>
+<li><a href="#12-%E7%AE%97%E6%B3%95%E7%BB%93%E6%9E%84">1.2 算法结构</a></li>
+<li><a href="#13-%E7%94%B3%E8%AF%B7%E9%87%8A%E6%94%BE%E5%86%85%E5%AD%98">1.3 申请/释放内存</a></li>
+<li><a href="#14-%E5%B7%A8%E5%9E%8B%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">1.4 巨型对象内存管理</a></li>
+<li><a href="#15-%E5%B0%8F%E5%AF%B9%E8%B1%A1%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86">1.5 小对象内存管理</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BC%B9%E6%80%A7%E4%BC%B8%E7%BC%A9">弹性伸缩</a>
+<ul>
+<li><a href="#21-poolchunk%E7%AE%A1%E7%90%86">2.1 PoolChunk管理</a></li>
+<li><a href="#22-poolsubpage%E7%AE%A1%E7%90%86">2.2 PoolSubpage管理</a></li>
+</ul>
+</li>
+<li><a href="#%E5%B9%B6%E5%8F%91%E8%AE%BE%E8%AE%A1">并发设计</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+<li><a href="#%E6%96%87%E7%AB%A0%E5%BC%95%E7%94%A8">文章引用</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

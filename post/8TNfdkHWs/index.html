@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java- Agent技术 (踩坑篇) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/8TNfdkHWs/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java- Agent技术 (踩坑篇)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-04-05</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/8TNfdkHWs/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/VEzHPOjsuV/"
+								class="tag">字节码</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/R7lRszjSRC/"
+								class="tag">Java</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1903字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>比较给力的两种模式 ,  <code>premain</code>  和 <code>agentmain</code> 这是两种代理模式.  第一种就是运行前代理, 第二种是运行时代理.</p>
+<p>这两种代理模式 , 基于他们实现的工具 , 第一种模式有 <code>SkyWalking</code>这种链路追踪工具 和 基于第二种模式的是 <code>Arthas</code> 的线上服务工具. 都是很给力的开源项目. 有兴趣的可以看看. 这种模式比Java的硬编码的动态代理更加少编码侵入性, 指的是用户写的代码, 不用专门去修改, 而只用去启动一个代理就可以了.  我就来举例子吧.</p>
+<h2 id="1-运行前编译">1. 运行前编译</h2>
+<blockquote>
+<p>​	这个其实最简单了, 因为是运行前编译 , 根本不怕运行中出现什么事情.</p>
+</blockquote>
+<p>这里有一个类, 在 <code>com.example.demo.Demo2</code> 这个目录下面.</p>
+<pre><code class="language-java">public class Demo2 {
+
+    public static void main(String[] args) throws InterruptedException {
+        while (true) {
+            TimeUnit.SECONDS.sleep(1);
+            System.out.println(&quot;invoke - 1&quot;);
+        }
+    }
+}
+</code></pre>
+<p>我们的目的是让他循环输出 <code>&quot;invoke - 1&quot;</code>  , 那么怎么办呢, 不使用动态代理.</p>
+<p>我们可以基于agent , 在他运行前代理一个.  我提前编译好了一个文件, <code>invoke-2</code>的class文件, 省的用字节码技术改了.</p>
+<pre><code class="language-java">public class JavaPreMain {
+
+
+    public static void premain(String arg, Instrumentation inst) {
+        System.out.println(&quot;premain init&quot;);
+
+        inst.addTransformer(new ClassFileTransformer() {
+            @Override
+            public byte[] transform(ClassLoader loader, String className, Class&lt;?&gt; classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer) throws IllegalClassFormatException {
+                // 我们只去代理我们的代理类.
+                if (className.equals(&quot;com/example/demo/Demo2&quot;)) {
+                    try (FileInputStream stream = new FileInputStream(&quot;D:\\代码库\\aop\\agent\\Demo2.class&quot;)) {
+                        int available = stream.available();
+                        byte[] bytes = new byte[available];
+                        stream.read(bytes);
+                        return bytes;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 不执行任何转换, 返回null, 便可以 , 官方说的.
+                return null;
+            }
+        });
+        System.out.println(&quot;premain end&quot;);
+    }
+}
+</code></pre>
+<p>代码很简单就是如上的, 关于提前编译, 可以用idea 编译一份好的, 然后拿出来 .</p>
+<p>打包工具</p>
+<pre><code class="language-java">&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+    &lt;version&gt;3.1.2&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;archive&gt;
+            &lt;manifest&gt;
+                &lt;addClasspath&gt;true&lt;/addClasspath&gt;
+            &lt;/manifest&gt;
+            &lt;manifestEntries&gt;
+                &lt;!--这里就是你META-INF生成文件加的部分--&gt;
+                &lt;Premain-Class&gt;
+                    com.agent.JavaPreMain
+                &lt;/Premain-Class&gt;
+                &lt;Can-Redefine-Classes&gt;true&lt;/Can-Redefine-Classes&gt;
+                &lt;Can-Retransform-Classes&gt;true&lt;/Can-Retransform-Classes&gt;
+            &lt;/manifestEntries&gt;
+        &lt;/archive&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+<p>直接maven打包一下就可以了  .  <code>mvn clean package</code></p>
+<p>关于如何使用, 我们在我们的Demo2 上面加入 <code>-javaagent:D:\\代码库\\aop\\agent\\java-agent\\target\\java-agent-0.0.1.jar</code>  这个vm信息. 既可.</p>
+<p>启动后, 发现确实代理了.  会改成输出 2 .</p>
+<p>关于上面那个 args参数 如何传入, 可以通过 : <code>-javaagent:D:\代码库\aop\agent\java-agent\target\java-agent-0.0.1.jar=xiaoli</code> 传入, <code>=</code> 后面跟着的就是参数了 . 可以接收到.</p>
+<h2 id="运行时代理编译">运行时代理编译</h2>
+<p>这个过程吧, 有点像什么呢, 就是运行时, 我给你改一些动态加载的类 .   类似于arthas 的 mc .  这个是最麻烦那了, 很多的限制有. 主要是因为运行期么. 必然有一些限制.</p>
+<p>这个是我写的代理类. 也复用了上面很大一部分,</p>
+<pre><code class="language-java">public class JavaAgentMain {
+
+    public static void agentmain(String args, Instrumentation inst) {
+        System.out.println(&quot;Agent - init&quot;);
+        inst.addTransformer(new ClassFileTransformer() {
+            @Override
+            public byte[] transform(ClassLoader loader, String className, Class&lt;?&gt; classBeingRedefined,
+                                    ProtectionDomain protectionDomain, byte[] classfileBuffer)
+                    throws IllegalClassFormatException {
+                System.out.println(&quot;className : &quot; + className);
+                if (className.equals(&quot;com/example/demo/Demo2&quot;)) {
+                    try (FileInputStream stream = new FileInputStream(&quot;D:\\代码库\\aop\\agent\\Demo2.class&quot;)) {
+                        int available = stream.available();
+                        byte[] bytes = new byte[available];
+                        stream.read(bytes);
+                        System.out.println(&quot;代理成功 ........&quot;);
+                        return bytes;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                return null;
+            }
+        }, true);
+        // 这个必须设置为true , 就是接受重新转换的请求.false是不会走的.
+        try {
+            // 这个过程相当于, 重新转变这个类.
+            Class&lt;?&gt; aClass = Class.forName(&quot;com.example.demo.Demo2&quot;);
+            inst.retransformClasses(aClass);
+        } catch (UnmodifiableClassException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        System.out.println(&quot;agent - end&quot;);
+    }
+}
+</code></pre>
+<p>还是需要在配置文件中加入这个 就是多了个 agent-class .</p>
+<pre><code class="language-java">&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+    &lt;version&gt;3.1.2&lt;/version&gt;
+    &lt;configuration&gt;
+        &lt;archive&gt;
+            &lt;manifest&gt;
+                &lt;addClasspath&gt;true&lt;/addClasspath&gt;
+            &lt;/manifest&gt;
+            &lt;manifestEntries&gt;
+                &lt;!--这里就是你META-INF生成文件加的部分--&gt;
+                &lt;Premain-Class&gt;
+                    com.agent.JavaPreMain
+                &lt;/Premain-Class&gt;
+                &lt;Agent-Class&gt;
+                    com.agent.JavaAgentMain
+                &lt;/Agent-Class&gt;
+                &lt;Can-Redefine-Classes&gt;true&lt;/Can-Redefine-Classes&gt;
+                &lt;Can-Retransform-Classes&gt;true&lt;/Can-Retransform-Classes&gt;
+            &lt;/manifestEntries&gt;
+        &lt;/archive&gt;
+    &lt;/configuration&gt;
+&lt;/plugin&gt;
+</code></pre>
+<p>启动Demo2 这个类 . 不用加VM参数  , 加一个 <code>-verbose:class</code> 这个参数</p>
+<p>我们写一个 attache的类</p>
+<pre><code class="language-java">public class Demo {
+
+    public static void main(String[] args) throws Exception {
+        // 这个是PID. 每个JVM进程都有
+        VirtualMachine attach = VirtualMachine.attach(&quot;4804&quot;);
+        attach.loadAgent(&quot;D:\\代码库\\aop\\agent\\java-agent\\target\\java-agent-0.0.1.jar&quot;);
+    }
+}
+</code></pre>
+<p>就是我们这个了, 让他去告诉 demo2 这个程序,</p>
+<p>我们在demo2的控制台发现</p>
+<pre><code class="language-java">[Loaded com.agent.JavaAgentMain$1 from file:/D:/%e4%bb%a3%e7%a0%81%e5%ba%93/aop/agent/java-agent/target/java-agent-0.0.1.jar]
+className : com/example/demo/Demo2
+代理成功 ........
+[Loaded com.example.demo.Demo2 from __VM_RedefineClasses__]
+agent - end
+</code></pre>
+<p>趋势重新装载了 <code>com.example.demo.Demo2</code>  ,但是不一样的是, 是不同的类加载器加载的.</p>
+<p>那为什么 , 不会改变方法的调用输出呢.</p>
+<p>是因为 ,<strong><code>retransformClasses</code></strong>：<strong>对于已经加载的类重新进行转换处理，即会触发重新加载类定义，需要注意的是，新加载的类不能修改旧有的类声明，譬如不能增加属性、不能修改方法声明；</strong></p>
+<p>这也就是为什么 , 他不能修改调用方法了 .  其实还有一个特别的地方就是 他可以修改属性字段值. 我试过是可以成立的.   比如我们第一份的 id是500  , 第二份是1000 , 将第一份修改成第二份是满足的.</p>
+<pre><code class="language-java">public class Demo2 {
+
+    private int id = 500;
+
+    @Override
+    public String toString() {
+        return &quot;Demo2{&quot; +
+                &quot;id=&quot; + id +
+                '}';
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        while (true) {
+            TimeUnit.SECONDS.sleep(1);
+            System.out.println(new Demo2().toString());
+        }
+    }
+}
+</code></pre>
+<p><strong>那么我们可以通过 <code>redefineClasses</code>  方法直接将字节码告诉 JVM 加载.   而不是走<code>addTransformer</code> 的回调了. 他是直接返回字节码数组的.</strong>   但是这种也是一个问题, 他不能代理 Main方法的,  我们上诉代码, 还需要改动.</p>
+<p>这个是Java的代理类.</p>
+<pre><code class="language-java">public class JavaAgentMain {
+
+    public static void agentmain(String args, Instrumentation inst) {
+        System.out.println(&quot;Agent - init&quot;);
+        try {
+            Class&lt;?&gt; demo2 = Class.forName(&quot;com.example.demo.Demo2&quot;);
+            inst.redefineClasses(new ClassDefinition(demo2, getBytes()));
+        } catch (ClassNotFoundException | UnmodifiableClassException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(&quot;agent - end&quot;);
+    }
+    private static byte[] getBytes() {
+        try (FileInputStream stream = new FileInputStream(&quot;D:\\代码库\\aop\\agent\\Demo2.class&quot;)) {
+            int available = stream.available();
+            byte[] bytes = new byte[available];
+            stream.read(bytes);
+            System.out.println(Thread.currentThread().getContextClassLoader() + &quot; : 代理成功 ........&quot;);
+            return bytes;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+}
+</code></pre>
+<p>然后我们的Demo2也得改改  一个改成输出 <code>&quot;invoke -1&quot;</code>  一个输出 <code>&quot;invoke -2&quot;</code></p>
+<pre><code class="language-java">public class Demo2 {
+
+    public static void main(String[] args) throws InterruptedException {
+        while (true) {
+            TimeUnit.SECONDS.sleep(1);
+            test();
+        }
+    }
+
+    public static void test(){
+        System.out.println(&quot;invoke -1&quot;);
+    }
+}
+</code></pre>
+<p>这么就可以动态修改了  我下面 是我的日志信息</p>
+<pre><code class="language-java">invoke -1
+invoke -1
+[Loaded java.lang.CharacterData00 from C:\Program Files\Java\jdk1.8.0_221\jre\lib\rt.jar]
+Agent - init
+[Loaded java.lang.instrument.ClassDefinition from C:\Program Files\Java\jdk1.8.0_221\jre\lib\rt.jar]
+sun.misc.Launcher$AppClassLoader@18b4aac2 : 代理成功 ........
+[Loaded com.example.demo.Demo2 from __VM_RedefineClasses__]
+agent - end
+invoke -2
+invoke -2
+invoke -2
+</code></pre>
+<h2 id="总结">总结</h2>
+<p>基本上就是这些了, 其实我只是简单的告诉你功能, 但是如何继续封装, 如何继续使用剩下的都是你的事情了, 坑我已经帮你踩完了 . 我测试这些的时候, 无数次尝试. 啊哈哈哈. 太难了. 不用开发工具还是很快的 .</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E8%BF%90%E8%A1%8C%E5%89%8D%E7%BC%96%E8%AF%91">1. 运行前编译</a></li>
+<li><a href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E4%BB%A3%E7%90%86%E7%BC%96%E8%AF%91">运行时代理编译</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

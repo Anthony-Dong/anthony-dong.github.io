@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Javassit - 操作字节码(入门) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/Y48EHNCyD/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Javassit - 操作字节码(入门)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-04-06</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/Y48EHNCyD/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/VEzHPOjsuV/"
+								class="tag">字节码</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/zsG4TSQ0NV/"
+								class="tag">Javassit</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1672字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	<code>Javassit</code> 是通过直接书写<code>java代码</code>, 通过它提供了一套系统, 给你编译成字节码的操作 . <code>ASM</code> 是直接书写<code>字节码</code>, 所以难度上来很大的, 不是一般水平, 根本难以使用, 所以CGLIB基于ASM提出了一种代理的模板 , 为什么说是模板呢, 因为真正的字节码操作, 不仅仅局限在代理.  所以``</p>
+</blockquote>
+<p>它如何区分JDK版本的  , 这个就告诉我们了, JDK版本每次变迁多了些设么.</p>
+<pre><code class="language-java">public static final int MAJOR_VERSION;
+
+static {
+    int ver = JAVA_3;
+    try {
+        Class.forName(&quot;java.lang.StringBuilder&quot;);
+        ver = JAVA_5;
+        Class.forName(&quot;java.util.zip.DeflaterInputStream&quot;);
+        ver = JAVA_6;
+        Class.forName(&quot;java.lang.invoke.CallSite&quot;, false, ClassLoader.getSystemClassLoader());
+        ver = JAVA_7;
+        Class.forName(&quot;java.util.function.Function&quot;);
+        ver = JAVA_8;
+        Class.forName(&quot;java.lang.Module&quot;);
+        ver = JAVA_9;
+        List.class.getMethod(&quot;copyOf&quot;, Collection.class);
+        ver = JAVA_10;
+        Class.forName(&quot;java.util.Optional&quot;).getMethod(&quot;isEmpty&quot;);
+        ver = JAVA_11;
+    }
+    catch (Throwable t) {}
+    MAJOR_VERSION = ver;
+}
+</code></pre>
+<h2 id="1-简单入门">1. 简单入门</h2>
+<blockquote>
+<p>​	**由于我们开发使用的话, 绝对不可能修改当前已有的类, 除非agent 或者自定义ClassLoader. 因为Java不支持卸载系统类加载器加载的类, 你说恶不恶心, 除非agent , **   因此我们这个例子只是生产一个新的类, 去继承父类的方法.</p>
+</blockquote>
+<pre><code class="language-java">public class Parent {
+
+    public void test() {
+        System.out.println(this + &quot; : echo&quot;);
+    }
+
+    public static void main(String[] args) throws Exception {
+        // 1. 默认生成一个 ClassPool , 其实很简单就是加入了Java的基本包装类型9种和加入了Java的Object类.
+        ClassPool pool = ClassPool.getDefault();
+
+        // 2. 去拿到我们com.javassit.demo.Parent类 , 由于Javassit 中最基本的类单元是CTClass .
+        CtClass parent = pool.getCtClass(&quot;com.javassit.demo.Parent&quot;);
+        // 3. 创建一个 子对象, 去继承父对象
+        CtClass child = pool.makeClass(&quot;com.javassit.demo.Child&quot;, parent);
+        // 4. 我们直接可以拿到该类对象了.
+        Class&lt;?&gt; cClass = child.toClass();
+        // 5. 直接基本构造器实例化就行了.
+        Parent ins = (Parent) cClass.getConstructor().newInstance();
+        // 6. invoke test
+        ins.test();
+    }
+}
+</code></pre>
+<p>上诉代码流程很简单, 最后会调用成功, 就是一个简单的例子.   下面我们要添加东西了.</p>
+<h2 id="2-添加构造器">2. 添加构造器</h2>
+<blockquote>
+<p>​	构造器 , 是类基本结构 , 所以提高了<code>CtConstructor</code> 定义一个构造器.</p>
+</blockquote>
+<pre><code class="language-java">public class Parent {
+    private Long id;
+
+    // 最好使用包装类型. 基本类型好像失败.
+    public Parent(Long id) {
+        this.id = id;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public static void main(String[] args) throws Exception {
+        ClassPool pool = ClassPool.getDefault();
+        CtClass parent = pool.getCtClass(&quot;com.javassit.demo2.Parent&quot;);
+        CtClass child = pool.makeClass(&quot;com.javassit.demo2.Child&quot;, parent);
+
+        // 添加构造器, 只用写出构造器如何书写就行了. 纯JAVA代码
+        child.addConstructor(CtNewConstructor.make(&quot;public Child(Long id){super(id);}&quot;, child));
+        
+        Class&lt;?&gt; cClass = child.toClass();
+        Parent ins = (Parent) cClass.getConstructor(Long.class).newInstance(100L);
+        long id = ins.getId();
+        System.out.println(id);
+    }
+}
+</code></pre>
+<p>其中 <code>CtNewConstructor.make(&quot;public Child(Long id){super(id);}&quot;, child)</code>  这个make操作会去编译你的Java代码, 编译成字节码, 由于我字节码学的不好, 不展开解释了. .</p>
+<h2 id="3-为什么反射必须使用包装类型">3. 为什么反射必须使用包装类型</h2>
+<p>为什么非要使用包装类型呢, 是因为Java的反射的缺陷, 这也是Java的弊端.  你不信可以自己反射去实例化一个对象. 基本类型, 根本无法实例化 , 不管是不是基础, 原因是Java会自动拆箱 , 装箱. 不是你手动执行的.</p>
+<p>当构造器 是一个基本数据类型, 不会有拆箱操作的. 如果我们传入Long类型, 而且反射只能传入包装类型, 此时注定会失败的.</p>
+<pre><code class="language-java"> 0: aload_0
+ 1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V
+ 4: aload_0
+ 5: lload_1
+ 6: putfield      #2                  // Field id:J
+ 9: return
+</code></pre>
+<p>如同下属代码 :</p>
+<pre><code class="language-java">Long x = 100L;
+long y = x;
+</code></pre>
+<p>实际上走了两次转换, 因为Java的字面量全是基本数据类型 , 所以100L - &gt; Long , 需要valueOf,  而第二次 Long -&gt; long 需要拆箱, 也就是langValue .</p>
+<pre><code class="language-java"> 0: ldc2_w        #3                  // long 100l
+ 3: invokestatic  #5                  // Method java/lang/Long.valueOf:(J)Ljava/lang/Long;
+ 6: astore_1
+ 7: aload_1
+ 8: invokevirtual #6                  // Method java/lang/Long.longValue:()J
+</code></pre>
+<h2 id="4-修改方法体">4. 修改方法体</h2>
+<blockquote>
+<p>​	我们这个例子, 直接在 Parent上修改 他的类构造器, 因此需要定义一个ClassLoader.</p>
+</blockquote>
+<pre><code class="language-java">public class Parent {
+    private long id;
+
+    // 最好使用包装类型. 基本类型好像失败.
+    public Parent(Long id) {
+        this.id = id;
+    }
+
+
+    public static void main(String[] args) throws Exception {
+        ClassPool pool = ClassPool.getDefault();
+        // 1. 加载目前的字节码
+        CtClass parent = pool.getCtClass(&quot;com.javassit.demo3.Parent&quot;);
+
+
+        // 2. 就是插入输出
+        for (CtConstructor constructor : parent.getConstructors()) {
+            // 插入到前面, 插入到后面. 
+            // 第一个参数是$1
+            constructor.insertAfter(&quot;System.out.println(\&quot;id=\&quot;+$1);&quot;);
+        }
+
+        // 3. 输出字节码
+        byte[] bytes = parent.toBytecode();
+
+        // 4. 遵循双亲委派模型, 去加载类 , 破坏会发现一堆问题 , 一堆类找不到
+        Map&lt;String, Class&lt;?&gt;&gt; cache = new ConcurrentHashMap&lt;&gt;();
+        ClassLoader classLoader = new ClassLoader(Thread.currentThread().getContextClassLoader()) {
+            @Override
+            public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+                // 如果使我们需要的类,直接放到catch中. 这种容易出现内存泄漏, 但是重复定义会报错的. 只能这么做了.
+                if (name.equals(&quot;com.javassit.demo3.Parent&quot;)) {
+                    if (cache.get(name) == null) {
+                        Class&lt;?&gt; aClass = defineClass(name, bytes, 0, bytes.length);
+                        cache.put(name, aClass);
+                    }
+                    return cache.get(name);
+                }
+                // 委派给父类加载
+                return super.loadClass(name);
+            }
+        };
+
+        Class&lt;?&gt; aClass = classLoader.loadClass(Parent.class.getName());
+        // 这里不能类型转换, 不然会失败的. 因为会有俩不同的类存在
+        Object o = aClass.getConstructor(Long.class).newInstance(1L);
+        System.out.println(&quot;对象的类加载器是 : &quot;+o.getClass().getClassLoader());
+    }
+}
+// 输出 : 
+// id=1
+// 对象的类加载器是 : com.javassit.demo3.Parent$1@2038ae61
+</code></pre>
+<p>最后生成的代码如下</p>
+<pre><code class="language-java">public Parent(Long id) {
+    this.id = id;
+    // 这个是方法的返回值. 所以构造器. 默认是空的.
+    Object var3 = null;
+    System.out.println(&quot;id=&quot; + id);
+}
+</code></pre>
+<h2 id="5-创建字段">5. 创建字段</h2>
+<pre><code class="language-java">public class JavaBean {
+
+    public static void main(String[] args) throws Exception {
+        ClassPool pool = ClassPool.getDefault();
+        String className = &quot;com.javassit.demo5.GavaBean&quot;;
+        CtClass cc = pool.makeClass(className);
+
+        // 创建字段, 需要申明类型 . 名字, 和什么插入的类
+        CtField field = new CtField(pool.get(String.class.getName()), &quot;name&quot;, cc);
+        // 设置访问类型
+        field.setModifiers(Modifier.PRIVATE);
+        // 添加字段
+        cc.addField(field);
+        // 直接可以创建get set方法.
+        cc.addMethod(CtNewMethod.setter(&quot;setName&quot;, field));
+        cc.addMethod(CtNewMethod.getter(&quot;getName&quot;, field));
+
+        // 创建无参构造器.
+        CtConstructor constructor = CtNewConstructor.make(null, null, cc);
+        constructor.setBody(&quot;{System.out.println(\&quot;instance\&quot;);}&quot;);
+        cc.addConstructor(constructor);
+
+        CtConstructor pc = new CtConstructor(new CtClass[]{pool.get(String.class.getName())}, cc);
+        // $0=this , $1,$2,$3... 代表方法参数 , 因为非静态方法默认就是带一个this指针,默认就是第0个参数
+        pc.setBody(&quot;{$0.name = $1;System.out.println(\&quot;instance\&quot;);}&quot;);
+        cc.addConstructor(pc);
+
+        Class&lt;?&gt; GavaBeanClass = cc.toClass();
+        Object tom = GavaBeanClass.getConstructor(String.class).newInstance(&quot;tom&quot;);
+        Method method = GavaBeanClass.getMethod(&quot;getName&quot;);
+
+        Object invoke = method.invoke(tom);
+        System.out.println(invoke);
+
+        cc.writeFile(&quot;D:\\代码库\\aop&quot;);
+    }
+}
+</code></pre>
+<h2 id="aop">AOP</h2>
+<blockquote>
+<p>​	由于前面插入的 insert before 和 after 两者之间还不能有共通的变量 , 所以很麻烦,  , 还取不到方法体.  等我修炼.</p>
+</blockquote>
+<h2 id="参考文章">参考文章</h2>
+<p><a href="https://www.jianshu.com/p/b9b3ff0e1bf8">https://www.jianshu.com/p/b9b3ff0e1bf8</a></p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8">1. 简单入门</a></li>
+<li><a href="#2-%E6%B7%BB%E5%8A%A0%E6%9E%84%E9%80%A0%E5%99%A8">2. 添加构造器</a></li>
+<li><a href="#3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%8F%8D%E5%B0%84%E5%BF%85%E9%A1%BB%E4%BD%BF%E7%94%A8%E5%8C%85%E8%A3%85%E7%B1%BB%E5%9E%8B">3. 为什么反射必须使用包装类型</a></li>
+<li><a href="#4-%E4%BF%AE%E6%94%B9%E6%96%B9%E6%B3%95%E4%BD%93">4. 修改方法体</a></li>
+<li><a href="#5-%E5%88%9B%E5%BB%BA%E5%AD%97%E6%AE%B5">5. 创建字段</a></li>
+<li><a href="#aop">AOP</a></li>
+<li><a href="#%E5%8F%82%E8%80%83%E6%96%87%E7%AB%A0">参考文章</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

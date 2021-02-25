@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Google的Guice框架 - 轻量级的Spring框架 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/HZk9UZzwZ/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Google的Guice框架 - 轻量级的Spring框架</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-25</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/HZk9UZzwZ/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/L-xvm-udt-/"
+								class="tag">Google</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1817字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	对于DI 依赖注入. 是开发一个很麻烦的事情. 比如面向接口编程中, 我们只提供一个接口, 我们需要运行时,我们要用到此接口. 如果程序通过方法注入的话,那么会带来一堆的方法信息, 简而言之就是硬编码形式.  对于Java提供了SPI接口的形式可以实现运行时加载接口实现类.  Spring也是提供了一个容器. 可以通过几个配置或者注解便可以实现注入.</p>
+<p>​		对于今天的框架来说 , <code>Guice</code>也是一样, 他遵循了JSR规范, 实现了很好的解耦. 同时Guice也提供了AOP的功能, 其实使用的是CGLIB.</p>
+<p>我大部分内容参考自<a href="https://www.baeldung.com/guice">官网</a>   : https://www.baeldung.com/guice</p>
+</blockquote>
+<h3 id="快速开始">快速开始</h3>
+<p>我们先来一个简单的例子 :</p>
+<p>比如最简单的web服务 , service层需要user服务, controller调用service的服务. 就这么一个例子.</p>
+<p>UserService 接口</p>
+<pre><code class="language-java">public interface UserService {
+    boolean hasAuth(String name);
+}
+</code></pre>
+<p>实现类 :</p>
+<pre><code class="language-java">public class IUserService implements UserService {
+    // 简单的实现. 
+    @Override
+    public boolean hasAuth(String name) {
+        return name.length() % 2 == 0;
+    }
+}
+</code></pre>
+<p>UserController 实现类</p>
+<pre><code class="language-java">public class UserController {
+    @Inject
+    private UserService service;
+
+    /**
+     * 判断用户权限
+     */
+    public boolean userHasAuth(String name) {
+        return service.hasAuth(name);
+    }
+}
+</code></pre>
+<p>程序如何启动 : 我们的App类</p>
+<pre><code class="language-java">public class App {
+    
+    public static void main(String[] args) {
+        // 1. 创建一个Injector
+        Injector injector = Guice.createInjector(new BasicModule());
+		// 2. 实例化对象.
+        UserController controller = injector.getInstance(UserController.class);
+        // 3. 运行就行了
+        controller.userHasAuth(&quot;ok&quot;);
+    }
+}
+</code></pre>
+<p>那么<code>BasicModule</code> 是啥呢, 其实这个就是Guice的核心.</p>
+<pre><code class="language-java">public class BasicModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        // 表明：当需要 UserService 这个接口时，我们注入 IUserService 的实例作为依赖
+        bind(UserService.class).to(IUserService.class);
+    }
+}
+</code></pre>
+<p>这就是一个简单的例子. .   那么到底注入的对象是单例还是原型呢. 我们试试 .</p>
+<pre><code class="language-java">public class App {
+  public static void main(String[] args) {
+      Injector injector = Guice.createInjector(new BasicModule());
+      // 实例一个
+      UserController controller = injector.getInstance(UserController.class);
+      System.out.println(controller.service);
+      // 实例两个
+      UserController controller1 = injector.getInstance(UserController.class);
+      System.out.println(controller1.service);
+  }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">com.example.service.IUserService@eec5a4a
+com.example.service.IUserService@2b2948e2
+</code></pre>
+<p>显然不是单例 , 其实他也考虑到了这点, 因此提供了几个方式.</p>
+<h3 id="单例模式">单例模式</h3>
+<p>我们修改 <code>AbstractModule</code> 类. 注释掉我们原来的写法. 我们继续使用 <code>@Provides</code> 和 <code>@Singleton</code> 注解修饰一下就可以了.</p>
+<pre><code class="language-java">public class BasicModule extends AbstractModule {
+    @Provides
+    @Singleton
+    public UserService userService() {
+        return new IUserService();
+    }
+}
+</code></pre>
+<p>再次执行发现 :</p>
+<pre><code class="language-java">com.example.service.IUserService@4b1c1ea0
+com.example.service.IUserService@4b1c1ea0
+</code></pre>
+<p>完全符合预期.</p>
+<p>或者可以通过编程实现.</p>
+<pre><code class="language-java">@Override
+protected void configure() {
+    bind(UserService.class).to(IUserService.class).in(Scopes.SINGLETON);
+}
+</code></pre>
+<h3 id="named-来区别多个bean"><code>Named</code> 来区别多个Bean</h3>
+<p><strong>注解编程</strong></p>
+<p>比如说我们现在有两个UserService的实现类. 此时我们继续 :</p>
+<pre><code class="language-java">public class DefaultUserService implements UserService {
+    @Override
+    public boolean hasAuth(String name) {
+        return false;
+    }
+}
+</code></pre>
+<p>然后我们再次注入 .</p>
+<pre><code class="language-java">@Provides
+@Singleton
+public UserService defaultUserService() {
+    return new DefaultUserService();
+}
+</code></pre>
+<p>再次运行会发现错误. 那怎么办, 其实Spring中也是这样 , 两个Bean如果没有指定就会出现问题.  我们需要用 注解<code>@Named</code> 指定用谁 , 比如我们定义的两个对象.</p>
+<pre><code class="language-java">public class BasicModule extends AbstractModule {
+    // 对象一
+    @Named(&quot;userService&quot;)
+    @Provides
+    @Singleton
+    public UserService userService() {
+        return new IUserService();
+    }
+    // 对象二
+    @Named(&quot;defaultUserService&quot;)
+    @Provides
+    @Singleton
+    public UserService defaultUserService() {
+        return new DefaultUserService();
+    }
+}
+</code></pre>
+<p>此时我们需要在 <code>com.example.controller.UserController</code> 中告诉用谁也得.</p>
+<pre><code class="language-java">@Named(&quot;defaultUserService&quot;)
+@Inject
+public UserService service;
+</code></pre>
+<p>此时运行.</p>
+<pre><code class="language-java">com.example.service.DefaultUserService@76f2b07d
+com.example.service.DefaultUserService@76f2b07d
+</code></pre>
+<p><strong>使用AIP注入</strong></p>
+<pre><code class="language-java">public class BasicModule extends AbstractModule {
+
+    @Override
+    protected void configure() {
+        bind(UserService.class).annotatedWith(Names.named(&quot;user&quot;)).to(IUserService.class).in(Scopes.SINGLETON);
+        bind(UserService.class).annotatedWith(Names.named(&quot;default&quot;)).to(DefaultUserService.class).in(Scopes.SINGLETON);
+    }
+
+}
+</code></pre>
+<h3 id="构造器注入">构造器注入</h3>
+<p>还有一种注入方式, 构造器注入方式.  不使用注解. 注解也可以的</p>
+<pre><code class="language-java">public class ClassController {
+
+    private List&lt;String&gt; className;
+
+    public ClassController(List&lt;String&gt; className) {
+        this.className = className;
+    }
+
+    public List&lt;String&gt; getAllClass() {
+        return className;
+    }
+}
+</code></pre>
+<p>此时我们写我们的<code>AbstractModule</code></p>
+<pre><code class="language-java">public class ClassModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bind(ClassController.class).toInstance(new ClassController(Arrays.asList(&quot;class1&quot;, &quot;class2&quot;)));
+    }
+}
+</code></pre>
+<p>此时就成功注入了 .</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    Injector injector = Guice.createInjector(new ClassModule());
+    ClassController instance = injector.getInstance(ClassController.class);
+    System.out.println(instance.getAllClass());
+}
+</code></pre>
+<p>也可以通过修改构造方法/可能出现构造方法重载的问题 :  <code>toConstructor()</code> 方法可以帮助注入构造方法.</p>
+<pre><code class="language-java">// 需要Boolean就注入这个
+bind(Boolean.class).toInstance(true);
+// 需要Communication就注入下面这个.
+bind(Communication.class).toConstructor(
+  Communication.class.getConstructor(Boolean.TYPE));
+</code></pre>
+<p>还可以直接写一个单例对象.</p>
+<pre><code class="language-java">bind(Communication.class).toInstance(new Communication(true));
+</code></pre>
+<h3 id="set-构造方法注入">set / 构造方法注入</h3>
+<p>支持get,set方法注入.</p>
+<pre><code class="language-java">@Inject
+public void setEmailCommunicator(@Named(&quot;EmailComms&quot;) CommunicationMode emailComms) {
+    this.emailComms = emailComms;
+}
+// 和下面是等效的.
+@Inject @Named(&quot;SMSComms&quot;)
+CommunicationMode smsComms;
+</code></pre>
+<p>支持构造方法注入 : 同上.</p>
+<pre><code class="language-java">@Inject
+public Communication(@Named(&quot;IMComms&quot;) CommunicationMode imComms) {
+    this.imComms= imComms;
+}
+</code></pre>
+<h3 id="支持logger-隐式注入">支持Logger 隐式注入</h3>
+<p>支持 Logger隐式注入  , 不用申明.</p>
+<pre><code class="language-java">@Inject
+Logger logger;
+</code></pre>
+<h3 id="provider-接口使用"><code>Provider</code> 接口使用</h3>
+<p>可编程话注入 :</p>
+<pre><code class="language-java">public class AopModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        // 如果需要Service回去找ServiceProvider实例化.
+        bind(Service.class).toProvider(ServiceProvider.class).in(Scopes.SINGLETON);
+    }
+}
+</code></pre>
+<pre><code class="language-java">public class ServiceProvider implements Provider&lt;Service&gt; {
+    @Override
+    public Service get() {
+        Service service = new Service();
+        return service;
+    }
+}
+</code></pre>
+<pre><code class="language-java">public class App {
+
+    public static void main(String[] args) throws InterruptedException {
+        Injector injector = Guice.createInjector(new AopModule());
+        Service service = injector.getInstance(Service.class);
+    }
+}
+</code></pre>
+<h3 id="aop-功能-methodinterceptor接口使用">AOP 功能 / MethodInterceptor接口使用</h3>
+<blockquote>
+<p>​	AOP功能.  底层是GJLIB . 和Spring一样,</p>
+</blockquote>
+<p>比如拦截这个标记的所有方法.</p>
+<pre><code class="language-java">@Target({METHOD})
+@Retention(RUNTIME)
+public @interface LoggerAop {
+}
+</code></pre>
+<p>我们的拦截器.</p>
+<pre><code class="language-java">public class LoggerInterceptor implements MethodInterceptor {
+    @Override
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+        long start = System.currentTimeMillis();
+        Object proceed = invocation.proceed();
+        System.out.println(String.format(&quot;%s spend: %dms.&quot;, Thread.currentThread().getName(), System.currentTimeMillis() - start));
+        return proceed;
+    }
+}
+</code></pre>
+<p>拦截的类 :</p>
+<pre><code class="language-java">public class Service {
+    @LoggerAop
+    public String test() throws InterruptedException {
+        TimeUnit.SECONDS.sleep(2);
+        return &quot;终于做完了&quot;;
+    }
+}
+</code></pre>
+<p>配置类:</p>
+<pre><code class="language-java">public class AopModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        bindInterceptor(Matchers.inPackage(Package.getPackage(&quot;com.example.apo2&quot;)), Matchers.annotatedWith(LoggerAop.class), new LoggerInterceptor());
+    }
+}
+</code></pre>
+<p>这个就是一个拦截器.</p>
+<pre><code class="language-java">public class App {
+
+    public static void main(String[] args) throws InterruptedException {
+        Service service = Guice.createInjector(new AopModule()).getInstance(Service.class);
+        String test = service.test();
+        System.out.println(test);
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">main spend: 2015ms.
+终于做完了
+</code></pre>
+<blockquote>
+<p>​	其实这里也跟Spring的AOP一样, 都是需要一个MethodInvocation / ProceedingJoinPoint ,应该有印象吧.  使用很方便.</p>
+</blockquote>
+<h3 id="provisionlistener使用">ProvisionListener使用</h3>
+<pre><code class="language-java">public class MyProvisionListener implements ProvisionListener {
+    @Override
+    public &lt;T&gt; void onProvision(ProvisionInvocation&lt;T&gt; provision) {
+        System.out.println(&quot;listener &quot;+provision.getBinding());
+    }
+}
+</code></pre>
+<p>注入 :</p>
+<pre><code class="language-java">public class AopModule extends AbstractModule {
+    @Override
+    protected void configure() {
+        // 匹配全部
+        bindListener(Matchers.any(), new MyProvisionListener());
+    }
+}
+</code></pre>
+<h3 id="总结">总结 :</h3>
+<p>其中核心就是 <code>Guice</code> 对象. 他就是入口.</p>
+<p>其中还有就是 <code>Module</code>  , 他类似于Spring的Configuration类. 可以说是多个类</p>
+<p>还有一个就是 <code>Injector</code>  , 类似于Spring的ApplicationContext对象. 可以用它来实例化对象, 拿到Bean等.</p>
+<p>还有就是 <code>Binder</code>  , 我个人觉得就是Spring的Bean. 注入的Bean. 告诉他注入方式罢了.</p>
+<p>还有 <code>Key</code> 和 <code>Binding</code>  是一对一的关系. 可以通过 <code>injector.getAllBindings()</code> 来获取 &lt;key , binding&gt;. 详细信息如下 :</p>
+<pre><code class="language-java">Key[type=com.example.controller.ClassController, annotation=[none]]
+InstanceBinding{key=Key[type=com.example.controller.ClassController, annotation=[none]], source=com.example.confif.BasicModule.configure(BasicModule.java:21), instance=com.example.controller.ClassController@2d6eabae}
+</code></pre>
+<p>那么 Binding则是将<code>Key</code> 和 <code>Provider</code>  和捆绑在一起了. 所以称为 <code>Binding</code></p>
+<p>其实对于我们的代码:</p>
+<pre><code class="language-java">ClassController instance = injector.getInstance(ClassController.class)
+</code></pre>
+<p>其实就是先实例化一个key  , 然后去表里找, 找到一个binding. 然后通过binding拿到Provider 对象. 可以通过provider对象的get方法获取到最终实例化的对象. (对于其核心就是生成一个Provider对象,上面我们代码也自己写了一个Provider对象)</p>
+<p>总体来说Guice遵循了JSR的标准, 进行开发, 所以很方便, 其实他是借鉴了Spring框架, 官网链接前面推荐了, 大家可以看看.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">快速开始</a></li>
+<li><a href="#%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F">单例模式</a></li>
+<li><a href="#named-%E6%9D%A5%E5%8C%BA%E5%88%AB%E5%A4%9A%E4%B8%AAbean"><code>Named</code> 来区别多个Bean</a></li>
+<li><a href="#%E6%9E%84%E9%80%A0%E5%99%A8%E6%B3%A8%E5%85%A5">构造器注入</a></li>
+<li><a href="#set-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95%E6%B3%A8%E5%85%A5">set / 构造方法注入</a></li>
+<li><a href="#%E6%94%AF%E6%8C%81logger-%E9%9A%90%E5%BC%8F%E6%B3%A8%E5%85%A5">支持Logger 隐式注入</a></li>
+<li><a href="#provider-%E6%8E%A5%E5%8F%A3%E4%BD%BF%E7%94%A8"><code>Provider</code> 接口使用</a></li>
+<li><a href="#aop-%E5%8A%9F%E8%83%BD-methodinterceptor%E6%8E%A5%E5%8F%A3%E4%BD%BF%E7%94%A8">AOP 功能 / MethodInterceptor接口使用</a></li>
+<li><a href="#provisionlistener%E4%BD%BF%E7%94%A8">ProvisionListener使用</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结 :</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Curator - 分布式锁的实现原理 &amp; 如何使用 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/-cXvc9r5D/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Curator - 分布式锁的实现原理 &amp; 如何使用</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-03-26</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/-cXvc9r5D/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/I3pJJjYod0F/"
+								class="tag">Zookeeper</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/ttg8Ug7wWN3/"
+								class="tag">Curator</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2519字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">12 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="curator分布式锁-基本使用">Curator分布式锁 - 基本使用</h2>
+<p>我的代码全部来自于 <a href="https://github.com/apache/curator/tree/master/curator-examples/src/main/java/locking">https://github.com/apache/curator/tree/master/curator-examples/src/main/java/locking</a></p>
+<p>这个是官方提供的例子, 我觉得挺好的, 人家代码写的也不错.</p>
+<p>我们先定义一个同步的资源. 也就是这个过程它必须是线程同步的, 不然一定会出现异常.  所以这里使用了一个cas操作 , 如果失败则异常.</p>
+<pre><code class="language-java">public class FakeLimitedResource {
+    private final AtomicBoolean inUse = new AtomicBoolean(false);
+
+    public void use() throws InterruptedException {
+        // in a real application this would be accessing/manipulating a shared resource
+        if (!inUse.compareAndSet(false, true)) {
+            throw new IllegalStateException(&quot;Needs to be used by one client at a time&quot;);
+        }
+
+        try {
+            // 模拟真实操作时长.
+            Thread.sleep((long) (100 * Math.random()));
+        } finally {
+            // 最后我们重置状态量.
+            inUse.set(false);
+        }
+    }
+}
+
+</code></pre>
+<p>我们的锁.</p>
+<pre><code class="language-java">public class ExampleClientThatLocks {
+    private final InterProcessMutex lock;
+    private final FakeLimitedResource resource;
+    private final String clientName;
+
+    // 创建这个排它锁.
+    public ExampleClientThatLocks(CuratorFramework client, String lockPath, FakeLimitedResource resource, String clientName) {
+        this.resource = resource;
+        this.clientName = clientName;
+        // 这就是 curator提供的 排它锁. 
+        lock = new InterProcessMutex(client, lockPath);
+    }
+
+    public void doWork(long time, TimeUnit unit) throws Exception {
+        // 这里就是去获取锁, curator的排它锁必须设置超时时间. 根据业务需求设置.
+        if (!lock.acquire(time, unit)) {
+            // 超时抛出异常.
+            throw new IllegalStateException(clientName + &quot; could not acquire the lock&quot;);
+        }
+        try {
+            // 使用资源.
+            System.out.println(clientName + &quot; has the lock&quot;);
+            resource.use();
+        } finally {
+            // 释放锁.
+            System.out.println(clientName + &quot; releasing the lock&quot;);
+            lock.release(); // always release the lock in a finally block
+        }
+    }
+}
+</code></pre>
+<p>主程序</p>
+<pre><code class="language-java">public class LockingExample {
+    private static final int QTY = 5;
+    private static final int REPETITIONS = QTY * 10;
+
+    private static final String PATH = &quot;/examples/locks&quot;;
+
+    public static void main(String[] args) throws Exception {
+        // all of the useful sample code is in ExampleClientThatLocks.java
+
+        // FakeLimitedResource simulates some external resource that can only be access by one process at a time
+        // 我们要求同步的资源.
+        final FakeLimitedResource resource = new FakeLimitedResource();
+
+        // 多线程并发操作.
+        ExecutorService service = Executors.newFixedThreadPool(QTY);
+        // 这个是一个zk的测试服务器. 我没有使用.
+//        final TestingServer server = new TestingServer();
+        try {
+            for (int i = 0; i &lt; QTY; ++i) {
+                final int index = i;
+                Callable&lt;Void&gt; task = new Callable&lt;Void&gt;() {
+                    @Override
+                    public Void call() throws Exception {
+                        // 过程很简单 . 就是创建客户端.
+                        CuratorFramework client = CuratorFrameworkFactory.newClient(&quot;192.168.58.131:2181&quot;, new ExponentialBackoffRetry(1000, 3));
+                        try {
+                            // 启动
+                            client.start();
+
+                            // 我们去创建锁.
+                            ExampleClientThatLocks example = new ExampleClientThatLocks(client, PATH, resource, &quot;Client &quot; + index);
+                            // 然后再执行业务逻辑. (分布式锁)
+                            for (int j = 0; j &lt; REPETITIONS; ++j) {
+                                example.doWork(10, TimeUnit.MINUTES);
+                            }
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            // log or do something
+                        } finally {
+                            // 最后记得释放客户端
+                            CloseableUtils.closeQuietly(client);
+                        }
+                        return null;
+                    }
+                };
+                // 提交task.
+                service.submit(task);
+            }
+
+            // 优雅关闭
+            service.shutdown();
+            service.awaitTermination(10, TimeUnit.MINUTES);
+        } finally {
+//            CloseableUtils.closeQuietly(server);
+        }
+    }
+}
+</code></pre>
+<p>打印一下信息</p>
+<pre><code class="language-java">Client 0 has the lock
+Client 0 releasing the lock
+Client 3 has the lock
+Client 3 releasing the lock
+Client 4 has the lock
+Client 4 releasing the lock
+Client 1 has the lock
+Client 1 releasing the lock
+Client 2 has the lock
+Client 2 releasing the lock
+</code></pre>
+<h2 id="curator实现分布式锁的原理">Curator实现分布式锁的原理</h2>
+<h3 id="lockacquiretime-unit"><code>lock.acquire(time, unit)</code></h3>
+<p><code>lock.acquire(time, unit)</code> 如下 :</p>
+<pre><code class="language-java">public boolean acquire(long time, TimeUnit unit) throws Exception
+{
+    return internalLock(time, unit);
+}
+</code></pre>
+<p><code>internalLock(time, unit);</code> :</p>
+<pre><code class="language-java">private boolean internalLock(long time, TimeUnit unit) throws Exception
+{
+    /*
+       Note on concurrency: a given lockData instance
+       can be only acted on by a single thread so locking isn't necessary
+    */
+
+    Thread currentThread = Thread.currentThread();
+
+	// 可重入的前提建立在单线程上. 他主要是给当前线程的状态量+1 , 先会判断当前的数据是不是空.
+    LockData lockData = threadData.get(currentThread);
+    if ( lockData != null )
+    {
+        // re-entering
+        lockData.lockCount.incrementAndGet();
+        return true;
+    }
+
+	// 空, 就去执行lock.
+    String lockPath = internals.attemptLock(time, unit, getLockNodeBytes());
+    if ( lockPath != null )
+    {
+    // 这里就是记录一下状态 , 实现可重入. 同时记录当前节点信息.
+        LockData newLockData = new LockData(currentThread, lockPath);
+        threadData.put(currentThread, newLockData);
+        return true;
+    }
+
+    return false;
+}
+</code></pre>
+<p><code>internals.attemptLock(time, unit, getLockNodeBytes());</code></p>
+<pre><code class="language-java">String attemptLock(long time, TimeUnit unit, byte[] lockNodeBytes) throws Exception
+{
+// 一些定义的变量  . 基本文字就可以看懂啥意思. 
+    final long      startMillis = System.currentTimeMillis();
+    final Long      millisToWait = (unit != null) ? unit.toMillis(time) : null;
+    final byte[]    localLockNodeBytes = (revocable.get() != null) ? new byte[0] : lockNodeBytes;
+    int             retryCount = 0;
+
+    String          ourPath = null;
+    boolean         hasTheLock = false;
+    boolean         isDone = false;
+    while ( !isDone )
+    {
+        isDone = true;
+
+        try
+        {
+        // 在这里其实是创建一个子 节点. zk创建 EPHEMERAL_SEQUENTIAL节点, 本身就是不用考虑并发的.
+            ourPath = driver.createsTheLock(client, path, localLockNodeBytes);
+            // 这里是真正的业务逻辑.
+            hasTheLock = internalLockLoop(startMillis, millisToWait, ourPath);
+        }
+        catch ( KeeperException.NoNodeException e )
+        {
+            // gets thrown by StandardLockInternalsDriver when it can't find the lock node
+            // this can happen when the session expires, etc. So, if the retry allows, just try it all again
+            if ( client.getZookeeperClient().getRetryPolicy().allowRetry(retryCount++, System.currentTimeMillis() - startMillis, RetryLoop.getDefaultRetrySleeper()) )
+            {
+                isDone = false;
+            }
+            else
+            {
+                throw e;
+            }
+        }
+    }
+
+// 如果拿到锁, 就return了.
+    if ( hasTheLock )
+    {
+        return ourPath;
+    }
+
+    return null;
+}
+</code></pre>
+<p><code>org.apache.curator.framework.recipes.locks.StandardLockInternalsDriver#createsTheLock</code></p>
+<pre><code class="language-java">@Override
+public String createsTheLock(CuratorFramework client, String path, byte[] lockNodeBytes) throws Exception
+{
+// 这个过程很简单 , 就是一个创建一个 EPHEMERAL_SEQUENTIAL节点 . 然后创建就好了. 
+    String ourPath;
+    if ( lockNodeBytes != null )
+    {
+        ourPath = client.create().creatingParentContainersIfNeeded().withProtection().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(path, lockNodeBytes);
+    }
+    else
+    {
+        ourPath = client.create().creatingParentContainersIfNeeded().withProtection().withMode(CreateMode.EPHEMERAL_SEQUENTIAL).forPath(path);
+    }
+    return ourPath;
+}
+</code></pre>
+<p>其次就是第二步 <code>hasTheLock = internalLockLoop(startMillis, millisToWait, ourPath);</code>  (核心步骤)</p>
+<pre><code class="language-java">private boolean internalLockLoop(long startMillis, Long millisToWait, String ourPath) throws Exception
+{
+// 状态
+    boolean     haveTheLock = false;
+    boolean     doDelete = false;
+    try
+    {
+        if (revocable.get() != null )
+        {
+            client.getData().usingWatcher(revocableWatcher).forPath(ourPath);
+        }
+
+// 如果当前的状态是启动成功的话. 同时也没有拥有锁. 这是一个循环. 
+        while ( (client.getState() == CuratorFrameworkState.STARTED) &amp;&amp; !haveTheLock )
+        {
+            List&lt;String&gt;        children = getSortedChildren();
+            String              sequenceNodeName = ourPath.substring(basePath.length() + 1); // +1 to include the slash
+
+// driver其实就是一个handler . 具体看下面解释. 就是判断是否拿到锁了, 同时返回一个前置节点.
+            PredicateResults    predicateResults = driver.getsTheLock(client, children, sequenceNodeName, maxLeases);
+            if ( predicateResults.getsTheLock() )
+            {
+                haveTheLock = true;
+            }
+            else
+            {
+            // 这里就是前置节点.
+                String  previousSequencePath = basePath + &quot;/&quot; + predicateResults.getPathToWatch();
+
+                synchronized(this)
+                {
+                    try 
+                    {
+                        // use getData() instead of exists() to avoid leaving unneeded watchers which is a type of resource leak
+                        // 获取前置节点.同时监听此节点. 
+                        // 好处是, 如果前置节点删除/或者修改数据, 此时可以通知 notify,停止wait. 
+                        // 为啥要用 getData 
+                        // 使用getData（）而不是exist（）以避免留下不必要的观察者，这是一种资源泄漏
+                        // 其实这里有问题的, 如果我们在监听此节点,如果此节点被删除了会怎么办呢 ?  并发下一定会出现这种情况. 我们拿到前置节点的瞬间,前置节点已经被释放锁, 被删除了.所以后面这个catch啥也没做,继续重试.
+                        // watcher的目的就是为了被notify. 如果前置节点改动了, 我一定会收到信息, 此时notify就可以了.
+                        client.getData().usingWatcher(watcher).forPath(previousSequencePath);
+                        // 有一个超时判断, 超时则删除当前节点.
+                        if ( millisToWait != null )
+                        {
+                            millisToWait -= (System.currentTimeMillis() - startMillis);
+                            startMillis = System.currentTimeMillis();
+                            if ( millisToWait &lt;= 0 )
+                            {
+                                doDelete = true;    // timed out - delete our node
+                                break;
+                            }
+
+// 否则则 wait超时时间.
+                            wait(millisToWait);
+                        }
+                        else
+                        {
+                        // 没有指定超时时间, 就是永久的等待.
+                            wait();
+                        }
+                    }
+                    catch ( KeeperException.NoNodeException e ) 
+                    {
+                        // it has been deleted (i.e. lock released). Try to acquire again
+                    }
+                }
+            }
+        }
+    }
+    catch ( Exception e )
+    {
+        ThreadUtils.checkInterrupted(e);
+        doDelete = true;
+        throw e;
+    }
+    finally
+    {
+    // 最后, 如果需要删除(这里显然是超时的话会触发这个操作.). 则删除节点.
+        if ( doDelete )
+        {
+            deleteOurPath(ourPath);
+        }
+    }
+    return haveTheLock;
+}
+</code></pre>
+<p><code>getSortedChildren</code> 其实是为了 实现公平性.  也不能说公平, 但实际上是很公平的, 但不是绝对的公平, 因为看zk-server端创建节点如何实现的.</p>
+<p>我们可以看看我们的lock节点 . 以为系统创建<strong>顺序节点, 这个是zk 原生提供的</strong>.</p>
+<pre><code class="language-java">_c_258cf713-62d2-45bd-8967-963eac169d4a-lock-0000000188
+_c_4d17dd48-1e07-4434-94a4-d3412eba1d47-lock-0000000187
+_c_b3f9ab7c-e863-40bf-aa2c-c6aa16700e73-lock-0000000185
+_c_b7d9b167-063a-401f-a7f7-9d9399c31296-lock-0000000184
+_c_e6abf5a9-f593-429f-b6e7-7d2563680ff0-lock-0000000186
+</code></pre>
+<pre><code class="language-java">public static List&lt;String&gt; getSortedChildren(CuratorFramework client, String basePath, final String lockName, final LockInternalsSorter sorter) throws Exception
+{
+    try
+    {
+    // 获取子节点.
+        List&lt;String&gt; children = client.getChildren().forPath(basePath);
+        List&lt;String&gt; sortedList = Lists.newArrayList(children);
+        Collections.sort
+        (
+            sortedList,
+            new Comparator&lt;String&gt;()
+            {
+                @Override
+                public int compare(String lhs, String rhs)
+                {
+                    return sorter.fixForSorting(lhs, lockName).compareTo(sorter.fixForSorting(rhs, lockName));
+                }
+            }
+        );
+        return sortedList;
+    }
+    catch ( KeeperException.NoNodeException ignore )
+    {
+        return Collections.emptyList();
+    }
+}
+</code></pre>
+<p><code>driver.getsTheLock(client, children, sequenceNodeName, maxLeases);</code>  <strong>核心 , 重要</strong></p>
+<pre><code class="language-java">@Override
+public PredicateResults getsTheLock(CuratorFramework client, List&lt;String&gt; children, String sequenceNodeName, int maxLeases) throws Exception
+{
+// 1.拿到一个子节点. 比如[0,1,2,3,4] , 当前节点是1 , 那么返回的index则是1 , 此时
+    int             ourIndex = children.indexOf(sequenceNodeName);
+    validateOurIndex(sequenceNodeName, ourIndex);
+
+// 2.去比较.最多可以获取几个, 这里默认是maxLeases=1(因为排它锁么) , 所以  1&lt;1 false. 则返回false.
+    boolean         getsTheLock = ourIndex &lt; maxLeases;
+// 3.获取失败, 然后监听它的前一个节点.(后续解释为什么.)
+    String          pathToWatch = getsTheLock ? null : children.get(ourIndex - maxLeases);
+
+    return new PredicateResults(pathToWatch, getsTheLock);
+}
+</code></pre>
+<h3 id="总结">总结</h3>
+<p>所以 zk实现可重入的机制其实是 和AQS 差不多,</p>
+<p>利用zk的<code>EPHEMERAL_SEQUENTIAL</code> 节点,  提供了AQS默认的队列机制. 线程安全的.</p>
+<p>再其次, 获取锁的操作,是执行 查找子节点 (排序一下 , 根据<code>EPHEMERAL_SEQUENTIAL</code>的顺序进行排列)  , 此时会根据当前节点的位置,做判断, 是否是拥有的节点. 如果不是则继续.  如果是则代表当前节点可以拥有锁 ,  否则继续重复操作.</p>
+<p>这里涉及到一个并发问题 :  第一点 , 比如我拿到的我当前位置, 比如此时获取的子节点顺序为 [0,1,2,3,4,5] , 我此时是索引1的位置, 此时我不可以拿到锁, 但是就在我比较的过程中, 此时前置节点已经释放锁了. 也就是删除了.  那么此时我就是第一个, 但是我当前的状态趋势未拥有锁.   所以我会去监听我的前置节点 , 也就是索引为0的节点. 此时监听失败. 我会继续重复一开始的操作. 这时候判断, 我是第一个位置. 哈哈哈. 拿到锁了.</p>
+<p>所以基本就是个这 循环往复的过程.</p>
+<h3 id="lockrelease"><code>lock.release();</code></h3>
+<p>我们看看 释放锁的过程 :  <code>lock.release();</code></p>
+<pre><code class="language-java">public void release() throws Exception
+{
+    /*
+        Note on concurrency: a given lockData instance
+        can be only acted on by a single thread so locking isn't necessary
+     */
+
+    Thread currentThread = Thread.currentThread();
+    LockData lockData = threadData.get(currentThread);
+    // 如果此时释放锁, 此时拿到线程却未拥有, 则抛出异常,所以获取锁和释放锁必须在同一个线程内执行.
+    if ( lockData == null )
+    {
+        throw new IllegalMonitorStateException(&quot;You do not own the lock: &quot; + basePath);
+    }
+
+// 获取当前的 状态.  然后减一. 如果不为0 , 还需要释放. 其实就是一个可重入锁. 但是我觉得这里没必要用cas, 本来就是单线程. 哈哈哈. 不懂为啥这里还要用. 
+    int newLockCount = lockData.lockCount.decrementAndGet();
+    if ( newLockCount &gt; 0 )
+    {
+        return;
+    }
+    if ( newLockCount &lt; 0 )
+    {
+        throw new IllegalMonitorStateException(&quot;Lock count has gone negative for lock: &quot; + basePath);
+    }
+    try
+    {
+    // 最后如果到0了 , 完全释放掉了, 再执行释放节点. 这里主要做的是释放资源.然后删除当前节点
+        internals.releaseLock(lockData.lockPath);
+    }
+    finally
+    {
+    // 释放map资源, 防止内存泄漏.
+        threadData.remove(currentThread);
+    }
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#curator%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">Curator分布式锁 - 基本使用</a></li>
+<li><a href="#curator%E5%AE%9E%E7%8E%B0%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E7%9A%84%E5%8E%9F%E7%90%86">Curator实现分布式锁的原理</a>
+<ul>
+<li><a href="#lockacquiretime-unit"><code>lock.acquire(time, unit)</code></a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+<li><a href="#lockrelease"><code>lock.release();</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>ThreadLocal | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/threadlocal/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>ThreadLocal</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-02</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/threadlocal/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1811字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	<code>ThreadLocal</code>是一个线程变量工具类。主要用于将私有线程和该线程存放的副本对象做一个映射，各个线程之间的变量互不干扰，例如A线程和B线程都想使用一个变量,此时就存在强资源的问题,而这个变量他可以有多份,此时就可以用<code>ThreadLocal</code>作为变量的管理者 ,不存在多线程隐患. 同时他隐式的可以作为一个线程内部的传递信息的一个工具 .</p>
+<p>​		<strong><code>ThreadLocal</code>从另一个角度来解决线程的并发访问</strong>。<strong><code>ThreadLocal</code>会为每一个线程提供一个独立的变量副本，从而隔离了多个线程对数据的访问冲突</strong>。例如在多线程中都去使用一个对象,但是又希望互不干涉,此时就需要用到<code>ThreadLocal</code>.</p>
+<p>概括起来说，对于多线程资源共享的问题，同步机制采用了“以时间换空间”的方式，而<code>ThreadLocal</code>采用了“以空间换时间”的方式。前者仅提供一份变量，让不同的线程排队访问，而后者为每一个线程都提供了一份变量，因此可以同时访问而互不影响。</p>
+</blockquote>
+<h2 id="1-全局观">1. 全局观</h2>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-28/1d86e756-b877-4020-8f81-6b1f1bf9c59a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们可以发现 每一个 线程 都有一个 map对象 , map存放的是本地线程对象和副本变量 .然后这个map对象由一个 threadlocal对象 维护 ,他负责去添加和维护</p>
+<p>所以对于不同的线程，每次获取副本值时，别的线程并不能获取到当前线程的副本值，形成了副本的隔离，互不干扰。</p>
+<p>ThreadLocal values与这个线程有关,这个map被这个thread所维护</p>
+<pre><code class="language-java">public class Thread implements Runnable {
+    /* ThreadLocal values pertaining(属于) to this thread. This map is maintained(被..维护)
+     * by the ThreadLocal class. */
+    ThreadLocal.ThreadLocalMap threadLocals = null;
+}
+</code></pre>
+<h2 id="2-常用的方法">2. 常用的方法</h2>
+<p>1 . public T <strong>get</strong>()   获取当前线程的副本变量值。</p>
+<p>2 . public void <strong>set</strong>(T value)    保存当前线程的副本变量值。</p>
+<p>3 .  public void <strong>remove</strong>()   移除当前前程的副本变量值。</p>
+<p>4 . public static  ThreadLocal  <strong>withInitial</strong>(Supplier supplier) 初始化变量</p>
+<h3 id="1-get方法">1. get方法</h3>
+<blockquote>
+<p>​	Returns the value in the current thread's copy of this thread-local variable. If the variable has no value for the current thread, it is first initialized to the value returned by an invocation of the initialValue method.</p>
+<p>​	<strong>返回当前线程的线程局部变量副本中的值。如果变量没有当前线程的值，则首先将其初始化为调用initialValue方法返回的值。</strong></p>
+</blockquote>
+<h3 id="2-set方法">2. set方法</h3>
+<blockquote>
+<p>​	Sets the current thread's copy of this thread-local variable to the specified value. Most subclasses will have no need to override this method, relying solely on the initialValue method to set the values of thread-locals.</p>
+<p>​	<strong>将此线程局部变量的当前线程副本设置为指定的值。大多数子类不需要重写这个方法，只需要依赖initialValue方法来设置线程局部变量的值。</strong></p>
+</blockquote>
+<h3 id="3-remove方法">3. remove方法</h3>
+<blockquote>
+<p>​	Removes the current thread's value for this thread-local variable. If this thread-local variable is subsequently read by the current thread, its value will be reinitialized by invoking its initialValue method, unless its value is set by the current thread in the interim. This may result in multiple invocations of the initialValue method in the current thread.</p>
+<p><strong>1 . 删除此线程中的局部变量。如果这个线程局部变量随后又被调用,那么它的值将通过调用其initialValue方法重新初始化，除非它的值是由当前线程在过渡期间设置的。这可能导致在当前线程中多次调用initialValue方法。</strong></p>
+<p><strong>2 . 还要注意一点就是 不remove 会发生内存泄漏,溢出,看你线程消耗吧,固有线程随意了,</strong></p>
+</blockquote>
+<h3 id="4-withinitial-方法">4. withInitial 方法</h3>
+<blockquote>
+<p>​	Creates a thread local variable. The initial value of the variable is determined by invoking the get method on the Supplier.</p>
+<p><strong>创造一个线程的局部变量 , 通过调用get方法来确定变量的初始值。</strong></p>
+</blockquote>
+<h2 id="3-使用场景">3. 使用场景</h2>
+<h3 id="1-线程池的使用">1. 线程池的使用</h3>
+<pre><code class="language-java">public class TestThreadLocal2 {
+
+    private static ThreadLocal&lt;Connection&gt; threadLocal = new ThreadLocal&lt;&gt;();
+
+    public static Connection getConnection(){
+        Connection connection = threadLocal.get();
+        if (null == connection) {
+            connection = Datasource.get();
+            threadLocal.set(connection);
+        }
+        return connection;
+    }
+
+    
+    public static void remove(){
+        threadLocal.remove();
+    }
+
+
+
+    public static void main(String[] args) throws InterruptedException {
+
+        Executor executors = Executors.newFixedThreadPool(10);
+        executors.execute(()-&gt;{
+            System.out.println(getConnection());
+        });
+        executors.execute(()-&gt;{
+            System.out.println(getConnection());
+        });
+
+        System.out.println(getConnection());
+    }
+
+    private static class Connection{
+        String name;
+        public Connection(String name) {
+            this.name = name;
+        }
+    }
+
+    private static class Datasource{
+        static ArrayBlockingQueue&lt;Connection&gt; connections = new ArrayBlockingQueue&lt;Connection&gt;(5);
+
+        static {
+            connections.offer(new Connection(&quot;1&quot;));
+            connections.offer(new Connection(&quot;2&quot;));
+            connections.offer(new Connection(&quot;3&quot;));
+            connections.offer(new Connection(&quot;4&quot;));
+            connections.offer(new Connection(&quot;5&quot;));
+        }
+
+        static Connection get(){
+            Connection connection =null;
+            try {
+                // 移除并返回头部元素 阻塞操作
+                connection = connections.take();
+                // 把移除的元素再添加回去 比如 一开始是 1 2 3 4 5 现在 take一个变成了 2 3 4 5 _ 然后put变成了 2 3 4  5 1 .
+                connections.put(connection);
+            } catch (InterruptedException e) {
+                System.out.println(&quot;线程阻塞&quot;);
+            }
+            return connection;
+        }
+    }
+}
+
+</code></pre>
+<h3 id="2-内部变量的使用">2. 内部变量的使用</h3>
+<pre><code class="language-java">public class MainTest {
+
+    public static void main(String[] args) {
+        ExecutorService pool = Executors.newFixedThreadPool(1000);
+
+        // 使用 ThreadLocal
+        Bank bank = new Bank();
+        IntStream.range(0, 3).forEach(e-&gt;{
+            pool.execute(()-&gt;{
+                bank.deposit(200,&quot;新员工 : &quot;+e);
+            });
+        });
+
+        pool.shutdown();
+    }
+}
+
+class Bank {
+    // 初始化账户余额为 1000
+    ThreadLocal&lt;Integer&gt; account = ThreadLocal.withInitial(() -&gt; 1000);
+
+    public void deposit(int money,String name) {
+        System.out.println(name + &quot;--当前账户余额为：&quot; + account.get());
+        account.set(account.get() + money);
+        System.out.println(name + &quot;--存入 &quot; + money + &quot; 后账户余额为：&quot; + account.get());
+        account.remove();
+    }
+}
+</code></pre>
+<p>输出结果  :</p>
+<pre><code class="language-java">新员工 : 0--当前账户余额为：1000
+新员工 : 0--存入 200 后账户余额为：1200
+新员工 : 2--当前账户余额为：1000
+新员工 : 2--存入 200 后账户余额为：1200
+新员工 : 1--当前账户余额为：1000
+新员工 : 1--存入 200 后账户余额为：1200
+</code></pre>
+<h3 id="3-日期格式化并发问题">3.  日期格式化并发问题</h3>
+<pre><code class="language-java">public class DateUtil {
+
+    private static ThreadLocal&lt;SimpleDateFormat&gt; sdf = ThreadLocal
+            .withInitial(() -&gt; new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+
+    // 
+    public static String format(Date date) {
+        String msg = null;
+        try {
+            // 调用get方法 -&gt; withInitial初始化 
+            msg = sdf.get().format(date);
+        } finally {
+            // 用完 remove 
+            sdf.remove();
+        }
+        return msg;
+    }
+
+
+    public static String formatJava8(Date date){
+        return LocalDateTime.now().format(DateTimeFormatter.ofPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+    }
+
+    public static void main(String[] args) throws Exception {
+        System.err.println(format(new Date()));
+
+        System.err.println(formatJava8(new Date()));
+    }
+
+}
+</code></pre>
+<h2 id="4-问题-threadlocalmap-entry">4 . 问题: ThreadLocalMap - entry</h2>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-10-02/85530434-974c-42c8-908a-e4723265379c.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<pre><code class="language-java">static class Entry extends WeakReference&lt;ThreadLocal&gt; {
+    /** The value associated with this ThreadLocal. */
+    Object value;
+
+    Entry(ThreadLocal k, Object v) {
+        // 只有key是弱类型引用,value并不是 , 所以容易出现内存溢出的现象,如果不去手动remove的话
+        super(k);
+        value = v;
+    }
+    
+    .....
+}
+</code></pre>
+<h2 id="5-使用注意的问题">5. 使用注意的问题</h2>
+<h4 id="threadlocalmap的问题">ThreadLocalMap的问题</h4>
+<p>由于ThreadLocalMap的key是弱引用，而Value是强引用。这就导致了一个问题，ThreadLocal在没有外部对象强引用时，发生GC时弱引用Key会被回收，而Value不会回收，如果创建ThreadLocal的线程一直持续运行，那么这个Entry对象中的value就有可能一直得不到回收，发生内存泄露。</p>
+<p><strong>如何避免泄漏</strong><br>
+既然Key是弱引用，那么我们要做的事，就是在调用ThreadLocal的get()、set()方法时完成后再调用remove方法，将Entry节点和Map的引用关系移除，这样整个Entry对象在GC Roots分析后就变成不可达了，下次GC的时候就可以被回收。</p>
+<p>如果使用ThreadLocal的set方法之后，没有显示的调用remove方法，就有可能发生内存泄露，所以养成良好的编程习惯十分重要，使用完ThreadLocal之后，记得调用remove方法。</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%85%A8%E5%B1%80%E8%A7%82">1. 全局观</a></li>
+<li><a href="#2-%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E6%B3%95">2. 常用的方法</a>
+<ul>
+<li><a href="#1-get%E6%96%B9%E6%B3%95">1. get方法</a></li>
+<li><a href="#2-set%E6%96%B9%E6%B3%95">2. set方法</a></li>
+<li><a href="#3-remove%E6%96%B9%E6%B3%95">3. remove方法</a></li>
+<li><a href="#4-withinitial-%E6%96%B9%E6%B3%95">4. withInitial 方法</a></li>
+</ul>
+</li>
+<li><a href="#3-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF">3. 使用场景</a>
+<ul>
+<li><a href="#1-%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E4%BD%BF%E7%94%A8">1. 线程池的使用</a></li>
+<li><a href="#2-%E5%86%85%E9%83%A8%E5%8F%98%E9%87%8F%E7%9A%84%E4%BD%BF%E7%94%A8">2. 内部变量的使用</a></li>
+<li><a href="#3-%E6%97%A5%E6%9C%9F%E6%A0%BC%E5%BC%8F%E5%8C%96%E5%B9%B6%E5%8F%91%E9%97%AE%E9%A2%98">3.  日期格式化并发问题</a></li>
+</ul>
+</li>
+<li><a href="#4-%E9%97%AE%E9%A2%98-threadlocalmap-entry">4 . 问题: ThreadLocalMap - entry</a></li>
+<li><a href="#5-%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E7%9A%84%E9%97%AE%E9%A2%98">5. 使用注意的问题</a><br>
+*
+<ul>
+<li><a href="#threadlocalmap%E7%9A%84%E9%97%AE%E9%A2%98">ThreadLocalMap的问题</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring-MVC  源码分析 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spring-mvc-jia-zai-guo-cheng/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring-MVC  源码分析</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-15</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spring-mvc-jia-zai-guo-cheng/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2384字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	我们都知道Spring-Mvc的搭建环境的环节, 就是注册一个<code>DispatcherServlet</code> 的Servlet , 然后servlet-mapping拦截所有的请求 , 此时我们是否先应该学习一下Servlet呢 ?  学习玩Servlet 再看看就很简单了 ........</p>
+</blockquote>
+<h2 id="1-servlet的生命周期">1. Servlet的生命周期</h2>
+<h3 id="1-简单的demo">1. 简单的Demo</h3>
+<p>这是我的web.xml配置文件</p>
+<pre><code class="language-xml">  &lt;servlet&gt;
+    &lt;servlet-name&gt;myServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;com.example.web.MyServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath*:springMVC.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;myServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/my&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+</code></pre>
+<p>这是我的Servlet类</p>
+<pre><code class="language-java">public class MyServlet extends HttpServlet {
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println(&quot;service&quot;);
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println(&quot;destroy&quot;);
+    }
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        String contextConfigLocation = config.getInitParameter(&quot;contextConfigLocation&quot;);
+        System.out.println(&quot;InitParameter : &quot; + contextConfigLocation);
+        System.out.println(&quot;init&quot;);
+    }
+}
+</code></pre>
+<p>第一次请求输出的结果 :</p>
+<pre><code class="language-java">InitParameter : classpath*:springMVC.xml
+init
+service
+</code></pre>
+<p>第二次请求输出的结果 :</p>
+<pre><code class="language-java">service
+</code></pre>
+<p>第三次  ..  以后呢 ?</p>
+<pre><code class="language-java">service
+</code></pre>
+<p>当我们把Tomcat服务器关闭呢 ?</p>
+<pre><code class="language-java">destroy
+</code></pre>
+<h3 id="2-通过demo我们知道了什么">2. 通过Demo,我们知道了什么 ?</h3>
+<h4 id="1-init-方法">1. init(..) 方法</h4>
+<p>他只会执行一次 , 就是当第一个请求到达或者Servlet容器启动的时候执行 .</p>
+<p><strong>补充 :</strong> <code>&lt;load-on-startup&gt;0&lt;/load-on-startup&gt;</code> 这个标签控制着Servlet加载的时机,默认是-1 ,就是需要用户去访问才会初始化 , 当大于等于0时 ,Servlet容器启动的时候就会帮助我们初始化</p>
+<h4 id="2-service-方法">2. service() 方法</h4>
+<p>他会在每次请求到达的时候都会去执行 .</p>
+<h4 id="3-destroy-方法">3. destroy() 方法</h4>
+<p>他会在Servlet容器关闭的时候执行 ,也是只会执行一次</p>
+<h4 id="4-总结">4. 总结</h4>
+<p>通过上诉我们知道了Servlet的生命周期 ,那么我们就开始吧 , 看看<code>DispatcherServlet</code>是如何执行的</p>
+<h2 id="2-dispatcherservlet-的核心">2. DispatcherServlet 的核心</h2>
+<p>配置项 web.xml 的</p>
+<pre><code class="language-xml">  &lt;servlet&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+    &lt;init-param&gt;
+      &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+      &lt;param-value&gt;classpath*:springMVC.xml&lt;/param-value&gt;
+    &lt;/init-param&gt;
+  &lt;/servlet&gt;
+  &lt;servlet-mapping&gt;
+    &lt;servlet-name&gt;dispatcherServlet&lt;/servlet-name&gt;
+    &lt;url-pattern&gt;/&lt;/url-pattern&gt;
+  &lt;/servlet-mapping&gt;
+// 没有配置初始化启动是为了方便Debug 后期
+</code></pre>
+<p>springMVC.xml 配置</p>
+<pre><code class="language-xml">    &lt;!--开启注解扫描--&gt;
+    &lt;context:component-scan base-package=&quot;com.example.web&quot;&gt;
+        &lt;!--只扫描controller注解下的对象--&gt;
+        &lt;context:include-filter type=&quot;annotation&quot; expression=&quot;org.springframework.stereotype.Controller&quot;/&gt;
+    &lt;/context:component-scan&gt;
+
+
+    &lt;!--视图解析器--&gt;
+    &lt;bean id=&quot;internalResourceViewResolver&quot; class=&quot;org.springframework.web.servlet.view.InternalResourceViewResolver&quot;&gt;
+        &lt;property name=&quot;prefix&quot; value=&quot;/WEB-INF/pages/&quot;&gt;&lt;/property&gt;
+        &lt;property name=&quot;suffix&quot; value=&quot;.jsp&quot;&gt;&lt;/property&gt;
+    &lt;/bean&gt;
+
+    &lt;!--开启MVC注解驱动--&gt;
+    &lt;mvc:annotation-driven &gt;&lt;/mvc:annotation-driven&gt;
+</code></pre>
+<p>Controller 配置</p>
+<pre><code class="language-java">@Controller
+public class TestController {
+
+    @GetMapping(&quot;/get&quot;)
+    public String get(){
+        return &quot;hello&quot;;
+    }
+}
+</code></pre>
+<h3 id="1-认识dispatcherservlet">1. 认识DispatcherServlet</h3>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/7f83b9b8-07eb-417d-adbb-636f456ad513.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>首先我们看蓝色部分 , 他继承自 <code>FrameworkServlet</code> , 然后FrameworkServlet继承了<code>HttpServletBean</code>,然后就到了我们常见的 <code>HttpServlet</code>和<code>GenericServlet</code> .</p>
+<h3 id="1-init-方法启动过程">1. init() 方法启动过程</h3>
+<p>首先我们去访问<code>http://localhost:8080/get</code></p>
+<p>首先由于 <code>HttpServletBean</code>重写了 <code>init()</code>方法 , 第一步就是获取我们<code>&lt;init-param&gt;</code>传入的配置信息 .</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/cbf8dea6-aa18-4232-8e4c-c0e6c3c323b0.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>第二步 : 执行 init()中的 <code>initServletBean()</code> 方法 ,</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/7f038918-9c33-441b-96b7-1f410faf59f4.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>所以 init执行完毕以后 以及将 ApplicationContext 注册成功了  , 所有的元信息都在里面</p>
+<h3 id="2-service方法-执行流程">2. service()方法 执行流程</h3>
+<h4 id="1-第一步-执行service-方法">1. 第一步  执行service() 方法</h4>
+<p>方法看似很简单 ,实际上包含了全部流程 , 就是进去<code>service()</code> 方法</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/021f91dd-0154-4b5f-ab69-3feb26322c3d.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="2-第二步-processrequest方法">2. 第二步  processRequest()方法</h4>
+<p>就是 <code>processRequest()</code> 方法上 , 我测试有BUG不能直接进去这个方法 , 也不懂为啥,我们就先看吧,其主要</p>
+<p>首先就是这个<code>initContextHolders()</code> 方法, 我们去看源码,发现他的意思就是 : <strong>将LocaleContext实例与当前线程相关联</strong>,类似于一种环境,就是你在中国,中国就是一个环境,这里可以取到 你所有的本地信息 ,可以看看java的<code>Local</code>类</p>
+<p>其次就是调用 doService() 方法 ,由于他是抽象类并未实现 所以我们需要找子类 <code>DispatcherServlet</code>他的实现方法</p>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/1fc4501b-3405-4362-92ee-74af97030cc9.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="3-第三步-调用doservice-方法">3. 第三步 调用doService() 方法</h4>
+<p>主角开始 <code>DispatcherServlet#doService()</code> ,</p>
+<p>首先就是将我们的 ApplicationContext 注册到 request中 ,方便以后拿到</p>
+<p>然后他使用了一种适配器模式 , 执行了 doDispatch() 方法</p>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/e47e6440-862a-44d5-9c57-f07bc2c5d87e.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="7"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/04bf6891-1c3b-48e3-8277-8300571be99a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="4-第四步-调用dodispatch方法">4. 第四步  调用doDispatch()方法</h4>
+<p>大致流程就是通过 <code>handlerMappings</code>获取<code>HandlerExecutionChain</code>中的<code>handler</code>对象, 然后拿<code>handler</code>对象去找到他匹配的<code>HandlerAdapter</code>对象 ,</p>
+<p>还有一个细节就是<code>mappedHandler.applyPreHandle(processedRequest, response)</code>这个方法的执行其实就是执行拦截器<code>HandlerInterceptor</code>, 如果拦截了直接就返回了, 没有拦截继续调用<code>HandlerAdapter</code>的<code>handle()</code>方法去做后续操作.....</p>
+<p><code>HandlerMapping</code> 是什么 ?</p>
+<blockquote>
+<p>​	Interface to be implemented by objects that define a mapping between requests and handler objects.</p>
+<p>定义请求和处理程序对象之间的映射关系, 他就一个方法 <code>HandlerExecutionChain getHandler(HttpServletRequest request) throws Exception;</code> 获取 HandlerExecutionChain  ,</p>
+</blockquote>
+<p><code>HandlerExecutionChain</code> 是什么 ?</p>
+<blockquote>
+<p>​	Handler execution chain, consisting of handler object and any handler interceptors. Returned by HandlerMapping's HandlerMapping.getHandler method.</p>
+<p>包含了 handler对象和拦截器 , 可以通过 <code>HandlerMapping</code>的 <code>getHandler ()</code>方法获取</p>
+</blockquote>
+<p><code>handler</code>是什么 ?</p>
+<blockquote>
+<p>​	HandlerMethod 对象 ,就是我们的Controller对象和他的方法组成的一个对象 , 元信息</p>
+</blockquote>
+<p><code>HandlerAdapter</code>是什么 ?</p>
+<blockquote>
+<p>​	MVC framework SPI, allowing parameterization of the core MVC workflow.</p>
+<p>MVC框架SPI，允许参数化的核心MVC工作流。 主要方法 <code>ModelAndView handle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception;</code>  根据方法我们就可以知道 他的作用是什么 ,</p>
+</blockquote>
+<p>所以三者的关系是<code>HandlerMapping</code> 是一个菜单 , 每个请求进来会根据请求,可以找到它对应的<code>HandlerExecutionChain</code>进而拿到<code>HandlerMethod</code>对象  ,</p>
+<p>当我们拿到 <code>HandlerMethod</code> 对象 , 此时做的不是简单的调用 ,Method.invoke() 就完了 .... ,他使用了适配器模式 ,所以我们需要通过 <code>HandlerMethod</code> 对象找到他何时的适配器 <code>HandlerAdapter</code> ,然后适配器执行他的 handle 方法帮助我们返回 <code>ModelAndVive</code> .</p>
+<figure data-type="image" tabindex="8"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/4f0c6c39-ab9d-4d6d-b319-380587b1a5e1.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="5-第五步-handler-方法">5. 第五步  handler() 方法</h4>
+<p>我们进入<code>mv = ha.handle(processedRequest, response, mappedHandler.getHandler())</code> 方法继续执行</p>
+<figure data-type="image" tabindex="9"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/8f4d5c3d-1259-476c-acc6-55baf413a537.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这时候我们需要看看什么是 <code>HandlerMethod</code> ,官方给的意思是 : <strong>此对象由方法和bean组成的处理程序方法的信息 ,提供对方法参数、方法返回值、方法注释等的方便访问。就是我们的TestController对象和get方法 封装了起来,类似于元信息</strong>.</p>
+<h4 id="6-第六步-继续跟进">6. 第六步 继续跟进</h4>
+<p>执行 <code>handleInternal(request, response, (HandlerMethod) handler)</code>方法 ,</p>
+<figure data-type="image" tabindex="10"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/1d37604c-c91d-47c3-9d6e-cc1293d633ca.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="7-第七步-继续跟进">7. 第七步  继续跟进</h4>
+<p>执行 <code>mav = invokeHandlerMethod(request, response, handlerMethod);</code> 方法我们继续跟进</p>
+<p>代码太长 我就截取一部分 :通过 HandlerMethod调用 返回 ModelAndVive</p>
+<figure data-type="image" tabindex="11"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/024062cd-ae6f-4aa8-a6bd-940035d17e05.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><code>invocableMethod.invokeAndHandle(webRequest, mavContainer);</code>方法执行 :</p>
+<figure data-type="image" tabindex="12"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/3fdcb64c-021d-49c2-8fff-400491e04675.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><code>Object returnValue = invokeForRequest(webRequest, mavContainer, providedArgs);</code> 方法执行 :</p>
+<figure data-type="image" tabindex="13"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/9f391b0d-d375-4eb5-b220-438256a43570.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="8-第八步-终于执行真正的逻辑了">8. 第八步  终于执行真正的逻辑了</h4>
+<p><code>Object returnValue = doInvoke(args);</code> 终于完成了 ............. 执行了我们的写的方法</p>
+<figure data-type="image" tabindex="14"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/02cc31c0-67f8-4b86-86d2-935ed11f3ec0.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此时就已经 讲我们写的:</p>
+<pre><code class="language-java">    @GetMapping(&quot;/get&quot;)
+    public String get(){
+        return &quot;hello&quot;;
+    }
+</code></pre>
+<p>返回了 , 我们可以看看这个对象是什么 :  确实使我们的返回的结果 :</p>
+<figure data-type="image" tabindex="15"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/7c9cb801-406a-4496-96e7-ab3f20f05d5b.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此后的过程就是一个 逆向过程往回返了 ....</p>
+<h4 id="9-第九步-根据返回的vive-渲染视图">9. 第九步  根据返回的vive 渲染视图</h4>
+<p>到了我们的 <code>DispatcherServlet</code> 的<code>mv = ha.handle(processedRequest, response, mappedHandler.getHandler());</code> 这个方法执行完毕了 ............................... 然后开始渲染  ... ,执行的是 <code>processDispatchResult(processedRequest, response, mappedHandler, mv, dispatchException);</code></p>
+<figure data-type="image" tabindex="16"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/edf083c2-7800-44ae-ace0-7486308b623d.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>渲染视图 , 调用其他方法 继续追</p>
+<figure data-type="image" tabindex="17"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/4f424a62-dadf-410d-bbc6-26893210a830.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>继续追 :</p>
+<figure data-type="image" tabindex="18"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/84e88eeb-3fc5-4bfc-8cc4-34829b09b1d2.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>就到了我们配置的视图解析器 , 渲染完成 .</p>
+<h4 id="10-第十步-结束processrequest-方法发布事件">10. 第十步  结束processRequest() 方法,发布事件</h4>
+<p>然后最后就到了processRequest() 方法的终点 ,发布了一个事件 , 就完成了</p>
+<figure data-type="image" tabindex="19"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-15/6916ae0a-41b6-4f6c-bb7e-b4752d66874b.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这个最后的事件发布有点骚哇 ,发布以后并无卵用 ,spring框架 并没有监听该事件 .... ,此时需要我们自己去监听 , 所以下面我自己去实现了一个简单的监听流程 ....</p>
+<h3 id="3-destroy-方法-2">3. destroy() 方法</h3>
+<pre><code class="language-java">	@Override
+	public void destroy() {
+		getServletContext().log(&quot;Destroying Spring FrameworkServlet '&quot; + getServletName() + &quot;'&quot;);
+		// Only call close() on WebApplicationContext if locally managed...
+		if (this.webApplicationContext instanceof ConfigurableApplicationContext &amp;&amp; !this.webApplicationContextInjected) {
+			((ConfigurableApplicationContext) this.webApplicationContext).close();
+		}
+	}
+</code></pre>
+<blockquote>
+<p>​	Close the WebApplicationContext of this servlet.</p>
+</blockquote>
+<p>就是将 ApplicationContext关闭了 ..............</p>
+<h2 id="3-servletrequesthandledevent-使用">3. ServletRequestHandledEvent 使用</h2>
+<p>写一个 Listener 实现自 ApplicationListener ,</p>
+<pre><code class="language-java">@Component
+public class ServletRequestHandledEventListener implements ApplicationListener&lt;ServletRequestHandledEvent&gt; {
+
+    /**
+     * Handle an application event.
+     *
+     * @param event the event to respond to
+     */
+    @Override
+    public void onApplicationEvent(ServletRequestHandledEvent event) {
+
+        System.out.println(Thread.currentThread().getName()+&quot; 收到事件 : &quot; + event);
+    }
+}
+</code></pre>
+<p>配置一个spring的上下文配置 applicationContext.xml</p>
+<pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+       xmlns:context=&quot;http://www.springframework.org/schema/context&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd&quot;&gt;
+
+
+    &lt;!--开启扫描--&gt;
+    &lt;context:component-scan base-package=&quot;com.example.listener&quot;&gt;&lt;/context:component-scan&gt;
+
+&lt;/beans&gt;
+</code></pre>
+<p>注入到 环境中web.xml中 , 监听器实现了ServletContextListener,所以当容器启动会自动加载</p>
+<pre><code class="language-xml">  &lt;!--监听器 , 加载contextConfigLocation属性的配置文件--&gt;
+  &lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+  &lt;/listener&gt;
+  &lt;!--设施spring配置文件的文件路径,不能改名字--&gt;
+  &lt;context-param&gt;
+    &lt;param-name&gt;contextConfigLocation&lt;/param-name&gt;
+    &lt;param-value&gt;classpath:applicationContext.xml&lt;/param-value&gt;
+  &lt;/context-param&gt;
+</code></pre>
+<p>所以运行结果 ,当我们访问  <code>http://localhost:8080/get</code> 链接时 ..</p>
+<pre><code class="language-java">http-nio-8080-exec-6 收到事件 : ServletRequestHandledEvent: url=[/get]; client=[0:0:0:0:0:0:0:1]; method=[GET]; servlet=[dispatcherServlet]; session=[B2595F9D400922D5A4EC7FA55162349C]; user=[null]; time=[217ms]; status=[OK]
+http-nio-8080-exec-9 收到事件 : ServletRequestHandledEvent: url=[/get]; client=[0:0:0:0:0:0:0:1]; method=[GET]; servlet=[dispatcherServlet]; session=[B2595F9D400922D5A4EC7FA55162349C]; user=[null]; time=[4ms]; status=[OK]
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-servlet%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">1. Servlet的生命周期</a>
+<ul>
+<li><a href="#1-%E7%AE%80%E5%8D%95%E7%9A%84demo">1. 简单的Demo</a></li>
+<li><a href="#2-%E9%80%9A%E8%BF%87demo%E6%88%91%E4%BB%AC%E7%9F%A5%E9%81%93%E4%BA%86%E4%BB%80%E4%B9%88">2. 通过Demo,我们知道了什么 ?</a>
+<ul>
+<li><a href="#1-init-%E6%96%B9%E6%B3%95">1. init(..) 方法</a></li>
+<li><a href="#2-service-%E6%96%B9%E6%B3%95">2. service() 方法</a></li>
+<li><a href="#3-destroy-%E6%96%B9%E6%B3%95">3. destroy() 方法</a></li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-dispatcherservlet-%E7%9A%84%E6%A0%B8%E5%BF%83">2. DispatcherServlet 的核心</a>
+<ul>
+<li><a href="#1-%E8%AE%A4%E8%AF%86dispatcherservlet">1. 认识DispatcherServlet</a></li>
+<li><a href="#1-init-%E6%96%B9%E6%B3%95%E5%90%AF%E5%8A%A8%E8%BF%87%E7%A8%8B">1. init() 方法启动过程</a></li>
+<li><a href="#2-service%E6%96%B9%E6%B3%95-%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">2. service()方法 执行流程</a>
+<ul>
+<li><a href="#1-%E7%AC%AC%E4%B8%80%E6%AD%A5-%E6%89%A7%E8%A1%8Cservice-%E6%96%B9%E6%B3%95">1. 第一步  执行service() 方法</a></li>
+<li><a href="#2-%E7%AC%AC%E4%BA%8C%E6%AD%A5-processrequest%E6%96%B9%E6%B3%95">2. 第二步  processRequest()方法</a></li>
+<li><a href="#3-%E7%AC%AC%E4%B8%89%E6%AD%A5-%E8%B0%83%E7%94%A8doservice-%E6%96%B9%E6%B3%95">3. 第三步 调用doService() 方法</a></li>
+<li><a href="#4-%E7%AC%AC%E5%9B%9B%E6%AD%A5-%E8%B0%83%E7%94%A8dodispatch%E6%96%B9%E6%B3%95">4. 第四步  调用doDispatch()方法</a></li>
+<li><a href="#5-%E7%AC%AC%E4%BA%94%E6%AD%A5-handler-%E6%96%B9%E6%B3%95">5. 第五步  handler() 方法</a></li>
+<li><a href="#6-%E7%AC%AC%E5%85%AD%E6%AD%A5-%E7%BB%A7%E7%BB%AD%E8%B7%9F%E8%BF%9B">6. 第六步 继续跟进</a></li>
+<li><a href="#7-%E7%AC%AC%E4%B8%83%E6%AD%A5-%E7%BB%A7%E7%BB%AD%E8%B7%9F%E8%BF%9B">7. 第七步  继续跟进</a></li>
+<li><a href="#8-%E7%AC%AC%E5%85%AB%E6%AD%A5-%E7%BB%88%E4%BA%8E%E6%89%A7%E8%A1%8C%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%80%BB%E8%BE%91%E4%BA%86">8. 第八步  终于执行真正的逻辑了</a></li>
+<li><a href="#9-%E7%AC%AC%E4%B9%9D%E6%AD%A5-%E6%A0%B9%E6%8D%AE%E8%BF%94%E5%9B%9E%E7%9A%84vive-%E6%B8%B2%E6%9F%93%E8%A7%86%E5%9B%BE">9. 第九步  根据返回的vive 渲染视图</a></li>
+<li><a href="#10-%E7%AC%AC%E5%8D%81%E6%AD%A5-%E7%BB%93%E6%9D%9Fprocessrequest-%E6%96%B9%E6%B3%95%E5%8F%91%E5%B8%83%E4%BA%8B%E4%BB%B6">10. 第十步  结束processRequest() 方法,发布事件</a></li>
+</ul>
+</li>
+<li><a href="#3-destroy-%E6%96%B9%E6%B3%95-2">3. destroy() 方法</a></li>
+</ul>
+</li>
+<li><a href="#3-servletrequesthandledevent-%E4%BD%BF%E7%94%A8">3. ServletRequestHandledEvent 使用</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

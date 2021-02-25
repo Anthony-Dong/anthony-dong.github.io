@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>HIVE - 入门学习二 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/hive-ru-men-xue-xi-er/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>HIVE - 入门学习二</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/hive-ru-men-xue-xi-er/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/YZlAYWOZz21/"
+								class="tag">大数据</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3099字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">14 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>DDL : (Data Definition Language)  数据定义语言 , 比如 create alter drop truncate ,这些语句</p>
+<p>DML : (Data Manipulation Language) 数据操作语言   其实就是我们所说的 CRUD 操作</p>
+<p>DCL : (Data Control Language)  数据控制语言  , 比如一些事务操作  ,数据库权限之类的</p>
+<p>我们的重点主要是前两个</p>
+</blockquote>
+<h2 id="ddl语句">DDL语句</h2>
+<h3 id="1-数据库创建语句">1. 数据库创建语句</h3>
+<pre><code class="language-sql">CREATE DATABASE [IF NOT EXISTS] database_name
+[COMMENT database_comment]
+[LOCATION hdfs_path]
+[WITH DBPROPERTIES (property_name=property_value, ...)];
+</code></pre>
+<p>使用 :</p>
+<pre><code class="language-shell">1. 创建数据库语句 , 指定位置在 hdfs 上的 /test 目录下
+create database test2 location '/test2';
+
+create database if not exists test;
+
+2. 删除数据库
+drop database test;
+
+删除非空数据库
+drop database test cascade;
+
+3.查询
+show databases;
+show databases like 'test*'
+
+4.查询信息
+desc database test;
+desc database extended test;
+
+hive&gt; desc database default;
+OK
+default	Default Hive database	hdfs://hadoop1:9000/user/hive/warehouse	public	ROLE	
+Time taken: 0.055 seconds, Fetched: 1 row(s)
+
+5.修改数据库属性操作
+alter database db_hive set dbproperties('createtime'='20170830');
+</code></pre>
+<h3 id="2-表创建语句">2. 表创建语句</h3>
+<pre><code class="language-sql">CREATE [EXTERNAL] TABLE [IF NOT EXISTS] table_name //external 外部表`EXTERNAL_TABLE`,删除表时只会删除元信息,不会删除数据. 默认是管理表`MANAGED_TABLE`
+[(col_name data_type [COMMENT col_comment], ...)] //字段属性
+[COMMENT table_comment] //添加注释
+[PARTITIONED BY (col_name data_type [COMMENT col_comment], ...)] 
+[CLUSTERED BY (col_name, col_name, ...) 
+[SORTED BY (col_name [ASC|DESC], ...)] INTO num_buckets BUCKETS] 
+[ROW FORMAT row_format] 
+[STORED AS file_format]  // sequencefile(二进制) textfile(文本) rcfile(列式存储)
+[LOCATION hdfs_path]  // HDFS 上的位置
+[TBLPROPERTIES (property_name=property_value, ...)]
+[AS select_statement]  // 根据查询结果创建表 或者用like可以复制表结构,但是不复制数据
+</code></pre>
+<p>使用 :</p>
+<pre><code class="language-shell">1. 创建表 
+// 字段 id 和 name  , 列分隔符 `\t` 分割开 , 存储格式为 textfile , 路径是 `/user/hive/warehouse/student2`
+create table if not exists student2(
+id int, name string
+)
+row format delimited fields terminated by '\t'
+stored as textfile
+location '/user/hive/warehouse/student2';
+
+2. 根据查询结果创建表 , 此时执行mr ,同时也新建了一个表 ,, 也就是一个文件夹 ,同时把数据也拷贝过去了
+create table if not exists student3 as select id, name from student;
+
+3. 根据已经存在的表结构创建表 , 此时也是新建了一个表 , 也就是一个文件夹
+create table if not exists student4 like student;
+
+4. 查询表类型
+desc formatted student2
+Table Type:             MANAGED_TABLE  
+
+6. 查询建表语句
+show create table student;
+
+7. 删除表
+drop table student;
+
+8.修改表为外部表
+alter table student set tblproperties('EXTERNAL'='TRUE');
+
+9. 查看属性
+desc formatted student2;
+</code></pre>
+<h4 id="插入数据-本地hdfs文件插入">插入数据 - 本地/HDFS文件插入</h4>
+<pre><code class="language-shell">1. 创建一张表
+create table stu3(id int , name string) row format delimited fields terminated by '\t';
+
+2. 创建文件
+[admin@hadoop1 data]$ cat stu3.txt 
+1	xiaoli
+2	xiaowang
+3	xiaoming
+
+3.上传到stu3 表中 
+load data  local inpath '/opt/software/apache-hive-1.2.1-bin/data/stu3.txt' into table stu3;
+
+4.查询
+hive&gt; select * from stu3;
+OK
+1	xiaoli
+2	xiaowang
+3	xiaoming
+</code></pre>
+<p>查看HDFS , 发现规律 ............</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-21/4ad88603-641d-418e-aa38-955cbe928db4.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们查看一下我们的建表语句 , 发现<code>/user/hive/warehouse/stu3</code> 就是在这里 , 所以他其实做的就是将你的<code>stu3.txt</code> 文件通过HDFS上传到了这里</p>
+<pre><code class="language-shell">hive&gt; show create table stu3;
+OK
+CREATE TABLE `stu3`(
+  `id` int, 
+  `name` string)
+ROW FORMAT DELIMITED 
+  FIELDS TERMINATED BY '\t' 
+STORED AS INPUTFORMAT 
+  'org.apache.hadoop.mapred.TextInputFormat' 
+OUTPUTFORMAT 
+  'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat'
+LOCATION
+  'hdfs://hadoop1:9000/user/hive/warehouse/stu3'
+TBLPROPERTIES (
+  'COLUMN_STATS_ACCURATE'='true', 
+  'numFiles'='1', 
+  'totalSize'='31', 
+  'transient_lastDdlTime'='1574342187')
+Time taken: 0.257 seconds, Fetched: 16 row(s)
+</code></pre>
+<p>因此我们此时可以将 我们本地的文件 直接以建表规则的方式,通过HDFS上传到<code>/user/hive/warehouse/stu3</code> 目录下面,</p>
+<pre><code class="language-shell">[admin@hadoop1 data]$ cat stu3_2.txt 
+4	anthony
+5	flex
+6	xiaofan
+
+[admin@hadoop1 data]$ hadoop fs -put stu3_2.txt /user/hive/warehouse/stu3
+
+hive&gt; select * from stu3;
+OK
+1	xiaoli
+2	xiaowang
+3	xiaoming
+4	anthony
+5	flex
+6	xiaofan
+</code></pre>
+<p>发现完全 OK , 此时我们想 ,我们可以让 HDFS 上的文件 加载到<code>stu3</code>这张表中 , 此时</p>
+<pre><code class="language-java">1. 上传到 HDFS 
+[admin@hadoop1 data]$ cp stu3.txt stu4.txt
+[admin@hadoop1 data]$ ls
+1.txt  stu3_2.txt  stu3.txt  stu4.txt  stu.txt
+[admin@hadoop1 data]$ hadoop fs -put stu4.txt /
+    
+2. 将HDFS 上的'/stu4.txt' 加载到 表stu3中
+hive&gt; load data inpath '/stu4.txt' into table stu3;
+Loading data to table default.stu3
+Table default.stu3 stats: [numFiles=3, totalSize=89]
+OK
+Time taken: 0.392 seconds
+
+3. 查询一下
+hive&gt; select * from stu3;
+OK
+1	xiaoli
+2	xiaowang
+3	xiaoming
+4	anthony
+5	flex
+6	xiaofan
+1	xiaoli
+2	xiaowang
+3	xiaoming
+Time taken: 0.138 seconds, Fetched: 9 row(s)    
+</code></pre>
+<p>查看一下 HDFS :</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-21/4079531a-6b16-4d0a-8e08-83b94d096db6.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>查看一下源文件 发现是移动到了 stu3 目录下面  ,但是其实是改了NameNode的元数据信息 ....</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-21/88392e80-3b57-4ba6-a57b-1db3847cfdf3.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="3-分区表">3. 分区表</h3>
+<blockquote>
+<p>分区类似于索引 , 可以提高查询速度 , 因为每一个分区就是一个文件夹 , 多级分区也是多级文件夹,这些都保存在数据库的元信息中</p>
+</blockquote>
+<p>建表语句</p>
+<pre><code class="language-sql">hive (default)&gt; create table dept_partition(
+deptno int, dname string, loc string
+)
+partitioned by (month string) //分区规则,可以有多个,用','分开就行了
+row format delimited fields terminated by '\t'
+location '/hive/dept_partition';
+</code></pre>
+<p>插入数据 ..</p>
+<pre><code class="language-sql">load data inpath '/hive/dept.txt' into table default.dept_partition partition(month='201709');
+</code></pre>
+<p>查询语句 :</p>
+<pre><code class="language-sql">select * from dept_partition where month='201709';
+</code></pre>
+<p>增加分区</p>
+<pre><code class="language-sql">alter table dept_partition add partition(month='201706') ;
+
+alter table dept_partition add partition(month='201705') partition(month='201704');
+</code></pre>
+<p>删除分区</p>
+<pre><code class="language-sql"> alter table dept_partition drop partition (month='201704');
+ 
+ alter table dept_partition drop partition (month='201705'), partition (month='201706');
+</code></pre>
+<p>查看分区</p>
+<pre><code class="language-sql">show partitions dept_partition;
+</code></pre>
+<p>创建多级分区 :</p>
+<pre><code class="language-sql">hive (default)&gt; create table dept_partition2(
+               deptno int, dname string, loc string
+               )
+               partitioned by (month string, day string)
+               row format delimited fields terminated by '\t';    
+</code></pre>
+<p>添加数据:</p>
+<pre><code class="language-sql">hive (default)&gt; load data local inpath '/opt/module/datas/dept.txt' into table default.dept_partition2 partition(month='201709', day='13');
+</code></pre>
+<p>查询</p>
+<pre><code class="language-sql">select * from dept_partition2 where month='201709' and day='13';
+</code></pre>
+<p>直接上传到HDFS 上</p>
+<ol>
+<li>上传后修复数据</li>
+</ol>
+<pre><code class="language-sql"> msck repair table dept_partition2;
+</code></pre>
+<ol start="2">
+<li>上传后添加分区</li>
+</ol>
+<pre><code class="language-sql"> alter table dept_partition2 add partition(month='201709',day='11');
+</code></pre>
+<ol start="3">
+<li>添加数据直接</li>
+</ol>
+<pre><code class="language-sql">load data local inpath '/opt/module/datas/dept.txt' into table dept_partition2 partition(month='201709',day='10');
+</code></pre>
+<h3 id="4-修改表">4. 修改表</h3>
+<ol>
+<li>修改表的名字</li>
+</ol>
+<pre><code class="language-sql">alter table table_name rename to new_table_name ; 
+</code></pre>
+<ol start="2">
+<li>添加列</li>
+</ol>
+<pre><code class="language-sql">alter table table_name add columns(deptdesc string);
+</code></pre>
+<ol start="3">
+<li>更新列</li>
+</ol>
+<pre><code class="language-sql">alter table dept_partition change column deptdesc desc int;
+</code></pre>
+<h2 id="dml-语句">DML 语句</h2>
+<h3 id="1-添加数据">1. 添加数据</h3>
+<pre><code class="language-sql">load data [local] inpath '/opt/module/datas/student.txt' [overwrite] into table student [partition (partcol1=val1,…)];
+
+（1）load data:表示加载数据
+（2）local:表示从本地加载数据到hive表；不写则从HDFS加载数据
+（3）inpath:表示加载数据的路径
+（4）overwrite:表示覆盖表中已有数据，否则表示追加
+（5）into table:表示加载到哪张表
+（6）student:表示具体的表
+（7）partition:表示上传到指定分区
+
+ create table student(id int, name string) stored as textfile partitioned by (month string) row format delimited fields terminated by '\t' location '/hive/student';
+</code></pre>
+<h3 id="2-插入语句">2. 插入语句</h3>
+<pre><code class="language-sql">1. 基本插入
+insert into table  student partition(month='201709') values(1,'wangwu'),(2,’zhaoliu’);
+
+2. 根据查询结果覆盖
+insert overwrite table student partition(month='201708') select id, name from student where month='201709';
+
+3. 创建表
+create table if not exists student3 as select id, name from student;
+
+
+</code></pre>
+<h3 id="3-查询语句">3. 查询语句</h3>
+<ol>
+<li>支持 as</li>
+</ol>
+<pre><code class="language-sql">select ename AS name, deptno dn from emp;
+</code></pre>
+<ol start="2">
+<li>支持运算符操作</li>
+</ol>
+<pre><code class="language-sql">select sal +1 from emp;
+</code></pre>
+<ol start="3">
+<li>支持常见的聚合函数操作</li>
+</ol>
+<pre><code class="language-sql">count(*)
+max(sal)
+min(sal)
+ sum(sal)
+ avg(sal)
+</code></pre>
+<ol start="4">
+<li>支持 limit语句</li>
+</ol>
+<pre><code class="language-sql">select * from emp limit 5;
+</code></pre>
+<ol start="5">
+<li>支持where</li>
+</ol>
+<pre><code class="language-sql">select * from emp where sal &gt;1000;
+</code></pre>
+<ol start="6">
+<li>比较符</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>支持的数据类型</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A=B</td>
+<td>基本数据类型</td>
+<td>如果A等于B则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>A&lt;=&gt;B</td>
+<td>基本数据类型</td>
+<td>如果A和B都为NULL，则返回TRUE，其他的和等号（=）操作符的结果一致，如果任一为NULL则结果为NULL</td>
+</tr>
+<tr>
+<td>A&lt;&gt;B,   A!=B</td>
+<td>基本数据类型</td>
+<td>A或者B为NULL则返回NULL；如果A不等于B，则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>A&lt;B</td>
+<td>基本数据类型</td>
+<td>A或者B为NULL，则返回NULL；如果A小于B，则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>A&lt;=B</td>
+<td>基本数据类型</td>
+<td>A或者B为NULL，则返回NULL；如果A小于等于B，则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>A&gt;B</td>
+<td>基本数据类型</td>
+<td>A或者B为NULL，则返回NULL；如果A大于B，则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>A&gt;=B</td>
+<td>基本数据类型</td>
+<td>A或者B为NULL，则返回NULL；如果A大于等于B，则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>A [NOT] BETWEEN B AND C</td>
+<td>基本数据类型</td>
+<td>如果A，B或者C任一为NULL，则结果为NULL。如果A的值大于等于B而且小于或等于C，则结果为TRUE，反之为FALSE。如果使用NOT关键字则可达到相反的效果。</td>
+</tr>
+<tr>
+<td>A IS NULL</td>
+<td>所有数据类型</td>
+<td>如果A等于NULL，则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>A IS NOT   NULL</td>
+<td>所有数据类型</td>
+<td>如果A不等于NULL，则返回TRUE，反之返回FALSE</td>
+</tr>
+<tr>
+<td>IN(数值1, 数值2)</td>
+<td>所有数据类型</td>
+<td>使用 IN运算显示列表中的值</td>
+</tr>
+<tr>
+<td>A [NOT]   LIKE B</td>
+<td>STRING 类型</td>
+<td>B是一个SQL下的简单正则表达式，也叫通配符模式，如果A与其匹配的话，则返回TRUE；反之返回FALSE。B的表达式说明如下：‘x%’表示A必须以字母‘x’开头，‘%x’表示A必须以字母’x’结尾，而‘%x%’表示A包含有字母’x’,可以位于开头，结尾或者字符串中间。如果使用NOT关键字则可达到相反的效果。</td>
+</tr>
+<tr>
+<td>A RLIKE B, A REGEXP B</td>
+<td>STRING 类型</td>
+<td>B是基于java的正则表达式，如果A与其匹配，则返回TRUE；反之返回FALSE。匹配使用的是JDK中的正则表达式接口实现的，因为正则也依据其中的规则。例如，正则表达式必须和整个字符串A相匹配，而不是只需与其字符串匹配。</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-sql"> select * from emp where sal LIKE '2%';
+ select * from emp where sal LIKE '_2%';
+ select * from emp where sal RLIKE '[2]';
+</code></pre>
+<ol start="7">
+<li>逻辑运算符</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>操作符</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AND</td>
+<td>逻辑并</td>
+</tr>
+<tr>
+<td>OR</td>
+<td>逻辑或</td>
+</tr>
+<tr>
+<td>NOT</td>
+<td>逻辑否</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-sql">select * from emp where sal&gt;1000 and deptno=30;
+select * from emp where sal&gt;1000 or deptno=30;
+select * from emp where deptno not IN (30, 20);
+</code></pre>
+<ol start="8">
+<li>排序</li>
+</ol>
+<p><strong>Order By</strong>：全局排序，只有一个Reducer ,</p>
+<pre><code class="language-sql">select * from emp order by sal desc;
+</code></pre>
+<p><strong>Sort By</strong>：对于大规模的数据集order by的效率非常低。在很多情况下，并不需要全局排序，此时可以使用<strong>sort by</strong>。Sort by为每个reducer产生一个排序文件。每个Reducer内部进行排序，对全局结果集来说不是排序。</p>
+<pre><code class="language-sql">设置reduce数量
+set mapreduce.job.reduces=3;
+
+查看数量
+set mapreduce.job.reduces;
+
+select * from emp sort by deptno desc;
+</code></pre>
+<p><strong>Distribute By</strong>： 在有些情况下，我们需要控制某个特定行应该到哪个reducer，通常是为了进行后续的聚集操作。<strong>distribute by</strong> 子句可以做这件事。<strong>distribute by</strong>类似MR中partition（自定义分区），进行分区，结合sort by使用。</p>
+<pre><code class="language-sql">hive (default)&gt; set mapreduce.job.reduces=3;
+hive (default)&gt; insert overwrite local directory '/opt/module/datas/distribute-result' select * from emp distribute by deptno sort by empno desc;
+</code></pre>
+<p>注意：</p>
+<p>1．  distribute by的分区规则是根据分区字段的hash码与reduce的个数进行模除后，余数相同的分到一个区。</p>
+<p>2．  Hive要求DISTRIBUTE BY语句要写在SORT BY语句之前。</p>
+<h3 id="4-join-操作">4. join 操作</h3>
+<blockquote>
+<p>​	Hive支持通常的SQL JOIN语句，但是只支持等值连接，不支持非等值连接。</p>
+<p>（1）使用别名可以简化查询。</p>
+<p>（2）使用表名前缀可以提高执行效率。</p>
+</blockquote>
+<pre><code class="language-sql">select e.empno, e.ename, d.deptno, d.dname from emp e join dept d on e.deptno = d.deptno;
+</code></pre>
+<h4 id="多表">多表</h4>
+<pre><code class="language-sql">hive (default)&gt;SELECT e.ename, d.dname, l.loc_name
+FROM   emp e 
+JOIN   dept d
+ON     d.deptno = e.deptno 
+JOIN   location l
+ON     d.loc = l.loc;
+</code></pre>
+<p>大多数情况下，<strong>Hive会对每对JOIN连接对象启动一个MapReduce任务</strong>。本例中会首先启动一个MapReduce job对表e和表d进行连接操作，然后会再启动一个MapReduce job将第一个MapReduce job的输出和表l;进行连接操作。</p>
+<p>注意：为什么不是表d和表l先进行连接操作呢？这是因为Hive总是按照从左到右的顺序执行的。</p>
+<p>优化：当对3个或者更多表进行join连接时，如果每个on子句都使用相同的连接键的话，那么只会产生一个MapReduce job。</p>
+<p><strong>hive join目前不支持在on子句中使用谓词or</strong></p>
+<h3 id="5-分桶">5. 分桶</h3>
+<blockquote>
+<p>​	Hive的分桶采用对分桶字段的值进行哈希，然后除以桶的个数求余的方式决定该条记录存放在哪个桶当中</p>
+</blockquote>
+<pre><code class="language-sql">create table stu_buck(id int, name string)
+clustered by(id) 
+into 4 buckets
+row format delimited fields terminated by '\t';
+
+desc formatted stu_buck;
+
+必须设置前两部
+set hive.enforce.bucketing=true;
+
+set mapreduce.job.reduces=1;
+
+insert into table stu_buck select id, name from stu;
+</code></pre>
+<h4 id="分桶抽样查询">分桶抽样查询</h4>
+<p>对于非常大的数据集，有时用户需要使用的是一个具有代表性的查询结果而不是全部结果。Hive可以通过对表进行抽样来满足这个需求。</p>
+<pre><code class="language-sql">select * from stu_buck tablesample(bucket 1 out of 4 on id);
+</code></pre>
+<p>tablesample是抽样语句，语法：TABLESAMPLE(BUCKET x OUT OF y)</p>
+<p>x表示从哪个bucket开始抽取，如果需要取多个分区，以后的分区号为当前分区号加上y ,x的值必须小于等于y的值 ,</p>
+<p>y必须是table总bucket数的倍数或者因子。</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#ddl%E8%AF%AD%E5%8F%A5">DDL语句</a>
+<ul>
+<li><a href="#1-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%9B%E5%BB%BA%E8%AF%AD%E5%8F%A5">1. 数据库创建语句</a></li>
+<li><a href="#2-%E8%A1%A8%E5%88%9B%E5%BB%BA%E8%AF%AD%E5%8F%A5">2. 表创建语句</a>
+<ul>
+<li><a href="#%E6%8F%92%E5%85%A5%E6%95%B0%E6%8D%AE-%E6%9C%AC%E5%9C%B0hdfs%E6%96%87%E4%BB%B6%E6%8F%92%E5%85%A5">插入数据 - 本地/HDFS文件插入</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%88%86%E5%8C%BA%E8%A1%A8">3. 分区表</a></li>
+<li><a href="#4-%E4%BF%AE%E6%94%B9%E8%A1%A8">4. 修改表</a></li>
+</ul>
+</li>
+<li><a href="#dml-%E8%AF%AD%E5%8F%A5">DML 语句</a>
+<ul>
+<li><a href="#1-%E6%B7%BB%E5%8A%A0%E6%95%B0%E6%8D%AE">1. 添加数据</a></li>
+<li><a href="#2-%E6%8F%92%E5%85%A5%E8%AF%AD%E5%8F%A5">2. 插入语句</a></li>
+<li><a href="#3-%E6%9F%A5%E8%AF%A2%E8%AF%AD%E5%8F%A5">3. 查询语句</a></li>
+<li><a href="#4-join-%E6%93%8D%E4%BD%9C">4. join 操作</a>
+<ul>
+<li><a href="#%E5%A4%9A%E8%A1%A8">多表</a></li>
+</ul>
+</li>
+<li><a href="#5-%E5%88%86%E6%A1%B6">5. 分桶</a>
+<ul>
+<li><a href="#%E5%88%86%E6%A1%B6%E6%8A%BD%E6%A0%B7%E6%9F%A5%E8%AF%A2">分桶抽样查询</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

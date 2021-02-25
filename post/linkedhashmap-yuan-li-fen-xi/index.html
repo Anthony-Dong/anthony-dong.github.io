@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>LinkedHashMap原理分析 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/linkedhashmap-yuan-li-fen-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>LinkedHashMap原理分析</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-13</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/linkedhashmap-yuan-li-fen-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1054字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-我们先写一段代码体验一下-linkedhashmap">1. 我们先写一段代码体验一下 LinkedHashMap</h2>
+<pre><code class="language-java">        LinkedHashMap&lt;String, Integer&gt; lmap = new LinkedHashMap&lt;&gt;();
+        lmap.put(&quot;语文&quot;, 1);
+        lmap.put(&quot;数学&quot;, 2);
+        lmap.put(&quot;英语&quot;, 3);
+        lmap.put(&quot;历史&quot;, 4);
+        lmap.put(&quot;政治&quot;, 5);
+        lmap.put(&quot;地理&quot;, 6);
+        lmap.put(&quot;生物&quot;, 7);
+        lmap.put(&quot;化学&quot;, 8);
+        for(Map.Entry&lt;String, Integer&gt; entry : lmap.entrySet()) {
+            System.out.println(entry.getKey() + &quot;: &quot; + entry.getValue());
+        }
+
+		语文: 1
+        数学: 2
+        英语: 3
+        历史: 4
+        政治: 5
+        地理: 6
+        生物: 7
+        化学: 8
+            
+          
+</code></pre>
+<ul>
+<li>
+<p>我们debug看看他的数据结构</p>
+</li>
+<li>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-13/471fb2d5-e190-436a-9217-18a4aaeccd3b.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>当我们去看到 打印结果 发现他是一个有序,根本不符合<strong>hashmap的无序性</strong></p>
+</li>
+<li>
+<p>那他究竟是为什么呢,我们看看LinkedHashMap的源码</p>
+<blockquote>
+<pre><code>Hash table and linked list implementation of the Map interface, with predictable iteration order. This implementation differs from HashMap in that it maintains a doubly-linked list running through all of its entries. This linked list defines the iteration ordering, which is normally the order in which keys were inserted into the map (insertion-order).
+
+这里主要说了 它是由Hashtable 和 linkedlist 实现的, 而且是双向链表(没一个entry都有 pre ,next) ,所以很好实现
+</code></pre>
+</blockquote>
+</li>
+<li>
+<p>它继承与hashmap ,那么它究竟重写和添加了什么方法呢,下一节引出</p>
+</li>
+</ul>
+<h2 id="2-linkedhashmap-的三个主要实现函数">2. LinkedHashMap 的三个主要实现函数</h2>
+<ul>
+<li>
+<p>我们去看他的父类发现,hashmap有三个回调函数</p>
+</li>
+<li>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-13/a7fdb106-4982-4fdf-ac32-b5274d34e52e.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>所以问题的关键就在这里,我们试着看一下 他是咋重写这 三个<strong>回调函数</strong>的</p>
+</li>
+<li>
+<pre><code class="language-java">1. afterNodeRemoval  这个函数是在移除节点后调用的，就是将节点从双向链表中删除。
+    
+    void afterNodeRemoval(Node&lt;K,V&gt; e) { // unlink
+        LinkedHashMap.Entry&lt;K,V&gt; p =(LinkedHashMap.Entry&lt;K,V&gt;)e,
+            b = p.before, // p前
+            a = p.after;	// p后
+        // 解除关系(类似与C的指针)    
+        p.before = p.after = null;
+        // b 如果为空(意思就是 p原来是头结点),a为头,否者 b的后面结点为a;
+        // 如果a为空,那么p就是尾巴,此时 移除p ,b就为尾巴, 否者a的前面是b
+        if (b == null)
+            head = a;
+        else
+            b.after = a;
+        if (a == null)
+            tail = b;
+        else
+            a.before = b;
+    }
+    
+2. afterNodeInsertion  节点插入后做的操作 
+    
+    // evict逐出的意思, 默认是true 这段代码我并么有看懂
+    void afterNodeInsertion(boolean evict) { // possibly remove eldest
+        LinkedHashMap.Entry&lt;K,V&gt; first;
+        if (evict &amp;&amp; (first = head) != null &amp;&amp; removeEldestEntry(first)) {
+            K key = first.key;
+            removeNode(hash(key), key, null, false, true);
+        }
+    }
+
+
+3. afterNodeAccess()  每次执行get操作时会调用 afterNodeAccess方法 ,我后面写个demo就和这个类似,
+	写demo的时候并没有研究 ,哈哈哈
+
+
+    void afterNodeAccess(Node&lt;K,V&gt; e) { // move node to last
+        LinkedHashMap.Entry&lt;K,V&gt; last;
+        if (accessOrder &amp;&amp; (last = tail) != e) {
+            LinkedHashMap.Entry&lt;K,V&gt; p =
+                (LinkedHashMap.Entry&lt;K,V&gt;)e, b = p.before, a = p.after;
+            p.after = null;
+            if (b == null)
+                head = a;
+            else
+                b.after = a;
+            if (a != null)
+                a.before = b;
+            else
+                last = b;
+            if (last == null)
+                head = p;
+            else {
+                p.before = last;
+                last.after = p;
+            }
+            tail = p;
+            ++modCount;
+        }
+    }
+
+</code></pre>
+</li>
+</ul>
+<h2 id="3-put和get函数">3. put和get函数</h2>
+<ul>
+<li>
+<p>put函数 并未实现 ,只是实现了get函数</p>
+</li>
+<li>
+<p>我们看看get函数</p>
+<pre><code class="language-java">    public V get(Object key) {
+        Node&lt;K,V&gt; e;
+        if ((e = getNode(hash(key), key)) == null)
+            return null;
+        if (accessOrder)
+            afterNodeAccess(e);
+        return e.value;
+    }
+
+注意: 如果定义了 accessOrder ,那么每次执行会调用回调函数(就是把最近访问的元素放到队尾)
+        
+举个栗子: 
+	   LinkedHashMap&lt;Object, Object&gt; map = new LinkedHashMap&lt;&gt;(10, 1, true);
+
+
+        map.put(1, 1);
+        map.put(2, 2);
+        map.put(3, 3);
+
+        for(Map.Entry&lt;Object, Object&gt; entry : map.entrySet()) {
+            System.out.println(entry.getKey() + &quot;: &quot; + entry.getValue());
+        }
+        map.get(2);
+        for(Map.Entry&lt;Object, Object&gt; entry : map.entrySet()) {
+            System.out.println(entry.getKey() + &quot;: &quot; + entry.getValue());
+        }
+输出:
+	1: 1
+    2: 2
+    3: 3
+  执行get之后      
+    1: 1
+    3: 3
+    2: 2
+</code></pre>
+</li>
+</ul>
+<h2 id="4-总结">4. 总结</h2>
+<blockquote>
+<p>​	只能说 linkedhashmap 实现 完全基于 父类的 hashmap ,只是重写了一些方法,</p>
+<p>​	还有就是 jdk源码太优秀了 , hashmap设计的太好了</p>
+</blockquote>
+<h2 id="5-我的问题">5. 我的问题</h2>
+<ul>
+<li>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-13/27eb9d63-285c-48c8-b6de-480c3414238e.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>代码实现 (这里就和 linkedhashmap 很相似)</p>
+</li>
+<li>
+<pre><code class="language-java">public class LRUcache {
+
+    private  LinkedHashMap&lt;Integer, Integer&gt; map = new LinkedHashMap&lt;&gt;();
+
+    private int capacity;
+
+    public LRUcache(int capacity) {
+        this.capacity = capacity;
+    }
+    public Integer get(Integer key){
+        Integer integer = map.get(key);
+        if (null == integer) {
+            return -1;
+        }
+        // 每次用的时候先删除,然后把他插入到队未
+        map.remove(key);
+        map.put(key, integer);
+        return integer;
+    }
+    public void put(Integer key, Integer value) {
+        map.put(key, value);
+        if (map.size() &gt; capacity) {
+            Set&lt;Integer&gt; integers = map.keySet();
+            Optional&lt;Integer&gt; first = integers.stream().findFirst();
+            map.remove(first.get());
+        }
+    }
+}    
+</code></pre>
+</li>
+</ul>
+<p><strong>本文参考自</strong></p>
+<p><a href="%5Bhttps://yikun.github.io/2015/04/02/Java-LinkedHashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/%5D(https://yikun.github.io/2015/04/02/Java-LinkedHashMap%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86%E5%8F%8A%E5%AE%9E%E7%8E%B0/)">引用自--------某位不知名大佬</a></p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E6%88%91%E4%BB%AC%E5%85%88%E5%86%99%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81%E4%BD%93%E9%AA%8C%E4%B8%80%E4%B8%8B-linkedhashmap">1. 我们先写一段代码体验一下 LinkedHashMap</a></li>
+<li><a href="#2-linkedhashmap-%E7%9A%84%E4%B8%89%E4%B8%AA%E4%B8%BB%E8%A6%81%E5%AE%9E%E7%8E%B0%E5%87%BD%E6%95%B0">2. LinkedHashMap 的三个主要实现函数</a></li>
+<li><a href="#3-put%E5%92%8Cget%E5%87%BD%E6%95%B0">3. put和get函数</a></li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+<li><a href="#5-%E6%88%91%E7%9A%84%E9%97%AE%E9%A2%98">5. 我的问题</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

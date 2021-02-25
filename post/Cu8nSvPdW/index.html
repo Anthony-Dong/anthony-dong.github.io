@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Protobuf 学习 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/Cu8nSvPdW/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Protobuf 学习</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-03-31</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/Cu8nSvPdW/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/L-xvm-udt-/"
+								class="tag">Google</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/lvXRknuC3t/"
+								class="tag">ProtoBuf</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1800字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>前期准备 :  https://github.com/protocolbuffers/protobuf/releases 下载编译器. protoc 编译器.</p>
+<p>官方文档 , 也就是proto3 / proto2文档, 在 https://developers.google.com/protocol-buffers/docs/proto3 这里, 如果英文水平差的同志呢, 可以看看这个  https://www.jianshu.com/p/bdd94a32fbd1 ,  其实proto3 更加写起来方便.</p>
+<p>我写了一篇文章 https://github.com/Anthony-Dong/protobuf-start  , 就是基本的使用.</p>
+<blockquote>
+<p>​	其中要区分开 message 和 service. 前者是序列化, 后者提供了rpc服务.  大部分场景只需要message . 同时编译service. 也需要插件进行编译 . 普通的protoc --go_out  --java_out 都不行.</p>
+</blockquote>
+<p>如果玩 golang的 , 可以使用 <a href="https://github.com/gogo/protobuf">gofast</a>  插件编译 . 也不错. 但是和官方自带的一些库冲突.  最好别混合使用.</p>
+<h2 id="文件结构">文件结构</h2>
+<h4 id="基本结构">基本结构</h4>
+<p>其实我大致说一下protobuf文件的基本结构 .</p>
+<p>写protobuf文件 , 使用vscode 写比较棒  . 有代码提示, 下载一个插件就行了.  我觉得protobuf文件最好和业务抽离出来. 别混在一起.</p>
+<pre><code class="language-java">syntax = &quot;proto3&quot;; // 语法版本
+
+// 这个属于package . 别的protobuf文件引用的时候需要指定这个. 最好自己给 protobuf定义一个path.
+package com.anthony.protobuf;
+
+// Java选项
+// Java类输出的目的地
+option java_package = &quot;com.example.grpc.api&quot;;
+// 输出的Class文件. 如果java_multiple_files=false,则只输出这一个文件
+// 否则输出 三个文件. Builder , RPCDateRequest ,Request 三个文件, 所以 java_outer_classname不能和RPCDateRequest名字重复
+option java_outer_classname = &quot;Request&quot;;
+// 上面解释过了
+option java_multiple_files = true;
+
+// Go 选项 , 也是它指的是生成后的 ,目录位置. 相对于protoc指定的地址.
+option go_package = &quot;github.com/golang/protobuf/ptypes/timestamp&quot;;
+
+
+// 定义消息 , 这里需要注意的是这个对象可以嵌套 互相引用.
+message RPCDateRequest {
+    uint64 id = 1;
+    string msg = 2;
+}
+</code></pre>
+<h4 id="如何编译">如何编译</h4>
+<blockquote>
+<p>​	最好熟练掌握编译命令 .</p>
+</blockquote>
+<p>第三步. 就是编译了 .  <code>protoc</code> 命令</p>
+<pre><code class="language-java">protoc -I=$SRC_DIR --go_out=$DST_DIR $SRC_DIR/addressbook.proto
+</code></pre>
+<p>第一个意思是 :  <code>-I</code> 和 <code>--proto_path</code>  含义一样  . 有些时候我们需要导入别的proto文件. 此时就需要使用这个了 .  这个可以指定多个路径.</p>
+<p>第二个就是 ,  <code>$DST_DIR</code> 指定的是 <code>go_package</code>的输出路径. 或者<code>java_package</code> 输出路径</p>
+<p>第三个就是.  <code>SRC_DIR</code> 指的是 我们protobuf源文件的地址.</p>
+<p>第四个比如说 <code>--go_out</code> 指的是 go的输出路径.   <code>--go_out=plugins=grpc:</code> 这个指的是生成 grpc 相关的配置.</p>
+<p>基本就是上诉四个命令.</p>
+<h2 id="message">Message</h2>
+<blockquote>
+<p>​	其中 message 有三个修饰词, 但是在proto3中, 只留下了一个, 默认一个缺醒值 .  <code>required</code> 表示必须出现一次, <code>optional</code>  出现零次或者一次,  <code>repeated</code> : 出现零次或者多次 , 其实就是数组. 也就是前面三个, 但是proto3中只保留了 第三个<code>repeated</code> .  默认就是<code>optional</code> ,不需要显示写出来,写出来就异常了.</p>
+<p>​	同时proto2支持默认模式, 也就是 <code>default</code> 关键字 , 但是在 proto3中取消了.</p>
+</blockquote>
+<h4 id="基本写法">基本写法</h4>
+<pre><code class="language-java">syntax=&quot;proto3&quot;;
+
+package  com.anthony.protobuf;
+
+// 引入其他的protobuf文件
+import &quot;google/protobuf/empty.proto&quot;;
+
+option java_multiple_files=true;
+option java_package=&quot;com.anthony.api&quot;;
+option java_outer_classname=&quot;PeopleApi&quot;;
+
+message People{
+    // 1 ,2 ,3 ,4 的意思是index , 所以传输的时候可以直接考这个传输位置. 这个是死的, 千万别随意改变. 
+    // 1-15 占用一个字节.  后面的占用两个字节. 所以最好使用前面的15个字段.
+    string name=1;
+    int32 age=2;
+    // 枚举
+    enum Gender{
+        // 这个必须从0开始
+        Female = 0;
+        Male = 1;
+        Null=2;
+    }
+    Gender gender=3 ;
+    // 0-1个 ,repeated 其实就是一个数组.
+    // 还可以使用其他类型.
+    repeated Hobby hobbies=4;
+
+    // map
+    map&lt;string,Salary&gt;  job=5;
+}
+
+message Salary{
+     int32 salary=1;
+}
+
+service PeopleService{
+    rpc addUser (People) returns (google.protobuf.Empty){}
+}
+
+message Hobby{
+    string name=1;
+}
+
+message Student{
+    
+}
+</code></pre>
+<h4 id="保留字-reserved-用法">保留字 reserved 用法</h4>
+<p>比如 我的第一代版本中, 有一个字段, 比如下面这种情况</p>
+<pre><code class="language-java">syntax=&quot;proto2&quot;;
+
+package  com.anthony.protobuf;
+
+option go_package=&quot;api&quot;;
+
+message People{
+    required string name=1;
+    optional int32 age=2;
+    // 第二个版本取消掉.
+    optional string info=3;
+}
+</code></pre>
+<p>执行 <code>protoc -I ./src --go_out=./go_out ./src/com/anthony/protobuf/user.proto</code>然后我们为了验证. 此时需要保存到文件中 , 调用这个方法.</p>
+<pre><code class="language-go">func write() {
+	people := api.People{}
+	name := &quot;tom&quot;
+	people.Name = &amp;name
+	age := int32(20)
+	people.Age = &amp;age
+	info := &quot;是个男的&quot;
+	people.Info = &amp;info
+
+	// 序列化
+	bytes, _ := proto.Marshal(&amp;people)
+
+	// 保存到文件中
+	file, e := os.OpenFile(&quot;save.txt&quot;, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+	if e != nil {
+		log.Fatal(e)
+	}
+	file.Write(bytes)
+	file.Close()
+}
+</code></pre>
+<p>此时下一代来了, 我们舍弃掉了 info字段. 此时修改了proto文件 .</p>
+<pre><code class="language-java">syntax=&quot;proto3&quot;;
+package  com.anthony.protobuf;
+option go_package=&quot;api&quot;;
+
+message People{
+    string name=1;
+    int32 age=2;
+    // 第一代版本中的.
+    // string info=3;
+    reserved 3;
+}
+</code></pre>
+<p>改成了上诉这个, 然后编译</p>
+<p>此时 调用这个方法.</p>
+<pre><code class="language-go">func read() {
+	bytes, _ := ioutil.ReadFile(&quot;save.txt&quot;)
+	var rest api.People
+	proto.Unmarshal(bytes,&amp;rest)
+	fmt.Printf(&quot;%#v\n&quot;,rest)
+	marshal, _ := json.Marshal(&amp;rest)
+	fmt.Printf(&quot;%s&quot;, marshal)
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">api.People{Name:&quot;tom&quot;, Age:20, XXX_NoUnkeyedLiteral:struct {}{}, XXX_unrecognized:[]uint8{0x1a, 0xc, 0xe6, 0x98, 0xaf, 0xe4, 0xb8, 0xaa, 0xe7, 0x94, 0xb7, 0xe7, 0x9a, 0x84}, XXX_sizecache:0}
+{&quot;name&quot;:&quot;tom&quot;,&quot;age&quot;:20}
+</code></pre>
+<p>说明个问题, 完全兼容的.   其实就算是不加上 reserved  . 也没啥事, 不信你删了它试试.   可能是我理解的出入问题.</p>
+<p>官方的意思是 : <strong>如果删除了某一个字段，protobuf允许重新使用该数值作为新的属性的标签，但是为了保证向后兼容，读取旧的数据的时候不会出现问题，一般使用reserved来声明该数值为保留，不能被使用。  反正就是个保留字, 是一种协议, 为了拓展罢了. 告诉对方这个是保留位.</strong></p>
+<h4 id="支持json">支持JSON</h4>
+<p>所以反正推荐使用 proto3 , 初次使用的话.  同时他还支持json. 原因是因为 , tag标签中有 json.</p>
+<pre><code class="language-go">type People struct {
+	Name                 string   `protobuf:&quot;bytes,1,opt,name=name,proto3&quot; json:&quot;name,omitempty&quot;`
+	Age                  int32    `protobuf:&quot;varint,2,opt,name=age,proto3&quot; json:&quot;age,omitempty&quot;`
+	XXX_NoUnkeyedLiteral struct{} `json:&quot;-&quot;`
+	XXX_unrecognized     []byte   `json:&quot;-&quot;`
+	XXX_sizecache        int32    `json:&quot;-&quot;`
+}
+</code></pre>
+<p>Java如何做json呢.</p>
+<p>需要 如下这么做. 使用第三方显然不可能.  需要使用 <code>JsonFormat</code> 工具类</p>
+<pre><code class="language-java">public static void main(String[] args) throws InvalidProtocolBufferException {
+    NPack hello = NPack.newBuilder().setBody(ByteString.copyFrom(&quot;helloworld&quot;.getBytes()))
+            .setUrl(&quot;hello&quot;)
+            .setTimeStamp(System.currentTimeMillis()).build();
+
+
+    // 序列化成 json
+    String print = JsonFormat.printer().print(hello);
+    System.out.println(print);
+
+
+    // 反序列化成 result
+    NPack.Builder result = NPack.newBuilder();
+    JsonFormat.parser().merge(print, result);
+
+    NPack build = result.build();
+    System.out.println(build);
+}
+</code></pre>
+<h2 id="service">service</h2>
+<blockquote>
+<p>​	记住一点就行了, service 不能有普通字段, 必须是 包装类型, 也就是必须是message. 也不能返回多个对象.</p>
+</blockquote>
+<h2 id="书写规范">书写规范</h2>
+<h4 id="message字段">message字段</h4>
+<p>使用驼峰命名法（首字母大写）命名 message，例子：<strong>SongServerRequest</strong><br>
+使用下划线命名字段，栗子：<strong>song_name</strong></p>
+<pre><code class="language-java">message SongServerRequest {
+  required string song_name = 1;
+}
+</code></pre>
+<h4 id="枚举">枚举</h4>
+<p>使用驼峰命名法（首字母大写）命名枚举类型，使用 “大写_下划线_大写” 的方式命名枚举值：</p>
+<pre><code class="language-java">enum Foo {
+  FIRST_VALUE = 0;
+  SECOND_VALUE = 1;
+}
+</code></pre>
+<h3 id="service-字段">service 字段</h3>
+<p>如果你在 .proto 文件中定义 RPC 服务，你应该使用驼峰命名法（首字母大写）命名 RPC 服务以及其中的 RPC 方法：</p>
+<pre><code class="language-java">service FooService {
+  rpc GetSomething(FooRequest) returns (FooResponse);
+}
+</code></pre>
+<h2 id="总结">总结</h2>
+<p>多写 , 多敲. 别把protobuf 作为rpc.  而是当做序列化协议. 我们大部分场景只需要它的序列化功能.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84">文件结构</a><br>
+*
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84">基本结构</a></li>
+<li><a href="#%E5%A6%82%E4%BD%95%E7%BC%96%E8%AF%91">如何编译</a></li>
+</ul>
+</li>
+<li><a href="#message">Message</a><br>
+*
+<ul>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E5%86%99%E6%B3%95">基本写法</a></li>
+<li><a href="#%E4%BF%9D%E7%95%99%E5%AD%97-reserved-%E7%94%A8%E6%B3%95">保留字 reserved 用法</a></li>
+<li><a href="#%E6%94%AF%E6%8C%81json">支持JSON</a></li>
+</ul>
+</li>
+<li><a href="#service">service</a></li>
+<li><a href="#%E4%B9%A6%E5%86%99%E8%A7%84%E8%8C%83">书写规范</a><br>
+*
+<ul>
+<li><a href="#message%E5%AD%97%E6%AE%B5">message字段</a></li>
+<li><a href="#%E6%9E%9A%E4%B8%BE">枚举</a></li>
+<li><a href="#service-%E5%AD%97%E6%AE%B5">service 字段</a></li>
+</ul>
+</li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

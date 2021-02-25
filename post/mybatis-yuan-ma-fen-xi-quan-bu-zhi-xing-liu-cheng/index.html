@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>MyBatis - 源码分析全部执行流程 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/mybatis-yuan-ma-fen-xi-quan-bu-zhi-xing-liu-cheng/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>MyBatis - 源码分析全部执行流程</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-01</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/mybatis-yuan-ma-fen-xi-quan-bu-zhi-xing-liu-cheng/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/3khXF681Z_v/"
+								class="tag">mybatis</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2648字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">12 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-前期环境">1. 前期环境</h2>
+<blockquote>
+<p>​	研究原理不需要太高级的环境 , 直接参照官网Demo写 , <a href="https://mybatis.org/mybatis-3/zh/getting-started.html">链接</a>:https://mybatis.org/mybatis-3/zh/getting-started.html ,</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/297c76b7-f864-43b6-bb5d-e37bae58ad14.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>整体目录结构 . 就是这个</p>
+<h2 id="2-运行">2. 运行</h2>
+<pre><code class="language-java">public class MybatisConf {
+
+
+    public static void main(String[] args) throws IOException {
+        // 1. 获取配置文件 , 主要目的就是为了一个 Configuration 对象的创建
+        String resource = &quot;mybatis-config.xml&quot;;
+        InputStream inputStream = Resources.getResourceAsStream(resource);
+        
+        // 2. 拿到配置创建一个工厂
+        SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+        
+        // 3. 通过工厂创建一个 会话对象 SqlSession
+        SqlSession sqlSession = sqlSessionFactory.openSession();
+        
+        // 4. 会话建立 执行SQL
+        DeptMapper mapper = sqlSession.getMapper(DeptMapper.class);
+        Dept dept = mapper.selectEmpByDeptId(10);
+        System.out.println(&quot;dept = &quot; + dept);
+    }
+
+}
+
+</code></pre>
+<h3 id="1-sqlsessionfactorybuilder">1. SqlSessionFactoryBuilder</h3>
+<p>这是使用了建造者模式 , 可以根据不同的输入 , 创建不同的对象实例 ,主要方法就是一个  <code>SqlSessionFactoryBuilder#build</code> ,我们可以看一下,主要是返回了一个 <code>SqlSessionFactory</code> 对象</p>
+<pre><code class="language-java">public SqlSessionFactory build(InputStream inputStream, String environment, Properties properties) {
+    try {
+      XMLConfigBuilder parser = new XMLConfigBuilder(inputStream, environment, properties);
+      return build(parser.parse());
+    } catch (Exception e) {
+      throw ExceptionFactory.wrapException(&quot;Error building SqlSession.&quot;, e);
+    } finally {
+      ErrorContext.instance().reset();
+      try {
+        inputStream.close();
+      } catch (IOException e) {
+        // Intentionally ignore. Prefer previous error.
+      }
+    }
+  }
+
+// 关键之处就是这一处需要一个 Configuration 对象
+  public SqlSessionFactory build(Configuration config) {
+    return new DefaultSqlSessionFactory(config);
+  }
+</code></pre>
+<p><strong>Configuration对象</strong></p>
+<p>我们以API 的方式注入 一下试试</p>
+<pre><code class="language-java">public static void main(String[] args) throws IOException, SQLException {
+
+    // 1. 创建configuration 对象
+    Configuration configuration = new Configuration(
+            new Environment(&quot;env&quot;,
+                    new JdbcTransactionFactory(),
+                    new PooledDataSource(&quot;com.mysql.jdbc.Driver&quot;,
+                            &quot;jdbc:mysql://127.0.0.1:3306/tyut&quot;,
+                            &quot;root&quot;, &quot;root&quot;)));
+
+    configuration.addMappers(&quot;com.mybatis.mapper&quot;);
+
+    // 2. 拿到配置创建一个工厂
+    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(configuration);
+
+    // 3. 通过工厂创建一个 会话对象 SqlSession
+    SqlSession sqlSession = sqlSessionFactory.openSession();
+
+    // 4. 会话建立 执行SQL
+    DeptMapper mapper = sqlSession.getMapper(DeptMapper.class);
+
+    mapper.selectAll();
+
+    Dept dept = mapper.selectEmpByDeptId(10);
+    System.out.println(&quot;dept = &quot; + dept);
+}
+
+</code></pre>
+<p>输出结果 , 此时需要注意 你的 mapper.xml 和你的 mapper 接口对象要放到一个包下面 , 输出一下结果 ...</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/1a14dfce-2105-416f-91a8-bfe9eb2fe79b.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<pre><code class="language-java">16:57:57.138 [main] DEBUG org.apache.ibatis.datasource.pooled.PooledDataSource - Created connection 1896294051.
+16:57:57.138 [main] DEBUG org.apache.ibatis.transaction.jdbc.JdbcTransaction - Setting autocommit to false on JDBC Connection [com.mysql.jdbc.JDBC4Connection@710726a3]
+16:57:57.146 [main] DEBUG com.mybatis.mapper.DeptMapper.selectAll - ==&gt;  Preparing: select * from dept 
+16:57:57.175 [main] DEBUG com.mybatis.mapper.DeptMapper.selectAll - ==&gt; Parameters: 
+16:57:57.194 [main] DEBUG com.mybatis.mapper.DeptMapper.selectAll - &lt;==      Total: 4
+16:57:57.197 [main] DEBUG com.mybatis.mapper.DeptMapper.selectEmpByDeptId - ==&gt;  Preparing: select * from dept where deptno=? 
+16:57:57.197 [main] DEBUG com.mybatis.mapper.DeptMapper.selectEmpByDeptId - ==&gt; Parameters: 10(Integer)
+16:57:57.198 [main] DEBUG com.mybatis.mapper.DeptMapper.selectEmpByDeptId - &lt;==      Total: 1
+</code></pre>
+<p>其中我们看看我们config对象做了什么 ,无非就是数据源的配置 , 有了所有的配置信息一切都好说</p>
+<h2 id="3-sqlsessionfactory-对象">3. SqlSessionFactory 对象</h2>
+<blockquote>
+<p>​	Creates an {@link SqlSession} out of a connection or a DataSource , 从connection 或者  DataSource  获取一个 SqlSession对象</p>
+</blockquote>
+<p>它是一个接口  我们看一下 <code>DefaultSqlSessionFactory</code> 的默认实现类</p>
+<p>执行<code>OpenSession</code>方法 ,其实就是创建一个 <code>SqlSession</code> 对象 ,</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/bc5a460b-b400-4e2d-85ab-a52df1cfaa3a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><code>openSessionFromDataSource</code> 方法, 创建一个<code>SqlSession</code> 对象需三个参数 <code>Configuration</code> , <code>Executor</code> , <code>autoCommit</code> ,  其中 <code>Executor</code> 是执行的关键 , 他分为几个不同的执行器 , 后续讲到</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/24b14f8f-4eed-4968-9af8-ce4f1361c94d.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<pre><code class="language-java">  public DefaultSqlSession(Configuration configuration, Executor executor, boolean autoCommit) {
+    this.configuration = configuration;
+    this.executor = executor;
+    this.dirty = false;
+    this.autoCommit = autoCommit;
+  }
+
+</code></pre>
+<p>其中 finally中 执行了一个 <code>ErrorContext.instance().reset();</code> 其实就是一个异常清除</p>
+<pre><code class="language-java">  public static ErrorContext instance() {
+    ErrorContext context = LOCAL.get();
+    if (context == null) {
+      context = new ErrorContext();
+      LOCAL.set(context);
+    }
+    return context;
+  }
+</code></pre>
+<p>从<code>ThreadLocal&lt;ErrorContext&gt;</code> 中实例一个 <code>ErrorContext</code>对象 , 防止多线程出现的并发问题, 最后从<code>ThreadLocal</code> 中移除 , 其实这一步操作我也不知道是做啥 , 后续可能会讲到</p>
+<h2 id="4-sqlsession-核心">4. SqlSession - 核心</h2>
+<p>通过上面的 <code>SqlSessionFactory</code> 我们已经拿到了<code>SqlSession</code> 对象, 此时我们可以进行一切操作了其实</p>
+<p>以 <code>DeptMapper mapper = sqlSession.getMapper(DeptMapper.class);</code> 这个代码为例子我们继续讲解 ,</p>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/272207fc-2d53-4fcf-bb72-ece0ef0ef0d8.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>他会去执行 <code>Configuration.getMapper(type, this);</code> 我们知到上一步我们已经将<code>Configuration</code>传给了<code>SqlSession</code> 对象 ,我们继续往下走进去</p>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/cf2bc9e5-49e8-4e79-9a12-2d4f66b08f74.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>它又丢给了一个 <code>MapperRegistry</code>对象 , 我们发现,他在实例化这个对象的时候已经创建了它 ,</p>
+<pre><code class="language-java">protected final MapperRegistry mapperRegistry = new MapperRegistry(this);
+</code></pre>
+<p>我们继续跟进</p>
+<figure data-type="image" tabindex="7"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/80455184-57b3-414f-8312-5e0db9da2f48.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>第一步是</p>
+<pre><code class="language-java">final MapperProxyFactory&lt;T&gt; mapperProxyFactory = (MapperProxyFactory&lt;T&gt;) knownMappers.get(type);
+</code></pre>
+<pre><code class="language-java">private final Map&lt;Class&lt;?&gt;, MapperProxyFactory&lt;?&gt;&gt; knownMappers = new HashMap&lt;&gt;();
+</code></pre>
+<p>此时我们发现knownMappers对象什么时候创建的哇 , 此时我们应该往上看</p>
+<figure data-type="image" tabindex="8"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/d148b0b0-2fa1-4224-aa44-053d3b3f0bfb.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此时就到我们下一节了 ...............</p>
+<h2 id="4configurationaddmappers-方法全过程">4.configuration.addMappers() 方法全过程</h2>
+<p>你还记得这行代码吗 , 我们执行了一句 <code>configuration.addMappers(&quot;com.mybatis.mapper&quot;);</code> 这个 , 当时我们一笔带过没说 , 此时我们先看这个</p>
+<figure data-type="image" tabindex="9"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/3ec504f3-c6c9-4aaf-a9c2-f942751e286a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们发现了一个这个 <code>mapperRegistry.addMappers(packageName);</code>这个方法 , 其实还是调用了 <code>MapperRegistry</code></p>
+<p>下面我们就讲一下 <code>MapperRegistry</code> 类</p>
+<p>此时第一步 ,  创建了一个<code>ResolverUtil</code> 类 ,我们看一下这个类可以做啥 .</p>
+<figure data-type="image" tabindex="10"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/a489f7b3-af11-4fbb-9251-a8c7b9d18722.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们进入 源码发现他可以</p>
+<pre><code class="language-java">The standard usage pattern for the ResolverUtil class is as follows:
+   ResolverUtil&lt;ActionBean&gt; resolver = new ResolverUtil&lt;ActionBean&gt;();
+   resolver.findImplementation(ActionBean.class, pkg1, pkg2);
+   resolver.find(new CustomTest(), pkg1);
+   resolver.find(new CustomTest(), pkg2);
+   Collection&lt;ActionBean&gt; beans = resolver.getClasses();
+</code></pre>
+<p>原来就是发现一堆类对象哇 .... 其实我们可以用用的 , 这个工具类蛮好用的 ,我们可以</p>
+<figure data-type="image" tabindex="11"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/fe10a279-ac69-494c-b154-9e2987f71518.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这个工具类的作用就是获取指定包下所有的类对象 .</p>
+<p>所以回到我们上面的 <code>public void addMappers(String packageName, Class&lt;?&gt; superType) {_}</code> 方法中 , 继续执行</p>
+<p><span id="jump">关键图</span ></p>
+<figure data-type="image" tabindex="12"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/d1073248-df2a-4f0b-9461-0f3b90f35a3c.jpg?x-oss-process=style/template01" alt="link" loading="lazy"></figure>
+<p>其中主要关键的地方在 <code>knownMappers.put(type, new MapperProxyFactory&lt;&gt;(type));</code> 和 <code>parser.parse();</code> , 第一个是创建了一个代理对象的工厂 , 后期加工, 第二个是解析 , 我们跟进去第二个<code>parser.parse()</code> 方法进去</p>
+<figure data-type="image" tabindex="13"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/840ba000-05ad-4544-acde-df02418112d1.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们先看 <code>MapperAnnotationBuilder#loadXmlResource();</code></p>
+<figure data-type="image" tabindex="14"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/a12494b0-637c-4752-8b93-b5f68f7ff174.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>解析XML的过程过于复杂化 ,其实就是将XML的信息全部存入Configuration中,方便后期使用 ,</p>
+<p>我们继续到了 <code>MapperAnnotationBuilder#parse#parseStatement(method);</code> 方法 进入</p>
+<figure data-type="image" tabindex="15"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/1463ac0f-544e-4db2-965c-d93a1cebca39.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这个目的就是创建一个 <code>MappedStatement</code> 为每一个方法</p>
+<figure data-type="image" tabindex="16"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/afbf8aeb-86ca-4033-9940-13689ed57880.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><strong>这个对象包含的信息很多 , 可以称之为 元信息</strong></p>
+<p>其实到这里 已经结束了 , 我们发现 <code>configuration.addMappers()</code> 的过程就是在<code>Configuration</code>中添加了<code>MapperStatement</code></p>
+<p>还有一点是 <code>MapperStatement</code> 其实一个方法 有两个映射 , 一个全限定名 ,一个只有方法名 ,后面我会讲到,这样的话可能出现两个mapper 方法重复的问题 , 后期研究</p>
+<figure data-type="image" tabindex="17"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/6dda815b-3b7c-474b-8f0e-698b27ff32b0.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="5-重新回到getmapperclasst-type-上来">5.  重新回到getMapper(Class<T> type) 上来</h2>
+<figure data-type="image" tabindex="18"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/fd6a1ef6-8a39-4feb-a141-538bc689253f.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>其中主要就是冲我们上面的那个  , 是否还记得<a href="#jump">那张图</a>,我上面写的, 在 <code>addMapper()</code> 第一步就是创建了一个代理工厂, 然后插入到了这个<code>knownMappers</code> 这个map中</p>
+<p>我们return跟进去继续</p>
+<figure data-type="image" tabindex="19"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/62a27735-8c07-43d7-9ff3-0bdb7f202d14.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>其实最后返回的是一个代理对象 , 好了就此我们回忆一下动态代理 的基本流程. ....</p>
+<pre><code class="language-java">public static Object newProxyInstance(ClassLoader loader,
+                                      Class&lt;?&gt;[] interfaces,
+                                      InvocationHandler h)
+</code></pre>
+<p>这里需要传入三个参数 ,</p>
+<p>第一个是一个类加载器, 目的就是找到你需要代理的类, 其实就是<strong>通过类加载器可以找到你的类的跟路径</strong> , 所以他可以找到代理对象 .....</p>
+<p>第二个是 被代理的接口 ,</p>
+<p>第三个是 一个代理实现 , 我们自己实现需要继承 <code>InvocationHandler</code>接口</p>
+<blockquote>
+<p>​	InvocationHandler is the interface implemented by the invocation handler of a proxy instance.</p>
+<p>InvocationHandler  是一个接口可以通过一个代理实例调用方法#invoke</p>
+</blockquote>
+<p>他就一个方法</p>
+<pre><code class="language-java">public Object invoke(Object proxy, Method method, Object[] args)
+        throws Throwable;
+</code></pre>
+<p>参数一 : proxy  方法所调用的代理实例</p>
+<p>参数二 : method 代理的方法</p>
+<p>参数三 : args  就是参数的值</p>
+<p>返回值 : Object</p>
+<p>对于 Mybatis给我们执行的是什么 , 和我们人知的是有区别的</p>
+<figure data-type="image" tabindex="20"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/1430beb5-1f90-4f93-aa97-143da5ac987d.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<pre><code class="language-java">输出: 
+proxy = com.proxy.DynamicProxy@776ec8df
+2003749087
+</code></pre>
+<p>这就是 Mybatis的动态代理 ,和你认知的一样吗 ............. 好多教程都是返回一个<code>method.invoke(object, args);</code> 他用了吗,没有,我前面代码这个object指的就是接口的实例化对象,  有时候因为我们根本拿不到一个接口的实例化对象 ,mybatis也做不到, 那怎么办 , 所以取巧和我上面的一样 , 只要返回值一致就可以</p>
+<p><strong>这个图就是 Mybatis的代理接口, 他做了什么 ? 我们分析一下</strong></p>
+<figure data-type="image" tabindex="21"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/bc4ce797-d6ec-4ed3-b7dd-cf1303c70705.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>前两步, 第一个判断这个申明的方法是不是<code>Object</code>的方法 , 第二个就是因为JDK1.8引入了 default 关键字 , 此时我们不需要进行加强实现 , 我测试的 Mybatis版本有点高哇 尽然基于1.8写的 ...</p>
+<p>如果你懂了我上面说的  , 就可以继续看下面了 , 就是所有Mybatis的执行流程了..........</p>
+<h2 id="6-mappermethod-核心执行流程">6. MapperMethod.	() 核心执行流程</h2>
+<h3 id="1-创建一个-mappermethod">1. 创建一个  MapperMethod</h3>
+<pre><code class="language-java">  public MapperMethod(Class&lt;?&gt; mapperInterface, Method method, Configuration config) {
+      // 创建 SqlCommand , 这个主要是确定方法的 Type的 
+    this.command = new SqlCommand(config, mapperInterface, method);
+      // 创建 MethodSignature , 这个主要是确定方法的 返回类型 
+    this.method = new MethodSignature(config, mapperInterface, method);
+  }
+</code></pre>
+<figure data-type="image" tabindex="22"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/0b7cedf7-1e7a-45b7-bff6-c2c9b107570b.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这个<code>Type</code>有用的 ,所以我才要说</p>
+<h3 id="2-执行">2. 执行</h3>
+<p>我们跟进来 , 第一步就是执行选择器  , 选择合适的入口 ....</p>
+<figure data-type="image" tabindex="23"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/e9a4cb4d-f624-4116-bbbe-33eb30ee14c2.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>第二步 ... 继续</p>
+<figure data-type="image" tabindex="24"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/bdb8c81a-6919-470e-ae8e-2664aee92595.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>由于我展示演示效果我执行的是一个比较复杂的方法 <code>List&lt;Dept&gt; selectAll(@Param(&quot;count&quot;) int count);</code> 这个方法 ,返回时List 属于Many , 所以此时执行的是<code>result = executeForMany(sqlSession, args);</code> 方法,我们跟进去看看</p>
+<figure data-type="image" tabindex="25"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/5c376bd5-96da-4cdc-80ac-628b85cefc65.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此时到了 <code>DefaultSqlSession#selectList</code> 方法</p>
+<figure data-type="image" tabindex="26"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/f3f1c125-dfe2-4023-937e-857bd797a932.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此时我们发现其实 <code>SqlStatement</code>的查询其实是委托给了 <code>Executor</code>这个接口的实现类的, 一种委托代理关系,目的就是为了解耦 , 我们继续往里跟 , 执行 <code>executor.query()</code> 方法</p>
+<p>此时进入了 <code>CachingExecutor#query</code> 方法</p>
+<figure data-type="image" tabindex="27"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/ad8284dc-3679-4a6c-aae1-27b0570a816e.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>继续往下走 ...到了 <code>CachingExecutor#query</code>重载方法,看我注释就行</p>
+<figure data-type="image" tabindex="28"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/51aaa886-ebe5-4632-add2-6757cc283174.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此时我们继续往委托的executor执行 , 其实这个委托类是 <code>BaseExecutor</code> ... 我们进到里面,此时执行的就是 <code>BaseExecutor#query</code> 方法 ,</p>
+<figure data-type="image" tabindex="29"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/d1d5d275-011e-45f3-a16f-0caa217886cd.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>如果缓存里没有就执行 JDBC 查询  , 执行 <code>BaseExecutor#queryFromDatabase</code></p>
+<figure data-type="image" tabindex="30"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/2d7ce646-e515-4580-8a7a-6f242dc2fb46.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>继续往下执行 <code>SimpleExecutor#doQuery</code> 方法</p>
+<figure data-type="image" tabindex="31"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/ba1bb97f-282d-40ec-b18e-f41df75aa2e5.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>先看第一步的 <code>stmt = prepareStatement(handler, ms.getStatementLog());</code> 我们需要执行 ...</p>
+<figure data-type="image" tabindex="32"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/566c8c1a-1531-4e97-876b-da6eb15dc19e.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ul>
+<li>我们跟进去看看 我写的第一步 ...<code>Connection connection = getConnection(statementLog);</code></li>
+</ul>
+<figure data-type="image" tabindex="33"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/62efa0c6-953d-483e-aa18-a074e422fa8b.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ul>
+<li>再看第二步 ... <code>stmt = handler.prepare(connection, transaction.getTimeout());</code></li>
+</ul>
+<figure data-type="image" tabindex="34"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/928d6af9-2637-4ec8-979a-b3733bd131eb.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ul>
+<li>我们看看这里的 <code>statement = instantiateStatement(connection);</code></li>
+</ul>
+<figure data-type="image" tabindex="35"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-01/4685ce00-ff74-4854-8226-207ee66eec47.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>最后看一下 <code>SimpleExecutor#doQuery</code> 中的 <code>handler.query(stmt, resultHandler)</code></p>
+<figure data-type="image" tabindex="36"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-30/cfa59981-ec81-4af2-bdb5-04fcaa7b147e.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>终于到终点了 , 我们往回走 ............ 其实已经结束了 , 返回的就是 List 也对着了 ...............</p>
+<h2 id="6-总结一下">6. 总结一下</h2>
+<p>JDBC的操作很重要 , MyBatis的设计原则也很重要 , 尽管是动态代理 ,但是他的前期环境准备使用的建造者模式, 后期使用的委托代理模式 ,都是十分重要的 ,</p>
+<figure data-type="image" tabindex="37"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-01/a8cd8b65-828e-4950-9ef2-d4f21eca186d.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>但是最后我并没有找到 ... Interceptor的使用点在哪 , 好像是在Configuration中配置的最后添加到executor ,属于Mybatis的pluging中, 有机会我介绍 , 这个十分重要的 ....</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%89%8D%E6%9C%9F%E7%8E%AF%E5%A2%83">1. 前期环境</a></li>
+<li><a href="#2-%E8%BF%90%E8%A1%8C">2. 运行</a>
+<ul>
+<li><a href="#1-sqlsessionfactorybuilder">1. SqlSessionFactoryBuilder</a></li>
+</ul>
+</li>
+<li><a href="#3-sqlsessionfactory-%E5%AF%B9%E8%B1%A1">3. SqlSessionFactory 对象</a></li>
+<li><a href="#4-sqlsession-%E6%A0%B8%E5%BF%83">4. SqlSession - 核心</a></li>
+<li><a href="#4configurationaddmappers-%E6%96%B9%E6%B3%95%E5%85%A8%E8%BF%87%E7%A8%8B">4.configuration.addMappers() 方法全过程</a></li>
+<li><a href="#5-%E9%87%8D%E6%96%B0%E5%9B%9E%E5%88%B0getmapperclasst-type-%E4%B8%8A%E6%9D%A5">5.  重新回到getMapper(Class<T> type) 上来</a></li>
+<li><a href="#6-mappermethod-%E6%A0%B8%E5%BF%83%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">6. MapperMethod.	() 核心执行流程</a>
+<ul>
+<li><a href="#1-%E5%88%9B%E5%BB%BA%E4%B8%80%E4%B8%AA-mappermethod">1. 创建一个  MapperMethod</a></li>
+<li><a href="#2-%E6%89%A7%E8%A1%8C">2. 执行</a></li>
+</ul>
+</li>
+<li><a href="#6-%E6%80%BB%E7%BB%93%E4%B8%80%E4%B8%8B">6. 总结一下</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Redis | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/redis-xue-xi-01/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Redis</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/redis-xue-xi-01/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/ECQCi6IDpNB/"
+								class="tag">数据库</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">9224字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">37 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1nosql数据库有哪些">1.nosql数据库有哪些</h2>
+<h3 id="1键值key-value对数据库redis-memcached">1.键值（Key-Value）对数据库(redis) Memcached</h3>
+<p>​	键值数据库就像在传统语言中使用的哈希表。你可以通过key来添加、查询或者删除数据，鉴于使用主键访问，所以会获得不错的性能及扩展性。<br>
+​	主要是redis<br>
+​	适用的场景:储存用户信息，比如会话、配置文件、参数、购物车等等。这些信息一般都和ID（键）挂钩，这种情景下键值数据库是个很好的选择。</p>
+<h3 id="2面向文档document-oriented数据库mongodb">2.面向文档（Document-Oriented）数据库(MongoDB)</h3>
+<p>​		面向文档数据库会将数据以文档的形式储存。每个文档都是自包含的数据单元，是一系列数据项的集合。每个数据项都有一个名称与对应的值，值既可以是简单的数据类型，如字符串、数字和日期等；也可以是复杂的类型，如有序列表和关联对象。数据存储的最小单位是文档，同一个表中存储的文档属性可以是不同的，数据可以使用XML、JSON或者JSONB等多种形式存储。<br>
+​		适用的场景</p>
+<ol>
+<li>
+<p>日志。企业环境下，每个应用程序都有不同的日志信息。Document-Oriented数据库并没有固定的模式，所以我们可以使用它储存不同的信息。</p>
+</li>
+<li>
+<p>分析。鉴于它的弱模式结构，不改变模式下就可以储存不同的度量方法及添加新的度量。</p>
+</li>
+</ol>
+<h3 id="3列存储wide-column-storecolumn-family数据库-hbase">3.列存储（Wide Column Store/Column-Family）数据库 HBase</h3>
+<ul>
+<li>高压缩比，适用于统计类业务场景</li>
+<li>适用的场景 :
+<ul>
+<li>日志。因为我们可以将数据储存在不同的列中，每个应用程序可以将信息写入自己的列族中。</li>
+<li>博客平台。我们储存每个信息到不同的列族中。</li>
+<li>举个例子，标签可以储存在一个，类别可以在一个，而文章则在另一个。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4图graph-oriented数据库-neo4j">4.图（Graph-Oriented）数据库 Neo4J</h3>
+<ul>
+<li>图数据库允许我们将数据以图的方式储存。</li>
+<li><strong>使用场景</strong> 在一些关系性强的数据中,推荐引擎。如果我们将数据以图的形式表现，那么将会非常有益于推荐的制定</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/edu/picture/20190821115057.png?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<h2 id="2传统的关系型数据库与nosql数据库区别">2.传统的关系型数据库与nosql数据库区别</h2>
+<h3 id="1acid规则关系型数据库遵循acid规则">1.ACID规则(关系型数据库遵循ACID规则)</h3>
+<pre><code>1、A (Atomicity) 原子性
+原子性很容易理解，也就是说事务里的所有操作要么全部做完，要么都不做，事务成功的条件是事务里的所有操作都成功，只要有一个操作失败，整个事务就失败，需要回滚。比如银行转账，从A账户转100元至B账户，分为两个步骤：1）从A账户取100元；2）存入100元至B账户。这两步要么一起完成，要么一起不完成，如果只完成第一步，第二步失败，钱会莫名其妙少了100元。
+2、C (Consistency) 一致性
+一致性也比较容易理解，也就是说数据库要一直处于一致的状态，事务的运行不会改变数据库原本的一致性约束。
+3、I (Isolation) 独立性
+所谓的独立性是指并发的事务之间不会互相影响，如果一个事务要访问的数据正在被另外一个事务修改，只要另外一个事务未提交，它所访问的数据就不受未提交事务的影响。比如现有有个交易是从A账户转100元至B账户，在这个交易还未完成的情况下，如果此时B查询自己的账户，是看不到新增加的100元的
+4、D (Durability) 持久性
+持久性是指一旦事务提交后，它所做的修改将会永久的保存在数据库上，即使出现宕机也不会丢失。
+</code></pre>
+<h3 id="2cap">2.cap</h3>
+<pre><code>分布式系统（distributed system）正变得越来越重要，大型网站几乎都是分布式的。分布式系统的最大难点，就是各个节点的状态如何同步。CAP 定理是这方面的基本定理，也是理解分布式系统的起点。1998年，加州大学的计算机科学家 Eric Brewer 提出，分布式系统有三个指标。Eric Brewer 说，这三个指标不可能同时做到。这个结论就叫做 CAP 定理。
+</code></pre>
+<p><img src="https://www.wangbase.com/blogimg/asset/201807/bg2018071607.jpg" alt="iamge" loading="lazy"><br>
+C:Consistency（强一致性）<br>
+A:Availability（可用性）<br>
+P:Partition tolerance（分区容错性）分布式必须具有这个(服务器之间可能通信断掉)</p>
+<p>推荐个网站讲的很好(http://www.ruanyifeng.com/blog/2018/07/cap.html)</p>
+<h3 id="3-三进二原则">3. 三进二原则</h3>
+<p>CAP理论的核心是：一个分布式系统不可能同时很好的满足一致性，可用性和分区容错性这三个需求，最多只能同时较好的满足两个。因此，根据 CAP 原理将 NoSQL 数据库分成了满足 CA 原则、满足 CP 原则和满足 AP 原则三 大类：<br>
+CA - 单点集群，满足一致性，可用性的系统，通常在可扩展性上不太强大。<br>
+CP - 满足一致性，分区容忍必的系统，通常性能不是特别高。<br>
+AP - 满足可用性，分区容忍性的系统，通常可能对一致性要求低一些。</p>
+<h2 id="3redis的安装和使用">3.redis的安装和使用</h2>
+<h3 id="1下载启动">1.下载启动</h3>
+<ul>
+<li>去官网下载二进制 gz包 或者  wget</li>
+<li>然后进入目录直接  make &amp;&amp; make install</li>
+<li>安装目录默认在  <code>/usr/local/bin/redis-server</code>  可以通过 <code>which redis-server</code></li>
+<li>然后备份配置文件 <code>cp /redis/redis.conf /opt/redis/redis1.conf</code>  一般都是推荐在 etc目录下,个人习惯吧</li>
+<li>然后 直接 <code>redis-server redis1.conf</code></li>
+<li><code>redis-cli -h 192.168.58.129 -p 6379</code>   就启动了 ,然后 输入 <code>PING</code>  他回复 <code>pang</code> 就OK了</li>
+<li>关闭 <code>shurdown</code></li>
+</ul>
+<h3 id="2远程访问">2.远程访问</h3>
+<pre><code class="language-shell">1. 关闭设备防火墙	
+2. 修改配置文件redis.conf
+2.1 daemonize yes  (yes是以守护进程的方式运行，就是关闭了远程连接窗口，redis依然运行)
+2.2 protected-mode，将yes修改为no (yes就是禁止外网访问)
+2.3 bind 127.0.0.1，注释掉(单机版本就这么做)
+2.4 保存退出  esc   :wq
+
+3.启动redis  redis-server ./redis.conf
+4.启动客户端   redis-cli -h 192.168.58.129  -p 6379
+
+5. redis-benchmark:性能测试工具，可以在自己本子运行，看看自己本子性能如何
+6. redis-check-dump：修复有问题的dump.rdb文件
+7. redis-check-aof：修复有问题的AOF文件，rdb和aof后面讲
+8. redis-sentinel：redis集群使用
+</code></pre>
+<h2 id="4redis介绍">4.redis介绍</h2>
+<ul>
+<li>它是个单进程软件;基于对epoll(多路复用io)函数进行包装做到的.redis的执行效率完全依赖于主进程的效</li>
+<li>redis默认是16个库;可以通过 select index 操作</li>
+<li>由于 Redis 是一个内存数据库，所谓内存数据库，就是将数据库中的内容保存在内存中，这与传统的MySQL，Oracle等关系型数据库直接将内容保存到硬盘中相比，内存数据库的读写效率比传统数据库要快的多（内存的读写效率远远大于硬盘的读写效率）。但是保存在内存中也随之带来了一个缺点，一旦断电或者宕机，那么内存数据库中的数据将会全部丢失。为了解决这个缺点，Redis提供了将内存数据持久化到硬盘，以及用持久化文件来恢复数据库数据的功能。Redis 支持两种形式的持久化，一种是RDB快照（snapshotting），另外一种是AOF（append-only-file）</li>
+</ul>
+<h2 id="5redis数据类型">5.redis数据类型</h2>
+<h3 id="1string字符串">1.string（字符串）</h3>
+<p>​	string 是Redis的最基本的数据类型，可以理解为与 Memcached 一模一样的类型，一个key 对应一个 value。string 类型是二进制安全的，意思是 Redis 的 string 可以包含任何数据，比如图片或者序列化的对象，一个 redis 中字符串 value 最多可以是 512M。</p>
+<blockquote>
+<p>自增自减操作，这在实际工作中还是特别有用的（分布式环境中统计系统的在线人数，利用Redis的高性能读写，在Redis中完成秒杀，而不是直接操作数据库。）。</p>
+</blockquote>
+<pre><code class="language-shell">set key value ex 5 	设置 key value  5s过期
+set key value px 5 	设置 key value  5ms过期
+get key  			获取key
+ttl key  			查看还有多有过去 -1表示永不过期 -2表示 已过期  -2已经这个元素么了
+EXPIRE k1 2         设置k1过期值
+
+incr key  			使得value 每次+1
+decr key  			使得value 每次 -1 
+decrby k1 3   		每次减少 3
+
+set k2 v2 ex 5 nx   只有在k2 不存在的时候才能重新设置k2的值,所以这个就是一个锁
+
+</code></pre>
+<h3 id="2hash">2.hash</h3>
+<pre><code>　hash 是一个键值对集合，是一个 string 类型的 key和 value 的映射表，key 还是key，但是value是一个键值对（key-value）。类比于 Java里面的 Map&lt;String,Map&lt;String,Object&gt;&gt; 集合。
+</code></pre>
+<h3 id="3list列表">3.List（列表）</h3>
+<ul>
+<li>list 列表，它是简单的字符串列表，按照插入顺序排序，你可以添加一个元素到列表的头部（左边）或者尾部（右边），它的底层实际上是个链表。</li>
+<li>Redis 列表是简单的字符串列表，按照插入顺序排序。你可以添加一个元素导列表的头部（左边）或者尾部（右边）。它的底层实际是个链表</li>
+</ul>
+<h3 id="4set集合">4.Set（集合）</h3>
+<ul>
+<li>Redis 的 set 是 string 类型的无序集合。它是通过HashTable实现实现的，</li>
+</ul>
+<h3 id="5-zsetsorted-set有序集合">5. zset(sorted set：有序集合)</h3>
+<p>​	　zset（sorted set 有序集合），和上面的set 数据类型一样，也是 string 类型元素的集合，但是它是有序的,且不允许重复的成员。不同的是每个元素都会关联一个double类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序。zset的成员是唯一的,但分数(score)却可以重复。</p>
+<h2 id="6rdb-redis持久化方式">6.RDB-redis持久化方式</h2>
+<h3 id="1自动触发">1.自动触发</h3>
+<pre><code>直接修改redis.conf文件 然后修改里面的save属性
+</code></pre>
+<h3 id="2手动触发">2.手动触发</h3>
+<ul>
+<li>
+<p>需要 输入指令 <strong>save</strong><br>
+该命令会<strong>阻塞当前Redis服务器</strong>，执行save命令期间，Redis不能处理其他命令，直到RDB过程完成为止。显然该命令对于内存比较大的实例会造成长时间阻塞，这是致命的缺陷，为了解决此问题，Redis提供了第二种方式。</p>
+</li>
+<li>
+<p>指令  <strong>bgsave</strong><br>
+　执行该命令时，<strong>Redis会在后台异步进行快照操作</strong>，快照同时还可以响应客户端请求。具体操作是Redis进程执行fork操作创建子进程，<strong>RDB持久化过程由子进程负责</strong>，完成后自动结束。阻塞只发生在fork阶段，一般时间很短。</p>
+</li>
+<li>
+<p>区别</p>
+<p>​		<strong>SAVE  保存是阻塞主进程</strong>，客户端无法连接redis，等SAVE完成后，主进程才开始工作，客户端可以连接<br>
+<strong>BGSAVE  是fork一个save的子进程，在执行save过程中，不影响主进程</strong>，客户端可以正常链接redis，等子进程fork执行save完成后，通知主进程，子进程关闭。</p>
+</li>
+</ul>
+<h3 id="3结论">3.结论</h3>
+<pre><code>基本上 Redis 内部所有的RDB操作都是采用 bgsave 命令。
+ps:执行执行 flushall 命令，也会产生dump.rdb文件，但里面是空的，无意义
+</code></pre>
+<h3 id="4如何关闭redis持久化功能">4.如何关闭redis持久化功能</h3>
+<p>​		有些情况下，我们只想利用Redis的缓存功能，并不像使用 Redis 的持久化功能，那么这时候我们最好停掉 RDB 持久化。可以通过上面讲的在配置文件 <strong>redis.conf</strong> 中，可以注释掉所有的 save 行来停用保存功能或者直接一个空字符串来实现停用：<strong>save &quot;&quot;</strong>; 或者 输入指令启动的时候  <code>redis-cli config set save ''</code></p>
+<h3 id="5rdb的优劣势">5.rdb的优劣势</h3>
+<pre><code>优势
+1.RDB是一个非常紧凑(compact)的文件，它保存了redis 在某个时间点上的数据集。这种文件非常适合用于进行备份和灾难恢复。
+2.生成RDB文件的时候，redis主进程会fork()一个子进程来处理所有保存工作，主进程不需要进行任何磁盘IO操作。
+3.RDB 在恢复大数据集时的速度比 AOF 的恢复速度要快。
+②、劣势
+1、RDB方式数据没办法做到实时持久化/秒级持久化。因为bgsave每次运行都要执行fork操作创建子进程，属于重量级操作(内存中的数据被克隆了一份，大致2倍的膨胀性需要考虑)，频繁执行成本过高(影响性能)
+2、RDB文件使用特定二进制格式保存，Redis版本演进过程中有多个格式的RDB版本，存在老版本Redis服务无法兼容新版RDB格式的问题(版本不兼容)
+3、在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改(数据有丢失)
+</code></pre>
+<h2 id="8aof持久化方式">8.aof持久化方式</h2>
+<pre><code>　　Redis的持久化方式之一RDB是通过保存数据库中的键值对来记录数据库的状态。而另一种持久化方式 AOF 则是通过保存Redis服务器所执行的写命令来记录数据库状态。　RDB 持久化方式就是将 str1,str2,str3 这三个键值对保存到 RDB文件中，而 AOF 持久化则是将执行的 set,sadd,lpush 三个命令保存到 AOF 文件中。
+例如 set str1 '123' ;sadd str2 '1' '2' '3' ;lpush str3 '1' '2' '3' ;如果是 rdb 则是将三个 str1,str2,str3 三个kv保存在文件中;而 aof则是 将 添加的三条指令存入文件中
+</code></pre>
+<h3 id="1开启">1.开启</h3>
+<pre><code>在 redis.conf 配置文件的 APPEND ONLY MODE 下： appendonly：默认值为no，也就是说redis 默认使用的是rdb方式持久化，如果想要开启 AOF 持久化方式，需要将 appendonly 修改为 yes。 appendfsync 是写入的策略(三种)
+</code></pre>
+<h3 id="2aof-重写">2.AOF 重写</h3>
+<pre><code>　由于AOF持久化是Redis不断将写命令记录到 AOF 文件中，随着Redis不断的进行，AOF 的文件会越来越大，文件越大，占用服务器内存越大以及 AOF 恢复要求时间越长。为了解决这个问题，Redis新增了重写机制，当AOF文件的大小超过所设定的阈值时，Redis就会启动AOF文件的内容压缩，只保留可以恢复数据的最小指令集。可以使用命令 bgrewriteaof 来重新。　　如果不进行 AOF 文件重写，那么 AOF 文件将保存四条 SADD 命令，如果使用AOF 重写，那么AOF 文件中将只会保留下面一条整合后的命令;
+</code></pre>
+<h3 id="3-aof的优缺点">3. aof的优缺点</h3>
+<pre><code>优点：
+　　①、AOF 持久化的方法提供了多种的同步频率，即使使用默认的同步频率每秒同步一次，Redis 最多也就丢失 1 秒的数据而已。
+　　②、AOF 文件使用 Redis 命令追加的形式来构造，因此，即使 Redis 只能向 AOF 文件写入命令的片断，使用 redis-check-aof 工具也很容易修正 AOF 文件。
+　　③、AOF 文件的格式可读性较强，这也为使用者提供了更灵活的处理方式。例如，如果我们不小心错用了 FLUSHALL 命令，在重写还没进行时，我们可以手工将最后的 FLUSHALL 命令去掉，然后再使用 AOF 来恢复数据。
+缺点：
+　　①、对于具有相同数据的的 Redis，AOF 文件通常会比 RDF 文件体积更大。
+　　②、虽然 AOF 提供了多种同步的频率，默认情况下，每秒同步一次的频率也具有较高的性能。但在 Redis 的负载较高时，RDB 比 AOF 具好更好的性能保证。
+　　③、RDB 使用快照的形式来持久化整个 Redis 数据，而 AOF 只是将每次执行的命令追加到 AOF 文件中，因此从理论上说，RDB 比 AOF 方式更健壮。官方文档也指出，AOF 的确也存在一些 BUG，这些 BUG 在 RDB 没有存在。
+ 　　那么对于 AOF 和 RDB 两种持久化方式，我们应该如何选择呢？
+　　如果可以忍受一小段时间内数据的丢失，毫无疑问使用 RDB 是最好的，定时生成 RDB 快照（snapshot）非常便于进行数据库备份， 并且 RDB 恢复数据集的速度也要比 AOF 恢复的速度要快，而且使用 RDB 还可以避免 AOF 一些隐藏的 bug；否则就使用 AOF 重写。但是一般情况下建议不要单独使用某一种持久化机制，而是应该两种一起用，在这种情况下,当redis重启的时候会优先载入AOF文件来恢复原始的数据，因为在通常情况下AOF文件保存的数据集要比RDB文件保存的数据集要完整。Redis后期官方可能都有将两种持久化方式整合为一种持久化模型。
+</code></pre>
+<h2 id="9redis-常用操作指令">9.redis 常用操作指令</h2>
+<pre><code class="language-shell">1. dbsize 看当前库 有多少个keys
+2. keys* 查看所以keys
+3. flushdb  清空当前库
+4. select index 切换库
+5. move key index 把 key 切换到 另外一个库
+6. expire key second  设置过期时间
+8. ttl key  查看还有多有过去 -1表示永不过期 -2表示 已过期  -2已经这个元素么了
+9. type k2 类型
+10. set key value 重复添加会覆盖
+11. object encoding key  查看该元素的 value属性值
+12.  watch key 监控 key
+13.  multi 开启事务
+14.  exec 执行事务
+</code></pre>
+<p><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/91deb155-4074-4f34-ac3d-b3315668f99e.png?x-oss-process=style/template01" alt="image" loading="lazy"><br>
+<img src="https://images2018.cnblogs.com/blog/1120165/201805/1120165-20180525234334105-751375191.png" alt="image" loading="lazy"></p>
+<h2 id="10-redis集群配置-主从配置">10. redis集群配置-主从配置</h2>
+<h3 id="1创建三个配置文件-redis_6380conf">1.创建三个配置文件 redis_6380.conf</h3>
+<pre><code>配置PID文件路径 pidfile 
+配置端口 port 
+配置log 文件名字 
+配置rdb文件名 
+配置rdb文件路径名称 
+redis-server redis6380.conf
+redis-cli -h 192.168.58.129 -p 6380
+</code></pre>
+<h3 id="2启动进程">2.启动进程</h3>
+<pre><code>启动redis-cli
+info replication  可以查看配置信息
+slaveof 192.168.58.129 6380  (salve 奴隶) 开启slave身份
+</code></pre>
+<h3 id="3特点">3.特点</h3>
+<pre><code>slave 	特点 	关闭连接  则取消身份
+master 	特点  关闭连接,再次开启依旧会有salve;他依旧是master身份
+</code></pre>
+<h3 id="4取消奴隶身份">4.取消奴隶身份</h3>
+<pre><code>slave no one
+</code></pre>
+<h2 id="11-redis集群配置-哨兵模式sentinal">11. redis集群配置-哨兵模式(Sentinal)</h2>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/7e951cc0-7bc7-4778-bfe7-6f22f2835874.png?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<h3 id="1配置环境">1.配置环境</h3>
+<pre><code>在配置文件目录下新建 sentinel.conf 文件，名字绝不能错，然后配置相应内容
+添加一下内容:  sentinel monitor 被监控机器的名字(自己起名字) ip地址 端口号 得票数
+分别配置被监控的名字，ip地址，端口号，以及得票数。上面的得票数为1表示表示主机挂掉后salve投票看让谁接替成为主机，得票数大于1便成为主机
+</code></pre>
+<h3 id="2启动哨兵模式">2.启动哨兵模式</h3>
+<pre><code> 1. 启动三个客户端 
+ 2. 然后启动 三个client
+ 3. slaveof   master
+ 4. 启动 redis-sentinel
+	其实我感觉吧 应该是 监控一台master 然后所有连到master上的slave 自动被添加进来
+ 5. 还有就是 master走了以后;新选出来的master会顶替原来的 ;原来的回来就变成slaver
+	redis-sentinel /etc/redis/sentinel.conf	
+</code></pre>
+<h3 id="3哨兵模式的利弊">3.哨兵模式的利弊</h3>
+<pre><code>　　PS：哨兵模式也存在单点故障问题，如果哨兵机器挂了，那么就无法进行监控了，解决办法是哨兵也建立集群，Redis哨兵模式是支持集群的。
+</code></pre>
+<h2 id="12-redis集群-cluster">12. redis集群-Cluster</h2>
+<h3 id="1前期准备-配置环境">1.前期准备 配置环境</h3>
+<pre><code>1.yum install ruby
+2.yum install rubygems
+这时候 你下载肯定不能下载 因为没有ruby的库
+$ gem sources --add https://gems.ruby-china.com/ --remove https://rubygems.org/
+$ gem sources -l
+https://gems.ruby-china.com
+# 确保只有 gems.ruby-china.com
+而且 此时 你应该做的是 去整个网站下载对应版本的安装包 去 gem 安装  (https://rubygems.org/gems/redis/versions/3.3.0) 我这里安装的是3.3.0 可以使用
+gem install redis-1.7.1.gem --local   这样就行了 别直接 gem install redis  坑了我一个小时整版本 
+3.gem install redis
+
+redis-trib.rb
+在 redis/src目录下 有这个 ;可以把它移动到 usr目录下
+</code></pre>
+<h3 id="2主要redisconf修改配置文件的-那些部分呢">2.主要redis.conf修改配置文件的 那些部分呢</h3>
+<pre><code>1. port  端口
+2. bind  主机ip
+3. pidfile 不知道改不改这个 其实 一台机器的话有必要改
+3. dbfile 配置rdb的位置下面的 dir /opt/redis/redis-cluster/node_6380
+4. cluster-enabled yes
+5. cluster-config-file nodes-6380.conf
+6.  cluster-node-timeout 15000
+7.  appendonly yes  开启 aof 
+
+[root@admin redis-cluster]# ll
+总用量 0
+drwxr-xr-x. 2 root root 101 8月  10 20:10 node_6380
+drwxr-xr-x. 2 root root 101 8月  10 20:10 node_6381
+drwxr-xr-x. 2 root root 101 8月  10 20:10 node_6382
+drwxr-xr-x. 2 root root 101 8月  10 20:10 node_6383
+drwxr-xr-x. 2 root root  81 8月  10 20:10 node_6384
+drwxr-xr-x. 2 root root 101 8月  10 20:10 node_6385
+drwxr-xr-x. 2 root root  23 8月   9 23:38 node_6386
+-rw-r--r--. 1 root root   0 8月  10 18:52 redis_log.log
+</code></pre>
+<p>​	<br>
+这里 我建议 大家 每一个node节点配置一个文件夹 这样的好处是 redis.conf文件修改的地方会很少;而且 一个node一个文件夹很棒</p>
+<pre><code>8.然后 开始redis-server redis.conf
+redis-server /opt/redis/redis-cluster/node_6380/redis.conf
+9.在 redis/src目录下 有这个 ;可以把它移动到 usr/local/redis目录下
+/home/user/redis/redis-4.0.9/src/redis-trib.rb create --replicas 1 192.168.58.129:6380 192.168.58.129:6381 192.168.58.129:6382 192.168.58.129:6383 192.168.58.129:6384 192.168.58.129:6385
+10.愉快的玩耍 了
+直接 redis-cli 
+</code></pre>
+<ul>
+<li>切记 保存好的节点信息千万别乱整;乱整要出事;每次启动就只能节点启动</li>
+</ul>
+<h2 id="13-java整合redis">13. java整合redis</h2>
+<pre><code>集群很简单 直接
+jedis 或者 spring-data-redis
+</code></pre>
+<h2 id="14redis开发中存在的问题">14.redis开发中存在的问题</h2>
+<h3 id="1缓存穿透的问题认为恶意使用">1.缓存穿透的问题(认为恶意使用)</h3>
+<p>​	由于后端代码设计的问题;一般是当访问redis数据key不存在的时候;会直接去访问db;然而可能db也没有;当用户连续请求这种么有的数据时;就会给db造成压力;严重使得宕机;所以我们可以在代码中给这些空的请求数据;设置短暂的生命周期;存入一个空值(其他值也可能)给redis;这样下次访问就不会直接去访问db;缓减压力;</p>
+<h3 id="2缓存雪崩问题">2.缓存雪崩问题</h3>
+<pre><code>由于某些原因使得很多的key集体失效(可能是设置缓存的存在的时间一致,造成key集体失效),造成更大的压力给db,使得雪崩,
+解决问题 : 就是设置不均匀的存活时间
+</code></pre>
+<h3 id="3缓存击穿问题">3.缓存击穿问题</h3>
+<pre><code>由于某些特殊原因,此时热点key失效,是得请求全部给了db,造成击穿问题,
+</code></pre>
+<h3 id="4-缓存预热">4 、缓存预热</h3>
+<p>​	缓存预热这个应该是一个比较常见的概念，相信很多小伙伴都应该可以很容易的理解，缓存预热就是系统上线后，将相关的缓存数据直接加载到缓存系统。这样就可以避免在用户请求的时候，先查询数据库，然后再将数据缓存的问题！用户直接查询事先被预热的缓存数据！<br>
+​	解决思路：<br>
+​	1、数据量不大，可以在项目启动的时候自动进行加载；<br>
+​	2、定时刷新缓存；</p>
+<h3 id="5缓存更新">5.缓存更新</h3>
+<pre><code>除了缓存服务器自带的缓存失效策略之外（Redis默认的有6中策略可供选择），我们还可以根据具体的业务需求进行自定义的缓存淘汰，常见的策略有两种：
+（1）定时去清理过期的缓存；
+（2）当有用户请求过来时，再判断这个请求所用到的缓存是否过期，过期的话就去底层系统得到新数据并更新缓存。
+两者各有优劣，第一种的缺点是维护大量缓存的key是比较麻烦的，第二种的缺点就是每次用户请求过来都要判断缓存失效，逻辑相对比较复杂！具体用哪种方案，大家可以根据自己的应用场景来权衡。
+</code></pre>
+<h3 id="6-缓存降级">6、缓存降级</h3>
+<p>​	当访问量剧增、服务出现问题（如响应时间慢或不响应）或非核心服务影响到核心流程的性能时，仍然需要保证服务还是可用的，即使是有损服务。系统可以根据一些关键数据进行自动降级，也可以配置开关实现人工降级。<br>
+​	降级的最终目的是保证核心服务可用，即使是有损的。而且有些服务是无法降级的（如加入购物车、结算）。<br>
+​	在进行降级之前要对系统进行梳理，看看系统是不是可以丢卒保帅；从而梳理出哪些必须誓死保护，哪些可降级；比如可以参考日志级别设置预案：</p>
+<blockquote>
+<p>其实这里 我觉得访问 db都需要锁</p>
+<p>因为 db操作可能很长时间 ; 此时大量请求访问数据库 会造成数据库 压力 ;此时 只能加锁 ;所以 我感觉 基于 好并发情况下直接操作数据库 都应该加锁</p>
+</blockquote>
+<h3 id="7-如何解决">7. 如何解决?</h3>
+<h4 id="1-分布式锁使用redis自带的分布式锁-set-ex-nx">1. 分布式锁:使用redis自带的分布式锁, set  ex  nx</h4>
+<pre><code>1. SET key value EX second NX  效果等同于 SETEX key second value NX 
+2. 
+NX ：只在键不存在时，才对键进行设置操作。 SET key value NX 效果等同于 SETNX key value 
+XX ：只在键已经存在时，才对键进行设置操作。
+指令: set key value ex second px millisecond nx|xx
+其中 在 second内不能重新赋值 会取到nil;如果 拿到锁的人 可以执行删除锁的操作使得后面的人可以继续set
+如果设置了 NX 或者 XX ，但因为条件没达到而造成设置操作未执行，那么命令返回空批量回复（NULL Bulk Reply）。
+
+其中怎么设计这个问题呢;拿到锁的人;可以继续执行访问数据库的代码;拿不到锁的人 ;则自旋(可以让线程睡眠三秒钟;然后继续return 递归操作)  这里切记不能不加return
+</code></pre>
+<h4 id="2-redisson-框架">2. redisson 框架</h4>
+<p>​	实现的分布式锁: redisson是一个带有juc的lock功能的框架;同时带有和jedis一样的功能</p>
+<h3 id="8-解决案例">8. 解决案例</h3>
+<h3 id="1-redis分布式锁-例子">1. redis分布式锁 例子</h3>
+<ul>
+<li>
+<p>主要利用了</p>
+<p><code>set k2 v2 ex 5 nx</code>  只有在k2 不存在的时候才能重新设置k2的值,所以这个就是一个锁</p>
+</li>
+</ul>
+<pre><code class="language-java">public class Demo {
+    private static Jedis jedis = new Jedis(&quot;xx.xx.234.232&quot;, 6379);
+	//  private JedisCluster jedisCluster = new JedisCluster();
+
+
+    // 数据库访问次数
+    private static int dbcunt = 0;
+
+    // 模拟数据库中的信息
+    private static List&lt;Person&gt; peoples = new ArrayList&lt;Person&gt;();
+
+    static {
+        peoples.add(new Person(&quot;tom&quot;, 0));
+        peoples.add(new Person(&quot;tom1&quot;, 1));
+        peoples.add(new Person(&quot;tom2&quot;, 2));
+        peoples.add(new Person(&quot;tom3&quot;, 3));
+        peoples.add(new Person(&quot;tom4&quot;, 4));
+        peoples.add(new Person(&quot;tom5&quot;, 5));
+    }
+
+
+    public static void main(String[] args) {
+
+        Demo demo = new Demo();
+
+        List&lt;Integer&gt; requests = new ArrayList&lt;Integer&gt;();
+
+        // 模拟制造请求列表
+        for (int i = 0; i &lt; 100; i++) {
+            requests.add(new Random().nextInt(11));
+        }
+
+        for (Integer request : requests) {
+            System.out.println(&quot;username = &quot; + demo.testPress(request));
+        }
+
+//        String set = jedis.set(&quot;user_lock&quot;, &quot;15&quot;, &quot;nx&quot;, &quot;ex&quot;, 20);
+//        System.out.println(set);
+
+    }
+
+
+    public String testPress(Integer id) {
+        //1.用户请求,首先要去 redis里面取数据
+        String name = jedis.get(id.toString());
+        //2.redis中不为空 ,则直接返回值
+        if (null != name) {
+            System.out.println(&quot;[从redis里面取]&quot;);
+            return name;
+        }
+        // 3.设置锁(设置过期时间长一点 20S)
+        String uuid = UUID.randomUUID().toString();
+        // 设置成功返回 OK
+        String set = jedis.set(&quot;user_lock&quot;, uuid, &quot;nx&quot;, &quot;ex&quot;, 20);
+        if (null != set &amp;&amp; set.equals(&quot;OK&quot;)) {
+            //4.如果为空则请求数据库
+            dbcunt++;
+            System.out.println(&quot;[从数据库中请求次数] :&quot; + dbcunt);
+            Person info = getInfo(id);
+            //5.如果数据库中的数据不为空,则返回 数据数据库中的数据 并且把数据存入到redis中
+            if (null != info) {
+                jedis.setex(id.toString(), 60, info.getName());
+                if (uuid.equals(jedis.get(&quot;user_lock&quot;))) {
+                    jedis.del(&quot;user_lock&quot;);
+                }
+                return jedis.get(id.toString());
+            } else {
+                //5.如果数据库中的数据为空,则应该给 存入给redis一个空值
+                jedis.setex(id.toString(), 30, &quot;用户不存在&quot;);
+                if (uuid.equals(jedis.get(&quot;user_lock&quot;))) {
+                    jedis.del(&quot;user_lock&quot;);
+                }
+                return jedis.get(id.toString());
+            }
+        }
+        try {
+            //这里 就是 设置 一个自旋锁
+            Thread.sleep(1000);
+            return testPress(id);
+        } catch (InterruptedException e) {
+            return null;
+        }
+    }
+
+    //模拟 数据库 操作
+    public Person getInfo(Integer id) {
+        try {
+            Person person = peoples.get(id);
+            return person;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+}
+
+class Person {
+    public Person(String name, int id) {
+        this.name = name;
+        this.id = id;
+    }
+
+    private String name;
+    private int id;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+}
+</code></pre>
+<ul>
+<li>
+<p>利用redisson的分布式锁</p>
+<pre><code class="language-java">RLock disLock = redissonClient.getLock(&quot;DISLOCK&quot;);
+//加锁
+disLock.lock();
+
+//执行 代码
+
+//释放锁
+disLock.unlock();
+</code></pre>
+</li>
+</ul>
+<h3 id="2-redis完成秒杀操作">2. redis完成秒杀操作</h3>
+<ul>
+<li>如何完成秒杀的?</li>
+<li>利用<strong>redis的事务</strong>,进行完成秒杀操作,这个比较好,因为比较公平</li>
+<li><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/70a04c22-5313-442d-9388-65bb077bb5d8.png?x-oss-process=style/template01" alt="" loading="lazy"></li>
+</ul>
+<pre><code class="language-java">    // 2.获取k1
+    String k1 = jedis.get(&quot;k1&quot;);
+
+    if (Integer.parseInt(k1) &gt; 0) {
+        // 1. 开启监控
+        jedis.watch(&quot;k1&quot;);
+        //3. 开启事务
+        Transaction multi = jedis.multi();
+        //4. 执行减票操作
+        multi.incrBy(&quot;k1&quot;, -1);
+        //5. 执行事务
+        List&lt;Object&gt; exec = multi.exec();
+        //6. 失败/成功
+        if (!CollectionUtils.isEmpty(exec)) {
+            System.out.println(&quot;抢购完成-----------&gt;&quot; + k1);
+        } else {
+            System.out.println(&quot;抢购失败&quot;);
+        }
+        // 7. 取消监控
+        jedis.unwatch();
+    }
+</code></pre>
+<ul>
+<li>
+<p>利用<strong>redisson</strong> 进行操作(先到先得的那种)</p>
+<pre><code class="language-java">    Jedis jedis = new Jedis(&quot;xx.xx.234.232&quot;, 6379);
+    jedis.set(&quot;k1&quot;, &quot;10&quot;);
+    Config config = new Config();
+    config.useSingleServer().setAddress(&quot;redis://xx.xx.234.232:6379&quot;);
+    RedissonClient redissonClient = Redisson.create(config);
+
+    for (int i = 0; i &lt;100; i++) {
+        RSemaphore k1 = redissonClient.getSemaphore(&quot;k1&quot;);
+        boolean b = k1.tryAcquire();
+        if (b) {
+            String k11 = jedis.get(&quot;k1&quot;);
+            System.out.println(&quot;抢票成功,剩余票数&quot;+k11);
+        }
+        System.out.println(&quot;抢票失败&quot;);
+    }
+</code></pre>
+</li>
+</ul>
+<h2 id="16redis常用配置-redisconf">16.redis常用配置  redis.conf</h2>
+<pre><code>参数说明:
+
+1. Redis默认不是以守护进程的方式运行，可以通过该配置项修改，使用yes启用守护进程
+  daemonize no
+2. 当Redis以守护进程方式运行时，Redis默认会把pid写入/var/run/redis.pid文件，可以通过pidfile指定
+  pidfile /var/run/redis.pid
+3. 指定Redis监听端口，默认端口为6379，作者在自己的一篇博文中解释了为什么选用6379作为默认端口，因为6379在手机按键上MERZ对应的号码，而MERZ取自意大利歌女Alessia Merz的名字
+  port 6379
+4. 绑定的主机地址
+  bind 127.0.0.1
+5.当 客户端闲置多长时间后关闭连接，如果指定为0，表示关闭该功能
+  timeout 300
+6. 指定日志记录级别，Redis总共支持四个级别：debug、verbose、notice、warning，默认为verbose
+  loglevel verbose
+7. 日志记录方式，默认为标准输出，如果配置Redis为守护进程方式运行，而这里又配置为日志记录方式为标准输出，则日志将会发送给/dev/null
+  logfile stdout
+8. 设置数据库的数量，默认数据库为0，可以使用SELECT &lt;dbid&gt;命令在连接上指定数据库id
+  databases 16
+9. 指定在多长时间内，有多少次更新操作，就将数据同步到数据文件，可以多个条件配合
+  save &lt;seconds&gt; &lt;changes&gt;
+  Redis默认配置文件中提供了三个条件：
+  save 900 1
+  save 300 10
+  save 60 10000
+  分别表示900秒（15分钟）内有1个更改，300秒（5分钟）内有10个更改以及60秒内有10000个更改。
+ 
+10. 指定存储至本地数据库时是否压缩数据，默认为yes，Redis采用LZF压缩，如果为了节省CPU时间，可以关闭该选项，但会导致数据库文件变的巨大
+  rdbcompression yes
+11. 指定本地数据库文件名，默认值为dump.rdb
+  dbfilename dump.rdb
+12. 指定本地数据库存放目录
+  dir ./
+13. 设置当本机为slav服务时，设置master服务的IP地址及端口，在Redis启动时，它会自动从master进行数据同步
+  slaveof &lt;masterip&gt; &lt;masterport&gt;
+14. 当master服务设置了密码保护时，slav服务连接master的密码
+  masterauth &lt;master-password&gt;
+15. 设置Redis连接密码，如果配置了连接密码，客户端在连接Redis时需要通过AUTH &lt;password&gt;命令提供密码，默认关闭
+  requirepass foobared
+16. 设置同一时间最大客户端连接数，默认无限制，Redis可以同时打开的客户端连接数为Redis进程可以打开的最大文件描述符数，如果设置 maxclients 0，表示不作限制。当客户端连接数到达限制时，Redis会关闭新的连接并向客户端返回max number of clients reached错误信息
+  maxclients 128
+17. 指定Redis最大内存限制，Redis在启动时会把数据加载到内存中，达到最大内存后，Redis会先尝试清除已到期或即将到期的Key，当此方法处理 后，仍然到达最大内存设置，将无法再进行写入操作，但仍然可以进行读取操作。Redis新的vm机制，会把Key存放内存，Value会存放在swap区
+  maxmemory &lt;bytes&gt;
+18. 指定是否在每次更新操作后进行日志记录，Redis在默认情况下是异步的把数据写入磁盘，如果不开启，可能会在断电时导致一段时间内的数据丢失。因为 redis本身同步数据文件是按上面save条件来同步的，所以有的数据会在一段时间内只存在于内存中。默认为no
+  appendonly no
+19. 指定更新日志文件名，默认为appendonly.aof
+   appendfilename appendonly.aof
+20. 指定更新日志条件，共有3个可选值： 
+  no：表示等操作系统进行数据缓存同步到磁盘（快） 
+  always：表示每次更新操作后手动调用fsync()将数据写到磁盘（慢，安全） 
+  everysec：表示每秒同步一次（折衷，默认值）
+  appendfsync everysec
+ 
+21. 指定是否启用虚拟内存机制，默认值为no，简单的介绍一下，VM机制将数据分页存放，由Redis将访问量较少的页即冷数据swap到磁盘上，访问多的页面由磁盘自动换出到内存中（在后面的文章我会仔细分析Redis的VM机制）
+   vm-enabled no
+22. 虚拟内存文件路径，默认值为/tmp/redis.swap，不可多个Redis实例共享
+   vm-swap-file /tmp/redis.swap
+23. 将所有大于vm-max-memory的数据存入虚拟内存,无论vm-max-memory设置多小,所有索引数据都是内存存储的(Redis的索引数据 就是keys),也就是说,当vm-max-memory设置为0的时候,其实是所有value都存在于磁盘。默认值为0
+   vm-max-memory 0
+24. Redis swap文件分成了很多的page，一个对象可以保存在多个page上面，但一个page上不能被多个对象共享，vm-page-size是要根据存储的 数据大小来设定的，作者建议如果存储很多小对象，page大小最好设置为32或者64bytes；如果存储很大大对象，则可以使用更大的page，如果不 确定，就使用默认值
+   vm-page-size 32
+25. 设置swap文件中的page数量，由于页表（一种表示页面空闲或使用的bitmap）是在放在内存中的，，在磁盘上每8个pages将消耗1byte的内存。
+   vm-pages 134217728
+26. 设置访问swap文件的线程数,最好不要超过机器的核数,如果设置为0,那么所有对swap文件的操作都是串行的，可能会造成比较长时间的延迟。默认值为4
+   vm-max-threads 4
+27. 设置在向客户端应答时，是否把较小的包合并为一个包发送，默认为开启
+  glueoutputbuf yes
+28. 指定在超过一定的数量或者最大的元素超过某一临界值时，采用一种特殊的哈希算法
+  hash-max-zipmap-entries 64
+  hash-max-zipmap-value 512
+29. 指定是否激活重置哈希，默认为开启（后面在介绍Redis的哈希算法时具体介绍）
+  activerehashing yes
+30. 指定包含其它的配置文件，可以在同一主机上多个Redis实例之间使用同一份配置文件，而同时各个实例又拥有自己的特定配置文件
+  include /path/to/local.conf
+31.redis3.2版本后新增protected-mode配置，默认是yes，即开启。设置外部网络连接redis服务，设置方式如下：
+	1、关闭protected-mode模式，此时外部网络可以直接访问
+	2、开启protected-mode保护模式，需配置bind ip或者设置访问密码
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1nosql%E6%95%B0%E6%8D%AE%E5%BA%93%E6%9C%89%E5%93%AA%E4%BA%9B">1.nosql数据库有哪些</a>
+<ul>
+<li><a href="#1%E9%94%AE%E5%80%BCkey-value%E5%AF%B9%E6%95%B0%E6%8D%AE%E5%BA%93redis-memcached">1.键值（Key-Value）对数据库(redis) Memcached</a></li>
+<li><a href="#2%E9%9D%A2%E5%90%91%E6%96%87%E6%A1%A3document-oriented%E6%95%B0%E6%8D%AE%E5%BA%93mongodb">2.面向文档（Document-Oriented）数据库(MongoDB)</a></li>
+<li><a href="#3%E5%88%97%E5%AD%98%E5%82%A8wide-column-storecolumn-family%E6%95%B0%E6%8D%AE%E5%BA%93-hbase">3.列存储（Wide Column Store/Column-Family）数据库 HBase</a></li>
+<li><a href="#4%E5%9B%BEgraph-oriented%E6%95%B0%E6%8D%AE%E5%BA%93-neo4j">4.图（Graph-Oriented）数据库 Neo4J</a></li>
+</ul>
+</li>
+<li><a href="#2%E4%BC%A0%E7%BB%9F%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%8Enosql%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8C%BA%E5%88%AB">2.传统的关系型数据库与nosql数据库区别</a>
+<ul>
+<li><a href="#1acid%E8%A7%84%E5%88%99%E5%85%B3%E7%B3%BB%E5%9E%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E9%81%B5%E5%BE%AAacid%E8%A7%84%E5%88%99">1.ACID规则(关系型数据库遵循ACID规则)</a></li>
+<li><a href="#2cap">2.cap</a></li>
+<li><a href="#3-%E4%B8%89%E8%BF%9B%E4%BA%8C%E5%8E%9F%E5%88%99">3. 三进二原则</a></li>
+</ul>
+</li>
+<li><a href="#3redis%E7%9A%84%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8">3.redis的安装和使用</a>
+<ul>
+<li><a href="#1%E4%B8%8B%E8%BD%BD%E5%90%AF%E5%8A%A8">1.下载启动</a></li>
+<li><a href="#2%E8%BF%9C%E7%A8%8B%E8%AE%BF%E9%97%AE">2.远程访问</a></li>
+</ul>
+</li>
+<li><a href="#4redis%E4%BB%8B%E7%BB%8D">4.redis介绍</a></li>
+<li><a href="#5redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">5.redis数据类型</a>
+<ul>
+<li><a href="#1string%E5%AD%97%E7%AC%A6%E4%B8%B2">1.string（字符串）</a></li>
+<li><a href="#2hash">2.hash</a></li>
+<li><a href="#3list%E5%88%97%E8%A1%A8">3.List（列表）</a></li>
+<li><a href="#4set%E9%9B%86%E5%90%88">4.Set（集合）</a></li>
+<li><a href="#5-zsetsorted-set%E6%9C%89%E5%BA%8F%E9%9B%86%E5%90%88">5. zset(sorted set：有序集合)</a></li>
+</ul>
+</li>
+<li><a href="#6rdb-redis%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F">6.RDB-redis持久化方式</a>
+<ul>
+<li><a href="#1%E8%87%AA%E5%8A%A8%E8%A7%A6%E5%8F%91">1.自动触发</a></li>
+<li><a href="#2%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91">2.手动触发</a></li>
+<li><a href="#3%E7%BB%93%E8%AE%BA">3.结论</a></li>
+<li><a href="#4%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%ADredis%E6%8C%81%E4%B9%85%E5%8C%96%E5%8A%9F%E8%83%BD">4.如何关闭redis持久化功能</a></li>
+<li><a href="#5rdb%E7%9A%84%E4%BC%98%E5%8A%A3%E5%8A%BF">5.rdb的优劣势</a></li>
+</ul>
+</li>
+<li><a href="#8aof%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%B9%E5%BC%8F">8.aof持久化方式</a>
+<ul>
+<li><a href="#1%E5%BC%80%E5%90%AF">1.开启</a></li>
+<li><a href="#2aof-%E9%87%8D%E5%86%99">2.AOF 重写</a></li>
+<li><a href="#3-aof%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9">3. aof的优缺点</a></li>
+</ul>
+</li>
+<li><a href="#9redis-%E5%B8%B8%E7%94%A8%E6%93%8D%E4%BD%9C%E6%8C%87%E4%BB%A4">9.redis 常用操作指令</a></li>
+<li><a href="#10-redis%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE-%E4%B8%BB%E4%BB%8E%E9%85%8D%E7%BD%AE">10. redis集群配置-主从配置</a>
+<ul>
+<li><a href="#1%E5%88%9B%E5%BB%BA%E4%B8%89%E4%B8%AA%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-redis_6380conf">1.创建三个配置文件 redis_6380.conf</a></li>
+<li><a href="#2%E5%90%AF%E5%8A%A8%E8%BF%9B%E7%A8%8B">2.启动进程</a></li>
+<li><a href="#3%E7%89%B9%E7%82%B9">3.特点</a></li>
+<li><a href="#4%E5%8F%96%E6%B6%88%E5%A5%B4%E9%9A%B6%E8%BA%AB%E4%BB%BD">4.取消奴隶身份</a></li>
+</ul>
+</li>
+<li><a href="#11-redis%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE-%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8Fsentinal">11. redis集群配置-哨兵模式(Sentinal)</a>
+<ul>
+<li><a href="#1%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83">1.配置环境</a></li>
+<li><a href="#2%E5%90%AF%E5%8A%A8%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F">2.启动哨兵模式</a></li>
+<li><a href="#3%E5%93%A8%E5%85%B5%E6%A8%A1%E5%BC%8F%E7%9A%84%E5%88%A9%E5%BC%8A">3.哨兵模式的利弊</a></li>
+</ul>
+</li>
+<li><a href="#12-redis%E9%9B%86%E7%BE%A4-cluster">12. redis集群-Cluster</a>
+<ul>
+<li><a href="#1%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87-%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83">1.前期准备 配置环境</a></li>
+<li><a href="#2%E4%B8%BB%E8%A6%81redisconf%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84-%E9%82%A3%E4%BA%9B%E9%83%A8%E5%88%86%E5%91%A2">2.主要redis.conf修改配置文件的 那些部分呢</a></li>
+</ul>
+</li>
+<li><a href="#13-java%E6%95%B4%E5%90%88redis">13. java整合redis</a></li>
+<li><a href="#14redis%E5%BC%80%E5%8F%91%E4%B8%AD%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">14.redis开发中存在的问题</a>
+<ul>
+<li><a href="#1%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F%E7%9A%84%E9%97%AE%E9%A2%98%E8%AE%A4%E4%B8%BA%E6%81%B6%E6%84%8F%E4%BD%BF%E7%94%A8">1.缓存穿透的问题(认为恶意使用)</a></li>
+<li><a href="#2%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9%E9%97%AE%E9%A2%98">2.缓存雪崩问题</a></li>
+<li><a href="#3%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF%E9%97%AE%E9%A2%98">3.缓存击穿问题</a></li>
+<li><a href="#4-%E7%BC%93%E5%AD%98%E9%A2%84%E7%83%AD">4 、缓存预热</a></li>
+<li><a href="#5%E7%BC%93%E5%AD%98%E6%9B%B4%E6%96%B0">5.缓存更新</a></li>
+<li><a href="#6-%E7%BC%93%E5%AD%98%E9%99%8D%E7%BA%A7">6、缓存降级</a></li>
+<li><a href="#7-%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3">7. 如何解决?</a>
+<ul>
+<li><a href="#1-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%E4%BD%BF%E7%94%A8redis%E8%87%AA%E5%B8%A6%E7%9A%84%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-set-ex-nx">1. 分布式锁:使用redis自带的分布式锁, set  ex  nx</a></li>
+<li><a href="#2-redisson-%E6%A1%86%E6%9E%B6">2. redisson 框架</a></li>
+</ul>
+</li>
+<li><a href="#8-%E8%A7%A3%E5%86%B3%E6%A1%88%E4%BE%8B">8. 解决案例</a></li>
+<li><a href="#1-redis%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81-%E4%BE%8B%E5%AD%90">1. redis分布式锁 例子</a></li>
+<li><a href="#2-redis%E5%AE%8C%E6%88%90%E7%A7%92%E6%9D%80%E6%93%8D%E4%BD%9C">2. redis完成秒杀操作</a></li>
+</ul>
+</li>
+<li><a href="#16redis%E5%B8%B8%E7%94%A8%E9%85%8D%E7%BD%AE-redisconf">16.redis常用配置  redis.conf</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

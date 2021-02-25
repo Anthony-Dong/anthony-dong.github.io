@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> Java - 五大集合(数据结构)要点 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/collection/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> Java - 五大集合(数据结构)要点</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-11</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/collection/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">6487字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">26 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-13/3538b330-ea4e-457c-9641-536d495733b3.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="1-list">1. List</h2>
+<h3 id="1主要问题">1.主要问题</h3>
+<ul>
+<li>了解一下ArrayList和CopyOnWriteArrayList的<strong>增删改查</strong>实现原理</li>
+<li>看看为什么说ArrayList查询快而增删慢？</li>
+<li>CopyOnWriteArrayList 与 Vector 的选择</li>
+<li>LinkedList 与 ArrayList</li>
+<li>Arrays.asList(....) 的使用问题</li>
+<li>Collections这个工具类</li>
+<li>java9+  List.of()方法  map , set 同理 都有,不多写了</li>
+</ul>
+<h3 id="2为什么arraylist-不安全">2.为什么arraylist 不安全</h3>
+<ul>
+<li>我们查看源码发现 arraylist 的 CRUD 操作 并么有涉及到锁之类的东西</li>
+<li>底层是数组，初始大小为10</li>
+<li>插入时会判断数组容量是否足够，不够的话会进行扩容</li>
+<li>所谓扩容就是新建一个新的数组，然后将老的数据里面的元素复制到新的数组里面(所以增加较慢)</li>
+</ul>
+<h3 id="3copyonwritearraylist-有什么特点">3.CopyOnWriteArrayList  有什么特点?</h3>
+<ul>
+<li>它是List接口的一个实现类,在 <strong>java.util.concurrent</strong>( 简称  JUC ,后面我全部改成 juc ,大家注意下)</li>
+<li>内部持有一个ReentrantLock lock = new ReentrantLock(); 对于 <strong>增删改</strong> 操作都是 先加锁 再 释放锁 线程安全.并且锁只有一把，而读操作不需要获得锁，支持<strong>并发</strong>。</li>
+<li>读写分离，写时复制出一个新的数组，完成插入、修改或者移除操作后将新数组赋值给array</li>
+</ul>
+<h3 id="4copyonwritearraylist-与-vector-的选择">4.CopyOnWriteArrayList 与 Vector 的选择</h3>
+<ul>
+<li>Vector是<strong>增删改查</strong>方法都加了<strong>synchronized</strong>，保证同步，但是每个方法执行的时候都要去获得锁，性能就会大大下降，而CopyOnWriteArrayList 只是在<strong>增删改</strong>上加<strong>锁</strong>，但是读不加锁，在读方面的性能就好于Vector，CopyOnWriteArrayList支持读多写少的并发情况。</li>
+<li>Vector和CopyOnWriteArrayList都是 List接口 的一个实现类</li>
+</ul>
+<h3 id="5copyonwritearraylist适用于什么情况">5.CopyOnWriteArrayList适用于什么情况</h3>
+<ul>
+<li>我们看源码不难发现他每次增加一个元素都要进行一次拷贝,此时严重影响了增删改的性能,其中和arraylist 差了好几百倍 我自己测试过,</li>
+<li>所以对于读多写少的操作  CopyOnWriteArrayList 更加适合 ,而且线程安全</li>
+<li><strong>DriverManager</strong>  这个类 就使用到了CopyOnWriteArrayList</li>
+</ul>
+<h3 id="6-linkedlist-e-和-arrayliste-对比">6. LinkedList <E> 和 ArrayList<E>  对比</h3>
+<pre><code class="language-java">LinkedList&lt;Integer&gt; lists = new LinkedList&lt;&gt;();
+
+lists.addFirst(1);
+lists.push(2);
+lists.addLast(3);
+lists.add(4);
+lists.addFirst(5);
+
+lists.forEach(System.out::println);
+// 5 2 1 3 4
+</code></pre>
+<blockquote>
+<p><code>addFirst</code>和<code>addLast</code> 方法很清楚 ,</p>
+<p><code>push</code> 方法的话 ,默认是<code>andFirst</code>实现</p>
+<p><code>add</code> 方法默认是<code>addLast</code> 实现 ....</p>
+<p>所以上面总结一下就是 add和last , push和first  ,</p>
+</blockquote>
+<p>其实我们要明白一下 , 链表相对于数组来说, 链表的添加和删除速度很快 , 是<strong>顺序添加删除</strong>很快,因为一个linkedList会保存第一个节点和最后一个节点,时间复杂度为<code>O(1)</code> , 但是你要指定位置添加<code>add(int index, E element)</code> , 那么此时他会先遍历, 然后找到改位置的节点, 将你的节点添加到他前面 , 此时时间复杂度最大值为 <code>O(n)</code>  ,</p>
+<p>数组呢 , 我们知道ArrayList底层实现就是数组 , 数组优点就是由于内存地址是顺序的, 属于一块整的 , 此时遍历起来很快 ,  添加删除的话 ,他会复制数组, 当数组长度特别大时,所消耗的时间会很长</p>
+<p>这是一张图 , 大家可以看一下 ,</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-07/4fe202ae-4013-44e0-86fd-8e382149b8a0.png" alt="" loading="lazy"></figure>
+<h3 id="7-arraysaslist-方法返回的数组是不可变得吗">7. Arrays.asList() 方法返回的数组是不可变得吗 ?</h3>
+<pre><code class="language-java">List&lt;Integer&gt; integers = Arrays.asList(1, 2, 3, 4, 5);
+integers.set(2, 5); // 这个操作可以
+//integers.add(6);  这个会抛出异常
+integers.forEach(System.out::println); // 1 2 5 4 5
+
+1. 很显然我们是可以修改 list集合的 可以使用set方法
+2. 但是当我们尝试去使用add() 方法时,会抛出 java.lang.UnsupportedOperationException 的异常,
+不支持操作的异常
+3.当我们使用 java9+时  可以使用 List.of()方法 ,他就是彻彻底底的不可修改的
+</code></pre>
+<h3 id="8怎么将一个不安全数组换成安全数组">8.怎么将一个不安全数组换成安全数组</h3>
+<pre><code class="language-java">1. 使用 Collections这个工具类
+List&lt;Integer&gt; integers1 = Collections.synchronizedList(integers);
+
+2. java5+ 变成 CopyOnWriteArrayList
+CopyOnWriteArrayList&lt;Integer&gt; integers2 = (CopyOnWriteArrayList&lt;Integer&gt;) integers;
+
+3. java9+ ,使用 List.of() 变成只读对象
+</code></pre>
+<h3 id="10-collections-工具类">10. Collections 工具类</h3>
+<pre><code class="language-java">1. 创建一个安全的空集合,防止NullPointerException异常
+List&lt;String&gt; list = Collections.&lt;String&gt;emptyList();
+
+2. 拷贝集合
+Collections.addAll(list, 2,3, 4, 5, 6);
+
+3. 构建一个安全的集合
+List&lt;Integer&gt; safeList = Collections.synchronizedList(list);
+
+4. 二分查找
+Collections.binarySearch(list, 2);
+
+5.翻转数组
+Collections.reverse(list);
+</code></pre>
+<p>翻转有很多方法 <code>java.util.Collections</code> , 可以去学一下, 有学习能力的可以去学习一下 Google的 <code>Guava</code> 很强的工具类 , 里面很多</p>
+<h2 id="2-set">2. Set</h2>
+<h3 id="1-问题">1. 问题</h3>
+<ul>
+<li>HashSet、TreeSet和 LinkedHashSet三种类型什么时候使用它们</li>
+<li>Hashset的实现方式?  HashSet去重方式 ? TreeSet 去重方式?</li>
+<li>那怎么实现一个线程安全的 HashSet , 因为JDK没有 ConcurrentHashSet</li>
+<li>CopyOnWriteArraySet的实现</li>
+</ul>
+<h3 id="2hashset-treeset和linkedhashset三种类型什么时候使用它们">2.HashSet、TreeSet和LinkedHashSet三种类型什么时候使用它们</h3>
+<ul>
+<li>如你的需求是要一个能快速访问的Set，那么就要用HashSet , <strong>HashSet底层是<code>HashMap</code>实现的</strong>，其中的元素没有按顺序排列.</li>
+<li>如果你要一个可排序Set，那么你应该用TreeSet, **TreeSet的底层实现是<code>TreeMap</code> **</li>
+<li>如果你要记录下插入时的顺序时，你应该使用LinedHashSet</li>
+<li><strong>Set集合中不能包含重复的元素</strong>，每个元素必须是唯一的，你只要将元素加入set中，重复的元素会自动移除。所以<strong>可以去重</strong>, 很多情况下都需要使用 (但是去重方式不同)</li>
+<li>LinkedHashSet正好介于HashSet和TreeSet之间，它也是一个基于<code>HashMap</code>和双向链表的集合，但它同时维护了一个双链表来记录插入的顺序，基本方法的复杂度为O(1)。</li>
+<li>三者都是线程不安全的, 需要使用 Collections.synchronizedSet(new HashSet(…));</li>
+</ul>
+<h3 id="3-hashset和linkedhashset-判定元素重复的原则是相同的">3. HashSet和LinkedHashSet 判定元素重复的原则是相同的</h3>
+<ul>
+<li>会先去执行hashCode() 方法 ,判断是否重复</li>
+<li>如果hashCode() 返回值相同 , 就会去判断equals方法,</li>
+<li>如果equals() 方法还是相同, 那么就认为重复</li>
+</ul>
+<h3 id="4-treeset-判断元素重复原则">4. TreeSet 判断元素重复原则</h3>
+<p>TreeSet的元素必须是实现了<code>java.lang.Comparable&lt;T&gt;</code> 接口 , 所以他是根据此个接口的方法<code>compareTo</code>方法进行判断重复的, 当返回值一样的时,认定重复</p>
+<h3 id="5-怎么实现一个线程安全的-hashset">5. 怎么实现一个线程安全的 hashset</h3>
+<blockquote>
+<p>​	我们看源码 会发现 他里面有一个 HashMap ,那为什么要用(用transient关键字标记的成员变量不参与序列化过程。) 为什么呢 ,因为 HashMap 已经实现了Serializable,</p>
+</blockquote>
+<p>怎么实现一个  ConcurrentHashSet</p>
+<ul>
+<li>自己写一个 实现类 实现 Set  ,里面 定义一个 ConcurrentHashSet  ,和 hashset的方式一样</li>
+<li>直接用 第三方库 ----- com.alibaba.dubbo.common.utils.ConcurrentHashSet ,阿里的库 ....</li>
+</ul>
+<pre><code class="language-java">package com.alibaba.dubbo.common.utils;
+import java.util.AbstractSet;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
+public class ConcurrentHashSet&lt;E&gt; extends AbstractSet&lt;E&gt; implements Set&lt;E&gt;, java.io.Serializable {
+
+    private static final long serialVersionUID = -8672117787651310382L;
+
+    private static final Object PRESENT = new Object();
+
+    private final ConcurrentMap&lt;E, Object&gt; map;
+
+    public ConcurrentHashSet() {
+        map = new ConcurrentHashMap&lt;E, Object&gt;();
+    }
+
+    public ConcurrentHashSet(int initialCapacity) {
+        map = new ConcurrentHashMap&lt;E, Object&gt;(initialCapacity);
+    }
+    
+ ...............   
+}
+</code></pre>
+<p>很显然跟我说的好像 一模一样 ,哈哈哈 ,我也是看别人学的,只是看你用的巧不巧,他继承了AbstractSet这个抽象类,重写了 他部分想要改的方法, 同时也实现了 set接口</p>
+<h3 id="6copyonwritearrayset的实现">6.CopyOnWriteArraySet的实现</h3>
+<pre><code class="language-jav">public CopyOnWriteArraySet() {
+     al = new CopyOnWriteArrayList&lt;E&gt;();
+ }
+</code></pre>
+<p>很显然翻源码我们发现 他实现了  CopyOnWriteArrayList<E>();</p>
+<h2 id="3-map">3. Map</h2>
+<h3 id="1-问题-2">1. 问题</h3>
+<ul>
+<li>最常见的问题就是 HashMap的底层实现  , JDK1.7和JDK1.8的差别 ,这个我不讲了,如果想要看,自己百度我提供一个我自己写的一个HashMap简单实现</li>
+<li>Hashtable、HashMap 以及ConcurrentHashMap 的区别</li>
+<li>深度学习 ConcurrentHashMap  和  HashMap   靠你们自己了 ,这俩研究透, 你已经向大神进阶了</li>
+<li>ConcurrentSkipListMap 与 TreeMap 的选择</li>
+<li>LinkedHashMap的使用</li>
+</ul>
+<h3 id="2-hashtable的学习">2. Hashtable的学习</h3>
+<ul>
+<li>Hashtable和ConcurrentHashMap以及ConcurrentSkipListMap 以及TreeMap  不允许key 和 value值 为空,但是 <strong>HashMap 可以 key 和value值都可以为空,</strong></li>
+<li>Hashtable的方法 都加了Synchronized 关键字修饰 , 所以线程安全</li>
+<li>它是 数组+链表的实现</li>
+</ul>
+<h3 id="3concurrenthashmap-问题">3.ConcurrentHashMap 问题</h3>
+<ul>
+<li>取消segments字段，直接采用transient volatile HashEntry&lt;K,V&gt;[] table保存数据，</li>
+<li>采用table数组元素作为锁，从而实现了对每一行数据进行加锁，进一步减少并发冲突的概率。</li>
+<li>把Table数组＋单向链表的数据结构   变成为  Table数组 ＋ 单向链表 ＋ 红黑树的结构。</li>
+<li>当链表长度超过8以后，单向链表变成了红黑数；  在哈希表扩容时，如果发现链表长度小于 6，则会由红黑树重新退化为链表。</li>
+<li>对于其他详细我不吹,看懂的么几个 ,他比HashMap 还要难,</li>
+<li>对于线程安全环境下 介意使用 ConcurrentHashMap  而不去使用 Hashtable</li>
+</ul>
+<h3 id="4-为什么不去使用-hashtable而去使用concurrenthashmap">4. 为什么不去使用 Hashtable,而去使用ConcurrentHashMap ?</h3>
+<p>HashTable容器使用synchronized来保证线程安全，但在线程竞争激烈的情况下HashTable的效率非常低下。因为当一个线程访问HashTable的同步方法时，其他线程访问HashTable的同步方法时，可能会进入阻塞或轮询状态。如线程1使用put进行添加元素，线程2不但不能使用put方法添加元素，并且也不能使用get方法来获取元素，所以竞争越激烈效率越低。</p>
+<h3 id="5-hashmap-问题">5. HashMap 问题</h3>
+<ul>
+<li>
+<p>其中部分信息咱们还能聊聊,不会的我就算了</p>
+</li>
+<li>
+<p>内部节点分为 <code>Node&lt;K,V&gt;</code>和<code>TreeNode&lt;K,V&gt;</code> , 都直接间接的实现与<code>Map.Entry&lt;K,V&gt;</code> , 后者所占用的空间较大,所以是一种空间换时间的想法 , 前者只要保存两个节点信息, 后者需要保存四个</p>
+</li>
+<li>
+<p>存储结构是<code>数组+链表</code> 或者 <code>数组+ 红黑树</code> 实现,有个阈值,当链表长度大于8，大于8的话把链表转换为红黑树,</p>
+<p>当小于等于6时会自动转成链表</p>
+<blockquote>
+<p>原因： (反正我看不懂,只是解决碰撞概率的问题,数学问题这个是)</p>
+<p>红黑树的平均查找长度是log(n)，长度为8，查找长度为log(8)=3，链表的平均查找长度为n/2，当长度为8时，平均查找长度为8/2=4，这才有转换成树的必要；链表长度如果是小于等于6，6/2=3，虽然速度也很快的，但是转化为树结构和生成树的时间并不会太短。</p>
+<p>还有选择6和8的原因是：</p>
+<p>中间有个差值7可以防止链表和树之间频繁的转换。假设一下，如果设计成链表个数超过8则链表转换成树结构，链表个数小于8则树结构转换成链表，如果一个HashMap不停的插入、删除元素，链表个数在8左右徘徊，就会频繁的发生树转链表、链表转树，效率会很低。</p>
+</blockquote>
+</li>
+<li>
+<p>Node[] table的初始化长度length(默认值是16)，LoadFactor为负载因子(默认值是0.75), 例如为1，虽然减少了空间开销，提高了空间利用率，但同时也增加了查询时间成本；加载因子过低，例如0.5，虽然可以减少查询时间成本，但是空间利用率很低，同时提高了rehash操作的次数</p>
+</li>
+<li>
+<p>实现链接,大家不会写可以看看</p>
+</li>
+<li>
+<p>HashMap是非synchronized  ,线程不安全</p>
+</li>
+<li>
+<p>大家可以看看高能讲解:</p>
+</li>
+</ul>
+<h3 id="6-concurrentskiplistmap-与-treemap-的选择">6. ConcurrentSkipListMap 与 TreeMap 的选择</h3>
+<ul>
+<li>ConcurrentSkipListMap提供了一种线程安全的并发访问的排序映射表。内部是SkipList（跳表）结构实现，利用底层的插入、删除的CAS原子性操作，通过死循环不断获取最新的结点指针来保证不会出现竞态条件。在理论上能够在O(log(n))时间内完成查找、插入、删除操作。调用ConcurrentSkipListMap的size时，由于多个线程可以同时对映射表进行操作，所以映射表需要遍历整个链表才能返回元素个数，这个操作是个O(log(n))的操作。</li>
+<li>在JDK1.8中，ConcurrentHashMap的性能和存储空间要优于ConcurrentSkipListMap，但是ConcurrentSkipListMap有一个功能： <strong>它会按照键的自然顺序进行排序</strong>。</li>
+<li>故需要对<strong>键值排序</strong>，则我们可以使用TreeMap，在<strong>并发场景</strong>下可以使用ConcurrentSkipListMap。</li>
+<li>所以 我们并不会去 纠结 ConcurrentSkipListMap 和 ConcurrentHashMap 两者的选择,因为我解释的很好了</li>
+</ul>
+<h3 id="7-linkedhashmap的使用">7. LinkedHashMap的使用</h3>
+<ul>
+<li>主要是为了解决读取的有序性,</li>
+<li>基于 HashMap 实现的</li>
+<li>可以看看我的<a href="https://anthony-dong.github.io/post/linkedhashmap-yuan-li-fen-xi/">这篇文章</a> : https://anthony-dong.github.io/post/linkedhashmap-yuan-li-fen-xi/</li>
+</ul>
+<h2 id="4-queue">4. Queue</h2>
+<blockquote>
+<p>​	队列在于你走向高级工程师必须走的一步 . 一开始我们对于他并不了解,但是你会发现并发包里面一堆关于队列的类,你就知道了他的关键所在,先进先出的使用场景很常见的</p>
+<p>​	通过我这段时间的学习,我发现在线程池这块,还有这消息队列,还有在数据库连接池这块都需要队列.这些中间件对于队列的依赖性太过于强烈.</p>
+<p>​	所以学会队列是很重要的一步.这些内容我会慢慢补充的.</p>
+</blockquote>
+<h3 id="1-队列是什么">1. 队列是什么</h3>
+<p>我们都知道<strong>队列</strong>(Queue)是一种<strong>先进先出</strong>(FIFO)的数据结构，Java中定义了<code>java.util.Queue</code>接口用来表示队列。Java中的<code>Queue</code>与<code>List</code>、<code>Set</code>属于同一个级别接口，它们都是实现了<code>Collection</code>接口。注意: HashMap没有实现<code>Collection</code>接口</p>
+<h3 id="2deque-是什么">2.Deque 是什么</h3>
+<ul>
+<li>它是一个双端队列</li>
+<li>我们用到的 linkedlist 就是 实现了  deque的接口</li>
+<li>支持在两端插入和移除元素</li>
+<li>区别与 循环队列 <a href="https://www.cnblogs.com/chenliyang/p/6554141.html">循环队列实现讲解</a></li>
+</ul>
+<h3 id="3常见的几种队列实现">3.常见的几种队列实现</h3>
+<h4 id="1-linkedlist">1. LinkedList</h4>
+<p><code>LinkedList</code>是链表结构，队列呢也是一个列表结构,继承关系上 , LinkedList实现了Queue , 所以对于Queue来说 ,</p>
+<p>添加是 <code>offer(obj)</code> , 删除是 <code>poll()</code>  ,  获取队头(不删除)是 <code>peek()</code>  .</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    Queue&lt;Integer&gt; queue = new LinkedList&lt;&gt;();
+
+    queue.offer(1);
+    queue.offer(2);
+    queue.offer(3);
+
+    System.out.println(queue.poll());
+    System.out.println(queue.poll());
+    System.out.println(queue.poll());
+}
+// 1, 2 , 3 
+</code></pre>
+<h4 id="2-priorityqueue">2. PriorityQueue</h4>
+<p>PriorityQueue维护了一个有序列表,插入或者移除对象会进行Heapfy操作,<strong>默认情况下可以称之为小顶堆</strong>。当然，我们也可以给它指定一个实现了 <code>java.util.Comparator</code> 接口的排序类来指定元素排列的顺序。</p>
+<p>PriorityQueue 是一个无界队列 , 当你设置初始化大小还是不设置 , 都不影响他继续添加元素</p>
+<h4 id="3-concurrentlinkedqueue">3. ConcurrentLinkedQueue</h4>
+<p><code>ConcurrentLinkedQueue</code> 是基于链接节点的并且线程安全的队列。因为它在队列的尾部添加元素并从头部删除它们，所以只要不需要知道队列的大小 <code>ConcurrentLinkedQueue</code> 对公共集合的共享访问就可以工作得很好。收集关于队列大小的信息会很慢，需要遍历队列。</p>
+<h3 id="4-arrayblockingqueue与linkedblockingqueue的区别哪个性能好呢">4. ArrayBlockingQueue与LinkedBlockingQueue的区别,哪个性能好呢</h3>
+<ul>
+<li>
+<p>ArrayBlockingQueue  是有界队列</p>
+</li>
+<li>
+<p>LinkedBlockingQueue 看构造方法区分 , 默认构造方法最大值是 2^31-1</p>
+</li>
+<li>
+<p>但是当 take 和 put操作时 ,ArrayBlockingQueue速度要快于 LinkedBlockingQueue原因是什么</p>
+<blockquote>
+<p>1.队列中的锁的实现不同</p>
+<p>​       ArrayBlockingQueue中的锁是没有分离的，即生产和消费用的是同一个锁；</p>
+<p>​       LinkedBlockingQueue中的锁是分离的，即生产用的是putLock，消费是takeLock</p>
+<p>2.在生产或消费时操作不同</p>
+<p>​     ArrayBlockingQueue基于数组，在生产和消费的时候，是直接将枚举对象插入或移除的，不会产生或销毁任何额外的对象实例；</p>
+<p>​     LinkedBlockingQueue基于链表，在生产和消费的时候，需要把枚举对象转换为Node<E>进行插入或移除，会生成一个额外的Node对象，这在长时间内需要高效并发地处理大批量数据的系统中，其对于GC的影响还是存在一定的区别。</p>
+</blockquote>
+</li>
+<li>
+<p><strong>问题有哪些</strong></p>
+<blockquote>
+<ul>
+<li>在使用LinkedBlockingQueue时，若用默认大小且当生产速度大于消费速度时候，有可能会内存溢出。</li>
+<li>在使用ArrayBlockingQueue和LinkedBlockingQueue分别对1000000个简单字符做入队操作时，</li>
+</ul>
+<p>​       LinkedBlockingQueue的消耗是ArrayBlockingQueue消耗的10倍左右，</p>
+<p>​       即LinkedBlockingQueue消耗在1500毫秒左右，而ArrayBlockingQueue只需150毫秒左右。</p>
+<ul>
+<li>按照实现原理来分析，<strong>ArrayBlockingQueue完全可以采用分离锁，从而实现生产者和消费者操作的完全并行运行</strong>。Doug Lea之所以没这样去做，也许是因为ArrayBlockingQueue的数据写入和获取操作已经足够轻巧，以至于引入独立的锁机制，除了给代码带来额外的复杂性外，其在性能上完全占不到任何便宜。</li>
+</ul>
+</blockquote>
+</li>
+<li>
+<p>我们测试的是 ArrayBlockingQueue 会比 LinkedBlockingQueue性能好 , 好差不多50%起步 ,</p>
+</li>
+</ul>
+<h3 id="5-blockingqueue的问题-以及-concurrentlinkedqueue-的问题">5. BlockingQueue的问题 以及  ConcurrentLinkedQueue 的问题</h3>
+<ul>
+<li>
+<p><code>BlockingQueue</code> 可以是限定容量的。</p>
+</li>
+<li>
+<p><code>BlockingQueue</code> 实现主要用于生产者-使用者队列，但它另外还支持collection接口。</p>
+</li>
+<li>
+<p><code>BlockingQueue</code> 实现是线程安全的</p>
+</li>
+<li>
+<p><code>BlockingQueue</code> 是阻塞队列 (看你使用的方法) , <code>ConcurrentLinkedQueue</code>是非阻塞队列</p>
+<p><strong>区别</strong></p>
+<blockquote>
+<p>​	    <strong>LinkedBlockingQueue</strong>是一个线程安全的阻塞队列，基于链表实现，一般用于生产者与消费者模型的开发中。采用锁机制来实现多线程同步，提供了一个构造方法用来指定队列的大小，如果不指定大小，队列采用默认大小（Integer.MAX_VALUE，即整型最大值）。</p>
+<p>​	  <strong>ConcurrentLinkedQueue</strong>是一个线程安全的非阻塞队列，基于链表实现。java并没有提供构造方法来指定队列的大小，因此它是无界的。为了提高并发量，它通过使用更细的锁机制，使得在多线程环境中只对部分数据进行锁定，从而提高运行效率。他并没有阻塞方法,take和put方法.注意这一点</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="6-简要概述blockingqueue常用的七个实现类">6. 简要概述BlockingQueue常用的七个实现类</h3>
+<blockquote>
+<p>​	有一个是 JDK1.7才加入的, 所以常见的就六个</p>
+</blockquote>
+<h4 id="1-arrayblockingqueue">1. ArrayBlockingQueue</h4>
+<p>构造函数必须传入指定大小, 所以他是一个有界队列</p>
+<h4 id="2-linkedblockingqueue">2. LinkedBlockingQueue</h4>
+<p>分为两种情况 , 第一种构造函数指定大小, 他是一个有界队列 , 第二种情况,不指定大小他可以称之为无界队列, 队列最大值为<code>Integer.MAX_VALUE</code></p>
+<h4 id="3-priorityblockingqueue-还有一个双向的linkedblockingdeque">3. PriorityBlockingQueue (还有一个双向的LinkedBlockingDeque)</h4>
+<p>他是一个无界队列 , 不管你使用什么构造函数 ..</p>
+<p>一个内部由优先级堆支持的、基于时间的调度队列。队列中存放Delayed元素，只有在延迟期满后才能从队列中提取元素。当一个元素的getDelay()方法返回值小于等于0时才能从队列中poll中元素，否则poll()方法会返回null。</p>
+<h4 id="4-synchronousqueue">4. SynchronousQueue</h4>
+<p>这个队列类似于Golang的channel , 也就是chan ,跟无缓冲区的chan很相似. 比如take和put操作就跟chan一模一样. 但是区别在于他的poll和offer操作可以设置等待时间.</p>
+<p>如果你学过golang的话. 应该理解 . 我写个例子</p>
+<pre><code class="language-java">func main() {
+	ch := make(chan int, 0)
+	start := time.Now().UnixNano()
+	go func() {
+		time.Sleep(time.Millisecond * 500)
+		ch &lt;- 1
+	}()
+	x := &lt;-ch
+	fmt.Printf(&quot;msg : %d , spend : %dms\n&quot;, x, (time.Now().UnixNano()-start)/1e6)
+}
+// 输出
+// msg : 1 , spend : 500ms
+</code></pre>
+<p>那么换而言之 , Java呢</p>
+<pre><code class="language-java">public class TestSync {
+
+    public static void main(String[] args) throws InterruptedException {
+        SynchronousQueue&lt;Integer&gt; queue = new SynchronousQueue&lt;&gt;();
+        long start = System.currentTimeMillis();
+        new Thread(() -&gt; {
+            try {
+                Integer poll = queue.take();
+                System.out.printf(&quot;receive : %d , spend : %dms.\n&quot;, poll, System.currentTimeMillis() - start);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }).start();
+
+        new Thread(() -&gt; {
+            try {
+                //sleep 2000ms
+                TimeUnit.SECONDS.sleep(2);
+                queue.put(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+}
+
+// 输出 
+//receive : 1 , spend : 2060ms.
+</code></pre>
+<p>但是他和chan不同的是, 他的poll操作吧, (类似于golang的 select case 操作) , 等不到放弃, 返回一个null.</p>
+<p>但是唯一不同的是 他可以指定等待时间.超过等待时间再放弃.</p>
+<pre><code class="language-java">Integer poll = queue.poll(1000,TimeUnit.MILLISECONDS);
+</code></pre>
+<p>这个就是等待1000ms  , 等不到放弃了 .</p>
+<p>像线程池中用 <code>SynchronousQueue</code> 使用的是 <code>offer(obj)</code>操作, 也就是说干脆插入不进去.因为他懒得等 , 但是offer可以指定等待时间的.</p>
+<p>总结一下.  <code>take 和 put 一对,是死等待</code>  ,  <code>poll和offer灵活, 活着来</code></p>
+<h4 id="5-delayqueue">5. DelayQueue</h4>
+<p>Java延迟队列提供了在指定时间才能获取队列元素的功能，队列头元素是最接近过期的元素。没有过期元素的话，使用poll()方法会返回null值，超时判定是通过getDelay(TimeUnit.NANOSECONDS)方法的返回值小于等于0来判断。延时队列不能存放空元素。</p>
+<p>​	添加的元素必须实现 <code>java.util.concurrent.Delayed</code> 接口</p>
+<pre><code class="language-java">@Test
+public void testLinkedList() throws InterruptedException {
+
+    DelayQueue&lt;Person&gt; queue = new DelayQueue&lt;&gt;();
+
+    queue.add(new Person());
+
+    System.out.println(&quot;queue.poll() = &quot; + queue.poll(200,TimeUnit.MILLISECONDS));
+}
+
+
+static class Person implements Delayed {
+
+    @Override
+    public long getDelay(TimeUnit unit) {
+        // 这个对象的过期时间
+        return 100L;
+    }
+
+    @Override
+    public int compareTo(Delayed o) {
+        //比较
+        return o.hashCode() - this.hashCode();
+    }
+}
+
+输出 : 
+queue.poll() = null
+</code></pre>
+<h4 id="6-linkedtransferqueue-重点">6. LinkedTransferQueue (重点)</h4>
+<blockquote>
+<p>​	JDK1.7 加入的无界队列 , 亮点就是无锁实现的,性能高 .</p>
+</blockquote>
+<p>Doug Lea 说这个是最有用的 BlockingQueue 了  , 性能最好的一个 .  <a href="https://yq.aliyun.com/go/articleRenderRedirect?url=http%3A%2F%2Fcs.oswego.edu%2Fpipermail%2Fconcurrency-interest%2F2009-February%2F005888.html">Doug Lea说</a>从功能角度来讲，LinkedTransferQueue实际上是ConcurrentLinkedQueue、SynchronousQueue（公平模式）和LinkedBlockingQueue的超集。</p>
+<p><strong>他的 transfer方法 表示生产必须等到消费者消费才会停止阻塞. 生产者会一直阻塞直到所添加到队列的元素被某一个消费者所消费（不仅仅是添加到队列里就完事）</strong></p>
+<p><strong>同时我们知道 上面那些BlockingQueue使用了大量的 condition和 lock , 这样子效率很低  ,  而LinkedTransferQueue则是无锁队列.</strong></p>
+<p>他的核心方法其实就是 <code>xfer()方法</code>,基本所有方法都是围绕着这个进行的 , 一般就是 SYNC ,ASYNC,NOW ,来区分状态量. 像put,offer,add 都是 <code>ASYNC</code> , 所以不会阻塞.  下面几个状态对应的变量.</p>
+<pre><code class="language-java">private static final int NOW   = 0; // for untimed poll, tryTransfer(不阻塞)
+private static final int ASYNC = 1; // for offer, put, add(不阻塞)
+private static final int SYNC  = 2; // for transfer, take(阻塞)
+private static final int TIMED = 3; // for timed poll, tryTransfer (waiting)
+</code></pre>
+<h3 id="7小顶堆-优先队列-priorityqueue-的实现">7.(小顶堆) 优先队列 PriorityQueue 的实现</h3>
+<blockquote>
+<p>​	小顶堆是什么 :  任意一个非叶子节点的权值，都不大于其左右子节点的权值</p>
+</blockquote>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-28/b9f34cf3-a483-4440-9a4b-99ec627c3059.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>PriorityQueue是非线程安全的，PriorityBlockingQueue是线程安全的</p>
+</li>
+<li>
+<p>两者都使用了堆，算法原理相同</p>
+</li>
+<li>
+<p>PriorityQueue 的逻辑结构是一棵完全二叉树，就是因为完全二叉树的特点, 他实际存储确实可以为一个数组的, 所以他的<strong>存储结构其实是一个数组</strong>。</p>
+<blockquote>
+<p>​	1. 首先java 中的 PriorityQueue 是优先队列,使用的是小顶堆实现</p>
+<ol start="2">
+<li>什么是小顶堆 (父节点,永远小于左右子节点) ,因此结果不一定是完全升序</li>
+<li>什么是大顶堆 跟 小顶堆相反,</li>
+<li>优先队列中 对于当offer操作,当插入的元素此时长度大于默认长度会进行数组扩容(system.copyarr()方法)<br>
+所以他其实是一个无界数列</li>
+<li>所以  优先队列 是数组实现,他不需要占用太大的物理空间,而是进行了深度的排序</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<h4 id="1-自己实现一个大顶堆">1. 自己实现一个大顶堆</h4>
+<pre><code class="language-java">/**
+ * 构建一个 大顶堆
+ *
+ * @param tree
+ * @param n
+ */
+static void build_heap(int[] tree, int n) {
+
+    // 最后一个节点
+    int last_node = n - 1;
+
+    // 开始遍历的位置是 : 最后一个堆的堆顶 , (以最小堆为单位)
+    int parent = (last_node - 1) / 2;
+
+    // 递减向上遍历
+    for (int i = parent; i &gt;= 0; i--) {
+        heapify(tree, n, i);
+    }
+}
+
+
+/**
+ * 递归操作
+ * @param tree 代表一棵树
+ * @param n    代表多少个节点
+ * @param i    对哪个节点进行 heapify
+ */
+static void heapify(int[] tree, int n, int i) {
+
+    // 如果当前值 大于 n 直接返回了 ,一般不会出现这种问题 .....
+    if (i &gt;= n) {
+        return;
+    }
+
+    // 子节点
+    int c1 = 2 * i + 1;
+    int c2 = 2 * i + 2;
+
+    // 假设最大的节点 为 i (父节点)
+    int max = i;
+
+    // 如果大于  赋值给 max
+    if (c1 &lt; n &amp;&amp; tree[c1] &gt; tree[max]) {
+        max = c1;
+    }
+
+    // 如果大于  赋值给 max
+    if (c2 &lt; n &amp;&amp; tree[c2] &gt; tree[max]) {
+        max = c2;
+    }
+
+    // 如果i所在的就是最大值我们没必要去做交换
+    if (max != i) {
+
+        // 交换最大值 和 父节点 的位置
+        swap(tree, max, i);
+
+        // 交换完以后 , 此时的max其实就是 i原来的数 ,就是最小的数字 ,所以需要递归遍历
+        heapify(tree, n, max);
+    }
+
+}
+
+// 交换操作
+static void swap(int[] tree, int max, int i) {
+    int temp = tree[max];
+    tree[max] = tree[i];
+    tree[i] = temp;
+}
+</code></pre>
+<h3 id="8常用的几个方法">8.常用的几个方法</h3>
+<ul>
+<li><strong>offer</strong>        添加一个元素并返回true        如果队列已满，则返回false</li>
+<li><strong>poll</strong>          移除并返问队列头部的元素    如果队列为空，则返回null</li>
+<li><strong>peek</strong>        返回队列头部的元素                如果队列为空，则返回null</li>
+<li><strong>put</strong>           添加一个元素                           如果队列满，则阻塞　 BlockQueue特有的</li>
+<li><strong>take</strong>         移除并返回队列头部的元素     如果队列为空，则阻塞 (像队头移除一个元素,并且整体向前移动,保证对头不为空)　BlockQueue特有的</li>
+</ul>
+<h2 id="5-stack">5. Stack</h2>
+<p>栈结构属于一种先进者后出,类似于一个瓶子 , 先进去的会压到栈低(push操作) , 出去的时候只有一个出口就是栈顶 , 返回栈顶元素,这个操作称为pop ,</p>
+<h3 id="1-stack类">1. Stack类</h3>
+<blockquote>
+<p>​	stack 继承自<code>Vector</code> , 所有方法都加入了 sync 修饰, 使得效率很低  ,线程安全.</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testStack() {
+
+    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+
+    // push 添加
+    stack.push(1);
+
+    stack.push(2);
+
+    // pop 返回栈顶元素 , 并移除
+    System.out.println(&quot;stack.pop() = &quot; + stack.pop());
+
+    System.out.println(&quot;stack.pop() = &quot; + stack.pop());
+
+}
+
+输出 : 
+2 , 1 
+</code></pre>
+<h3 id="2-通过linkedlist-实现">2. 通过LinkedList 实现</h3>
+<blockquote>
+<p>​	但是LInkedList很好的实现了这个 , 同时他是个线程不安全的类.</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testStack() {
+
+    LinkedList&lt;Integer&gt; stack = new LinkedList&lt;&gt;();
+
+    stack.push(1);
+    stack.push(2);
+
+
+    System.out.println(&quot;stack.pop() = &quot; + stack.pop());
+    System.out.println(&quot;stack.pop() = &quot; + stack.pop());
+}
+
+输出 
+2 , 1 
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-list">1. List</a>
+<ul>
+<li><a href="#1%E4%B8%BB%E8%A6%81%E9%97%AE%E9%A2%98">1.主要问题</a></li>
+<li><a href="#2%E4%B8%BA%E4%BB%80%E4%B9%88arraylist-%E4%B8%8D%E5%AE%89%E5%85%A8">2.为什么arraylist 不安全</a></li>
+<li><a href="#3copyonwritearraylist-%E6%9C%89%E4%BB%80%E4%B9%88%E7%89%B9%E7%82%B9">3.CopyOnWriteArrayList  有什么特点?</a></li>
+<li><a href="#4copyonwritearraylist-%E4%B8%8E-vector-%E7%9A%84%E9%80%89%E6%8B%A9">4.CopyOnWriteArrayList 与 Vector 的选择</a></li>
+<li><a href="#5copyonwritearraylist%E9%80%82%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5">5.CopyOnWriteArrayList适用于什么情况</a></li>
+<li><a href="#6-linkedlist-e-%E5%92%8C-arrayliste-%E5%AF%B9%E6%AF%94">6. LinkedList <E> 和 ArrayList<E>  对比</a></li>
+<li><a href="#7-arraysaslist-%E6%96%B9%E6%B3%95%E8%BF%94%E5%9B%9E%E7%9A%84%E6%95%B0%E7%BB%84%E6%98%AF%E4%B8%8D%E5%8F%AF%E5%8F%98%E5%BE%97%E5%90%97">7. Arrays.asList() 方法返回的数组是不可变得吗 ?</a></li>
+<li><a href="#8%E6%80%8E%E4%B9%88%E5%B0%86%E4%B8%80%E4%B8%AA%E4%B8%8D%E5%AE%89%E5%85%A8%E6%95%B0%E7%BB%84%E6%8D%A2%E6%88%90%E5%AE%89%E5%85%A8%E6%95%B0%E7%BB%84">8.怎么将一个不安全数组换成安全数组</a></li>
+<li><a href="#10-collections-%E5%B7%A5%E5%85%B7%E7%B1%BB">10. Collections 工具类</a></li>
+</ul>
+</li>
+<li><a href="#2-set">2. Set</a>
+<ul>
+<li><a href="#1-%E9%97%AE%E9%A2%98">1. 问题</a></li>
+<li><a href="#2hashset-treeset%E5%92%8Clinkedhashset%E4%B8%89%E7%A7%8D%E7%B1%BB%E5%9E%8B%E4%BB%80%E4%B9%88%E6%97%B6%E5%80%99%E4%BD%BF%E7%94%A8%E5%AE%83%E4%BB%AC">2.HashSet、TreeSet和LinkedHashSet三种类型什么时候使用它们</a></li>
+<li><a href="#3-hashset%E5%92%8Clinkedhashset-%E5%88%A4%E5%AE%9A%E5%85%83%E7%B4%A0%E9%87%8D%E5%A4%8D%E7%9A%84%E5%8E%9F%E5%88%99%E6%98%AF%E7%9B%B8%E5%90%8C%E7%9A%84">3. HashSet和LinkedHashSet 判定元素重复的原则是相同的</a></li>
+<li><a href="#4-treeset-%E5%88%A4%E6%96%AD%E5%85%83%E7%B4%A0%E9%87%8D%E5%A4%8D%E5%8E%9F%E5%88%99">4. TreeSet 判断元素重复原则</a></li>
+<li><a href="#5-%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E5%AE%89%E5%85%A8%E7%9A%84-hashset">5. 怎么实现一个线程安全的 hashset</a></li>
+<li><a href="#6copyonwritearrayset%E7%9A%84%E5%AE%9E%E7%8E%B0">6.CopyOnWriteArraySet的实现</a></li>
+</ul>
+</li>
+<li><a href="#3-map">3. Map</a>
+<ul>
+<li><a href="#1-%E9%97%AE%E9%A2%98-2">1. 问题</a></li>
+<li><a href="#2-hashtable%E7%9A%84%E5%AD%A6%E4%B9%A0">2. Hashtable的学习</a></li>
+<li><a href="#3concurrenthashmap-%E9%97%AE%E9%A2%98">3.ConcurrentHashMap 问题</a></li>
+<li><a href="#4-%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%8E%BB%E4%BD%BF%E7%94%A8-hashtable%E8%80%8C%E5%8E%BB%E4%BD%BF%E7%94%A8concurrenthashmap">4. 为什么不去使用 Hashtable,而去使用ConcurrentHashMap ?</a></li>
+<li><a href="#5-hashmap-%E9%97%AE%E9%A2%98">5. HashMap 问题</a></li>
+<li><a href="#6-concurrentskiplistmap-%E4%B8%8E-treemap-%E7%9A%84%E9%80%89%E6%8B%A9">6. ConcurrentSkipListMap 与 TreeMap 的选择</a></li>
+<li><a href="#7-linkedhashmap%E7%9A%84%E4%BD%BF%E7%94%A8">7. LinkedHashMap的使用</a></li>
+</ul>
+</li>
+<li><a href="#4-queue">4. Queue</a>
+<ul>
+<li><a href="#1-%E9%98%9F%E5%88%97%E6%98%AF%E4%BB%80%E4%B9%88">1. 队列是什么</a></li>
+<li><a href="#2deque-%E6%98%AF%E4%BB%80%E4%B9%88">2.Deque 是什么</a></li>
+<li><a href="#3%E5%B8%B8%E8%A7%81%E7%9A%84%E5%87%A0%E7%A7%8D%E9%98%9F%E5%88%97%E5%AE%9E%E7%8E%B0">3.常见的几种队列实现</a>
+<ul>
+<li><a href="#1-linkedlist">1. LinkedList</a></li>
+<li><a href="#2-priorityqueue">2. PriorityQueue</a></li>
+<li><a href="#3-concurrentlinkedqueue">3. ConcurrentLinkedQueue</a></li>
+</ul>
+</li>
+<li><a href="#4-arrayblockingqueue%E4%B8%8Elinkedblockingqueue%E7%9A%84%E5%8C%BA%E5%88%AB%E5%93%AA%E4%B8%AA%E6%80%A7%E8%83%BD%E5%A5%BD%E5%91%A2">4. ArrayBlockingQueue与LinkedBlockingQueue的区别,哪个性能好呢</a></li>
+<li><a href="#5-blockingqueue%E7%9A%84%E9%97%AE%E9%A2%98-%E4%BB%A5%E5%8F%8A-concurrentlinkedqueue-%E7%9A%84%E9%97%AE%E9%A2%98">5. BlockingQueue的问题 以及  ConcurrentLinkedQueue 的问题</a></li>
+<li><a href="#6-%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0blockingqueue%E5%B8%B8%E7%94%A8%E7%9A%84%E4%B8%83%E4%B8%AA%E5%AE%9E%E7%8E%B0%E7%B1%BB">6. 简要概述BlockingQueue常用的七个实现类</a>
+<ul>
+<li><a href="#1-arrayblockingqueue">1. ArrayBlockingQueue</a></li>
+<li><a href="#2-linkedblockingqueue">2. LinkedBlockingQueue</a></li>
+<li><a href="#3-priorityblockingqueue-%E8%BF%98%E6%9C%89%E4%B8%80%E4%B8%AA%E5%8F%8C%E5%90%91%E7%9A%84linkedblockingdeque">3. PriorityBlockingQueue (还有一个双向的LinkedBlockingDeque)</a></li>
+<li><a href="#4-synchronousqueue">4. SynchronousQueue</a></li>
+<li><a href="#5-delayqueue">5. DelayQueue</a></li>
+<li><a href="#6-linkedtransferqueue-%E9%87%8D%E7%82%B9">6. LinkedTransferQueue (重点)</a></li>
+</ul>
+</li>
+<li><a href="#7%E5%B0%8F%E9%A1%B6%E5%A0%86-%E4%BC%98%E5%85%88%E9%98%9F%E5%88%97-priorityqueue-%E7%9A%84%E5%AE%9E%E7%8E%B0">7.(小顶堆) 优先队列 PriorityQueue 的实现</a>
+<ul>
+<li><a href="#1-%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%A4%A7%E9%A1%B6%E5%A0%86">1. 自己实现一个大顶堆</a></li>
+</ul>
+</li>
+<li><a href="#8%E5%B8%B8%E7%94%A8%E7%9A%84%E5%87%A0%E4%B8%AA%E6%96%B9%E6%B3%95">8.常用的几个方法</a></li>
+</ul>
+</li>
+<li><a href="#5-stack">5. Stack</a>
+<ul>
+<li><a href="#1-stack%E7%B1%BB">1. Stack类</a></li>
+<li><a href="#2-%E9%80%9A%E8%BF%87linkedlist-%E5%AE%9E%E7%8E%B0">2. 通过LinkedList 实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

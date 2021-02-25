@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>限流算法 - 基本实现 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/xian-liu-chang-jian-de-suan-fa-shi-xian/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>限流算法 - 基本实现</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-05</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/xian-liu-chang-jian-de-suan-fa-shi-xian/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/h-oLWzEpzKL/"
+								class="tag">算法</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2971字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">13 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>在开发高并发系统时有三把利器用来保护系统：<strong>缓存、降级、 限流</strong> , 今天我们就谈谈<code>限流</code></p>
+<p><strong>缓存</strong>：缓存的目的是提升系统访问速度和增大系统处理容量<br>
+<strong>降级</strong>：降级是当服务器压力剧增的情况下，根据当前业务情况及流量对一些服务和页面有策略的降级，以此释放服务器资源以保证核心任务的正常运行<br>
+<strong>限流</strong>：限流的目的是通过对并发访问/请求进行限速，或者对一个时间窗口内的请求进行限速来保护系统，一旦达到限制速率则可以拒绝服务、排队或等待、降级等处理</p>
+</blockquote>
+<blockquote>
+<p>​	我下面算法的实现基本上都用到了定时器<code>Timer</code> , 其实关于时间的也可以不用定时器, 可以看看<code>Guava</code>的 <code>RateLimiter</code>, 定时器的好处是我不用处理时间逻辑 , 但是需要消耗一个线程去执行逻辑 , 当逻辑算力压力过大会线程处理不过来,效果不好 ,  可以使用一下 <code>ScheduledThreadPoolExecutor</code> 线程池来执行,降低压力</p>
+<p>​	同时还大量使用了<code>队列</code>数据结构 ,是因为生产者消费者模型大多需要队列, 先进先出的特点</p>
+<p>​	第一节是环境搭建 , 写出需求 ,和接口要求 , 和测试用例 ,后面四节就是基本算法</p>
+</blockquote>
+<h2 id="1-环境搭建">1. 环境搭建</h2>
+<p>我们模拟<code>Filter#doFilter</code> 接口进行测试 , 全部实现 <code>AbstractLimiter#limit</code>方法</p>
+<p><code>Filter</code> 实现</p>
+<pre><code class="language-java">public interface Filter {
+
+    default public void init() {
+    }
+
+    public void doFilter(ServletRequest request, ServletResponse response,
+                         FilterChain chain);
+
+    default public void destroy() {
+    }
+}
+</code></pre>
+<p><code>FilterChain</code> 实现</p>
+<pre><code class="language-java">public interface FilterChain {
+
+    void doFilter(ServletRequest request, ServletResponse response);
+}
+</code></pre>
+<p><code>ServletRequest</code> 实现</p>
+<pre><code class="language-java">public class ServletRequest {
+
+    private String msg;
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;ServletRequest{&quot; +
+                &quot;msg='&quot; + msg + '\'' +
+                '}';
+    }
+
+    public ServletRequest(String msg) {
+        this.msg = msg;
+    }
+}
+</code></pre>
+<p><code>ServletResponse</code> 实现</p>
+<pre><code>public class ServletResponse {
+
+
+}
+</code></pre>
+<p><code>AbstractLimiter</code> 实现</p>
+<pre><code class="language-java">public abstract class AbstractLimiter {
+
+    /**
+     * 最大流量
+     */
+    protected final int MAX_FlOW;
+
+    /**
+     * 构造器 , 输入每秒最大流量
+     * @param MAX_FlOW 最大流量
+     */
+    public AbstractLimiter(int MAX_FlOW) {
+        this.MAX_FlOW = MAX_FlOW;
+    }
+
+
+    /**
+     * 具体实现的方法
+     * @param request 请求
+     * @param response 响应
+     * @param chain 执行
+     */
+    public abstract void limit(ServletRequest request, ServletResponse response, FilterChain chain);
+
+}
+</code></pre>
+<p><code>Demo</code> 测试类</p>
+<pre><code class="language-java">public class Demo {
+
+    @Test
+    public void test() {
+        
+        // 过滤器
+        Filter filter = new Filter() {
+            AbstractLimiter limit = null;
+
+            @Override
+            public void init() {
+                // 入口 ,我们都是每秒限制 100个请求
+                limit = new LeakyBucketLimiter(100);
+            }
+
+            @Override
+            public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) {
+                limit.limit(request, response, chain);
+            }
+        };
+
+        // 过滤器初始化
+        filter.init();
+
+        // 计时器
+        long start = System.currentTimeMillis();
+        
+        // 计数器
+        AtomicInteger integer = new AtomicInteger(0);
+
+        ExecutorService pool = Executors.newFixedThreadPool(10);
+        // 模拟4000次请求
+        IntStream.range(0, 4000).forEach(e -&gt; {
+            try {
+                // 模拟请求延迟
+                TimeUnit.MILLISECONDS.sleep(1);
+            } catch (InterruptedException e1) {
+                //
+            }
+
+            // 多线程执行
+            pool.execute(()-&gt;{
+                filter.doFilter(new ServletRequest(&quot;&quot; + e), new ServletResponse(), new FilterChain() {
+                    @Override
+                    public void doFilter(ServletRequest request, ServletResponse response) {
+                        // 回调接口
+                        integer.incrementAndGet();
+                        System.out.println(&quot;请求 : &quot;+request.getMsg() + &quot; 通过, 执行线程 &quot;+Thread.currentThread().getName());
+                    }
+                });
+            });
+        });
+
+        System.out.println(&quot;总耗时&quot; + (System.currentTimeMillis() - start));
+        System.out.println(&quot;一共通过 : &quot; + integer.get());
+    }
+}
+</code></pre>
+<h2 id="2-计数器算法">2. 计数器算法</h2>
+<blockquote>
+<p>​	<code>计数器算法(Counter)</code> 顾明思议就是一个计数器 , 比如我每秒可以通过100个请求 , 我呢每进来一个请求, 我就将计数器+1 , 当计数器到达了100,此时我就不让请求过去 , 但是他存在一个问题 : 比如我第999ms 的时候过来100个请求 , 当刚刚过了1000ms的时候初始化了,但是又来了100个请求 , 此时就会发生实际上在这0.1S的时候处理了200个请求 , 严重超载了  , 此时服务器处理不了而全部都请求超时了....</p>
+</blockquote>
+<pre><code class="language-java">public class CounterLimiter extends AbstractLimiter {
+
+    private static final Integer initFlow = 0;
+
+    private final AtomicInteger flow;
+
+    public CounterLimiter(int MAX_FlOW) {
+        super(MAX_FlOW);
+		
+        // 初始化计数器
+        flow = new AtomicInteger(initFlow);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // 每1000ms初始化一次
+                flow.set(initFlow);
+            }
+        }, 0, 1000);
+    }
+
+    public void limit(ServletRequest request, ServletResponse response, FilterChain chain) {
+        // 比较是否超载
+        if (flow.get() &lt; MAX_FlOW) {
+		// 通过 : 计数器+1
+            flow.incrementAndGet();
+            chain.doFilter(request, response);
+        }
+    }
+}
+</code></pre>
+<h2 id="3-滑动窗口算法">3. 滑动窗口算法</h2>
+<blockquote>
+<p>​	<code>滑动窗口算法(Rolling - Window)</code> 可以说是计数器算法的一种改进 , 他呢 , 将计算器细分了, 比如我将1S的 1000ms 细分为10个 100ms , 我们就有10个计数器 , 比如上面的问题 , 999ms和1000ms的问题, 由于我们是连续的, 此时1000ms进来的我也算进去了, 此时就不会出现那种情况 ,</p>
+<p>​	当我们的颗粒度越高 , 此时所计算的资源会越多,也会越精确 , 其实对比 <code>Hystrix</code>和<code>sentinel</code> 都是这种思想, 滑动窗口算法 , 主要是考虑的计算资源少的问题 ,</p>
+<p>​	我的算法并不是最优 ,其实不需要使用<code>ArrayBlockingQueue</code>去维护滑块 , 由于我们是单个线程去执行并不会出现多线程问题, 其实可以使用 <code>LinkedList</code> 来模拟队列 , 还有其他点也可以看一下</p>
+</blockquote>
+<pre><code class="language-java">public class RollingWindowFilter extends AbstractLimiter {
+
+    /**
+     * 我们的滑动窗口对象,包含多个窗口
+     */
+    private final Slider slider;
+
+    /**
+     * 程序中暴露的唯一一个计数器,可以称之为当前窗口
+     */
+    private AtomicInteger counter;
+
+    /**
+     * 计数器初始化大小
+     */
+    private static final int INIT_SIZE = 0;
+
+    /**
+     * 比如窗口分为10块,这个代表先进入9块窗口的计算值 , 为什么要引入是因为不浪费计算资源, 好多都是重复计算
+     */
+    private final AtomicInteger preCount;
+
+
+    /**
+     * 我们默认队列大小是 20 ,其实颗粒度很高了50ms计算一次, 可以重载构造参数调整
+     *
+     * @param MAX_FlOW 最大流量
+     */
+    public RollingWindowFilter(int MAX_FlOW) {
+
+        super(MAX_FlOW);
+
+        // 初始化窗口,感觉改名字叫做Windows比较好 ....
+        slider = new Slider(20);
+
+
+        // 初始化对象
+        preCount = new AtomicInteger(INIT_SIZE);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+
+                ArrayBlockingQueue&lt;AtomicInteger&gt; queue = slider.blocks;
+
+                // 当前窗口大小
+                int size = queue.size();
+
+                /**
+                 * 初始化窗口长度
+                 */
+                if (size &lt; slider.capacity) {
+                    try {
+
+                        /**
+                         * 计算前面窗口的计数器总和
+                         * 
+                         * 这里其实由多线程的并发问题 ,其实可以设置一个标识符来表示完成与否 .. 我懒得改了 ,或者你就大量实例化对象,不用我这个单一对象
+                         */
+                        preCount.set(INIT_SIZE);
+                        if (size &gt; 0) {
+                            queue.forEach(e -&gt; preCount.addAndGet(e.get()));
+                        }
+
+                        // 新建一个计数器, 放入对应的滑块 ,其实就是队尾
+                        counter = new AtomicInteger(INIT_SIZE);
+                        queue.put(counter);
+                    } catch (InterruptedException e) {
+                        //
+                    }
+
+                }
+
+                /**
+                 * 当窗口长度初始化完成
+                 */
+                if (size == slider.capacity) {
+
+                    try {
+                        // 出局最先进来的那个
+                        queue.take();
+
+                        // 计算前面窗口的计数器总和 , 有多线程并发问题
+                        preCount.set(INIT_SIZE);
+                        queue.forEach(e -&gt; preCount.addAndGet(e.get()));
+
+                        
+                        // 新建一个计数器, 放入对应的滑块 ,其实就是队尾
+                        counter = new AtomicInteger(INIT_SIZE);
+                        queue.put(counter);
+                    } catch (InterruptedException e) {
+                        //
+                    }
+                }
+            }
+        }, 0, 1000 / slider.capacity);
+    }
+
+
+    public void limit(ServletRequest request, ServletResponse response, FilterChain chain) {
+
+        int cur = counter.get();
+        int pre = preCount.get();
+        int sum = cur + pre;
+
+        if (sum &lt; MAX_FlOW) {
+            counter.incrementAndGet();
+            chain.doFilter(request, response);
+        }
+    }
+
+
+    /**
+     * 滑块组成 , 一个队列维护一个块 , 其实可以用LinkedList来维护 , 我是懒得改
+     * &lt;p&gt;
+     * 一般内部类来说看JDK源码你会发现都会用private static修饰 ,因为反射不是静态内部类,无法实例化 , 和构造器不加修饰
+     */
+    private static class Slider {
+        // 多少个计数器
+        private final int capacity;
+        // 放置计数器
+        private final ArrayBlockingQueue&lt;AtomicInteger&gt; blocks;
+
+        Slider(int capacity) {
+            this.blocks = new ArrayBlockingQueue&lt;&gt;(capacity);
+            this.capacity = capacity;
+        }
+    }
+}
+</code></pre>
+<h2 id="4-漏桶算法">4. 漏桶算法</h2>
+<blockquote>
+<p>​	其实所谓的<code>漏桶算法(Leaky Bucket)</code>,我们想一下 , 有一个入水口和一个出水口 , 我们这俩口控制权在谁那 ,入水口无非就是大量的请求, 出水口就是我们放过的请求 , 所以他是一个<code>生产者 - 消费者模型</code> , 生产者就是请求 , 消费者就是以一定速度我们消费请求 ,</p>
+<p>​	漏桶算法可以使<code>请求流出的速率是均匀的</code>, 不管你多少请求 , 我流出的速率是均匀的 , 当桶满了就溢出 ,没有满加进来就等着被流出去</p>
+<p>​	当你看懂我上面的两段话 , 你就理解了下面的代码 , 我的注释十分清晰</p>
+</blockquote>
+<pre><code class="language-java">public class LeakyBucketLimiter extends AbstractLimiter {
+
+    /**
+     * 我们的漏斗
+     */
+    private final LeakyBucket leakyBucket;
+
+    /**
+     * 构造器 , 输入每秒最大流量
+     *
+     * @param MAX_FlOW 最大流量
+     */
+    public LeakyBucketLimiter(int MAX_FlOW) {
+        super(MAX_FlOW);
+        this.leakyBucket = new LeakyBucket(MAX_FlOW);
+    }
+
+    @Override
+    public void limit(ServletRequest request, ServletResponse response, FilterChain chain) {
+        try {
+            // 1. 获取桶当前水的大小
+            int size = leakyBucket.bucket.size();
+
+            // 2. 比较桶里的水是否满了
+            if (size &lt; leakyBucket.waterSize) {
+
+                // 没有满我们就将水放进去,其实这里put也行 , offer也行 , 看需求
+                leakyBucket.bucket.put(new Water(request, response, chain));
+            }
+        } catch (InterruptedException e) {
+            //
+        }
+    }
+
+    static class LeakyBucket {
+
+        /**
+         * 能放多少水,其实就是队列大小
+         */
+        final int waterSize;
+
+        /**
+         * 我们的放水的桶
+         */
+        final ArrayBlockingQueue&lt;Water&gt; bucket;
+
+        public LeakyBucket(int MAX_FlOW) {
+            this.waterSize = MAX_FlOW;
+            bucket = new ArrayBlockingQueue&lt;&gt;(this.waterSize);
+
+            /**
+             * 模拟消费 , 1S只能过去100个 ,说明 100ms 可以消耗10个, 看你的颗粒度
+             */
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    // 100ms 流出去10个
+                    for (int i = 0; i &lt; (waterSize / 10); i++) {
+                        try {
+                            // 流出的水
+                            Water water = bucket.take();
+
+                            // 执行掉
+                            water.chain.doFilter(water.request, water.response);
+                        } catch (InterruptedException e) {
+                            //
+                        }
+                    }
+                }
+            }, 0, 100);
+        }
+    }
+
+
+    /**
+     * 我们的节点对象, 其实可以称之为 成功注入的水 , 等着被漏桶流出去
+     */
+    static class Water {
+
+        private ServletRequest request;
+
+        private ServletResponse response;
+
+        private FilterChain chain;
+
+        public Water(ServletRequest request, ServletResponse response, FilterChain chain) {
+            this.request = request;
+            this.response = response;
+            this.chain = chain;
+        }
+    }
+}
+</code></pre>
+<h2 id="5-令牌桶算法">5. 令牌桶算法</h2>
+<blockquote>
+<p>​	<code>令牌桶算法(Token Bucket)</code> 是与漏桶算法相反的思想, 他也是<code>生产者消费者模型</code> ,只是角色的互换,  他呢是我们去控制生成 , 请求去执行消费 , 举个栗子 : 比如我们限流100 , 此时我们就每100ms生成10个令牌 , 当令牌数达到100 我们就不生产 了, 当一个请求过来 , 就会去拿掉一个令牌 , 如果拿到了就通过了, 拿不到就拒绝</p>
+<p>​	<strong>根据这个我们可以和漏桶算法做比较 ,假设都是刚刚开始 , 此时都是100个请求过来 , 令牌桶可能会拒绝掉90个,因为我只生产了10个令牌 ,但是漏桶呢他不会, 他会将100个请求全部放进去慢慢消费 , 是因为我的桶容量是100,可以放进去这么多请求 , 这就是这俩的区别 .... 其实稳定了几乎么区别</strong></p>
+<p>​	<code>生产者消费者模型</code> 的思想转换可以更加理清思路 , 模型的选择有时候是解决问题的一个合适的方式</p>
+<p>​	令牌桶算法 网上大多都是采用的 <code>Guava</code>的 <code>RateLimiter</code>实现的 , 这里我就实现两种 一种是自己实现, 一种是使用<code>RateLimiter</code>,</p>
+</blockquote>
+<h3 id="1-自己实现的令牌桶">1. 自己实现的令牌桶</h3>
+<pre><code class="language-java">public class TokenBucketLimiter extends AbstractLimiter {
+
+    /**
+     * 令牌桶
+     */
+    private final TokenBucket tokenBucket;
+
+    /**
+     * 构造器 , 输入每秒最大流量
+     *
+     * @param MAX_FlOW 最大流量
+     */
+    public TokenBucketLimiter(int MAX_FlOW) {
+        super(MAX_FlOW);
+        this.tokenBucket = new TokenBucket(MAX_FlOW);
+    }
+
+
+    @Override
+    public void limit(ServletRequest request, ServletResponse response, FilterChain chain) {
+        /**
+         * 这里我们就不使用 take的阻塞思想了 ,直接poll去拉去 ,然后等待5mS ,  如果拉去不到直接返回失败 , 其实等待的长了点
+         */
+        try {
+            // 尝试去获取一个令牌
+            Token token = tokenBucket.bucket.poll(5, TimeUnit.MILLISECONDS);
+            
+            // 拿到通过
+            if (null != token) {
+                chain.doFilter(request, response);
+            }
+
+        } catch (InterruptedException e) {
+            //
+        }
+
+    }
+
+
+    /**
+     * 令牌桶
+     */
+    private static class TokenBucket {
+        /**
+         * 令牌存放的位置 , 用一个队列维护
+         */
+        private final ArrayBlockingQueue&lt;Token&gt; bucket;
+
+        /**
+         * 桶最多存放多少个令牌
+         */
+        private final int tokenSize;
+
+        public TokenBucket(int MAX_FlOW) {
+            this.tokenSize = MAX_FlOW;
+            this.bucket = new ArrayBlockingQueue&lt;&gt;(this.tokenSize);
+
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    for (int x = 0; x &lt; (tokenSize / 10); x++) {
+                        try {
+                            if (bucket.size() &lt; tokenSize) {
+                                // 定时放入令牌
+                                bucket.put(new Token());
+                            }
+                        } catch (InterruptedException e) {
+                            //
+                        }
+                    }
+                }
+            }, 0, 100);
+        }
+    }
+
+    /**
+     * 令牌
+     */
+    private static class Token {
+
+    }
+}
+</code></pre>
+<h3 id="2-基于guava-的-ratelimiter实现令牌桶">2. 基于Guava 的 RateLimiter实现令牌桶</h3>
+<pre><code class="language-java">public class GuavaRateLimiter extends AbstractLimiter {
+
+    /**
+     * 令牌桶
+     */
+    private final RateLimiter limiter;
+
+    /**
+     * 每次需要的令牌个数
+     */
+    private static final int ACQUIRE_NUM = 1;
+    /**
+     * 最长等待时间
+     */
+    private static final int WAIT_TIME_PER_MILLISECONDS = 5;
+
+    /**
+     * 构造器 , 输入每秒最大流量
+     *
+     * @param MAX_FlOW 最大流量
+     */
+    public GuavaRateLimiter(final int MAX_FlOW) {
+        super(MAX_FlOW);
+        limiter = RateLimiter.create(MAX_FlOW);
+    }
+
+
+    @Override
+    public void limit(ServletRequest request, ServletResponse response, FilterChain chain) {
+        /**
+         * 意思就是 我尝试去获取1个令牌 ,最大等待时间是 5 ms , 其实太长了, 真是开发也就1ms不到
+         */
+        boolean flag = limiter.tryAcquire(ACQUIRE_NUM, WAIT_TIME_PER_MILLISECONDS, TimeUnit.MILLISECONDS);
+        if (flag) {
+            chain.doFilter(request, response);
+        }
+    }
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA">1. 环境搭建</a></li>
+<li><a href="#2-%E8%AE%A1%E6%95%B0%E5%99%A8%E7%AE%97%E6%B3%95">2. 计数器算法</a></li>
+<li><a href="#3-%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%AE%97%E6%B3%95">3. 滑动窗口算法</a></li>
+<li><a href="#4-%E6%BC%8F%E6%A1%B6%E7%AE%97%E6%B3%95">4. 漏桶算法</a></li>
+<li><a href="#5-%E4%BB%A4%E7%89%8C%E6%A1%B6%E7%AE%97%E6%B3%95">5. 令牌桶算法</a>
+<ul>
+<li><a href="#1-%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0%E7%9A%84%E4%BB%A4%E7%89%8C%E6%A1%B6">1. 自己实现的令牌桶</a></li>
+<li><a href="#2-%E5%9F%BA%E4%BA%8Eguava-%E7%9A%84-ratelimiter%E5%AE%9E%E7%8E%B0%E4%BB%A4%E7%89%8C%E6%A1%B6">2. 基于Guava 的 RateLimiter实现令牌桶</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

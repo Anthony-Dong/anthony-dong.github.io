@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring - 日常开发使用技巧 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spring-chang-yong-zhu-jie-shi-yong/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring - 日常开发使用技巧</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-19</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spring-chang-yong-zhu-jie-shi-yong/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">937字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	https://docs.spring.io/spring/docs/current/spring-framework-reference/web.html</p>
+<p>官方文档<br>
+😃😃😃😃😃😃😃</p>
+</blockquote>
+<h3 id="通用注解">通用注解</h3>
+<pre><code class="language-java">@Component
+
+@Configuration
+</code></pre>
+<h3 id="dao层">dao层</h3>
+<pre><code class="language-java">@Repository
+</code></pre>
+<h3 id="service-层">service 层</h3>
+<pre><code class="language-java">@Service
+</code></pre>
+<h3 id="controller-类的">controller 类的:</h3>
+<pre><code class="language-java">1. @Controller 
+2. @RestController  = @Controller +  @ResponseBody
+
+3. 通知类,切面编程,其实就是给@RequestMapping 上加了多元注解,
+@ControllerAdvice(assignableTypes = {MyController.class}) 
+    内部常用注解
+3.1  @ExceptionHandler({Throwable.class}) 
+  @ExceptionHandler({Throwable.class})
+    public ResponseEntity&lt;String&gt; res(Throwable throwable){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(throwable.getMessage());
+    }        
+        
+        
+3.2  @ModelAttribute(&quot;acceptLanguage&quot;) 
+     @ModelAttribute
+     public void addAttribute(Model model) {
+        model.addAttribute(&quot;attribute&quot;,  &quot;The Attribute&quot;);
+    }
+        
+3.3 @CookieValue
+3.4 @InitBinder  : 应用到所有@RequestMapping注解方法，在其执行之前初始化数据绑定器 ,比如:
+	 @InitBinder
+     public void initBinder(WebDataBinder binder) {
+        binder.addCustomFormatter(new DateFormatter(&quot;yyyy-MM-dd&quot;));
+        
+    }
+   
+3.5 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR) 返回状态
+		
+     
+4. @RequestMapping 
+ 
+    
+5. ResponseEntity 对象 
+</code></pre>
+<h3 id="注入属性">注入属性</h3>
+<pre><code class="language-java">@Data
+@ConfigurationProperties(prefix = &quot;anthony&quot;)
+public class MyProperties {
+
+	@value(${&quot;anthony.name&quot;})
+    String name;
+
+    String age;
+
+    String info;
+
+    
+    //在对象初始化之后立        马执行 
+    @PostConstruct
+    public void doFirst() {
+        System.out.println(&quot;name = &quot; + name);
+
+        System.out.println(&quot;age = &quot; + age);
+
+        System.out.println(&quot;info = &quot; + info);
+
+        this.info = &quot;modify&quot;;
+    }
+
+}
+
+// 如果不用EnableConfigurationProperties 需要将MyProperties加上一个@Configuration最好
+@EnableConfigurationProperties(MyProperties.class) 
+@RestController
+public class MyController {
+
+    @Autowired
+    MyProperties properties;
+}    
+</code></pre>
+<h3 id="单元测试类">单元测试类</h3>
+<pre><code class="language-java">@RunWith(SpringRunner.class)
+@SpringBootTest
+class SpringValidatorApplicationTests {
+
+    @Test
+    @After
+    @Before
+    public void test(){
+        
+    }
+
+}
+</code></pre>
+<h3 id="validate-数据校验">validate  数据校验</h3>
+<pre><code class="language-java">@Data
+public class MYData {
+
+
+    @NotNull(message = &quot;状态不能为空&quot;)
+    @Min(value = 18,groups = Adult.class)
+    @PositiveOrZero(message = &quot;正数或者0&quot;)
+    private Integer age;
+
+    public interface Adult{}
+
+    public interface Minor{}
+    
+}
+
+    @RequestMapping(&quot;/live&quot;)
+    public String live(@Validated({MYData.Adult.class}) MYData foo, BindingResult bindingResult) {
+        if(bindingResult.hasErrors()){
+            for (FieldError fieldError : bindingResult.getFieldErrors()) {
+                //...
+            }
+            return &quot;fail&quot;;
+        }
+        return &quot;success&quot;;
+    }
+
+    @NotBlank
+    @NotEmpty
+    @NotNull(message = &quot;状态不能为空&quot;)
+    @Min(value = 18,message = &quot;错了&quot;)
+    @PositiveOrZero(message = &quot;正数或者0&quot;)
+
+
+@Validated({MYData.Adult.class}) 只会对 groups标记的做校验 其他不会进行 ,所以要么你注意一点
+@Valid 不可以进行分组检测
+BindingResult 可以获取失败结果
+</code></pre>
+<h3 id="aop">aop</h3>
+<pre><code class="language-java">1. 自定义log注解
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface Log {
+    String value() default &quot;&quot;;
+}
+
+2. 自定义 log aop 类
+
+@Aspect
+@Component
+public class LogAspect {
+
+
+    private static final Logger logger = LoggerFactory.getLogger(LogAspect.class);
+
+    // 可以将 加上 @log 注解的类 环绕通知
+    @Pointcut(&quot;@annotation(com.spring.springvalidator.aop.Log)&quot;)
+    public void logPointCut() {
+    }
+
+
+    //环绕通知
+    @Around(&quot;logPointCut()&quot;)
+    public Object around(ProceedingJoinPoint point) throws Throwable {
+        Object result =null;
+        try {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            HttpServletRequest request = attributes.getRequest();
+
+            // 记录下请求内容
+            logger.info(&quot;doBefore : 请求地址 : &quot; + request.getRequestURL().toString());
+            logger.info(&quot;doBefore :  HTTP METHOD : &quot; + request.getMethod());
+            logger.info(&quot;doBefore :  CLASS_METHOD : &quot; + point.getSignature().getDeclaringTypeName() + &quot;.&quot;
+                    + point.getSignature().getName());
+            // 执行方法
+            result = point.proceed();
+
+            logger.info(&quot;doBefore  :  方法参数 : &quot; + Arrays.toString(point.getArgs()));
+
+            logger.info(&quot;doBefore :  方法返回值 : &quot; + result);
+
+            logger.info(&quot;doAfterReturning&quot;);
+            return result;
+
+        } catch (Exception e) {
+
+            logger.error(&quot;doAfterThrowing :  {} &quot;, e.getMessage());
+            throw new RuntimeException(&quot;runtime  exception&quot;);
+        } finally {
+            logger.info(&quot;doAfter&quot;);
+        }
+        
+    }
+
+</code></pre>
+<pre><code class="language-java">@Aspect
+@Component
+public class WebLogAspect2 {
+
+    private static final Logger logger = LoggerFactory.getLogger(WebLogAspect2.class);
+
+    //切点
+    //两个..代表所有子目录，最后括号里的两个..代表所有参数
+    @Pointcut(&quot;execution( * com.spring.springvalidator.web.*.*(..))&quot;)
+    public void logPointCut() {
+    }
+
+    //前置通知 
+    @Before(&quot;logPointCut()&quot;)
+    public void doBefore(JoinPoint joinPoint) throws Throwable {
+        logger.info(&quot;doBefore&quot;);
+
+    }
+    
+    // 成功返回
+    @AfterReturning(&quot;logPointCut()&quot;)
+    public void doAfterReturning(JoinPoint joinPoint){
+        logger.info(&quot;doAfterReturning&quot;);
+    }
+    // 失败返回
+    @AfterThrowing(&quot;logPointCut()&quot;)
+    public void doAfterThrowing(JoinPoint joinPoint){
+        logger.info(&quot;doAfterThrowing&quot;);
+    }
+
+	//前置通知	
+    @After(&quot;logPointCut()&quot;)
+    public void doAfter(JoinPoint joinPoint){
+        logger.info(&quot;doAfter&quot;);
+    }
+}
+
+
+执行顺序 一般是 :
+doBefore  do(controller)  doAfter  doAfterReturning\doAfterThrowing
+
+
+
+或者 环绕通知, 
+
+    @Around(&quot;logPointCut()&quot;)
+    public Object aroundLog(ProceedingJoinPoint pjp) {
+        Object reValue = null;
+        try {
+            // 请求参数 : 
+            Object[] args = pjp.getArgs();
+            logger.info(&quot;doBefore&quot;);
+
+            reValue = pjp.proceed(args);
+
+            logger.info(&quot;成功返回值 : {} &quot;, reValue);
+            logger.info(&quot;doAfterReturning&quot;);
+            return reValue;
+        } catch (Throwable throwable) {
+            logger.info(&quot;doAfterThrowing&quot;);
+            throw new RuntimeException(throwable);
+        } finally {
+            logger.info(&quot;doAfter&quot;);
+        }
+    }
+
+  doBefore  doAfterReturning/doAfterThrowing   doAfter
+</code></pre>
+<h3 id="拦截器">拦截器</h3>
+<pre><code class="language-java">@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    /**
+     * 添加拦截器
+     * @param registry
+     */
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new HandlerInterceptor() {
+
+            @Override
+            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+                // 设置
+                System.out.println(&quot;前置拦截1&quot;);
+                return true;
+            }
+        });
+
+        registry.addInterceptor(new HandlerInterceptor() {
+
+            @Override
+            public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+                // 设置
+
+                System.out.println(handler);
+
+                System.out.println(&quot;前置拦截2&quot;);
+                response.setStatus(400);
+                return false;
+            }
+        });
+    }
+
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E9%80%9A%E7%94%A8%E6%B3%A8%E8%A7%A3">通用注解</a></li>
+<li><a href="#dao%E5%B1%82">dao层</a></li>
+<li><a href="#service-%E5%B1%82">service 层</a></li>
+<li><a href="#controller-%E7%B1%BB%E7%9A%84">controller 类的:</a></li>
+<li><a href="#%E6%B3%A8%E5%85%A5%E5%B1%9E%E6%80%A7">注入属性</a></li>
+<li><a href="#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95%E7%B1%BB">单元测试类</a></li>
+<li><a href="#validate-%E6%95%B0%E6%8D%AE%E6%A0%A1%E9%AA%8C">validate  数据校验</a></li>
+<li><a href="#aop">aop</a></li>
+<li><a href="#%E6%8B%A6%E6%88%AA%E5%99%A8">拦截器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

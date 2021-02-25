@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://anthony-dong.github.io</id>
+    <title>Anthony-Dong</title>
+    <updated>2021-02-25T03:21:44.186Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://anthony-dong.github.io"/>
+    <link rel="self" href="https://anthony-dong.github.io/atom.xml"/>
+    <subtitle>Anthony-Dong的个人博客</subtitle>
+    <logo>https://anthony-dong.github.io/images/avatar.png</logo>
+    <icon>https://anthony-dong.github.io/favicon.ico</icon>
+    <rights>All rights reserved 2021, Anthony-Dong</rights>
+    <entry>
+        <title type="html"><![CDATA[Dubbo 使用中发现的三个问题]]></title>
+        <id>https://anthony-dong.github.io/post/aIjzHSRSy/</id>
+        <link href="https://anthony-dong.github.io/post/aIjzHSRSy/">
+        </link>
+        <updated>2020-04-07T14:23:22.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Javassit - 操作字节码(入门)]]></title>
+        <id>https://anthony-dong.github.io/post/Y48EHNCyD/</id>
+        <link href="https://anthony-dong.github.io/post/Y48EHNCyD/">
+        </link>
+        <updated>2020-04-05T16:26:37.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Jetbrains 插件推荐 & 开发常用工具]]></title>
+        <id>https://anthony-dong.github.io/post/oiz_jB7Sp/</id>
+        <link href="https://anthony-dong.github.io/post/oiz_jB7Sp/">
+        </link>
+        <updated>2020-04-05T05:28:54.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[StructLog4J  - 日志插件]]></title>
+        <id>https://anthony-dong.github.io/post/YVlL69JfN/</id>
+        <link href="https://anthony-dong.github.io/post/YVlL69JfN/">
+        </link>
+        <updated>2020-04-05T04:49:24.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[APM系统 - SkyWalking]]></title>
+        <id>https://anthony-dong.github.io/post/tQepF7WVx/</id>
+        <link href="https://anthony-dong.github.io/post/tQepF7WVx/">
+        </link>
+        <updated>2020-04-04T18:42:44.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java- Agent技术 (踩坑篇)]]></title>
+        <id>https://anthony-dong.github.io/post/8TNfdkHWs/</id>
+        <link href="https://anthony-dong.github.io/post/8TNfdkHWs/">
+        </link>
+        <updated>2020-04-04T18:40:42.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SpringBoot 单元测试之Junit & Mockito]]></title>
+        <id>https://anthony-dong.github.io/post/GnDOXDulp/</id>
+        <link href="https://anthony-dong.github.io/post/GnDOXDulp/">
+        </link>
+        <updated>2020-04-04T18:39:05.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Java - 自定义Classloader的一些问题]]></title>
+        <id>https://anthony-dong.github.io/post/cHEGNbBdy/</id>
+        <link href="https://anthony-dong.github.io/post/cHEGNbBdy/">
+        </link>
+        <updated>2020-04-04T03:38:37.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[Maven使用的一些技巧]]></title>
+        <id>https://anthony-dong.github.io/post/WxBx7SZK9/</id>
+        <link href="https://anthony-dong.github.io/post/WxBx7SZK9/">
+        </link>
+        <updated>2020-04-03T06:24:48.000Z</updated>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[GRPC  - Go & Java 混合平台测试项目]]></title>
+        <id>https://anthony-dong.github.io/post/vXc-k6G_z/</id>
+        <link href="https://anthony-dong.github.io/post/vXc-k6G_z/">
+        </link>
+        <updated>2020-03-31T15:32:08.000Z</updated>
+    </entry>
+</feed>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>分析 Nacos 和 Apollo 配置中心实现实时配置刷新 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/nacos-he-apollo-pei-zhi-zhong-xin-shi-xian-shi-shi-pei-zhi-shua-xin/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>分析 Nacos 和 Apollo 配置中心实现实时配置刷新</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-29</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/nacos-he-apollo-pei-zhi-zhong-xin-shi-xian-shi-shi-pei-zhi-shua-xin/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/t2J0gSv9kxo/"
+								class="tag">Apollo</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/zxweVMb3lRd/"
+								class="tag">Nacos</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1475字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	其实他借助了 Spring的两个特性 , 第一个就是<code>org.springframework.core.env.Environment</code>  , 这个是Spring所有配置信息的元信息接口, 其中其子实现类 <code>ConfigurableEnvironment</code> , 使我们需要拿到的对象,对其进行修改</p>
+<p>​	还有一个就是<code>BeanPostProcess</code> , Bean初始化完成的后置处理器, 这里面可以拿到已经实例化完成的Bean. 此时我们可以对其进行过滤 以及其他手脚 , 这个借助于Spring的单例对象模式 ,真的很不错</p>
+</blockquote>
+<h2 id="1-获取environment">1. 获取Environment</h2>
+<ol>
+<li>第一种方式 <code>org.springframework.context.ApplicationContextInitializer</code>  接口</li>
+</ol>
+<p>需要在<code>META-INF/spring.factories</code> 中写入,他的初始化很早, 在Bean装载之前,所以不能用<code>@Component</code>注入</p>
+<pre><code class="language-properties">org.springframework.context.ApplicationContextInitializer=\
+com.example.springbootconfig.autoconfig.ConfigAutoApplication
+</code></pre>
+<pre><code class="language-java">public class ConfigAutoApplication implements ApplicationContextInitializer&lt;ConfigurableApplicationContext&gt; {
+    @Override
+    public void initialize(ConfigurableApplicationContext applicationContext) {
+        ConfigurableEnvironment environment = applicationContext.getEnvironment();
+
+   		// 处理
+    }
+}
+</code></pre>
+<ol start="2">
+<li>第二种方式 <code>org.springframework.boot.env.EnvironmentPostProcessor</code> 接口</li>
+</ol>
+<p>需要在 <code>META-INF/spring.factories</code> 中添加</p>
+<pre><code class="language-properties">org.springframework.boot.env.EnvironmentPostProcessor=\
+com.example.springbootconfig.autoconfig.EnvironmentAutoWire
+</code></pre>
+<p>此时可以通过</p>
+<pre><code class="language-java">public class EnvironmentAutoWire implements EnvironmentPostProcessor {
+
+    @Override
+    public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
+		// 获取对象
+    }
+}
+</code></pre>
+<ol start="3">
+<li>第三种方式 : <code>org.springframework.context.EnvironmentAware</code></li>
+</ol>
+<pre><code class="language-java">@Component
+public class ConfigEnvironmentAware implements EnvironmentAware, PriorityOrdered {
+    @Override
+    public void setEnvironment(Environment environment) {
+        // 处理
+    }
+
+    @Override
+    public int getOrder() {
+        return HIGHEST_PRECEDENCE;
+    }
+}
+</code></pre>
+<p>这三种方式加载的时间</p>
+<p><code>org.springframework.boot.env.EnvironmentPostProcessor</code>  早与 <code>org.springframework.context.ApplicationContextInitializer</code>  早于<code>org.springframework.context.EnvironmentAware</code></p>
+<p>所以第二种方式注入的时候最早</p>
+<h2 id="2-处理单例bean">2. 处理单例Bean</h2>
+<blockquote>
+<p>​	这里我们需要拿到Bean对象, 这就需要所谓的<code>org.springframework.beans.factory.config.BeanPostProcessor</code> ,这里面可以获取已经实例化的Bean , 此时我们可以对其加一修饰</p>
+</blockquote>
+<pre><code class="language-java">@Component
+public class ConfigBeanPostProcess implements BeanPostProcessor {
+
+    /**
+     * 保存所有实例化对象
+     */
+    private Set&lt;Object&gt; set = new HashSet&lt;&gt;();
+
+
+    /**
+     * 保存所有的被@AutoConfigListener修饰方法对象和方法调用对象
+     */
+    private Map&lt;String, Pair&lt;Object, Method&gt;&gt; methodMap = new HashMap&lt;&gt;();
+
+
+    /**
+     * 保存所有的被@Configurable修饰的类 , 同时获取他的被 @Value修饰的字段和字段对象
+     */
+    private volatile Map&lt;String, Pair&lt;Object, Field&gt;&gt; map = new HashMap&lt;&gt;();
+
+
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        Class&lt;?&gt; aClass = bean.getClass();
+
+
+        /**
+         * 监听器
+         */
+        Method[] methods = aClass.getMethods();
+        for (Method method : methods) {
+            AutoConfigListener annotation = method.getAnnotation(AutoConfigListener.class);
+
+            if (annotation != null) {
+
+                String key = annotation.key();
+
+                if (method.getParameters().length == 1 &amp;&amp; method.getParameters()[0].getType() == Object.class) {
+                    methodMap.put(key, new Pair&lt;&gt;(bean, method));
+                }
+            }
+
+        }
+
+
+        /**
+         * 注入属性
+         */
+        if (aClass == ConfigServer.class) {
+            ConfigServer server = (ConfigServer) bean;
+            server.map = map;
+            server.methodMap = methodMap;
+
+        }
+
+
+        /**
+         * 配置bean - &gt; 自动修改字段值设置值
+         */
+        Configurable annotation = aClass.getAnnotation(Configurable.class);
+        if (annotation != null) {
+            set.add(bean);
+
+            Field[] fields = bean.getClass().getDeclaredFields();
+
+            for (Field field : fields) {
+                Value value = field.getAnnotation(Value.class);
+                if (null != value) {
+                    // private需要设置可见性
+                    field.setAccessible(true);
+                    String value1 = value.value();
+                    map.put(value1, new Pair&lt;&gt;(bean, field));
+                }
+            }
+        }
+        return bean;
+    }
+
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        return bean;
+    }
+}
+</code></pre>
+<p>这里借助了 两个注解修饰</p>
+<pre><code class="language-java">/**
+ * 监听器 处理器
+ */
+@Documented
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface AutoConfigListener {
+    String key();
+}
+</code></pre>
+<pre><code class="language-java">/**
+ * 可以自动刷新的类  字段可以自动刷新  @value注解的配置
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+public @interface Configurable {
+
+}
+</code></pre>
+<p>主要逻辑就是 当Bean被 <code>Configurable</code> 修饰时 ,<code>@value</code> 注解标记的就会被刷新</p>
+<p>当Bean的method, 被 <code>AutoConfigListener</code>  修饰时, 他的方法会被我们调用执行,当他所监听的配置刷新的时候</p>
+<p>主要是实现逻辑很简单 ,我们需要拿到 <code>Field</code> 和 <code>Method</code> 对象, 和这俩对象所对应的实例化对象</p>
+<pre><code class="language-java">@Component
+public class ConfigServer {
+
+
+    Map&lt;String, Pair&lt;Object, Method&gt;&gt; methodMap;
+    Map&lt;String, Pair&lt;Object, Field&gt;&gt; map;
+
+
+    /**
+     * 这里监听器还可以细分
+     */
+    private ConfigListener listener = new ConfigListener() {
+        @Override
+        public void onEvent(String key, Object value) {
+
+            Pair&lt;Object, Method&gt; objectMethodPair = methodMap.get(key);
+            Method v = objectMethodPair.getV();
+            Object k = objectMethodPair.getK();
+
+            try {
+                v.invoke(k, value);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                e.printStackTrace();
+            }
+
+            
+            Pair&lt;Object, Field&gt; pair = map.get(key);
+            try {
+                pair.getV().set(pair.getK(), value);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    /**
+     * 模拟拉去远程服务
+     *
+     * @return
+     */
+    static Map&lt;String, Object&gt; getRemoteConfig() {
+        HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+        map.put(&quot;user.name&quot;, &quot;xiaoli&quot;);
+        map.put(&quot;user.age&quot;, 1);
+        return map;
+    }
+
+
+    /**
+     * 启动线程模拟拉去
+     */
+    public ConfigServer() {
+        new Thread(() -&gt; {
+            System.out.println(&quot;启动配置中心监听&quot;);
+            try {
+                TimeUnit.SECONDS.sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            // 收到配置发生变化, 发布事件
+            listener.onEvent(&quot;${user.name}&quot;, &quot;测试&quot;);
+        }).start();
+    }
+}
+</code></pre>
+<h2 id="3-总结">3. 总结</h2>
+<p>其实基本是基于Spring的单例模式带来的优势, 有些人会投机取巧的问 , 如果我将<code>Environment</code> 配置后期修改了, Bean所对应的属性不就改了吗. 实际上是错误的, 因为他不会修改, 因为啥呢,因为Spring说过, Bean只会实例化一次, 不会多次刷新, 我们知道刷新过程会自动装载bean. 但是<code>SpringApplication</code>不允许</p>
+<p>其次还有设计上 ,我上面的Demo就写了半个小时, 基本就是一个框框 ,没考虑太多的设计成分 . 其实可以基于SpringApplicationEvent, 和 SpringApplication的publish方法来实现,  事件的发布, 无所谓了 , 其实思想都是一样的,</p>
+<p>配置中心拉去信息, 监听是否发生变化,  变化了发布事件, 进行修改操作 . 无非这些操作</p>
+<h2 id="4-apollo和nacos是如何实现的">4. Apollo和Nacos是如何实现的</h2>
+<p><strong>Apollo</strong> 的实现在于 <code>com.ctrip.framework.apollo.spring.boot.ApolloApplicationContextInitializer</code> 和 <code>com.ctrip.framework.apollo.spring.config.PropertySourcesProcessor</code> 这两个类来实现Env的注入 ,</p>
+<p>其实对于刷新 主要是基于<code>com.ctrip.framework.apollo.spring.annotation.ApolloProcessor</code> 这个类对于Bean的信息保存</p>
+<p>其中<strong>Nacos</strong>的实现基本是在于<code>com.alibaba.nacos.spring.context.annotation.config.NacosValueAnnotationBeanPostProcessor</code> 这个类实现 对于<code>com.alibaba.nacos.api.annotation.NacosInjected</code> 这个注解的实现配置自动注入的功能</p>
+<p><code>com.alibaba.nacos.spring.context.annotation.config.NacosConfigListenerMethodProcessor</code> 这个类实现对于<code>com.alibaba.nacos.api.config.annotation.NacosConfigListener</code>这个监听方法的实现配置刷新自动调用的功能</p>
+<p><code>com.alibaba.nacos.spring.beans.factory.annotation.AnnotationNacosInjectedBeanPostProcessor</code> 实现对<code>com.alibaba.nacos.api.annotation.NacosInjected</code> 功能注入的实现</p>
+<p>所以实现并不难</p>
+<p>难就难在谁的设计最优雅, 其实都是基于Spring提供的强大的事件处理机制,配置注入简单, 配置刷新的方式基本都一样 , 难就难在设计谁的更巧妙</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E8%8E%B7%E5%8F%96environment">1. 获取Environment</a></li>
+<li><a href="#2-%E5%A4%84%E7%90%86%E5%8D%95%E4%BE%8Bbean">2. 处理单例Bean</a></li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+<li><a href="#4-apollo%E5%92%8Cnacos%E6%98%AF%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E7%9A%84">4. Apollo和Nacos是如何实现的</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

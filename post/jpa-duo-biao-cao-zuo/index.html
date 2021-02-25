@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JPA - 多表操作 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/jpa-duo-biao-cao-zuo/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JPA - 多表操作</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-06</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/jpa-duo-biao-cao-zuo/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/NYP7PsS0Ewg/"
+								class="tag">JPA</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1602字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	多于关系型数据库, 大多是描述对象直接复杂的关系, 所以掌握多表之间的关系,是很重要的.</p>
+</blockquote>
+<p>常见的关系有 一对一, 一对多, 多对一 ,多对多 .</p>
+<p>对于JPA , 实现了上述的四种关系 ,分别用 <code>@OneToOne</code> , <code>@ManyToOne</code> , <code>@OneToMany</code>, <code>@ManyToMany</code>  , 一下就详细的讲解一下</p>
+<h2 id="1-一对一">1. 一对一</h2>
+<blockquote>
+<p>​	假如我们有一个用户 , 用户只能在公司办理一张工资卡, 所以 , 用户和银行卡是一对一的关系 ,</p>
+</blockquote>
+<p>用户实体类</p>
+<pre><code class="language-java">@Setter
+@Getter
+@Entity
+@Table(name = &quot;users&quot;)
+@Access(AccessType.FIELD) // 这个是字段注入属性,表示
+public class User {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(length = 20)
+    private String name;
+
+    @Column(length = 50)
+    private String password;
+
+    @OneToOne
+    protected Card card;
+}
+</code></pre>
+<p>银行卡实体类</p>
+<pre><code class="language-java">@Setter
+@Getter
+@Entity
+@Table(name = &quot;credit_card&quot;)
+@Access(AccessType.FIELD)
+public class Card {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(length = 50)
+    private String card;
+
+    /**
+     * mappedBy 他所关联的属性名称, 指定拥有方, 所以非拥有方需要指定 mappedBy
+     */
+    @OneToOne(mappedBy = &quot;card&quot;,fetch = FetchType.EAGER)
+    private User user;
+}
+</code></pre>
+<p>然后看一下自动生成的建表语句</p>
+<pre><code class="language-sql">CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `card_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKtfe9cabsdp6g8exmp5g5qboax` (`card_id`),
+  CONSTRAINT `FKtfe9cabsdp6g8exmp5g5qboax` FOREIGN KEY (`card_id`) REFERENCES `credit_card` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<pre><code class="language-sql">CREATE TABLE `credit_card` (
+  `id` bigint(20) NOT NULL,
+  `card` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<p>我们可以发现此时 银行卡和用户, 用户有一个<code>card_id</code>的字段关联的外键指向了<code>credit_card</code>表的<code>id</code>字段 , 所以我们基本实现了 , 如果你想说为啥不能反过来, 我感觉真的无语 , 外键要分亲谁是主 , 谁是从, 如果A需要B , 那么B就是A的外键, B可以独立于A存在 .</p>
+<p>下来就是 <code>@OneToOne</code> 注解的<code>mappedBy</code> 属性  , 他的意思就是我上述说的 , 他代表的含义是 银行卡跟用户确实有关联, 但是不需要外键约束, 我们依靠<code>Java</code>的字段约束 , 其中<code>mappedBy</code> 字段值等于 , <code>User</code>表中,指向<code>Card</code>表中的字段名称, 此时是<code>card</code> , 所以就是 <code>@OneToOne(mappedBy = &quot;card&quot;,fetch = FetchType.EAGER)</code>  ,</p>
+<p><code>fetch</code>的含义是指加载需求 , 懒加载和及时加载 , 因为JPA对于颗粒度的实现不是很好, 所以对于是否需要加载他并不知道, 所以默认是<code>javax.persistence.FetchType#EAGER</code>  ,就是提前拿. 但是有些时候直接拿不好, 需要查询额外的数据, 一般情况下还是关闭为好,就是 <code>javax.persistence.FetchType#LAZY</code> 类型, 比如说我查询<code>userRepository.findById(1);</code>,  那么此时会给我将Card表也查询出来, 所以对于不想查询的数据可以使用延迟加载</p>
+<h2 id="2-多对一-一对多">2. 多对一 , 一对多</h2>
+<p>加入, 一个公司可以有多有员工 , 一个员工只能在一个公司上班, 这就是 公司-员工 一对多的关系 , 员工-公司 多对一</p>
+<pre><code class="language-java">@Setter
+@Getter
+@Table
+@Entity
+public class Company {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+
+    private String name;
+
+    /**
+     *fetch :  FetchType.LAZY 代表查询的时候不会查找 user 表
+     *         FetchType.EAGER 代表查询的时候回去找到 user 表
+     */
+    @OneToMany(mappedBy = &quot;company&quot;,fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private Collection&lt;User&gt; users;
+}
+</code></pre>
+<pre><code class="language-java">@Setter
+@Getter
+@Entity
+@Table(name = &quot;users&quot;)
+@Access(AccessType.FIELD)
+@EntityListeners(value = {UserListener.class})
+public class User {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(length = 20)
+    private String name;
+
+    @Column(length = 50)
+    private String password;
+
+    @OneToOne
+    protected Card card;
+
+    @ManyToOne
+    private Company company;
+
+}
+</code></pre>
+<p>查看自动生成的建表语句</p>
+<pre><code class="language-java">CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `card_id` bigint(20) DEFAULT NULL,
+  `company_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKtfe9cabsdp6g8exmp5g5qboax` (`card_id`),
+  KEY `FKbwv4uspmyi7xqjwcrgxow361t` (`company_id`),
+  CONSTRAINT `FKbwv4uspmyi7xqjwcrgxow361t` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`),
+  CONSTRAINT `FKtfe9cabsdp6g8exmp5g5qboax` FOREIGN KEY (`card_id`) REFERENCES `credit_card` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<pre><code class="language-java">CREATE TABLE `company` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<p>符合我们的需求 ,</p>
+<p>此时查询</p>
+<pre><code class="language-java">Company save = companyRepository.save(company);
+user1.setCompany(save);
+userRepository.save(user1);
+user2.setCompany(save);
+userRepository.save(user2);
+Optional&lt;Company&gt; id = companyRepository.findById(save.getId());
+</code></pre>
+<p>查询的SQL是</p>
+<pre><code class="language-java">select company0_.id as id1_1_0_, company0_.name as name2_1_0_, users1_.company_id as company_5_3_1_, users1_.id as id1_3_1_, users1_.id as id1_3_2_, users1_.card_id as card_id4_3_2_, users1_.company_id as company_5_3_2_, users1_.name as name2_3_2_, users1_.password as password3_3_2_, card2_.id as id1_2_3_, card2_.card as card2_2_3_ from company company0_ left outer join users users1_ on company0_.id=users1_.company_id left outer join credit_card card2_ on users1_.card_id=card2_.id where company0_.id=?
+</code></pre>
+<p>基本啥都查询 了 , credit_card表 , company表哇 .  user表哇, 所以懒加载是很必要的 .</p>
+<h2 id="3-多对多">3. 多对多</h2>
+<p>比如公司开设了图书馆, 图书馆中的书 , 一本书可能多个人借阅, 同时一个人可能借阅多本, 这就是多对多的关系 ,这时候就需要有一个表来作为中间表进行维护数据了 ,</p>
+<p>书实体类</p>
+<pre><code class="language-java">@Setter
+@Getter
+@Entity
+@Table(name = &quot;books&quot;)
+@Access(AccessType.FIELD)
+public class Book {
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(length = 50)
+    private String name;
+
+    private Double price;
+
+    private Date publishDate;
+
+    @ManyToMany(mappedBy = &quot;books&quot;)
+    private Collection&lt;User&gt; users;
+}
+</code></pre>
+<pre><code class="language-java">@Setter
+@Getter
+@Entity
+@Table(name = &quot;users&quot;)
+@Access(AccessType.FIELD)
+@EntityListeners(value = {UserListener.class})
+public class User {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(length = 20)
+    private String name;
+
+    @Column(length = 50)
+    private String password;
+
+    @OneToOne
+    protected Card card;
+
+    @ManyToOne
+    private Company company;
+//
+    @ManyToMany
+    private Collection&lt;Book&gt; books;
+
+}
+</code></pre>
+<p>运行生成表</p>
+<p>用户表</p>
+<pre><code class="language-java">CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `card_id` bigint(20) DEFAULT NULL,
+  `company_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKtfe9cabsdp6g8exmp5g5qboax` (`card_id`),
+  KEY `FKbwv4uspmyi7xqjwcrgxow361t` (`company_id`),
+  CONSTRAINT `FKbwv4uspmyi7xqjwcrgxow361t` FOREIGN KEY (`company_id`) REFERENCES `company` (`id`),
+  CONSTRAINT `FKtfe9cabsdp6g8exmp5g5qboax` FOREIGN KEY (`card_id`) REFERENCES `credit_card` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<p>图书表</p>
+<pre><code class="language-java">CREATE TABLE `books` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `price` double DEFAULT NULL,
+  `publish_date` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<p>中间表</p>
+<pre><code class="language-java">CREATE TABLE `users_books` (
+  `users_id` bigint(20) NOT NULL,
+  `books_id` bigint(20) NOT NULL,
+  KEY `FKjck6upwhlc41ktqa7sg09tge0` (`books_id`),
+  KEY `FKikjr8gdxtts5ubg8nvd0avjjm` (`users_id`),
+  CONSTRAINT `FKikjr8gdxtts5ubg8nvd0avjjm` FOREIGN KEY (`users_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `FKjck6upwhlc41ktqa7sg09tge0` FOREIGN KEY (`books_id`) REFERENCES `books` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<p>因此基本可以完成 , 需要注意的还是弄清楚 主次关系</p>
+<h2 id="4-joincolumn">4. @JoinColumn</h2>
+<p>他就是外键锁关联的主表的键</p>
+<p><code>referencedColumnName</code> 指的是外键引用的表的字段名 , <code>name</code>指的是表中字段的名称 , 其他的就么啥了 和 column一样 , `javax.persistence.ForeignKey 就是你外键约束的一堆定义, 你不定义默认会生成的</p>
+<pre><code class="language-java">@Setter
+@Getter
+@Entity
+@Table(name = &quot;users&quot;)
+@Access(AccessType.FIELD)
+@EntityListeners(value = {UserListener.class})
+public class User {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(length = 20)
+    private String name;
+
+    @Column(length = 50)
+    private String password;
+
+    @OneToOne
+    protected Card card;
+
+    @ManyToOne(targetEntity = Company.class)
+    @JoinColumn(referencedColumnName = &quot;id&quot;, name = &quot;user_company_id&quot;,foreignKey = @ForeignKey(name = &quot;fk_user_company_id&quot;))
+    private Company company;
+
+    @ManyToMany
+    private Collection&lt;Book&gt; books;
+
+}
+</code></pre>
+<pre><code class="language-java">CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL,
+  `name` varchar(20) DEFAULT NULL,
+  `password` varchar(50) DEFAULT NULL,
+  `card_id` bigint(20) DEFAULT NULL,
+  `user_company_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKtfe9cabsdp6g8exmp5g5qboax` (`card_id`),
+  KEY `fk_user_company_id` (`user_company_id`),
+  CONSTRAINT `FKtfe9cabsdp6g8exmp5g5qboax` FOREIGN KEY (`card_id`) REFERENCES `credit_card` (`id`),
+  CONSTRAINT `fk_user_company_id` FOREIGN KEY (`user_company_id`) REFERENCES `company` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+</code></pre>
+<p>基本就是这个用法, 其他么了 , 对比上面的表生成语句 . ......</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E4%B8%80%E5%AF%B9%E4%B8%80">1. 一对一</a></li>
+<li><a href="#2-%E5%A4%9A%E5%AF%B9%E4%B8%80-%E4%B8%80%E5%AF%B9%E5%A4%9A">2. 多对一 , 一对多</a></li>
+<li><a href="#3-%E5%A4%9A%E5%AF%B9%E5%A4%9A">3. 多对多</a></li>
+<li><a href="#4-joincolumn">4. @JoinColumn</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

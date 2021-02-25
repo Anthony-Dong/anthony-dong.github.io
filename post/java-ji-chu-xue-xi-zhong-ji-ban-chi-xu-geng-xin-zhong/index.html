@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java 面向对象 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/java-ji-chu-xue-xi-zhong-ji-ban-chi-xu-geng-xin-zhong/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java 面向对象</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/java-ji-chu-xue-xi-zhong-ji-ban-chi-xu-geng-xin-zhong/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1025字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">4 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="extends">Extends</h2>
+<h3 id="constructor">constructor</h3>
+<ul>
+<li>
+<p><strong>Java会为每一个对象创建一个默认的构造器,但是当重写时,他就不会给你去创建了</strong> , 例如 你写了一个有参的构造器,此时就 不会自动给你生成一个默认的构造器 .</p>
+</li>
+<li>
+<p>还有就是 <strong>子类会默认调用父类的构造器</strong>,只是我们不去写而已 ,我用eclipse的一张图 说明一下</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-23/03c235a6-a231-4120-94d9-b336e9408cfd.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+</ul>
+<p>它这里说的很明白就是 省略 调用默认的父类构造器 ,所以当我们不去写 这个时,其实Java 就会 隐式的给我们加上这个. 但是当你父类有其他构造器时,可以覆盖这个默认构造器: 例如</p>
+<pre><code class="language-java">public Person(Integer unm) {
+        this.unm = unm;
+        System.out.println(&quot;我是父类带参构造器&quot;);
+ }
+public Son() {
+    // 这里可以覆盖掉
+      super(null);
+      System.out.println(&quot;我是子类的默认构造器&quot;);
+ }
+</code></pre>
+<p><strong>而且注意: 当我们使用单例模式的时候,会把构造方法私有化,所以此时就无法让子类继承,因为继承会自动引用父类构造器,可以用protected修饰</strong></p>
+<p>所以我们看看下面这段代码的执行结果</p>
+<pre><code class="language-java">public class Demo {
+
+    public static void main(String[] args) {
+        Son son = new Son();
+    }
+}
+
+class Person{
+    public Person() {
+        super();
+        System.out.println(&quot;我是父类默认构造器&quot;);
+    }
+}
+
+class Son extends  Person{
+    public Son() {
+        super();
+        System.out.println(&quot;我是子类默认构造器&quot;);
+    }
+}
+</code></pre>
+<p>执行结果</p>
+<pre><code class="language-java">我是父类默认构造器
+我是子类默认构造器
+</code></pre>
+<p>所以发现实例化一个对象时,会自动调用父类的构造方法, 不过我们可以显示的重写 . 顶层对象都是 Object</p>
+<p>当我们知道结果 尝试去改变时,会发现  他说 调用父类的构造器必须在开始位置声明在子类构造器中.所以我们不可能改变 父类优于子类构造器调用的关系</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-23/94cbc6c7-164a-4687-a89f-d6c6f089a0b6.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="向上-向下转型">向上-向下转型</h3>
+<ul>
+<li>向上转型 时,例如:  <code>Person person = new Son();</code> ,不会影响子类重写父类方法的调用,但是此时不能调用子类自己的方法 ,需要向下转型.<code>((Son) person).m2();</code> .</li>
+<li>向下转型 时 , 例如 <code>Son son = (Son) new Person();</code> ,此时当 子类调用父类的方法时候会抛出异常 <code>java.lang.ClassCastException: com.javase.Java_Object_Oriented.extend.Person cannot be cast to com.javase.Java_Object_Oriented.extend.Son</code>  所以向下转型时会发生子类对象无法调用父类方法.</li>
+</ul>
+<h3 id="协变返回-covariant-return">协变返回 - Covariant Return</h3>
+<blockquote>
+<p>​	Java5.0 放宽了这一限制，只要子类方法与超类方法具有相同的方法签名，或者子类方法的返回值是超类方法的子类型，就可以覆盖。</p>
+</blockquote>
+<pre><code class="language-java">public class covariantReturn {
+ 
+    public static void main(String[] args) {
+        MilK milK = new MilK();
+        System.out.println(&quot;milK.process() = &quot; + milK.process());
+
+        WheatMilK wheatMilK = new WheatMilK();
+        System.out.println(&quot;wheatMilK.process() = &quot; + wheatMilK.process());
+
+    }
+
+}
+
+class Grandparent{
+    public String toString(){
+        return &quot;Grandparent&quot;;
+    }
+}
+class Parent extends Grandparent{
+    public String toString(){
+        return &quot;Parent&quot;;
+    }
+}
+
+
+class MilK{
+    Grandparent process(){
+        return new Grandparent();
+    }
+}
+
+class WheatMilK extends MilK{
+
+    /**
+     * 只要子类方法与超类方法具有相同的方法签名
+     * 子类方法的返回值是超类方法的子类型，就可以覆盖。
+     * @return
+     */
+    @Override
+    Parent process(){
+        return new Parent();
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">milK.process() = Grandparent
+wheatMilK.process() = Parent
+</code></pre>
+<p>很显然是两个不同的结果,重写时可以改变返回类型的 , 只要是返回类型属于一种继承关系</p>
+<h2 id="private-空-protected-public">private &amp; 空 &amp; protected &amp; public</h2>
+<p>​	  当我们不写作用域修饰词时,此时他默认是friendly,只可以被当前类和同一个package类访问  ,就算是子类(不是同一个包下的) 也无法访问(此时需要修改为protected,可以让子类访问) ,</p>
+<blockquote>
+<p>​	并不是只有 private和public,我们看好多源码都是 protected</p>
+<p>​	private 私有权限,只有自己能用。 friendly 包权限,同一个包下的可用。 protected 继承权限,（是包权限的扩展，子女类也可使用）。 public 谁都可以用。</p>
+<p>​	其实 就是 一种范围逐级扩大 ,当你私有时,只属于你自己 ; 当不写时,属于同包下 ;当用protected时,此时属于可继承状态,</p>
+<p>子类可以享受 ;  当public时属于全部.</p>
+</blockquote>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#extends">Extends</a>
+<ul>
+<li><a href="#constructor">constructor</a></li>
+<li><a href="#%E5%90%91%E4%B8%8A-%E5%90%91%E4%B8%8B%E8%BD%AC%E5%9E%8B">向上-向下转型</a></li>
+<li><a href="#%E5%8D%8F%E5%8F%98%E8%BF%94%E5%9B%9E-covariant-return">协变返回 - Covariant Return</a></li>
+</ul>
+</li>
+<li><a href="#private-%E7%A9%BA-protected-public">private &amp; 空 &amp; protected &amp; public</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java - Object.wait VS Condition.await 以及在Dubbo的使用 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/JmBil-MQE/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java - Object.wait VS Condition.await 以及在Dubbo的使用</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-16</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/JmBil-MQE/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3297字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">14 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>​	有些人不知道这俩玩意有啥用, 其实大有用处, 对于有些同步操作, 需要使用大量的阻塞操作, 这个玩意可以很好的做到通知效果. 当你条件多时候, 你就可以使用 Condition了 .</p>
+<h2 id="dubbo中使用condition">Dubbo中使用Condition</h2>
+<p>我们拿个例子来举例子.  比如一个 Dubbo框架你想过没有. 客户端如何拿到返回值的 , 那么如何加入超时, 一系列的问题都在这 .  所以需要我们来思考 .</p>
+<p>我给大家展示一块代码 : <code>org.apache.dubbo.rpc.protocol.dubbo.DubboInvoker#doInvoke</code></p>
+<pre><code class="language-java">@Override
+protected Result doInvoke(final Invocation invocation) throws Throwable {
+    RpcInvocation inv = (RpcInvocation) invocation;
+    // 获取当前客户端
+    ExchangeClient currentClient;
+    try {
+        // 一堆参数获取
+        boolean isAsync = RpcUtils.isAsync(getUrl(), invocation);
+        boolean isAsyncFuture = RpcUtils.isReturnTypeFuture(inv);
+        boolean isOneway = RpcUtils.isOneway(getUrl(), invocation);
+        int timeout = getUrl().getMethodParameter(methodName, Constants.TIMEOUT_KEY, Constants.DEFAULT_TIMEOUT);
+        if (isOneway) {
+			// 只执行一次
+            return new RpcResult();
+        } else if (isAsync) {
+   			// 异步
+            return result;
+        } else {
+            // 同步 , 默认其实是同步的
+            RpcContext.getContext().setFuture(null);
+            // 客户端.get()
+            return (Result) currentClient.request(inv, timeout).get();
+        }
+    } catch (Exception e) {
+		// .... 一堆异常 
+    } 
+}
+</code></pre>
+<p>我们继续往下走 : <code>org.apache.dubbo.remoting.exchange.support.DefaultFuture#get()</code></p>
+<pre><code class="language-java">@Override
+public Object get() throws RemotingException {
+    return get(timeout);
+}
+// 获取结果
+@Override
+public Object get(int timeout) throws RemotingException {
+	// 有没有结果
+    if (!isDone()) {
+        long start = System.currentTimeMillis();
+        // 类似于sync obj.wait的写法
+        lock.lock();
+        try {
+            // 核心地方. 就是这里. 不断的等待. 然后可以输入一个超时间,前提是你这个锁是没有其他线程拿到,这个超时时间才有效. 不然会一直等待到signal被唤醒,或者线程中断.
+            while (!isDone()) {
+                done.await(timeout, TimeUnit.MILLISECONDS);
+                if (isDone() || System.currentTimeMillis() - start &gt; timeout) {
+                    break;
+                }
+            }
+        } catch (InterruptedException e) {
+            // 抛出异常
+        } finally {
+            lock.unlock();
+        }
+        if (!isDone()) {
+           // 超时也是抛出异常
+        }
+    }
+    return returnFromResponse();
+}
+</code></pre>
+<p>那么现在简单了, 究竟是谁帮助他存入结果呢<code>org.apache.dubbo.remoting.exchange.support.DefaultFuture#doReceived</code></p>
+<pre><code class="language-java">private void doReceived(Response res) {
+    lock.lock();
+    try {
+        // 拿到结果
+        response = res;
+        if (done != null) {
+            // 唤醒
+            done.signal();
+        }
+    } finally {
+        // 释放锁
+        lock.unlock();
+    }
+    // 看看有木有回调.有回调就执行回调方法
+    if (callback != null) {
+        invokeCallback(callback);
+    }
+}
+</code></pre>
+<p>我们再往上走就到了 :   <code>org.apache.dubbo.remoting.transport.dispatcher.connection.ConnectionOrderedChannelHandler#received</code></p>
+<p>由于Netty的worker线程有限, 而且worker线程,每个线程同步执行,比如一个客户端分配一个线程,那么这个线程可能就会因为处理消息而阻塞. 所以分配给其他线程池来执行. 他就可以只负责将消息转发给线程池执行了.</p>
+<pre><code class="language-java">executor.execute(new ChannelEventRunnable(channel, handler, ChannelState.RECEIVED, message));
+</code></pre>
+<p>其次就是 <code>org.apache.dubbo.remoting.transport.dispatcher.ChannelEventRunnable</code>  他实现了<code>java.lang.Runnable</code> 接口, , 所以调用就是靠这个.</p>
+<pre><code class="language-java">@Override
+public void run() {
+    if (state == ChannelState.RECEIVED) {
+        try {
+            // 这里调用 `org.apache.dubbo.remoting.exchange.support.header.HeaderExchangeHandler`,类似以一种委派模型,其实也和包装模型也像, 一层层包装也属于一层层委派.
+            handler.received(channel, message);
+        } catch (Exception e) {
+			// 异常
+        }
+    } else {
+        switch (state) {
+                /// 省略, 有兴趣的可以看看
+        }
+    }
+}
+</code></pre>
+<p>基本流程就是这个. :</p>
+<p>当Reference对象调用一个RPC时 , 会被动态代理到执行<code>doiovoke</code>方法那去. 他会不断的等待.等到到拿去结果. (这里使用到了ReentrantLock+Condition) ,  此时服务器反馈回消息来了. 此时就会执行委派模型, 不断的分发给下一级 , 最后交给一个线程池处理 .然后再调用<code>DefaultFuture</code> , 帮助结果赋值,然后返回.</p>
+<p>但是这里有个问题, 我说过. 就是当一个锁被俩线程拿到. 那么 wait()的超时效果就没有了 . 形同虚设. 那么Dubbo采用了一个开启一个线程来处理这个事情. 将我们的<code>DefaultFuture</code>对象交给它  . 如果发现超时直接返回一个超时结果. 所以这些都是细节.  更多细节请看 <code>org.apache.dubbo.common.timer.HashedWheelTimer</code> , 他类似于一个表盘.每隔一段时间检查一次 . 有没有 <code>org.apache.dubbo.common.timer.TimerTask</code> 落入表盘. 如果有就执行了.</p>
+<h2 id="objectwait-和-objectnotify"><code>Object.wait()</code> 和  <code>Object.notify()</code></h2>
+<blockquote>
+<p>​	其中 Object.wait() 还有加入超时机制的. Object.notify() 还有一个 notifyAll(). 下面都会讲 , 你要理解了他的流程. 就明白了Condition了.</p>
+</blockquote>
+<p>我们来个简单的例子. 来体验一下 wait方法 .</p>
+<pre><code class="language-java">private static String rest = null;
+
+public static void main(String[] args){
+    Object lock = new Object();
+
+    // 启动一个线程,等待,直到rest有结果.
+    new Thread(() -&gt; {
+        synchronized (lock) {
+            try {
+                while (rest == null) {
+                    // 这里会等待有人将他唤醒,当执行第一次执行wait方法时, 他会释放lock锁.代表其他线程可以拿到锁了
+                    lock.wait();
+                }
+                System.out.println(String.format(&quot;res : %s&quot;,rest));
+            } catch (InterruptedException e) {
+                //
+            }
+        }
+    }).start();
+
+    // 启动一个线程, 来执行,然后告诉他结果.
+    new Thread(() -&gt; {
+        synchronized (lock) {
+            sleep(2000);
+            rest = &quot;辛苦你了,等了2S.&quot;;
+            lock.notify();
+        }
+    }).start();
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">res : 辛苦你了,等了2S.
+</code></pre>
+<p>通过上诉例子, 我们知道. 当调用了 <code>notify</code> 会释放一个等待线程. 那么我们再多一个等待线程呢.  我们将上面两个线程runnable封装一下. 省代码空间</p>
+<pre><code class="language-java">new Thread(waiter).start();
+new Thread(waiter).start();
+new Thread(notifier).start();
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">thread : Thread-0, res : 辛苦你了,等了2S.
+</code></pre>
+<p>发现只有一个线程被唤醒. 其实这里也有先后顺序的.</p>
+<h4 id="执行流程">执行流程</h4>
+<p>​		在执行<code>wait方法</code>之前，必须去争夺Synchorized锁,不然会抛出异常的 <code>IllegalMonitorStateException</code>，首先会执行JVM指令<code>monitorenter</code> ,如果当前线程获取到此对象(lock对象),那么lock对象的markword会记录该锁的线程持有者和计数器.同时在执行Lock.wait()的时候,此时已经是持有锁了. 此时就会执行释放锁操作 . 对于上诉那个例子来说,就是thread2可以执行了.</p>
+<p>​	  怎么说说这个wait线程去哪了 ? , 在JVM里, 有一个<code>_WaitSet</code> 这个集合进行保存, 他是一个双链表结构(实际上是队列结构, 先进先出). 当一个线程执行wait时, 第一步将他封装成一个node节点, 类似于AQS, 然后将这个节点node添加到 waitset中, 然后调用<code>ObjectMonitor::exit</code> 释放当前的monitor对象(local对象).最终调用<code>park</code>将他挂起. 跟AQS如出一辙.</p>
+<p>​	 那么当有线程调用<code>notify</code>时(前提也是此线程得先拿到锁,就是加同步代码块了), 然后反向操作了, 他会将waitset中第一个节点拿出来. 然后将第一个节点封装的线程执行<code>unpark</code>操作. 并且将它移到 <code>EntrySet</code>中, 也就是等待线程的集合中. 当你退出<code>sync(obj){}</code> 同步代码块时(就会调用了<code>monitorexit</code>), 会释放当前持有的锁.</p>
+<p>此时刚刚等待的线程会停止等待 . 所以就是这么一个过程.</p>
+<p>​	那么说说 <code>notifyAll</code>  , 他的做法就是将 WaitSet集合全部遍历一遍全部释放.</p>
+<h4 id="objectwaitlong-timeout"><code>Object.wait(long timeout)</code></h4>
+<blockquote>
+<p>​	为什么我要单独拿出来, 超时有啥好多的 , 因为这个超时是假的(其实上面那段话很明白了) . 并不是超时了一定会超时.  我们看看例子.</p>
+</blockquote>
+<p>我们将原来的waiter改成一个加了超时的, 这个单位是ms, 我们再次执行.</p>
+<pre><code class="language-java">Runnable waiter = () -&gt; {
+    synchronized (lock) {
+        long start = System.currentTimeMillis();
+        try {
+            while (rest == null) {
+                // 这里会等待有人将他唤醒,当执行第一次执行wait方法时, 他会释放lock锁.代表其他线程可以拿到锁了
+                lock.wait(1000);
+                System.out.println(String.format(&quot;thread : %s wait : %dms&quot;, Thread.currentThread().getName(), System.currentTimeMillis() - start));
+            }
+            System.out.println(String.format(&quot;thread : %s, res : %s , cost : %dms&quot;, Thread.currentThread().getName(), rest, System.currentTimeMillis() - start));
+        } catch (InterruptedException e) {
+            //
+        }
+    }
+};
+</code></pre>
+<p>然后再次运行, 发现什么?  花费了</p>
+<pre><code class="language-java">thread : Thread-0 wait : 2002ms
+thread : Thread-0, res : 辛苦你了,等了2S. , cost : 2016ms
+</code></pre>
+<p>所以结果是啥, 超时有用吗. 没有, 那么是为什么呢?</p>
+<h4 id="原因">原因</h4>
+<p>因为当你执行 <code>lock.wait(1000)</code> 当你超时结束. 这里是JVM里的, JVM里你超时结束了. 那么首先你需要去拿到锁. 你拿不到锁. 会继续执行 <code>lock.wait(1000)</code>   ,AQS的源码和JVM思想基本一致 . 直到你拿到锁. 你才会wait结束, 所以也就是上面为啥 你的花费了2000ms, 而只等待了1000ms.</p>
+<h2 id="condition">Condition</h2>
+<p>其实condition跟 java的wait-notify思想是一模一样的. 我将其对应的方法关联一下. 源码也不是太难, 设计到大量的CAS同步操作, 一次park和unpack操作, 基本和JVM内部思想一致.  不过他的灵活性高点. (随着JVM的进步, 其实这种性能差距会不断缩小, 而且代码更加简便, JVM控制不容易出现问题. 所以我推荐没有特殊需求就用wait和notify足够了)</p>
+<p>那么Condition怎么来呢 . 我们看看 Lock接口他有一个方法是 <code>Condition newCondition();</code></p>
+<p><strong>对 , 一把锁可以new 很多个Condition. 这点是Java内置的wait-notify做不到的. 这个优点就是一把锁可以控制多个Condition, 不是一把锁一个Condition . 懂了吧.</strong></p>
+<p>其次是Condition有一个方法是 <code>awaitUninterruptibly</code> , 是不可中断的等待. 我们知道Java内置的wait-notify,wait方法可以被打断的.</p>
+<p>我们来拿BlockStack为例子.  是一个后进先出的数组 .  么办法懒得写队列, 因为一个变量便可以维护好栈.</p>
+<pre><code class="language-java">public class BlockStack {
+
+    final Lock lock = new ReentrantLock();
+    // 当满了.就阻塞
+    final Condition full = lock.newCondition();
+
+    // 当空了, 也阻塞.
+    final Condition empty = lock.newCondition();
+
+    final Object[] arr;
+
+    public BlockStack(int size) {
+        arr = new Object[size];
+    }
+
+    // 当前索引位置
+    int count = 0;
+
+    public void push(Object val) throws InterruptedException {
+        // lock获取锁
+        lock.lock();
+        try {
+            // 如果满了.就一直等待
+            if (count == arr.length) {
+                // await-&gt; park()..(等别人unpark).. -&gt;tryacq()获取锁-&gt; 拿到锁成功-&gt;结束wait
+                full.await();
+            }
+            arr[count] = val;
+            count++;
+            empty.signal();
+        } finally {
+            // unlock -&gt; release(1)-&gt;释放锁
+            lock.unlock();
+        }
+    }
+
+    // 剔除栈顶
+    public Object pop() throws InterruptedException {
+        lock.lock();
+        try {
+            while (count == 0) {
+                empty.await();
+            }
+            // 此时count已经+1了,所以我们拿不到刚刚插进去的
+            Object obj = arr[--count];
+            // 找到一个Condition队列的头节点-&gt;将await线程从condition队列放入到阻塞队列中(核心方法在AQS的eq方法中)-&gt;unpark(await线程)
+            full.signal();
+            return obj;
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+</code></pre>
+<p>我们来分析一下这个执行流程.  前提是T1 比 T2先执行</p>
+<pre><code class="language-java">public class AQS {
+
+    public static void main(String[] args) {
+        final Lock lock = new ReentrantLock();
+        final Condition full = lock.newCondition();
+        // t1线程
+        new Thread(() -&gt; {
+            lock.lock();
+            try {
+                full.await();
+            } catch (InterruptedException e) {
+                //
+            } finally {
+                lock.unlock();
+            }
+        },&quot;t1&quot;).start();
+        // t2线程
+         new Thread(() -&gt; {
+            lock.lock();
+            try {
+                // 
+                full.signal();
+                
+            } finally {
+                lock.unlock();
+            }
+       },&quot;t2&quot;).start();
+    }
+}
+</code></pre>
+<p>假设T1拿锁的时间 优于 T2执行. 如果执行满了. 就会无脑的await下去/</p>
+<p>park 操作是 当前线程将自己执行waiting , 你说难不难,看过科幻片没有就是自己冰封自己,无休止的睡眠下去. 跟sleep一样. 只是他没有指定时间. 这时候就需要一个人,就是另一个人,把他唤醒.就是unpark操作了..</p>
+<hr>
+<p><code>T1.Lock()</code>  -&gt;<code>tryaq()</code> -&gt;<code>t1拿到锁</code> -&gt;<code>T1.FULL.await()</code> -&gt; ....</p>
+<hr>
+<p><code>T2.Lock()</code>  -&gt; <code>tryaq()</code>  -&gt; 由于T1已经拿到锁了,自己只能长眠了 <code>-&gt; (睡哇睡.....)</code> -&gt; <code>(TAG1) 将自己唤醒了</code>-&gt; 继续操作, 也就是走到了 <code>T2.FULL.signal</code> .</p>
+<hr>
+<p><code>T1.FULL.await()</code> -&gt; <code>将自己加入到从condition队列</code> -&gt; <code>释放锁(TAG1)</code> -&gt;  <code>自己park(),长眠下去</code>  -&gt; (睡哇睡) -&gt; <code>(TAG2)将自己唤醒</code> -&gt; <code>第一件事检查自己是否被中端</code>   -&gt;<code>(判断head是不是自己),再尝试去获取锁</code> -&gt; <code>拿到锁自然就结束了</code>(中间过程unpark后 , 不一定完事大吉了,可能是被推到了后面,也就是继续park,具体实现在 <code>AQS.acquireQueued</code> )   ----&gt; 真正拿到锁才会继续执行......</p>
+<hr>
+<p><code>T2.FULL.signal</code> -&gt; <code>找到condition队列中的第一个节点,移除(也就是T1线程)</code> -&gt;  <code>将T1线程加入到阻塞队列中(核心方法在AQS的eq方法中,线程安全操作,所以不保证T1加入到等待队列的head部分)</code> , 执行完毕了就.</p>
+<hr>
+<p><code>T2.unlock ()</code> -&gt; <code>release()</code> -&gt; <code>释放锁(TAG2)</code>  执行完毕.</p>
+<hr>
+<p><code>T1.unlock</code>  结束完成.</p>
+<p>**拿锁的过程 : **</p>
+<blockquote>
+<p>​	拿锁过程很简单, 状态量如果可以修改, 就成功拿锁, 将AQS的占用线程设置为当前线程.</p>
+<p>​	如果状态量修改失败. 加入AQS等待队列. 然后调用park操作, 将自己睡眠.</p>
+</blockquote>
+<p><strong>释放锁的流程 :</strong></p>
+<blockquote>
+<p>​	注意这个全部操作是安全的, 也就是不需要CAS , 将AQS占用线程设置为NULL , 重置状态量 ,  然后去看等待队列, 看看里有没有人 , 有人简单, 直接把第一个人叫起来, (unpack那个人) , 就好了. 完成工作返回.</p>
+</blockquote>
+<blockquote>
+<p>​	总结 : AQS其实不难, 难的是思想, 如何安全的插入队列,在不使用锁的情况下, 如何实现公平 , 如何高效的维护队列. 这些都是难题.  当你懂了AQS 其实Condition并不难.</p>
+</blockquote>
+<h2 id="注意">注意</h2>
+<p>**注意一点就是  :  ** 就算是 <code>Object.wait()</code>和<code>Condition.await()</code>   操作他们都是需要拿到锁, 才能继续执行, 懂了吗, 加入超时也是, 都是需要再次获取锁, 这样保证了安全性.   所以这俩方式都需要操作中获取两次锁. 所以效率可能而知. 所以一般用于同步获取数据时用到.</p>
+<p>这里吐槽一下<code>FutureTask.get() 方法</code> , 竟然使用的是空转 ,这个玩意至少不比空转好吗.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#dubbo%E4%B8%AD%E4%BD%BF%E7%94%A8condition">Dubbo中使用Condition</a></li>
+<li><a href="#objectwait-%E5%92%8C-objectnotify"><code>Object.wait()</code> 和  <code>Object.notify()</code></a><br>
+*
+<ul>
+<li><a href="#%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">执行流程</a></li>
+<li><a href="#objectwaitlong-timeout"><code>Object.wait(long timeout)</code></a></li>
+<li><a href="#%E5%8E%9F%E5%9B%A0">原因</a></li>
+</ul>
+</li>
+<li><a href="#condition">Condition</a></li>
+<li><a href="#%E6%B3%A8%E6%84%8F">注意</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

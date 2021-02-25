@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JUC - Future - 背后真正秘密 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/future-bei-hou-zhen-zheng-mi-mi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JUC - Future - 背后真正秘密</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/future-bei-hou-zhen-zheng-mi-mi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">807字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">4 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-future">1. Future</h2>
+<blockquote>
+<p>A {@code Future} represents the result of an asynchronous  computation. 它是代表一个异步计算的返回结果 ,其实就是实现了一个 又返回结果的 <code>call()</code> 方法,我们自己也可以实现.</p>
+<p>主要方法 :</p>
+<ul>
+<li><strong>boolean cancel(boolean mayInterruptIfRunning);boolean isCancelled();</strong>  是否取消该任务</li>
+<li><strong>boolean isCancelled();</strong>   是否已经被取消</li>
+<li><strong>boolean isDone();</strong>   是否任务执行完</li>
+<li><strong>V get()</strong>  :  获取返回结果</li>
+<li><strong>V get(long timeout, TimeUnit unit)</strong>  :  获取返回结果 同时设置超时时间</li>
+</ul>
+</blockquote>
+<p>我们 查看他的源码其实就告诉我们如何去使用了</p>
+<pre><code class="language-java">  ExecutorService executor = Executors.newFixedThreadPool(10);
+
+        Future&lt;String&gt; future = executor.submit(new Callable&lt;String&gt;() {
+            @Override
+            public String call() throws Exception {
+                Thread.sleep(1000);
+                return Thread.currentThread().getName() + &quot;   hello world&quot;;
+            }
+        });
+
+        System.out.println(Thread.currentThread().getName() + &quot;   hello world&quot;);
+
+        try {
+            String s = future.get(2, TimeUnit.SECONDS);
+            System.out.println(s);
+            // 判断是否任务执行完
+            System.out.println(&quot;isDone : &quot;+future.isDone());
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // 超时关闭
+            executor.shutdown();
+        }
+        // 正确关闭
+        executor.shutdown();
+</code></pre>
+<h2 id="2-futuretask">2. FutureTask</h2>
+<blockquote>
+<p>The {@link FutureTask} class is an implementation of {@code Future} that  implements {@code Runnable}, and so may be executed by an {@code Executor}.</p>
+<p><code>FutureTask</code>类 是 一个实现了Runnable, Future<V> 的类  , 其实呢 <code>Future</code>对象 , 真正执行的时候也是被转换为<code>FutureTask</code> 对象,然后执行<code>execute()</code>方法 ,才执行的  . 一回事,<code>submi()</code>方法实际上调用的就是<code>execute()</code>  方法.</p>
+<p><a href="https://anthony-dong.github.io/post/executor-xian-cheng-chi/">可以看看我写的另一篇文章</a></p>
+</blockquote>
+<pre><code class="language-java">       ExecutorService executor = Executors.newSingleThreadExecutor();
+        FutureTask&lt;String&gt; task = new FutureTask&lt;&gt;(new Callable&lt;String&gt;() {
+            @Override
+            public String call() throws Exception {
+                TimeUnit.SECONDS.sleep(1);
+
+                return Thread.currentThread().getName() + &quot; : hello world&quot;;
+            }
+        });
+        //  有效的解耦
+        executor.execute(task);
+        // 主线程
+        System.out.println(Thread.currentThread().getName() + &quot;   hello world&quot;);
+        // 取消任务
+        task.cancel(true);
+        // 获取任务是否中断
+        System.out.println(task.isCancelled());
+        
+        try {
+            if (!task.isCancelled()) {
+                String s = task.get(2, TimeUnit.SECONDS);
+                System.out.println(s);
+            }
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            // 超时关闭
+            executor.shutdown();
+        }
+        executor.shutdown();
+</code></pre>
+<h2 id="3自定义实现一个-futuretask">3.自定义实现一个 FutureTask</h2>
+<p>代码注释还是很不错的可以看看   .. .. .. 应该你可以理解的 ......</p>
+<pre><code class="language-java">public class MyFutureTask&lt;T&gt; implements Runnable {
+
+    // 关键之处 
+    private  volatile int state;
+    
+    // 状态 ,没有考虑太多状态 
+    private  static final int NEW          = 0;
+    private  static final int COMPLETING   = 1;
+
+    // Callable 对象 , 其call()方法其实就是有一个返回值的方法罢了
+    private Callable&lt;T&gt; callable;
+
+
+    public MyFutureTask(Callable&lt;T&gt; callable) {
+        this.callable = callable;
+        this.state = NEW;
+    }
+
+    
+    // 结果
+    public T t;
+
+
+    // 获取结果
+    public T get() {
+
+        // 关键代码 , 死循环 啥也不做 , 就是让线程阻塞 , 利用了volatile 的特性 ,
+        // 让执行get的线程不断去拉去state状态
+        while (state &lt; COMPLETING) {
+            
+        }
+        return this.t;
+    }
+
+    /**
+     * 重写 run 方法 , 就是实现了 runnable接口 , 
+     *  执行 调用 call 方法 , 将返回值返回 . 
+     *  所以 Callable 其实就是一个 event源,只是有返回值而已 
+     */
+    @Override
+    public void run() {
+        try {
+            // 调用 call 方法 
+            Object call = callable.call();
+            // 给结果赋值
+            this.t = (T)call;
+            // 然后改变状态
+            this.state = COMPLETING;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>使用 ...  .. .</p>
+<pre><code class="language-java">public class TestMyFutureTaskDemo {
+
+
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+
+        FutureTask&lt;String&gt; task = new FutureTask&lt;&gt;(new Callable&lt;String&gt;() {
+            @Override
+            public String call() throws Exception {
+                return &quot;JDK 实现的 FutureTask&quot;;
+            }
+        });
+
+        MyFutureTask&lt;Object&gt; myTask = new MyFutureTask&lt;&gt;(new Callable&lt;Object&gt;() {
+            @Override
+            public Object call() throws Exception {
+                return &quot;我自己 实现的 FutureTask&quot;;
+            }
+        });
+
+        executor.execute(task);
+        executor.execute(myTask);
+
+
+        System.out.println(&quot;task = &quot; + task.get());
+        System.out.println(&quot;myTask.get() = &quot; + myTask.get());
+        
+        executor.shutdown();
+    }
+}
+</code></pre>
+<p>输出结果 -- 一模一样</p>
+<pre><code class="language-java">task = JDK 实现的 FutureTask
+myTask.get() = 我自己 实现的 FutureTask
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-future">1. Future</a></li>
+<li><a href="#2-futuretask">2. FutureTask</a></li>
+<li><a href="#3%E8%87%AA%E5%AE%9A%E4%B9%89%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA-futuretask">3.自定义实现一个 FutureTask</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

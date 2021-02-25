@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>设计模式 - 动态代理之拦截器 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/she-ji-mo-shi-dong-tai-dai-li-zhi-lan-jie-qi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>设计模式 - 动态代理之拦截器</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-12</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/she-ji-mo-shi-dong-tai-dai-li-zhi-lan-jie-qi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/hWcBwQyHp2o/"
+								class="tag">设计模式</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1519字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Java强大的动态代理 ,给与Java强大的活力 ,例如AOP 的实现 , 其实就是基于java的动态代理来实现的, 获取一个增强后的对象,  动态代理依靠字节码技术 , 可以运行时进行代码生成, 而不入侵原有的代码,</p>
+<p>​	例如Spring的AOP , Mybatis 的 Intercept 许多都是基于这个实现的 ,</p>
+<p>​	为什么要说拦截器 , 拦截器可以让用户拓展功能实现, 在运行关键期可以可以实现可见性 , 让开发者可以更加轻松的完成各种操作</p>
+</blockquote>
+<h2 id="1-设计一个简单的拦截器">1. 设计一个简单的拦截器</h2>
+<h3 id="1-开始">1. 开始</h3>
+<p>我们简易设计了一个拦截器对象</p>
+<pre><code class="language-java">public interface Interceptor {
+
+    /**
+     * 方法参数
+     *
+     * @param args
+     */
+    void before(Object[] args);
+
+
+    /**
+     * 方法调用完成后
+     *
+     * @param result 方法的返回结果
+     * @return Object 增强后的结果
+     */
+    Object after(Object result);
+
+    /**
+     * 执行出现异常
+     *
+     * @param e 异常
+     */
+    void error(Exception e);
+}
+</code></pre>
+<p>设计一个代理类</p>
+<pre><code class="language-java">public class MyProxy implements InvocationHandler {
+	// 拦截器对象
+    private final Interceptor interceptor;
+
+    // 增强的类
+    private final Object target;
+
+    public MyProxy(Interceptor interceptor, Object target) {
+        this.interceptor = interceptor;
+        this.target = target;
+    }
+	
+    // 返回一个代理对象
+    public static Object getInstance(Object target, Interceptor interceptor) {
+        MyProxy proxy = new MyProxy(interceptor, target);
+        return Proxy.newProxyInstance(proxy.target.getClass().getClassLoader(), proxy.target.getClass().getInterfaces(),
+                proxy);
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        Object methodResult = null;
+        Object proxyResult = null;
+        try {
+            // 事前
+            interceptor.before(args);
+            methodResult = method.invoke(target, args);
+        } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException e) {
+            // 异常
+            interceptor.error(e);
+        } finally {
+            //事后
+            proxyResult = interceptor.after(methodResult);
+        }
+        return proxyResult;
+    }
+}
+
+</code></pre>
+<p>实现接口</p>
+<pre><code class="language-java">public interface IEchoService {
+
+    String echo(String msg);
+
+}
+</code></pre>
+<p>我们的实现方法</p>
+<pre><code class="language-java">public class EchoServiceImpl implements IEchoService {
+
+    @Override
+    public String echo(String msg) {
+        return null;
+    }
+}
+</code></pre>
+<p>我们的测试类 :</p>
+<pre><code class="language-java">public class Demo {
+    public static void main(String[] args) {
+
+        IEchoService echoService = new EchoServiceImpl();
+
+        IEchoService instance = (IEchoService) MyProxy.getInstance(echoService, new Interceptor() {
+
+            @Override
+            public void before(Object[] args) {
+                for (Object arg : args) {
+                    System.out.printf(&quot;args : %s \t&quot;, arg);
+                }
+                System.out.printf(&quot;\r\n&quot;);
+            }
+            @Override
+            public Object after(Object result) {
+                if (result == null) {
+                    return &quot;hello world&quot;;
+                }
+                return result;
+            }
+
+            @Override
+            public void error(Exception e) {
+                System.out.println(&quot;exception : &quot;+(e == null ? &quot;null&quot; : e));
+            }
+        });
+
+        String result = instance.echo(&quot;tom&quot;);
+        System.out.println(result);
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">args : tom 	
+hello world
+</code></pre>
+<h3 id="2-总结">2. 总结</h3>
+<p>我们设计的有什么优点和缺点 :</p>
+<p>优点 : 可拓展性很强 , 对于一个方法的参数和返回值,异常等都进行了拓展</p>
+<p>缺点 ; 没有泛型支持 , 对于方法没有进行一个抽象封装 , Java默认提供的几个参数我们需要加以封装变得更加实用性 , 拓展不是用户管理而是我们管理 ,我们需要进一步优化 ,</p>
+<h2 id="2-继续改进">2. 继续改进</h2>
+<h3 id="1-主体改造部分">1. 主体改造部分</h3>
+<h4 id="1-设计一个-invocation-类">1. 设计一个 Invocation 类</h4>
+<pre><code class="language-java">public class Invocation&lt;T&gt; {
+
+    /**
+     * 增强的对象
+     */
+    private final T target;
+    /**
+     * 方法对象
+     */
+    private final Method method;
+
+    /**
+     * 方法参数
+     */
+    private final Object[] args;
+    
+    
+    public Invocation(T target, Method method, Object[] args) {
+        this.target = target;
+        this.method = method;
+        this.args = args;
+    }
+
+    public T getTarget() {
+        return target;
+    }
+
+    public Method getMethod() {
+        return method;
+    }
+
+    public Object[] getArgs() {
+        return args;
+    }
+
+    /**
+     * 如果你不想修改可以 .... ,或者 try - catch 都可以
+     * @return
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
+    public Object proceed() throws InvocationTargetException, IllegalAccessException {
+        return method.invoke(target, args);
+    }
+}
+</code></pre>
+<h4 id="2-接口类">2.  接口类</h4>
+<pre><code class="language-java">public interface Interceptor&lt;T&gt; {
+    Object intercept(Invocation&lt;T&gt; invocation) throws Throwable;
+}
+</code></pre>
+<h4 id="3-代理实现类">3. 代理实现类</h4>
+<pre><code class="language-java">package com.intercept.java;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
+
+/**
+ * TODO
+ *
+ * @date:2019/12/12 13:10
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+
+public class MyProxy&lt;T&gt; implements InvocationHandler {
+	
+    private final Interceptor&lt;T&gt; interceptor;
+    private final T target;
+
+    // 私有是因为不能开发者进行实例化
+    private MyProxy(Interceptor&lt;T&gt; interceptor, T target) {
+        this.interceptor = interceptor;
+        this.target = target;
+    }
+
+    // 写成V 是因为让大家区分开 静态方法的泛型和非静态的不同(类声明的T) , 
+	public static &lt;V&gt; V getInstance(final V target, final Interceptor&lt;V&gt; interceptor) {
+        // 不是接口直接返回
+        Class&lt;?&gt;[] interfaces = target.getClass().getInterfaces();
+        if (interfaces == null) {
+            return target;
+        }
+
+        final MyProxy&lt;V&gt; proxy = new MyProxy&lt;V&gt;(interceptor, target);
+        return (V) Proxy.newProxyInstance(proxy.target.getClass().getClassLoader(), proxy.target.getClass().getInterfaces(),proxy);
+    }
+
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        return interceptor.intercept(new Invocation&lt;T&gt;(target, method, args));
+    }
+}
+</code></pre>
+<h3 id="2-简单使用">2. 简单使用</h3>
+<p>接口</p>
+<pre><code class="language-java">public interface EchoService { void echo(String msg);}
+</code></pre>
+<p>接口实现</p>
+<pre><code class="language-java">public class EchoServiceImpl implements EchoService{
+
+    @Override
+    public void echo(String msg) {
+        // 模拟异常
+        int x = 1 / 0;
+        // 输出
+        System.out.println(msg);
+    }
+}
+</code></pre>
+<p>测试类 :</p>
+<pre><code class="language-java">public class Demo {
+    public static void main(String[] args) {
+        EchoService echoService = new EchoServiceImpl();
+
+        Interceptor&lt;EchoService&gt; interceptor = new Interceptor&lt;EchoService&gt;() {
+            @Override
+            public Object intercept(Invocation&lt;EchoService&gt; invocation) throws Throwable {
+                try {
+                    invocation.getTarget().echo((String) invocation.getArgs()[0]);
+                } catch (Exception e) {
+                    System.out.println(&quot;异常信息 : &quot; + e.getMessage());
+                }
+                return null;
+            }
+        };
+
+        EchoService proxyEchoService = MyProxy.&lt;EchoService&gt;getInstance(echoService, interceptor);
+        proxyEchoService.echo(&quot;hello&quot;);
+    }
+}
+</code></pre>
+<p>结果 :</p>
+<pre><code class="language-java">异常信息 : / by zero
+</code></pre>
+<h3 id="3-总结">3. 总结</h3>
+<p>我们发现如果接口有多个实现类, 如果我们的拦截器是面向方法实现的改如何做呢  ?</p>
+<p>比如我这个拦截器只拦截这个方法, 其他方法不拦截 , 那么我们改如何做  ?</p>
+<p>其实很简单 ,当我们生成代理对象的时候对于<code>invoke</code> 那里进行判断就行了 , 我简单实现一个例子</p>
+<p>接口有两个方法</p>
+<pre><code class="language-java">public interface EchoService {
+    void echo(String msg);
+
+    void say(String msg);
+}
+</code></pre>
+<p>接口实现类 :</p>
+<pre><code class="language-java">public class EchoServiceImpl implements EchoService {
+
+    @Override
+    public void echo(String msg) {
+        System.out.println(&quot;echo : &quot; + msg);
+    }
+
+    @Override
+    public void say(String msg) {
+        System.out.println(&quot;say : &quot; + msg);
+    }
+}
+</code></pre>
+<p>代理类 :  修改这里 <code>MyProxy&lt;T&gt; #invoke</code></p>
+<pre><code class="language-java">@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+
+    if (method.getName().equals(&quot;echo&quot;)) {
+        return method.invoke(target, args);
+    }
+
+    return interceptor.intercept(new Invocation&lt;T&gt;(target, method, args));
+}
+</code></pre>
+<p>测试类 ;</p>
+<pre><code class="language-java">public class Demo {
+    public static void main(String[] args) {
+
+        EchoService echoService = new EchoServiceImpl();
+
+        Interceptor&lt;EchoService&gt; interceptor = new Interceptor&lt;EchoService&gt;() {
+            @Override
+            public Object intercept(Invocation&lt;EchoService&gt; invocation) throws Throwable {
+                System.out.println(&quot;time  : &quot; + new Date());
+                return invocation.proceed();
+            }
+        };
+        EchoService proxyEchoService = MyProxy.&lt;EchoService&gt;getInstance(echoService, interceptor);
+
+        System.out.println(&quot;=========echo===========&quot;);
+        proxyEchoService.echo(&quot;hello&quot;);
+
+        System.out.println(&quot;=========say===========&quot;);
+        proxyEchoService.say(&quot;hello world&quot;);
+    }
+}
+
+</code></pre>
+<p>执行结果 :</p>
+<pre><code class="language-java">=========echo===========
+echo : hello
+=========say===========
+time  : Thu Dec 12 14:41:53 CST 2019
+say : hello world
+</code></pre>
+<p>发现只增强了 say</p>
+<h3 id="4-再次总结">4. 再次总结</h3>
+<p>我整个是基于 Mybatis的拦截器实现的 ,基本上和他的思想是一样的 , 我的<code>MyProxy</code>类对应的就是他的 <code>Plugin</code> 类</p>
+<p>我的 <code>Interceptor</code> 和 <code>Invocation</code> 跟他的一样  , 所以颗粒度的降低需要再次细化,比如注解之类的.... 所以<code>Java</code>的强大还是很厉害的</p>
+<h2 id="3-总结-2">3. 总结</h2>
+<p>其实拦截器无法就是动态代理去实现, 他可以实现无入侵式的进行方法的拦截, 增强之类的,</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%AE%80%E5%8D%95%E7%9A%84%E6%8B%A6%E6%88%AA%E5%99%A8">1. 设计一个简单的拦截器</a>
+<ul>
+<li><a href="#1-%E5%BC%80%E5%A7%8B">1. 开始</a></li>
+<li><a href="#2-%E6%80%BB%E7%BB%93">2. 总结</a></li>
+</ul>
+</li>
+<li><a href="#2-%E7%BB%A7%E7%BB%AD%E6%94%B9%E8%BF%9B">2. 继续改进</a>
+<ul>
+<li><a href="#1-%E4%B8%BB%E4%BD%93%E6%94%B9%E9%80%A0%E9%83%A8%E5%88%86">1. 主体改造部分</a>
+<ul>
+<li><a href="#1-%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA-invocation-%E7%B1%BB">1. 设计一个 Invocation 类</a></li>
+<li><a href="#2-%E6%8E%A5%E5%8F%A3%E7%B1%BB">2.  接口类</a></li>
+<li><a href="#3-%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E7%B1%BB">3. 代理实现类</a></li>
+</ul>
+</li>
+<li><a href="#2-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8">2. 简单使用</a></li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+<li><a href="#4-%E5%86%8D%E6%AC%A1%E6%80%BB%E7%BB%93">4. 再次总结</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%80%BB%E7%BB%93-2">3. 总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

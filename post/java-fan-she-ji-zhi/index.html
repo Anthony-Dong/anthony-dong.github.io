@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java - 反射机制 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/java-fan-she-ji-zhi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java - 反射机制</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/java-fan-she-ji-zhi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2432字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">12 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	java反射绝对是一个很强大的功能 ,他不需要使用 new 关键字显示的申明来实例化一个对象, 而是通过 <code>java.lang.reflect</code> 的一些包进行控制</p>
+<p>​	其实绝大多数框架实现都是拿到类对象(字节码)首先, 然后可能是根据动态代理或者其他去实现一个真正的对象</p>
+</blockquote>
+<p><code>Class , Method , Field , Annotation ,Constructor, Unsafe ,Classloader</code> 基本就这几个类, 加上动态代理的 <code>Proxy</code>类 , 很简单的 , 其实就是玩字节码 , 懂了吧</p>
+<h2 id="1-classforname-与-classloaderloadclass">1. Class.forName 与 ClassLoader().loadClass</h2>
+<pre><code class="language-java">public class TestClass {
+    static {
+        System.out.println(&quot;调用了静态块&quot;);
+    }
+
+    public TestClass() {
+        System.out.println(&quot;调用了构造方法&quot;);
+    }
+}
+</code></pre>
+<p>测试类一 :</p>
+<pre><code class="language-java">public static void main(String[] args) throws Exception {
+    System.out.println(&quot;========Class.forName=============&quot;);
+    Class.forName(&quot;com.javase.unsafe.TestClass&quot;);
+}
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-java">调用了静态块
+</code></pre>
+<p>测试类二 :</p>
+<pre><code class="language-java">public static void main(String[] args) throws Exception {
+    System.out.println(&quot;========ClassLoader().loadClass=============&quot;);
+    Thread.currentThread().getContextClassLoader().loadClass(&quot;com.javase.unsafe.TestClass&quot;);
+}
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-java">========ClassLoader().loadClass=============
+</code></pre>
+<p>我们发现 <code>java.lang.Class#forName(java.lang.String)</code>这个方法调用的时候会加载类的静态代码块 , 而 <code>java.lang.ClassLoader#loadClass(java.lang.String)</code> 在加载类的时候不会加载类的静态代码块, 所以需要注意一下.</p>
+<p>但是两个代码如果都执行<code>java.lang.Class#newInstance</code>,我们发现先出现的都会去加载静态代码块 ,</p>
+<h2 id="2-unsafe-类">2. Unsafe 类</h2>
+<blockquote>
+<p>​	Unsafe 实例化对象是<code>不执行构造方法</code> , 注意这一点</p>
+</blockquote>
+<pre><code class="language-java">public static void main(String[] args) throws Exception {
+    Unsafe unsafe = getUnsafe();
+    TestClass o = (TestClass) unsafe.allocateInstance(TestClass.class);
+    System.out.println(&quot;=====================================&quot;);
+    new TestClass();
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">调用了静态块
+==============
+调用了构造方法
+</code></pre>
+<p>如何实例化Unsafe类 ,首先他是一个final, 而且构造方法私有化 , 显然我们无法实例化 , 但是有一个细节就是他又一个<code>私有</code>的静态变量 就是他自己,  如果我们调用 <code>Unsafe.getUnsafe()</code> 方法的时候会出现因为类加载器的原因报错,</p>
+<pre><code class="language-java">public static Unsafe getUnsafe() throws Exception {
+    Field filed = Unsafe.class.getDeclaredField(&quot;theUnsafe&quot;);
+    // 私有成员变量,都需要设置这个
+    filed.setAccessible(true);
+    // 类变量不需要输入参数
+    return (Unsafe) filed.get(null);
+}
+</code></pre>
+<p>其实很简单获取类然后获取字段,注意私有的字段必须用<code>java.lang.Class#getDeclaredField</code> , 像<code>java.lang.Class#getField</code> 他是只能访问public的字段的, 所以我们获取私有后 ,然后就是设置可访问 , 因为私有吗, 所以成功获取了 , 所以获取私有的静态变量需要两部 一步就是获取字段, 然后设置访问权 , <strong>非静态字段不行注意 , 因为他不属于类对象</strong></p>
+<h2 id="3-field">3. Field</h2>
+<p>java中的 <code>Field</code> 类 , 他可以获取字段所有的对象 , 使用很简单</p>
+<h4 id="获取值">获取值</h4>
+<p><code>public Object get(Object obj)</code>   , 参数是当前实例化对象</p>
+<pre><code class="language-java">public class TestField {
+
+    private int num;
+
+    public TestField(int num) {
+        this.num = num;
+    }
+
+    public static void main(String[] args) throws Exception {
+        // 1.实例化对象
+        final TestField target = new TestField(10);
+        // 2. 通过类的字节码拿到对应的Field对象
+        final Field field = TestField.class.getDeclaredField(&quot;num&quot;);
+        // 被private修饰需要设置可见性
+        field.setAccessible(true);
+        
+        // 3. 通过get(target) 传入我们实例化的对象,拿到对应的对象
+        Object o = field.get(target);
+        
+        // 
+        System.out.println(&quot;num : &quot;+o); // 输出 : 10
+    }
+}
+</code></pre>
+<h4 id="更改值">更改值 :</h4>
+<p><code>public void set(Object obj, Object value)</code>  , 参数一是当前对象, 参数二是修改的数值</p>
+<pre><code class="language-java">public class TestField {
+
+    private int num;
+
+    public TestField(int num) {
+        this.num = num;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public static void main(String[] args) throws Exception {
+        // 1.实例化对象
+        final TestField target = new TestField(10);
+        // 2. 通过类的字节码拿到对应的Field对象
+        final Field field = TestField.class.getDeclaredField(&quot;num&quot;);
+
+        // 3. 通过get(target) 传入我们实例化的对象,拿到对应的对象
+        Object o = field.get(target);
+        System.out.println(&quot;获取当前 num : &quot;+o); //输出 : 10
+
+
+        // 基于 Unsafe类进行设置的
+        field.set(target, 20);
+
+        System.out.println(&quot;更改后的 num : &quot;+target.num);  // 输出 : 20
+    }
+}
+
+</code></pre>
+<h4 id="获取类对象的静态字段">获取类对象的静态字段</h4>
+<p>测试对象</p>
+<pre><code class="language-java">public class TestField {
+
+    private static int snum = 100;
+}
+</code></pre>
+<p>测试用例</p>
+<pre><code class="language-java">public static void main(String[] args) throws Exception{
+
+    // 获取静态字段
+    final Field field = TestField.class.getDeclaredField(&quot;snum&quot;);
+
+    // 必须设置可见性, 因为是private修饰
+    field.setAccessible(true);
+
+    // 他属于类对象, 所以设置为null
+    Object o = field.get(null);
+
+    System.out.println(o);  // 输出 : 100
+}
+</code></pre>
+<h2 id="4-method对象">4. Method对象</h2>
+<p><code>method. invoke(obj,arg)</code>基本就是他的核心精髓了</p>
+<h2 id="5-简单的字节码扫描">5. 简单的字节码扫描</h2>
+<pre><code class="language-java">public class Main {
+
+    public static void main(String[] args) throws Exception {
+        Predicate&lt;Class&lt;?&gt;&gt; filter = new Predicate&lt;Class&lt;?&gt;&gt;() {
+            @Override
+            public boolean test(Class&lt;?&gt; aClass) {
+                return !aClass.isAnnotation();
+            }
+        };
+
+		// 存放类对象
+        Set&lt;Class&lt;?&gt;&gt; classSet = new HashSet&lt;&gt;();
+
+        String packName = &quot;com.javase.spring&quot;;
+
+        String packUrl = packName.replace('.', '/');
+        
+        // spring的ClassPathResource , 他将简单的封装了都,下面我的方法也是差不多实现了找个
+        ClassPathResource resource = new ClassPathResource(packUrl);
+	
+        // 获取文件
+        File file = resource.getFile();
+
+        // 是否是文件夹
+        if (file.isDirectory()) {
+            // 获取文件 , 可能需要递归 .... 真麻烦我简单除暴
+            File[] files = file.listFiles();
+            for (File file1 : files) {
+                String name = file1.getName();
+                String className = packName + &quot;.&quot; + name.substring(0, name.length() - 6);
+                // 获取className ,最终目的
+                Class&lt;?&gt; aClass = Class.forName(className);
+                // 过滤
+                if (filter.test(aClass)) {
+                    classSet.add(Class.forName(className));
+                }
+            }
+        }
+
+        classSet.forEach((e) -&gt; {
+                System.out.println(&quot;Class : &quot; + e);
+        });
+    }
+
+    private static void test() throws IOException {
+        String packName = &quot;com.javase.spring&quot;;
+
+        String packUrl = packName.replace('.', '/');
+
+        Enumeration&lt;URL&gt; resources = Thread.currentThread().getContextClassLoader().getResources(packUrl);
+
+        while (resources.hasMoreElements()) {
+            URL url = resources.nextElement();
+
+            Assert.isTrue(url.getProtocol().equalsIgnoreCase(&quot;file&quot;), &quot;必须是文件系统&quot;);
+
+            String filePath = URLDecoder.decode(url.getFile(), &quot;UTF-8&quot;);
+
+            File file = new File(filePath);
+            
+            /// .......就和spring的一样了
+        }
+    }
+}
+</code></pre>
+<h2 id="6-字节码扫描工具类">6. 字节码扫描工具类</h2>
+<pre><code class="language-java">import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
+import java.net.JarURLConnection;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Enumeration;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
+/**
+ * 类扫描器
+ * 
+ * @author kingston
+ */
+public class ClassScanner {
+
+	private static Logger logger = LoggerFactory.getLogger(ClassScanner.class);
+
+	/**
+	 * 默认过滤器（无实现）
+	 */
+	private final static Predicate&lt;Class&lt;?&gt;&gt; EMPTY_FILTER = clazz -&gt; true;
+
+	/**
+	 * 扫描目录下的所有class文件
+	 * 
+	 * @param scanPackage 搜索的包根路径
+	 * @return
+	 */
+	public static Set&lt;Class&lt;?&gt;&gt; getClasses(String scanPackage) {
+		return getClasses(scanPackage, EMPTY_FILTER);
+	}
+
+	/**
+	 * 返回所有的子类（不包括抽象类）
+	 * 
+	 * @param scanPackage 搜索的包根路径
+	 * @param parent
+	 * @return
+	 */
+	public static Set&lt;Class&lt;?&gt;&gt; listAllSubclasses(String scanPackage, Class&lt;?&gt; parent) {
+		return getClasses(scanPackage, (clazz) -&gt; {
+			return parent.isAssignableFrom(clazz) &amp;&amp; !Modifier.isAbstract(clazz.getModifiers());
+		});
+	}
+
+	/**
+	 * 返回所有带制定注解的class列表
+	 * 
+	 * @param scanPackage 搜索的包根路径
+	 * @param annotation
+	 * @return
+	 */
+	public static &lt;A extends Annotation&gt; Set&lt;Class&lt;?&gt;&gt; listClassesWithAnnotation(String scanPackage,
+			Class&lt;A&gt; annotation) {
+		return getClasses(scanPackage, (clazz) -&gt; {
+			return clazz.getAnnotation(annotation) != null;
+		});
+	}
+
+	/**
+	 * 扫描目录下的所有class文件
+	 * 
+	 * @param pack   包路径
+	 * @param filter 自定义类过滤器
+	 * @return
+	 */
+	public static Set&lt;Class&lt;?&gt;&gt; getClasses(String pack, Predicate&lt;Class&lt;?&gt;&gt; filter) {
+		Set&lt;Class&lt;?&gt;&gt; result = new LinkedHashSet&lt;Class&lt;?&gt;&gt;();
+		// 是否循环迭代
+		boolean recursive = true;
+		// 获取包的名字 并进行替换
+		String packageName = pack;
+		String packageDirName = packageName.replace('.', '/');
+		// 定义一个枚举的集合 并进行循环来处理这个目录下的things
+		Enumeration&lt;URL&gt; dirs;
+		try {
+			dirs = Thread.currentThread().getContextClassLoader().getResources(packageDirName);
+			// 循环迭代下去
+			while (dirs.hasMoreElements()) {
+				// 获取下一个元素
+				URL url = dirs.nextElement();
+				// 得到协议的名称
+				String protocol = url.getProtocol();
+				// 如果是以文件的形式保存在服务器上
+				if (&quot;file&quot;.equals(protocol)) {
+					// 获取包的物理路径
+					String filePath = URLDecoder.decode(url.getFile(), &quot;UTF-8&quot;);
+					// 以文件的方式扫描整个包下的文件 并添加到集合中
+					findAndAddClassesInPackageByFile(packageName, filePath, recursive, result, filter);
+				} else if (&quot;jar&quot;.equals(protocol)) {
+					// 如果是jar包文件
+					Set&lt;Class&lt;?&gt;&gt; jarClasses = findClassFromJar(url, packageName, packageDirName, recursive, filter);
+					result.addAll(jarClasses);
+				}
+			}
+		} catch (IOException e) {
+			logger.error(&quot;&quot;, e);
+		}
+
+		return result;
+	}
+
+	private static Set&lt;Class&lt;?&gt;&gt; findClassFromJar(URL url, String packageName, String packageDirName, boolean recursive,
+			Predicate&lt;Class&lt;?&gt;&gt; filter) {
+		Set&lt;Class&lt;?&gt;&gt; result = new LinkedHashSet&lt;Class&lt;?&gt;&gt;();
+		try {
+			// 获取jar
+			JarFile jar = ((JarURLConnection) url.openConnection()).getJarFile();
+			// 从此jar包 得到一个枚举类
+			Enumeration&lt;JarEntry&gt; entries = jar.entries();
+			// 同样的进行循环迭代
+			while (entries.hasMoreElements()) {
+				// 获取jar里的一个实体 可以是目录 和一些jar包里的其他文件 如META-INF等文件
+				JarEntry entry = entries.nextElement();
+				String name = entry.getName();
+				// 如果是以/开头的
+				if (name.charAt(0) == '/') {
+					// 获取后面的字符串
+					name = name.substring(1);
+				}
+				// 如果前半部分和定义的包名相同
+				if (name.startsWith(packageDirName)) {
+					int idx = name.lastIndexOf('/');
+					// 如果以&quot;/&quot;结尾 是一个包
+					if (idx != -1) {
+						// 获取包名 把&quot;/&quot;替换成&quot;.&quot;
+						packageName = name.substring(0, idx).replace('/', '.');
+					}
+					// 如果可以迭代下去 并且是一个包
+					if ((idx != -1) || recursive) {
+						// 如果是一个.class文件 而且不是目录
+						if (name.endsWith(&quot;.class&quot;) &amp;&amp; !entry.isDirectory()) {
+							// 去掉后面的&quot;.class&quot; 获取真正的类名
+							String className = name.substring(packageName.length() + 1, name.length() - 6);
+							try {
+								// 添加到classes
+								Class&lt;?&gt; c = Class.forName(packageName + '.' + className);
+								if (filter.test(c)) {
+									result.add(c);
+								}
+							} catch (ClassNotFoundException e) {
+								logger.error(&quot;&quot;, e);  
+							}
+						}
+					}
+				}
+			}
+		} catch (IOException e) {
+			logger.error(&quot;&quot;, e);
+		}
+		return result;
+	}
+
+	private static void findAndAddClassesInPackageByFile(String packageName, String packagePath,
+			final boolean recursive, Set&lt;Class&lt;?&gt;&gt; classes, Predicate&lt;Class&lt;?&gt;&gt; filter) {
+		// 获取此包的目录 建立一个File
+		File dir = new File(packagePath);
+		// 如果不存在或者 也不是目录就直接返回
+		if (!dir.exists() || !dir.isDirectory()) {
+			// log.warn(&quot;用户定义包名 &quot; + packageName + &quot; 下没有任何文件&quot;);
+			return;
+		}
+		// 如果存在 就获取包下的所有文件 包括目录
+		File[] dirfiles = dir.listFiles(new FileFilter() {
+			// 自定义过滤规则 如果可以循环(包含子目录) 或则是以.class结尾的文件(编译好的java类文件)
+			@Override
+			public boolean accept(File file) {
+				return (recursive &amp;&amp; file.isDirectory()) || (file.getName().endsWith(&quot;.class&quot;));
+			}
+		});
+		// 循环所有文件
+		for (File file : dirfiles) {
+			// 如果是目录 则继续扫描
+			if (file.isDirectory()) {
+				findAndAddClassesInPackageByFile(packageName + &quot;.&quot; + file.getName(), file.getAbsolutePath(), recursive,
+						classes, filter);
+			} else {
+				// 如果是java类文件 去掉后面的.class 只留下类名
+				String className = file.getName().substring(0, file.getName().length() - 6);
+				try {
+					// 添加到集合中去
+					Class&lt;?&gt; clazz = Thread.currentThread().getContextClassLoader()
+							.loadClass(packageName + '.' + className);
+					if (filter.test(clazz)) {
+						classes.add(clazz);
+					}
+				} catch (ClassNotFoundException e) {
+					logger.error(&quot;&quot;, e);  
+				}
+			}
+		}
+	}
+
+}
+</code></pre>
+<p>写的还不错奥 , 基本功能如下</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-15/af5d7c56-8db3-4d7a-a89e-ee457b742c7d.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-classforname-%E4%B8%8E-classloaderloadclass">1. Class.forName 与 ClassLoader().loadClass</a></li>
+<li><a href="#2-unsafe-%E7%B1%BB">2. Unsafe 类</a></li>
+<li><a href="#3-field">3. Field</a><br>
+*
+<ul>
+<li><a href="#%E8%8E%B7%E5%8F%96%E5%80%BC">获取值</a></li>
+<li><a href="#%E6%9B%B4%E6%94%B9%E5%80%BC">更改值 :</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96%E7%B1%BB%E5%AF%B9%E8%B1%A1%E7%9A%84%E9%9D%99%E6%80%81%E5%AD%97%E6%AE%B5">获取类对象的静态字段</a></li>
+</ul>
+</li>
+<li><a href="#4-method%E5%AF%B9%E8%B1%A1">4. Method对象</a></li>
+<li><a href="#5-%E7%AE%80%E5%8D%95%E7%9A%84%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%AB%E6%8F%8F">5. 简单的字节码扫描</a></li>
+<li><a href="#6-%E5%AD%97%E8%8A%82%E7%A0%81%E6%89%AB%E6%8F%8F%E5%B7%A5%E5%85%B7%E7%B1%BB">6. 字节码扫描工具类</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JavaScript - 原型链 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/javascript-xue-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JavaScript - 原型链</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/javascript-xue-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/K-vGzzsL5u_/"
+								class="tag">前端</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2056字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1学习js第一关认清楚prototype-_-proto-_与constructor">1.学习js第一关(认清楚prototype、_  <em>proto</em> _与constructor)</h2>
+<blockquote>
+<p>这 三者 之间有着怎么样的关系</p>
+<ol>
+<li>prototype 记住它是函数特有的,当我们输出一个prototype 时发现他由constructor和proto(浏览器特有的,它是给开发者准备的) 和一些成员变量 组成</li>
+<li><strong>proto</strong> 是原型链,是由<strong>一个对象指向一个对象</strong>，即指向它们的原型对象（也可以理解为父对象）,它的作用就是当访问一个对象的属性时，如果该对象内部不存在这个属性，那么就会去它的__proto__属性所指向的那个对象（可以理解为父对象）里找，如果父对象也不存在这个属性，则继续往父对象的__proto__属性所指向的那个对象（可以理解为爷爷对象）里找.  所以称之为原型链</li>
+<li>每个实例对象（ object ）都有一个私有属性（称之为 <strong>proto</strong> ）指向它的构造函数的原型对像（<strong>prototype</strong> ）</li>
+<li>constructor 是什么呢,它是对象特有的,它是从<strong>一个对象指向一个函数</strong>,<strong>指向该对象的构造函数</strong></li>
+<li>还有this关键字的问题,当我们实例化一个对象时<code>let o1 = new object1();</code> 此时 函数体本身的this指向的是 o1这个对象 ;</li>
+<li>我换一句更精辟的  么加this的就是java中的静态方法和常量,</li>
+<li>在 ES2015/ES6 中引入了 <code>class</code> 关键字，但那只是语法糖，JavaScript 仍然是基于原型的</li>
+<li>我在论坛看的 <a href="https://blog.csdn.net/cc18868876837/article/details/81211729">三者关系讲解链接</a></li>
+<li>我们写个demo来验证一下</li>
+</ol>
+</blockquote>
+<h3 id="让我们用图来加深理解">让我们用图来加深理解</h3>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-06/cd23f2be-550e-45cf-9ad0-48b0b2a26a0c.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><strong>当你真正读懂上面的图 你会发现 你就理解了 三者之间的关系了</strong>    <strong>然后看我的demo 吧</strong></p>
+<pre><code class="language-js">/**
+ * function Foo() {...};
+ * let f1 = new Foo();
+ 	这两段代码背后的东西是什么
+ 	
+ 	var f1 = new Object();
+    f1.__proto__ = Foo.prototype;
+    Foo.call(o);
+ 	
+ 	创建一个构造函数Foo()，并用new关键字实例化该构造函数得到一个实例化对象f1,从而在内存中分配一个实例对象。这里稍微补充一下new操作符将函数作为构造器进行调用时的过程：函数被调用，然后新创建一个对象，并且成了函数的上下文（也就是此时  函数内部的this是指向该新创建的对象(关键点,记住)  ，这意味着我们可以在构造器函数内部通过this参数初始化值），最后返回该新对象的引用
+	
+	当我们试着用 原生的 对象去写的时候 会关注很多细节 ,如果 你用es6 的新语法 细节几乎没有
+	我会在第三章 讲解 es6 中prototype的用法
+ * 
+ */
+
+let object1 = function () {
+    this.a = 'a';
+    this.b = 'b';
+    object1.prototype.c = 'c'
+    this.fun = function () {
+        console.log('this.a :', this.a);
+    }
+    fun2 = function (params) {
+        console.log('hhhhhhhhhh');
+    }
+    console.log('this :', this);
+    return this
+}
+
+//  外部如何修改object1 prototype的属性 
+object1.prototype = {
+    constructor: object1,
+    d: 'd',
+}
+
+object1.prototype.foo = &quot;bar&quot;;
+//或者可以 
+
+console.log('------------函数体中的this关键字------------------');
+
+object1()
+
+console.log('--------------对象的this关键字----------------');
+
+let o1 = new object1();
+
+console.log('o1 :', o1);
+
+console.log('------------开始我的表演------------------');
+
+
+
+//  1. 比较是不类型一致 ?  为什么为 true
+console.log('object :', o1 instanceof object1);
+/**
+ * 每个实例对象（ object ）都有一个私有属性（称之为 __proto__ ）指向它的构造函数的原型对像（**prototype** ）
+ * A instanceof  B内部原理,其实  确实如此 o1的构造函数是谁 是 object1() , 所以 o1的 proto 会指向 object1()的原型对象,即  object1.prototype
+ * var L = A.__proto__;
+    var R = B.prototype;
+    if(L === R)
+    return true;
+ * 
+ */
+
+
+
+
+//所以我们的结论是对的  这俩相等 都是 object1的构造函数 其实 等于  object1 输出是一样的
+console.log('object1.prototype.constructor :', object1.prototype.constructor);
+console.log('o1.constructor :', o1.constructor);
+
+
+
+console.log('o1.constructor.prototype :', o1.constructor.prototype);
+console.log('object1.prototype :', object1.prototype);
+
+
+
+
+console.log('object1 :', object1);
+
+
+
+console.log('object1() :', object1());
+
+console.log('Function() :', Function());
+
+// 这里能使用时因为 我object1() 返回了this 他指的是全文;所以可以直接使用;如果你没有返回this则报错
+let oo = object1().fun2
+oo()
+
+object1().fun2()
+
+console.log('object1().a :', object1().a);
+
+console.log('----------最下面测试------------------ :');
+
+console.log('o1 :', o1.a);
+
+o1.fun();
+
+
+console.log('c :', o1.c);
+console.log('d :', o1.d);
+o1.a = 6
+
+console.log('o1.a :', o1.a);
+
+
+注意 :
+
+1. doSomething.prototype.name = &quot;name&quot;;
+
+2. doSomething.prototype = {
+    constructor: doSomething,
+    d: 'd',
+}
+3. let doSome=new doSomething()
+	2 称为 构造器创建对象法; ;由于的在 doSome 被实例化时，doSome.[[Prototype]] 指向doSomething.prototype。
+
+这俩 不能同时使用 如果 我用了 1 那么我可以写多个都么问题;但是如果我用了 2,那么我1的就失去效果了;2前面全部的 1 都失去效果;因为 什么呢 因为此时构造函数发生了变化;我 2的构造函数还是我原来函数的;所以 两者并不推荐一起使用;使用也切记 2 在 1 前面
+
+</code></pre>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-06/795a166d-2fc8-4319-9bbf-0053e95b045b.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="2-apply-call-bind的区别">2. apply call  bind的区别</h2>
+<pre><code class="language-js">/**
+ * 什么是 apply call 以及 bind
+ */
+
+/**
+ * 先看call函数  其中当我 输入 一个对象时就改变了this的指向; 第一个参数是 所要绑定的对象
+ * 第二个参数是 ...ages  他是函数的参数,由原函数控制
+ */
+
+function fun(arg1, arg2) {
+    console.log('arg1 :', arg1);
+    console.log('arg2 :', arg2);
+    console.log('this :', this);
+}
+
+fun('name')
+
+console.log('this is call :', 'this is call');
+fun.call({
+    call: 'call'
+}, 'call1', 'call2', 'call3')
+
+
+/**
+ * apply  和 call相同 ,只是第二个参数是一个数组,数组里面是原函数的 参数
+ */
+
+console.log('this is appliy :', 'this is appliy');
+fun.apply({
+    apply: 'apply'
+}, ['apply', 'apply2', 'apply3'])
+
+/**
+ * 然后我们看看bind  我们发现 bind 和 call 唯一的区别就是 他其实是重新定义了一个 函数;
+ * 其实 fun2就是个新的函数,我个人使这么理解,当我们使用call和apply时他无返回值; 而bind返回一个原对象
+ */
+console.log('this is bind :', 'this is bind');
+let fun2 = fun.bind({
+    bind: 'bind'
+}, 'bind1', 'bind2', 'bind3')
+fun2()
+</code></pre>
+<h2 id="3-prototype">3. prototype</h2>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Inheritance_and_the_prototype_chain">prototype的讲解</a></p>
+<blockquote>
+<p>对于使用过基于类的语言 (如 Java 或 C++) 的开发人员来说，JavaScript 有点令人困惑，因为它是动态的，并且本身不提供一个 <code>class</code> 实现。（在 ES2015/ES6 中引入了 <code>class</code> 关键字，但那只是语法糖，JavaScript 仍然是基于原型的）。</p>
+</blockquote>
+<p>所以我们看待 js 要以一种 动态语言去看待 我感觉是js区别其他语言的一个特点;</p>
+<ul>
+<li>这里 就用到了  原型 - prototype</li>
+<li>他可以动态的修改原对象中定义的函数</li>
+</ul>
+<blockquote>
+<p>创建对象的多种方式:</p>
+<ol>
+<li>使用语法结构创建对象</li>
+<li>使用构造器创建对象</li>
+<li>Object.create() 创建对象</li>
+<li>class创建对象</li>
+</ol>
+</blockquote>
+<pre><code class="language-js">// 1.最初
+        function User(name, pwd) {
+            this.name = name
+            this.pwd = pwd
+        }
+        User.prototype.showName = function () {
+            console.log(this.name)
+        }
+        User.prototype.showPwd = function () {
+            console.log(this.pwd)
+        }
+
+        let u1 = new User('tom', '123456')
+        u1.showName()
+        u1.showPwd()
+
+
+
+// 2.
+
+        var o = {
+            a: 2,
+            m: function () {
+                return this.a + 1;
+            }
+        };
+
+        // 当我们理解原生的对象时这个就很好理解了
+        console.log('o :', o);
+        console.log(o.m()); // 3
+        // 当调用 o.m 时，'this' 指向了 o.
+
+        var p = Object.create(o);
+        // p是一个继承自 o 的对象
+
+        p.a = 4; // 创建 p 的自身属性 'a'
+        console.log(p.m()); // 5
+        // 调用 p.m 时，'this' 指向了 p
+        // 又因为 p 继承了 o 的 m 函数
+        // 所以，此时的 'this.a' 即 p.a，就是 p 的自身属性 'a'
+
+
+// 3. 
+        class Student {
+            constructor(name, password) {
+                this.name = name;
+                this.password = password
+            };
+            info() {
+                return this.name + ':' + this.password
+            }
+        }
+
+        let student = new Student('tom', '123456')
+        console.log(student.info())
+        console.log('帅')
+
+
+ 
+	// 4.借用构造函数 (组合继承)
+	// 4.1构造器继承,使用call和apply借用其他构造函数的成员, 可以解决给父构造函数传递参数的问题, 但是获取不到父构造函数原型上的成员.也不存在共享问题
+        function VipUser(name,password,level){
+            User.call(this,name,password)
+            this.level=level
+        }
+
+
+	//4.2原型式继承 VipUser.prototype=User.prototype ,此时构造函数是 user 我们需要改变
+		// new User() 对象的原型链 指向的是 User.prototype
+        VipUser.prototype=new User();// User.prototype
+	
+	
+	//4.3修改子构造函数的原型的构造器属性  所以此时 构造函数变成了我们自己
+        VipUser.prototype.constructor=VipUser;
+	
+
+	
+        VipUser.prototype.showLevel=function(){
+            console.log(this.level)
+        }
+
+       let vipu= new VipUser('tony','12345','6')
+
+       vipu.showName()
+       vipu.showPwd()
+       vipu.showLevel()
+        
+ //5. es6  继承  
+       class VipStudent extends Student{
+            constructor(name,pwd,level){
+                super(name,pwd)
+                this.level=level
+            }
+            showLevel(){
+                console.log(this.level)
+            }
+       }
+
+       let vips=new VipStudent('rose','123','5')
+       console.log(vips.info())
+       vips.showLevel()
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1%E5%AD%A6%E4%B9%A0js%E7%AC%AC%E4%B8%80%E5%85%B3%E8%AE%A4%E6%B8%85%E6%A5%9Aprototype-_-proto-_%E4%B8%8Econstructor">1.学习js第一关(认清楚prototype、_  <em>proto</em> _与constructor)</a>
+<ul>
+<li><a href="#%E8%AE%A9%E6%88%91%E4%BB%AC%E7%94%A8%E5%9B%BE%E6%9D%A5%E5%8A%A0%E6%B7%B1%E7%90%86%E8%A7%A3">让我们用图来加深理解</a></li>
+</ul>
+</li>
+<li><a href="#2-apply-call-bind%E7%9A%84%E5%8C%BA%E5%88%AB">2. apply call  bind的区别</a></li>
+<li><a href="#3-prototype">3. prototype</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

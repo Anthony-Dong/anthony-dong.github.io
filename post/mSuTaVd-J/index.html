@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java - I/O体系应用 - 续集 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/mSuTaVd-J/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java - I/O体系应用 - 续集</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/mSuTaVd-J/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1171字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p><a href="https://anthony-dong.gitee.io/post/flc5KkhMY/">Java - I/O体系从原理到应用</a>  写的就不错, 这一篇只是相应的补充 .</p>
+<h2 id="1-randomaccessfile-的mode">1.  RandomAccessFile 的mode</h2>
+<blockquote>
+<p>​	<code>RandomAccessFile</code>和 <code>FileInputStream</code>  都可以拿到一个<code>FileChannel</code> , 这个channel是NIO的产物, 是一个双向的流.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&quot;r&quot;</code></td>
+<td>Open for reading only. Invoking any of the <code>write</code> methods of the resulting object will cause an <a href="http://www.mpi-inf.mpg.de/departments/d5/teaching/ss05/is05/javadoc/java/io/IOException.html"><code>IOException</code></a> to be thrown.</td>
+</tr>
+<tr>
+<td><code>&quot;rw&quot;</code></td>
+<td>Open for reading and writing. If the file does not already exist then an attempt will be made to create it.</td>
+</tr>
+<tr>
+<td><code>&quot;rws&quot;</code></td>
+<td>Open for reading and writing, as with <code>&quot;rw&quot;</code>, and also require that every update to the file's content or metadata be written synchronously to the underlying storage device.</td>
+</tr>
+<tr>
+<td><code>&quot;rwd&quot;</code></td>
+<td>Open for reading and writing, as with <code>&quot;rw&quot;</code>, and also require that every update to the file's content be written synchronously to the underlying storage device.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-channelreadbuffer-返回值">2. channel.read(buffer) 返回值</h2>
+<p><code>int read = rchannel.read(buffer);</code>  的返回值有些时候需要判断.</p>
+<ul>
+<li><code>-1</code>  : 负一表示读不到数据  , 代表channel中没有可读数据</li>
+<li><code>0</code>  :  代表buffer 的 limit和position相等, 无法写入</li>
+<li><code>&gt;0</code>  :  代表从channel中读取多少个字节数据.</li>
+</ul>
+<h2 id="3-java的-sendfile实现">3. Java的 sendfile实现</h2>
+<blockquote>
+<p>​	其实就chanel 的直接拷贝的实现 , Java send file api 是 transferTo 方法和 transferFrom 方法。</p>
+<p>为了理解 sendfile 的意义，了解数据从文件到套接字的常见数据传输路径就非常重要：</p>
+<ol>
+<li>操作系统从磁盘读取数据到内核空间的 pagecache</li>
+<li>应用程序读取内核空间的数据到用户空间的缓冲区</li>
+<li>应用程序将数据(用户空间的缓冲区)写回内核空间到套接字缓冲区(内核空间)</li>
+<li>操作系统将数据从套接字缓冲区(内核空间)复制到通过网络发送的 NIC 缓冲区</li>
+</ol>
+<p>这显然是低效的，有四次 copy 操作和两次系统调用。使用 sendfile 方法，可以允许操作系统将数据从 pagecache 直接发送到网络，这样避免重新复制数据。所以这种优化方式，只需要最后一步的copy操作，将数据复制到 NIC 缓冲区。</p>
+</blockquote>
+<p><a href="https://www.jianshu.com/p/713af3a13bde">文章链接</a> :  https://www.jianshu.com/p/713af3a13bde</p>
+<p>对于 <code>sendfile</code> 只能使用<code>transferTo()</code>  ,from不可以使用 , 只能将文件复制到网卡.</p>
+<pre><code class="language-java">SocketChannel socketChannel = serverSocketChannel.accept();
+FileInputStream file = new FileInputStream(&quot;resp.text&quot;);
+FileChannel readChannel = file.getChannel();
+// 这里可以直接文件数据复制到NIC缓冲区(UNIX) , 叫 `sendfile`
+readChannel.transferTo(0, readChannel.size(), socketChannel);
+// close 释放资源
+</code></pre>
+<h2 id="4-nio-基本感受">4. NIO 基本感受</h2>
+<p>nio 与 普通的io 区分就是在于io是基于stream流的, 而nio是基于channel的. channel是一个双向的流.</p>
+<p>对比传统的io编程中, 使用到的 <code>ServerSocket</code> 和 <code>Socket</code>   对应到 NIO中就是 <code>ServerSocketChannel</code> 和 <code>SocketChannel</code>  , 但是NIO的核心是selector (多路复用) , 是的传统的阻塞编程变得非阻塞. 这个很重要. 可以看看<a href="https://anthony-dong.gitee.io/post/flc5KkhMY/">Java -IO体系</a>那篇文章感受一下.</p>
+<h2 id="5-mmap-使用">5. MMAP  使用</h2>
+<p><a href="https://baike.baidu.com/item/mmap/1322217">百度百科 :</a> https://baike.baidu.com/item/mmap/1322217</p>
+<p><a href="https://www.jianshu.com/p/c3afc0f02560">关于MMAP的这主要实现以及理论 : </a>   https://www.jianshu.com/p/c3afc0f02560</p>
+<blockquote>
+<p>​	mmap是一种内存映射文件的方法，即将一个文件或者其他对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对应关系；实现这样的映射关系后，进程就可以采用指针的方式读写操作这一块内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必调用read，write等系统调用函数，相反，内核空间堆这段区域的修改也直接反应到用户空间，从而可以实现不同进程间的文件共享。</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/efe52780-3d1c-4c9e-ae65-57d1328661e5.png" alt="" loading="lazy"></figure>
+<p>对于正常的IO操作 .</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/6834f5a6-015b-4cbc-8bd1-82113a41d4d6.webp" alt="" loading="lazy"></figure>
+<p>**需要四次拷贝才能修改文件 , 而MMAP只需要 一次. **</p>
+<p>Java中使用<code>mmap</code></p>
+<p>基于NIO的 FileChannel .</p>
+<p>首先我的测试文件<code>test.properties</code>内容是 <code>Hello World</code> , 然后我们使用mmap.</p>
+<pre><code class="language-java">public static void main(String[] args) throws IOException {
+
+    // 1. 获取 FileChannel
+    RandomAccessFile file = new RandomAccessFile(&quot;test.properties&quot;, &quot;rw&quot;);
+
+    FileChannel channel = file.getChannel();
+
+    // 2. 指定1024大小的空间.这个是直接内存(不属于GC管理范围,所以节省了GC回收).
+    // 第一个是mode . 第二个是文件映射起始位置(其实就是文件内容的offset), 第三个是文件映射长度.
+    MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_WRITE, 0, 1024);
+
+    // 读取
+    byte[] reader = new byte[20];
+    buffer.get(reader);
+    System.out.printf(&quot;read : %s\n&quot;, new String(reader, StandardCharsets.UTF_8));
+
+    // 重置位置. 然后我们继续写入
+    buffer.clear();
+    buffer.put(&quot;我写入的内容&quot;.getBytes(StandardCharsets.UTF_8));
+
+
+    // 重置位置. 然后我们继续读取,不用filp的目的是懒得进行位置修改
+    buffer.clear();
+    buffer.get(reader);
+    System.out.printf(&quot;read : %s\n&quot;, new String(reader, StandardCharsets.UTF_8));
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-go">read : Hello World      
+read : 我写入的内容  
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-randomaccessfile-%E7%9A%84mode">1.  RandomAccessFile 的mode</a></li>
+<li><a href="#2-channelreadbuffer-%E8%BF%94%E5%9B%9E%E5%80%BC">2. channel.read(buffer) 返回值</a></li>
+<li><a href="#3-java%E7%9A%84-sendfile%E5%AE%9E%E7%8E%B0">3. Java的 sendfile实现</a></li>
+<li><a href="#4-nio-%E5%9F%BA%E6%9C%AC%E6%84%9F%E5%8F%97">4. NIO 基本感受</a></li>
+<li><a href="#5-mmap-%E4%BD%BF%E7%94%A8">5. MMAP  使用</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

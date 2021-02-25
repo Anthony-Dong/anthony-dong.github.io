@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring-XML标签自定义和Dubbo整合Spring的XML注入方式 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/GzcbGn7v3/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring-XML标签自定义和Dubbo整合Spring的XML注入方式</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-03-21</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/GzcbGn7v3/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1615字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>有些时候, 比较老的项目 , 需要配置Spring-XML .  此时需要我们进行配置我们自己的标签. 其实很简单,</p>
+<h2 id="快速开始">快速开始</h2>
+<p>Spring的标签中.</p>
+<p>第一在 <code>META-INF/user.xsd</code> 文件</p>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;no&quot;?&gt;
+&lt;xsd:schema xmlns=&quot;http://user.apache.org/schema/user&quot;
+            xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;
+            targetNamespace=&quot;http://user.apache.org/schema/user&quot;
+            elementFormDefault=&quot;qualified&quot;&gt;
+
+    &lt;xsd:import namespace=&quot;http://www.w3.org/XML/1998/namespace&quot;/&gt;
+
+    &lt;xsd:element name=&quot;user&quot;&gt;
+        &lt;xsd:complexType&gt;
+        // 必须有ID项. 就是你getBean(id) 这个传入的. 所以是必须配置的.
+            &lt;xsd:attribute name=&quot;id&quot; type=&quot;xsd:string&quot;/&gt;
+            &lt;xsd:attribute name=&quot;name&quot; type=&quot;xsd:string&quot;/&gt;
+            &lt;xsd:attribute name=&quot;gender&quot; type=&quot;xsd:integer&quot;/&gt;
+        &lt;/xsd:complexType&gt;
+    &lt;/xsd:element&gt;
+&lt;/xsd:schema&gt;
+</code></pre>
+<p>第二在 <code>META-INF/spring.schemas</code> 文件中 , 导入你的XSD文件. 前面这个URL可以根据自己需求写.</p>
+<pre><code class="language-java">http\://user.apache.org/schema/user/user.xsd=META-INF/user.xsd
+</code></pre>
+<p>第三在 <code>META-INF/spring.handlers</code> 中配置你的解析xsd的handler.</p>
+<pre><code class="language-java">http\://user.apache.org/schema/user=com.example.springbeanconfig.bean.UserNameSpaceHandler
+</code></pre>
+<p>第四. 我们的 Handler</p>
+<pre><code class="language-java">public class UserNameSpaceHandler extends NamespaceHandlerSupport {
+    @Override
+    public void init() {
+        // 其实就是注册了一个Bean. 
+        registerBeanDefinitionParser(&quot;user&quot;, new UserBeanDefinitionParser());
+    }
+}
+</code></pre>
+<p>第五. 设置我们的Parser</p>
+<pre><code class="language-java">public class UserBeanDefinitionParser implements BeanDefinitionParser {
+
+    @Override
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        String name = element.getAttribute(&quot;name&quot;);
+        String gender = element.getAttribute(&quot;gender&quot;);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(User.class);
+
+        if (name != null) {
+            builder.addPropertyValue(&quot;name&quot;, name);
+        }
+        if (gender != null) {
+            builder.addPropertyValue(&quot;gender&quot;, Integer.parseInt(gender));
+        }
+        parserContext.getRegistry().registerBeanDefinition(&quot;user&quot;, builder.getBeanDefinition());
+        // 后期解释为啥不需要返回值. 其实返回值,没啥用.
+        return null;
+    }
+}
+</code></pre>
+<p>这样就会注入我们的Bean.</p>
+<pre><code class="language-java">@Data
+public class User {
+
+    String name;
+
+    Integer gender;
+
+}
+</code></pre>
+<p>虽然SpringBoot 后期提供了 注解配置. 但是其实这个也是很nice的.  我们的 user.xml</p>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;beans xmlns=&quot;http://www.springframework.org/schema/beans&quot;
+       xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:user=&quot;http://user.apache.org/schema/user&quot;
+       xsi:schemaLocation=&quot;http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://user.apache.org/schema/user http://user.apache.org/schema/user/user.xsd&quot;&gt;
+
+    &lt;user:user id=&quot;user&quot; name=&quot;xiaoli&quot; gender=&quot;1&quot;/&gt;
+&lt;/beans&gt;
+</code></pre>
+<p>启动器</p>
+<pre><code class="language-java">public class SpringApp {
+    public static void main(String[] args) {
+        // 默认自动刷新的.
+        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(&quot;user.xml&quot;);
+        User bean = context.getBean(User.class);
+        System.out.println(bean);
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">User(name=xiaoli, gender=1)
+</code></pre>
+<h2 id="流程">流程.</h2>
+<pre><code class="language-java">@Override
+public void refresh() throws BeansException, IllegalStateException {
+    synchronized (this.startupShutdownMonitor) {
+        // Prepare this context for refreshing.
+        prepareRefresh();
+
+        // Tell the subclass to refresh the internal bean factory.
+        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+        // Prepare the bean factory for use in this context.
+        prepareBeanFactory(beanFactory);
+
+        try {
+            // Allows post-processing of the bean factory in context subclasses.
+            postProcessBeanFactory(beanFactory);
+
+            // Invoke factory processors registered as beans in the context.
+            invokeBeanFactoryPostProcessors(beanFactory);
+
+            // Register bean processors that intercept bean creation.
+            registerBeanPostProcessors(beanFactory);
+
+            // Initialize message source for this context.
+            initMessageSource();
+
+            // Initialize event multicaster for this context.
+            initApplicationEventMulticaster();
+
+            // Initialize other special beans in specific context subclasses.
+            onRefresh();
+
+            // Check for listener beans and register them.
+            registerListeners();
+
+            // Instantiate all remaining (non-lazy-init) singletons.
+            finishBeanFactoryInitialization(beanFactory);
+
+            // Last step: publish corresponding event.
+            finishRefresh();
+        }
+
+        catch (BeansException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(&quot;Exception encountered during context initialization - &quot; +
+                        &quot;cancelling refresh attempt: &quot; + ex);
+            }
+
+            // Destroy already created singletons to avoid dangling resources.
+            destroyBeans();
+
+            // Reset 'active' flag.
+            cancelRefresh(ex);
+
+            // Propagate exception to caller.
+            throw ex;
+        }
+
+        finally {
+            // Reset common introspection caches in Spring's core, since we
+            // might not ever need metadata for singleton beans anymore...
+            resetCommonCaches();
+        }
+    }
+}
+</code></pre>
+<p>在 <code>ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();</code></p>
+<pre><code class="language-java">protected final void refreshBeanFactory() throws BeansException {
+    if (hasBeanFactory()) {
+        destroyBeans();
+        closeBeanFactory();
+    }
+    try {
+        DefaultListableBeanFactory beanFactory = createBeanFactory();
+        beanFactory.setSerializationId(getId());
+        customizeBeanFactory(beanFactory);
+        // 这里加载
+        loadBeanDefinitions(beanFactory);
+        synchronized (this.beanFactoryMonitor) {
+            this.beanFactory = beanFactory;
+        }
+    }
+    catch (IOException ex) {
+        throw new ApplicationContextException(&quot;I/O error parsing bean definition source for &quot; + getDisplayName(), ex);
+    }
+}
+</code></pre>
+<p>然后<code>loadBeanDefinitions(beanFactory);</code>  在 xml这个实现类中</p>
+<pre><code class="language-java">@Override
+protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws BeansException, IOException {
+    // Create a new XmlBeanDefinitionReader for the given BeanFactory.
+    XmlBeanDefinitionReader beanDefinitionReader = new XmlBeanDefinitionReader(beanFactory);
+
+    // Configure the bean definition reader with this context's
+    // resource loading environment.
+    beanDefinitionReader.setEnvironment(this.getEnvironment());
+    beanDefinitionReader.setResourceLoader(this);
+    beanDefinitionReader.setEntityResolver(new ResourceEntityResolver(this));
+
+    // Allow a subclass to provide custom initialization of the reader,
+    // then proceed with actually loading the bean definitions.
+    initBeanDefinitionReader(beanDefinitionReader);
+    // 还是这里加载
+    loadBeanDefinitions(beanDefinitionReader);
+}
+
+</code></pre>
+<pre><code class="language-java">protected void loadBeanDefinitions(XmlBeanDefinitionReader reader) throws BeansException, IOException {
+    Resource[] configResources = getConfigResources();
+    if (configResources != null) {
+        reader.loadBeanDefinitions(configResources);
+    }
+    // 我们传入的 localconfig 就是配置文件,
+    String[] configLocations = getConfigLocations();
+    if (configLocations != null) {
+        reader.loadBeanDefinitions(configLocations);
+    }
+}
+</code></pre>
+<p>继续<code>reader.loadBeanDefinitions(configLocations);</code></p>
+<pre><code class="language-java">@Override
+public int loadBeanDefinitions(String... locations) throws BeanDefinitionStoreException {
+    Assert.notNull(locations, &quot;Location array must not be null&quot;);
+    int counter = 0;
+    for (String location : locations) {
+        // 还是加载. 一个个加载.
+        counter += loadBeanDefinitions(location);
+    }
+    return counter;
+}
+</code></pre>
+<p>最后在这里</p>
+<pre><code class="language-java">protected void doRegisterBeanDefinitions(Element root) {
+
+    preProcessXml(root);
+    // 就是在这里 注册了我们的Handler.
+    parseBeanDefinitions(root, this.delegate);
+    postProcessXml(root);
+    this.delegate = parent;
+}
+</code></pre>
+<p>然后再这里 <code>parseBeanDefinitions</code></p>
+<pre><code class="language-java">protected void parseBeanDefinitions(Element root, BeanDefinitionParserDelegate delegate) {
+    if (delegate.isDefaultNamespace(root)) {
+        NodeList nl = root.getChildNodes();
+        for (int i = 0; i &lt; nl.getLength(); i++) {
+            Node node = nl.item(i);
+            if (node instanceof Element) {
+                Element ele = (Element) node;
+                if (delegate.isDefaultNamespace(ele)) {
+                    parseDefaultElement(ele, delegate);
+                }
+                else {
+                    // 委托执行解析. 但是. 我们发现返回值根本没啥用
+                    delegate.parseCustomElement(ele);
+                }
+            }
+        }
+    }
+    else {
+        delegate.parseCustomElement(root);
+    }
+}
+</code></pre>
+<p>然后再这里</p>
+<pre><code class="language-java">public BeanDefinition parseCustomElement(Element ele, @Nullable BeanDefinition containingBd) {
+    String namespaceUri = getNamespaceURI(ele);
+    if (namespaceUri == null) {
+        return null;
+    }
+    //  拿到 NamespaceHandler
+    NamespaceHandler handler = this.readerContext.getNamespaceHandlerResolver().resolve(namespaceUri);
+    if (handler == null) {
+        error(&quot;Unable to locate Spring NamespaceHandler for XML schema namespace [&quot; + namespaceUri + &quot;]&quot;, ele);
+        return null;
+    }
+    // 通过它parse 对象. 得到BeanDefinition
+    return handler.parse(ele, new ParserContext(this.readerContext, this, containingBd));
+}
+</code></pre>
+<p>所以parser 最终的返回值是无效的. 所以更像是是一种回调. 所以. 我们并不需要返回 . 需要拿到Register 去注册bean.</p>
+<h2 id="dubbo-做代理-是如何做的">Dubbo 做代理. 是如何做的.</h2>
+<p>第一步也是 创建一个 handler <code>org.apache.dubbo.config.spring.schema.DubboNamespaceHandler</code></p>
+<pre><code class="language-java">public class DubboNamespaceHandler extends NamespaceHandlerSupport {
+
+    static {
+        Version.checkDuplicate(DubboNamespaceHandler.class);
+    }
+
+    @Override
+    public void init() {
+        registerBeanDefinitionParser(&quot;application&quot;, new DubboBeanDefinitionParser(ApplicationConfig.class, true));
+        registerBeanDefinitionParser(&quot;module&quot;, new DubboBeanDefinitionParser(ModuleConfig.class, true));
+        registerBeanDefinitionParser(&quot;registry&quot;, new DubboBeanDefinitionParser(RegistryConfig.class, true));
+        registerBeanDefinitionParser(&quot;config-center&quot;, new DubboBeanDefinitionParser(ConfigCenterBean.class, true));
+        registerBeanDefinitionParser(&quot;metadata-report&quot;, new DubboBeanDefinitionParser(MetadataReportConfig.class, true));
+        registerBeanDefinitionParser(&quot;monitor&quot;, new DubboBeanDefinitionParser(MonitorConfig.class, true));
+        registerBeanDefinitionParser(&quot;metrics&quot;, new DubboBeanDefinitionParser(MetricsConfig.class, true));
+        registerBeanDefinitionParser(&quot;provider&quot;, new DubboBeanDefinitionParser(ProviderConfig.class, true));
+        registerBeanDefinitionParser(&quot;consumer&quot;, new DubboBeanDefinitionParser(ConsumerConfig.class, true));
+        registerBeanDefinitionParser(&quot;protocol&quot;, new DubboBeanDefinitionParser(ProtocolConfig.class, true));
+        registerBeanDefinitionParser(&quot;service&quot;, new DubboBeanDefinitionParser(ServiceBean.class, true));
+        registerBeanDefinitionParser(&quot;reference&quot;, new DubboBeanDefinitionParser(ReferenceBean.class, false));
+        registerBeanDefinitionParser(&quot;annotation&quot;, new AnnotationBeanDefinitionParser());
+    }
+
+}
+</code></pre>
+<p>这个里面解析太麻烦. 所以不做解释了.  反正就是</p>
+<p>原理就是 注入了一个FactoryBean.   然后这个玩意继承了 ReferenceConfig. 当调用他的get方法的时候, 然后此时就回去调用dubbo的 ReferenceConfig的get方法. 这个类是 <code>org.apache.dubbo.config.spring.ReferenceBean</code></p>
+<p>那么这个怎么写, 我大致写一个.</p>
+<p>像Spring没有提供Spring那种活性. 只能这么注入.</p>
+<pre><code class="language-java">public class MyBeanDefinitionParser implements BeanDefinitionParser {
+
+    @Override
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        String name = element.getAttribute(&quot;name&quot;);
+        String gender = element.getAttribute(&quot;gender&quot;);
+
+        BeanDefinitionRegistry registry = parserContext.getRegistry();
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(MyFactoryBean.class);
+        User user = new User();
+        user.setName(name);
+        user.setGender(Integer.parseInt(gender));
+        builder.addConstructorArgValue(user);
+        registry.registerBeanDefinition(&quot;user-factoryBean&quot;, builder.getBeanDefinition());
+        return null;
+    }
+}
+</code></pre>
+<p>这个是我的 FactoryBean</p>
+<pre><code class="language-java">public class MyFactoryBean implements FactoryBean&lt;User&gt; {
+    private User user;
+    public MyFactoryBean(User user) {
+        this.user = user;
+    }
+    @Override
+    public User getObject() throws Exception {
+        user.setAge(1);
+        // dubbo的org.apache.dubbo.config.spring.ReferenceBean这里是使用的是调用referenceConfig的get方法. 
+        return user;
+    }
+    @Override
+    public Class&lt;?&gt; getObjectType() {
+        return User.class;
+    }
+}
+</code></pre>
+<p>所以 基本就是这么实现的.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">快速开始</a></li>
+<li><a href="#%E6%B5%81%E7%A8%8B">流程.</a></li>
+<li><a href="#dubbo-%E5%81%9A%E4%BB%A3%E7%90%86-%E6%98%AF%E5%A6%82%E4%BD%95%E5%81%9A%E7%9A%84">Dubbo 做代理. 是如何做的.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

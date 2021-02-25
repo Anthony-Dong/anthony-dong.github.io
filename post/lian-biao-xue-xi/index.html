@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>链表 - (全和部分)翻转实现 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/lian-biao-xue-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>链表 - (全和部分)翻转实现</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/lian-biao-xue-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/h-oLWzEpzKL/"
+								class="tag">算法</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1070字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>链表其实会遍历和翻转基本么啥问题 , 因为掌握了翻转你就掌握了链表临时变量的使用</p>
+</blockquote>
+<h2 id="1-定义链表">1. 定义链表</h2>
+<blockquote>
+<p>​	链表 , 英文名 : <code>LinkedList</code></p>
+</blockquote>
+<pre><code class="language-scala">public class ListNode {
+    int val;
+    ListNode next;
+
+    ListNode(int x) {
+        val = x;
+    }
+}    
+</code></pre>
+<h2 id="2-链表完全翻转难度中">2. 链表完全翻转(难度中)</h2>
+<pre><code class="language-scala">/**
+ * 链表完全翻转 
+ *
+ * @param head 表头
+ * @return 翻转的链表
+ */
+public static ListNode reserve(ListNode head) {
+    ListNode prev = null;
+    ListNode cur = head;
+    while (cur != null) {
+        ListNode temp = cur.next;
+        cur.next = prev;
+        prev = cur;
+        cur = temp;
+    }
+    return prev;
+}
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-27/cd17c21a-ab18-42cf-9970-4925b68f8786.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-10/c028629e-1a7e-4625-ad37-d399c81e0145.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="3-链表部分翻转难度高">3. 链表部分翻转(难度高)</h2>
+<p>代码注释很详细,  基本可以看懂, 核心代码就一个地方 , 重要的是记住这张图 , 怎么扭来着, 还有三个坐标分别代表什么</p>
+<pre><code class="language-java">/**
+ * 链表部分翻转
+ * 比如 [1,2,3,4,5] m=2, n=4, 此时结果 : [1 4 3 2 5]
+ * @param head 链表头
+ * @param m 开始位置,从1开始计算
+ * @param n 结束位置,从1开始计算
+ * @return
+ */
+public static ListNode reverseBetween(ListNode head, int m, int n) {
+    if (head == null) return null;
+    if (head.next == null) return head;
+    ListNode pre = null;
+    ListNode cur = null;
+
+    // 一是比较特殊的情况,此时我们无法实例化pre ,下面会出现异常, 所以我们这里取巧
+    if (m == 1) {
+        pre = new ListNode(0);
+        pre.next = head;
+        cur = head;
+    } else {
+        // 如果不是1 一般都是下面这种写法
+        for (int x = 1; x &lt; m; x++) {
+            cur = cur == null ? head : cur.next;
+        }
+        // 第N个前一个节点 ,
+        pre = cur;
+        // 这是当前开始要改变的节点,
+        cur = cur.next;
+    }
+
+    for (int x = m; x &lt; n; x++) {
+        // 这里几乎是固定写法
+        ListNode temp = cur.next;
+        cur.next = temp.next;
+        temp.next = pre.next;
+        pre.next = temp;
+    }
+    if (m == 1) return pre.next;
+    return head;
+}
+</code></pre>
+<p>基本执行逻辑就是我下面画的, 很绕是不是 , 记住我的标号, 代表顺序, 其实就是扭了一下</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-17/5039259c-1c6b-4e64-b17c-bf27d4fc5cf4.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="4-链表遍历长度">4. 链表遍历长度</h2>
+<p>我相信如果看过我的二叉树遍历那节的小伙伴们, 绝对懂递归的执行逻辑, 所以就很简单了</p>
+<pre><code class="language-java">public static int listNodeLength(ListNode head) {
+    if (head==null) return 0;
+    return listNodeLength(head.next) + 1;
+}
+</code></pre>
+<p>或者迭代也很简单 , 逻辑清晰就行, 记住递归执行效率没有迭代高 , 因为方法调用会引起入栈和出栈，导致消耗更多的CPU和内存，所以迭代是一种正确的选择 , <code>虽然递归很美,但是效率和内存消耗大哇</code></p>
+<pre><code class="language-java">public static int listNodeLength2(ListNode head) {
+    int len = 0;
+    while (head != null) {
+        head = head.next;
+        len++;
+    }
+    return len;
+}
+</code></pre>
+<h2 id="5-单链表基本操作-插入删除">5. 单链表基本操作, 插入,删除</h2>
+<pre><code class="language-scala">class SingleLinkedList[E] {
+
+  var first: Node[E] = _
+
+  var size: Int = 0
+
+  class Node[E](var item: E, var next: Node[E]) {
+    override def toString = s&quot;Node($item, $next)&quot;
+  }
+
+
+  def removeNode(index: Int): E = {
+    // 如果比当前长度哈爱长 , 抛出异常
+    if (index &gt; size) {
+      throw new IndexOutOfBoundsException(s&quot;当前长度 : $size&quot;)
+    }
+
+    // 遍历 ,找出 index 前面那个节点
+    var temp = first
+    if (index == 0) {
+      first = first.next
+      return temp.item
+    }
+    
+    var count = 0
+    while (temp.next != null &amp;&amp; count &lt; index - 1) {
+      temp = temp.next
+      count = count + 1
+    }
+
+    //移除的节点
+    val remove = temp.next
+    //添加
+    temp.next = temp.next.next
+    // size--
+    size = size - 1
+
+    remove.item
+  }
+
+
+  def addNode(data: E): Unit = {
+    addNode(data, size)
+  }
+
+
+  def addNode(data: E, index: Int): Unit = {
+
+    // 大于当前大小 , 返回
+    if (index &gt; size) throw new IndexOutOfBoundsException(s&quot;当前size : $size&quot;)
+
+    // 找位置
+    val newNode = new Node(data, null)
+    if (first == null) {
+      // 放到头
+      first = newNode
+      //size++
+      size = size + 1
+      return
+    }
+
+    var temp = first
+    var count = 0
+    while (temp.next != null &amp;&amp; count &lt; index - 1) {
+      temp = temp.next
+      count = count + 1
+    }
+
+    // 前一个位置的 下一个为new node
+    temp.next = newNode
+
+    // 前一个的下一个下一个为 newNode
+    newNode.next = temp.next.next
+
+    // 大小++
+    size = size + 1
+  }
+
+}
+</code></pre>
+<p>通过上面我们发现单链表 ,最多保存一个头结点信息, 但是当我们保存了尾结点信息, 此时发现当我们去移除最后一个的时候,我们没有前面节点的信息 , 此时就需要双向链表,  单链表大量的时间浪费在遍历删 , 我上面添加需要保存一个尾节点信息可以添加更快 ,</p>
+<h2 id="6-双向链表">6. 双向链表</h2>
+<p>英文名 : <code>Double Linked List</code></p>
+<p>他保存了 两个节点信息 , 一个是 next , 一个是 prior , 所以他所带来的遍历很多, 比如我知道任何一个节点,都可以前后遍历 , 但是内存消耗更大</p>
+<h2 id="7-链表拷贝">7. 链表拷贝</h2>
+<pre><code class="language-java">public static ListNode copyList(ListNode head) {
+    if(head==null) return null;
+    ListNode replication = new ListNode(head.val);
+    ListNode start = replication;
+    while (head != null) {
+        head = head.next;
+        if (head!=null){
+            replication.next = new ListNode(head.val);
+            replication = replication.next;
+        }
+    }
+    return start;
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%AE%9A%E4%B9%89%E9%93%BE%E8%A1%A8">1. 定义链表</a></li>
+<li><a href="#2-%E9%93%BE%E8%A1%A8%E5%AE%8C%E5%85%A8%E7%BF%BB%E8%BD%AC%E9%9A%BE%E5%BA%A6%E4%B8%AD">2. 链表完全翻转(难度中)</a></li>
+<li><a href="#3-%E9%93%BE%E8%A1%A8%E9%83%A8%E5%88%86%E7%BF%BB%E8%BD%AC%E9%9A%BE%E5%BA%A6%E9%AB%98">3. 链表部分翻转(难度高)</a></li>
+<li><a href="#4-%E9%93%BE%E8%A1%A8%E9%81%8D%E5%8E%86%E9%95%BF%E5%BA%A6">4. 链表遍历长度</a></li>
+<li><a href="#5-%E5%8D%95%E9%93%BE%E8%A1%A8%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C-%E6%8F%92%E5%85%A5%E5%88%A0%E9%99%A4">5. 单链表基本操作, 插入,删除</a></li>
+<li><a href="#6-%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8">6. 双向链表</a></li>
+<li><a href="#7-%E9%93%BE%E8%A1%A8%E6%8B%B7%E8%B4%9D">7. 链表拷贝</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

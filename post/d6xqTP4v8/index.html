@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>为什么说函数只存在值传递 &amp; 引用类型是什么 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/d6xqTP4v8/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>为什么说函数只存在值传递 &amp; 引用类型是什么</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-06</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/d6xqTP4v8/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/7UE4VSAdKI7/"
+								class="tag">计算机</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2136字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	前面是俩例子,值传递和引用类型并不冲突, 这两句话不矛盾.</p>
+<p>​	第三节后面会讲到 JVM的引用类型实现,为什么会这样.</p>
+</blockquote>
+<h2 id="1-例子一">1. 例子一</h2>
+<p>我们先来几个例子. 先来Java的吧. Java最假了. 一般人都认为是引用传递(基本类型值传递).  所以我们又拿C++做例子.</p>
+<p>写 a , b 是为了好区分开.  其实 写俩a都行. 不好书面表达</p>
+<pre><code class="language-java">public class Demo {
+
+    public static void main(String[] args) {
+        A a = new A();
+        System.out.println(&quot;初始化 : &quot; + a.name);
+        a.name = &quot;main&quot;;
+        System.out.println(&quot;init函数调用前 : &quot; + a.name);
+        // change 函数传递
+        init(a);
+        // 结果 ?
+        System.out.println(&quot;init函数调用后 : &quot;+a.name);
+    }
+
+    static void init(A b) {
+        // a被初始化了..
+        b = new A();
+    }
+
+    private static class A {
+        String name;
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">初始化 : null
+init函数调用前 : main
+init函数调用后 : main
+</code></pre>
+<p>结果是啥. 如果真的是引用传递. 那么为啥a.name为啥不是空呢.</p>
+<p>我用C++ 给大家写一下.</p>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+class A
+{
+public:
+   string name;
+};
+
+void init(A *b)
+{
+   cout &lt;&lt; &quot;未改变的地址 : &quot; &lt;&lt; b &lt;&lt; endl;
+   *b = A();
+   cout &lt;&lt; &quot;改变后的地址 : &quot; &lt;&lt; b &lt;&lt; endl;
+}
+int main(int argc, char const *argv[])
+{
+   A *a = new A();
+   cout &lt;&lt; &quot;初始化 : &quot; &lt;&lt; a-&gt;name &lt;&lt; endl;
+   a-&gt;name = &quot;main&quot;;
+   cout &lt;&lt; &quot;init函数调用前 : &quot; &lt;&lt; a-&gt;name &lt;&lt; endl;
+   init(a);
+   cout &lt;&lt; &quot;init函数调用后 : &quot; &lt;&lt; a-&gt;name &lt;&lt; endl;
+   return 0;
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">初始化 : 
+init函数调用前 : main
+未改变的地址 : 0xe699d0
+改变后的地址 : 0xe699d0
+init函数调用后 : 
+</code></pre>
+<p>显然C++和Java的表现是不一样的.  为什么C++ 赋值可以改变值. 而Java却不是呢.</p>
+<p><strong>我们先解释C++的做法.</strong></p>
+<p>我们 <code>init(A *b)</code>做了啥</p>
+<p>首先是我们定义了一个变量 A *a=new A(&quot;main&quot;) , 我没有写构造函数, 假设的.</p>
+<p>此时传递给函数<code>init(A *b)</code>  , 此时 b=a  ,a= 0xe699d0 . 所以呢 b= 0xe699d0 .</p>
+<p>后面我们的操作就是基于 b 的. 此时我们将 <code>*b = A();</code>  ,   是不是将 <code>0xe699d0指针</code>指向了  <code>A()</code> 对象呢(其实就是块内存,指向的是内存的首地址)  . 此时是不是修改了 <code>0xe699d0指针</code> 的指向呢.  那么a也等于 0xe699d0 .所以a的值也被修改了 .</p>
+<p><strong>然后我们看看Java的做法.</strong></p>
+<pre><code class="language-java">static void init(A b) {
+    System.out.println(&quot;未改变的地址: 0x&quot;+Integer.toHexString(a.hashCode()));
+    // a被初始化了..
+    b = new A();
+    System.out.println(&quot;改变后的地址: 0x&quot;+Integer.toHexString(a.hashCode()));
+}
+</code></pre>
+<p>我们打印一下  hashcode. 因为Java的hashcode其实就是确定一个对象的唯一标识, 如果你想深入了解hashcode的话介意看看JVM的源码,C++和Java对象的映射关系 (如果是对象地址的话,那么内存回收会改变大量的内存地址,难道还是地址吗,我们这里不考虑这个.只要知道这个是Java对象的唯一值类似于hash码 ).</p>
+<p>输出结果:</p>
+<pre><code class="language-java">初始化 : null
+init函数调用前 : main
+未改变的地址: 0x6e8cf4c6
+改变后的地址: 0x12edcd21
+init函数调用后 : main
+</code></pre>
+<p>此时我们发现地址发生了改变.  其实理解了上面C++那部分聪明的就明白了.</p>
+<p>由于Java引用类型传递如果是Hotspot虚拟机则实现的就是简单的指针传递. 这个变量指向Java对象的数据区域.</p>
+<p>由于一开始 a=0x6e8cf4c6(Java引用对象) , 然后函数赋值 b=a , 此时 b= 0x6e8cf4c6.</p>
+<p>关键点在于new A()地方; 执行的是,实例化一个A对象,在栈顶开辟一块空间, 将A对象保存在栈顶中, 此时栈顶值=0x12edcd21, 然后将栈顶值存入到变量b中. 此时b=0x12edcd21 . 那么改变原来0x6e8cf4c6指向的内容了吗,并没有.</p>
+<p>我们再看看javac编译后的结果 :</p>
+<pre><code class="language-java">static void init(com.jvm.reference.Demo$A);
+descriptor: (Lcom/jvm/reference/Demo$A;)V
+flags: ACC_STATIC
+Code:
+// 栈的深度需要3 , 变量表需要一个,参数一个
+  stack=3, locals=1, args_size=1
+      // 实例化一个对象
+     0: new           #2                  // class com/jvm/reference/Demo$A
+     3: dup
+     4: aconst_null
+     // 调用构造方法
+     5: invokespecial #3                  // Method com/jvm/reference/Demo$A.&quot;&lt;init&gt;&quot;:(Lcom/jvm/reference/Demo$1;)V
+     // 将栈顶值存入变量0中
+     8: astore_0
+     // 返回
+     9: return
+</code></pre>
+<p>准确点说Java的做法是 :  如下操作.</p>
+<pre><code class="language-c++">void init(A *b)
+{
+    cout &lt;&lt; &quot;未改变的地址 : &quot; &lt;&lt; b &lt;&lt; endl;
+    A a = A();
+    b = &amp;a;
+    cout &lt;&lt; &quot;改变后的地址 : &quot; &lt;&lt; b &lt;&lt; endl;
+}
+</code></pre>
+<blockquote>
+<p>​	其实各种做法也有各种做法的好处. 没有绝对的好坏.</p>
+</blockquote>
+<h2 id="2-例子二">2. 例子二</h2>
+<blockquote>
+<p>​	其实你理解上面这个例子. 你就明白了为啥值传递了.  我们继续拿C++说话. Java查看地址不方便.</p>
+</blockquote>
+<pre><code class="language-c++">#include &lt;iostream&gt;
+
+using namespace std;
+
+void swap(int *a, int *b)
+{
+    int *temp = a;
+    a = b;
+    b = temp;
+    cout &lt;&lt; &quot;a : &quot; &lt;&lt; *a &lt;&lt; &quot; , b : &quot; &lt;&lt; *b &lt;&lt; endl;
+}
+
+int main(int argc, char const *argv[])
+{
+    int x = 1;
+    int y = 2;
+
+    cout &lt;&lt; &quot;x : &quot; &lt;&lt; x &lt;&lt; &quot; , y : &quot; &lt;&lt; y &lt;&lt; endl;
+    // swap 方法.
+    swap(&amp;x, &amp;y);
+
+    cout &lt;&lt; &quot;x : &quot; &lt;&lt; x &lt;&lt; &quot; , y : &quot; &lt;&lt; y &lt;&lt; endl;
+    /* code */
+    return 0;
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-c++">x : 1 , y : 2
+a : 2 , b : 1
+x : 1 , y : 2
+</code></pre>
+<p>我们发现为啥函数内部 . a 和 b 成功交换了地址 . 所以 a 和 b的值就互换了 .</p>
+<p>但是为啥呢.</p>
+<p>我们再次打印一下地址</p>
+<pre><code class="language-c++">cout &lt;&lt; &quot;&amp;x  : &quot; &lt;&lt; &amp;x &lt;&lt; &quot; , &amp;y : &quot; &lt;&lt; &amp;y &lt;&lt; endl;
+// 输出 : 
+&amp;x : 0x61fefc , &amp;y : 0x61fef8
+</code></pre>
+<p>&amp;x = 0x61fefc ,  &amp;y=0x61fef8 ,</p>
+<p>执行swap函数.  此时 a=0x61fefc ,  b=0x61fef8  ,</p>
+<p>然后经过一番操作, 此时 a=0x61fef8    ,  b=0x61fefc  . 然后输出 *a=2, *b=1,  所以成功了.</p>
+<p>但是为啥  x 和 y 没变呢. 是不是发现 &amp;x 和 &amp;y依旧着原来的地址呢.</p>
+<p>正确的swap操作 , 必须修改指针指向的值.</p>
+<pre><code class="language-c++">void swap(int *a, int *b)
+{
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+</code></pre>
+<h2 id="3-java的引用类型">3. Java的引用类型</h2>
+<p>​		创建对象自然是为了后续使用该对象，我们的Java程序会通过栈上的reference数据来操作堆上的具体对象。由于<strong>reference类型</strong>在《Java虚拟机规范》里面只规定了它是一个<strong>指向对象的引用</strong>，并没有定义这个引用应该通过什么方式去定位、访问到堆中对象的具体位置，所以对象访问方式也是由虚拟机实现而定的，主流的访问方式主要有使用句柄和直接指针两种：</p>
+<ul>
+<li>如果使用句柄访问的话，Java堆中将可能会划分出一块内存来作为句柄池，reference中存储的就是对象的句柄地址，而句柄中包含了对象实例数据与类型数据各自具体的地址信息，其结构如图2-2所示。</li>
+<li>如果使用直接指针访问的话，Java堆中对象的内存布局就必须考虑如何放置访问类型数据的相关信息 ,reference中存储的直接就是对象地址，如果只是访问对象本身的话，就不需要多一次间接访问的开销，如图2-3所示。</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/d420d022-e427-4cae-a2c4-d27a380f2522.png" alt="" loading="lazy"></figure>
+<p>本文第三节引用自 &lt;&lt;深入理解Java虚拟机&gt;&gt; .</p>
+<blockquote>
+<p>​		这两种对象访问方式各有优势 :</p>
+<ul>
+<li>使用句柄来访问的最大好处就是reference中存储的是稳定句柄地址，在对象被移动（垃圾收集时移动对象是非常普遍的行为）时只会改变句柄中的实例数据指针，而reference本身不需要被修改。</li>
+<li>使用直接指针来访问最大的好处就是速度更快，它节省了一次指针定位的时间开销，由于对象访问在Java中非常频繁，因此这类开销积少成多也是一项极为可观的执行成本，就本书讨论的主要虚拟机HotSpot而言，它主要使用第二种方式进行对象访问（有例外情况，如果使用了Shenandoah收集器的话也会有一次额外的转发，具体可参见第3章），但从整个软件开发的范围来看，在各种语言、框架中使用句柄来访问的情况也十分常见。</li>
+</ul>
+</blockquote>
+<p>所以句柄访问方便管理, 直接指针访问效率高, 但是不方便管理.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E4%BE%8B%E5%AD%90%E4%B8%80">1. 例子一</a></li>
+<li><a href="#2-%E4%BE%8B%E5%AD%90%E4%BA%8C">2. 例子二</a></li>
+<li><a href="#3-java%E7%9A%84%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B">3. Java的引用类型</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

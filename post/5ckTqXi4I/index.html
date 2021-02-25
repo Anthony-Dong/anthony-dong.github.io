@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java生态界的  - 序列化方式(为RPC铺垫) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/5ckTqXi4I/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java生态界的  - 序列化方式(为RPC铺垫)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-19</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/5ckTqXi4I/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/VGFs7LxPgW/"
+								class="tag">中间件</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1216字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	我的版本是 2.7.X , dubbo用的序列化是 hessian2  .  他相对于java的序列化更加的小巧,  相对于FastJson来说更加方便,使用的主要原因是为了跨平台的问题.</p>
+<p>​	MessagePack需要的要求高, 注解配置不符合这种灵活性高的场景 ,而且跨平台只是假象 , 对用户不友好.</p>
+<p>​	Hessian2 提供了更好的方式 , 实现序列化机制. 直接基于字节流, 相对于Java的序列化机制更加灵活, 但是也有bug. Java的序列化不会有BUG.</p>
+</blockquote>
+<p>我们先对比一下Java的序列化方式</p>
+<h4 id="java原生-的序列化与反序列">Java原生 的序列化与反序列</h4>
+<blockquote>
+<p>​	自带的很方便.</p>
+</blockquote>
+<pre><code class="language-java">private static &lt;T&gt; byte[] serializeJava(T obj) throws IOException {
+    if (obj == null) throw new NullPointerException();
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+    try (ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+        oos.writeObject(obj);
+        return bos.toByteArray();
+    }
+}
+
+@SuppressWarnings(&quot;all&quot;)
+private static &lt;T&gt; T deserializeJava(byte[] by) throws IOException, ClassNotFoundException {
+    if (by == null || by.length == 0) throw new NullPointerException();
+    ByteArrayInputStream bis = new ByteArrayInputStream(by);
+    try (ObjectInputStream ois = new ObjectInputStream(bis)) {
+        return (T) ois.readObject();
+    }
+}
+</code></pre>
+<p>Java测试类:</p>
+<pre><code class="language-java">@Test
+public void testJava() throws IOException, ClassNotFoundException {
+    TestBean testBean = new TestBean(&quot;a&quot;, Collections.singletonList(&quot;b&quot;), Collections.singletonMap(&quot;c&quot;, &quot;d&quot;));
+    byte[] bytes = serializeJava(testBean);
+    System.out.printf(&quot;byte length : %d.&quot;, bytes.length);
+    TestBean bean = deserializeJava(bytes);
+    System.out.println(bean);
+    bean.printlnType();
+}
+</code></pre>
+<p>Java输出:</p>
+<pre><code class="language-java">byte length : 302.
+TestBean{name='a', list=[b], map={c=d}}
+name: class java.lang.String , list : class java.util.Collections$SingletonList , map : class java.util.Collections$SingletonMap
+</code></pre>
+<h4 id="hessian2-序列化与反序列化">hessian2 序列化与反序列化</h4>
+<pre><code class="language-java">/**
+ * 序列化
+ * @throws IOException
+ */
+private static &lt;T&gt; byte[] serialize(T obj) throws IOException {
+    if (obj == null) throw new NullPointerException();
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    Hessian2Output ho = new Hessian2Output(os);
+    try {
+        ho.writeObject(obj);
+        // 这里必须刷新出去.
+        ho.flushBuffer();
+        return os.toByteArray();
+    } finally {
+        ho.close();
+    }
+}
+
+
+/**
+ * 反序列化
+ *
+ * @throws IOException
+ */
+@SuppressWarnings(&quot;all&quot;)
+private static &lt;T&gt; T deserialize(byte[] by) throws IOException {
+    if (by == null || by.length == 0) throw new NullPointerException();
+    ByteArrayInputStream is = new ByteArrayInputStream(by);
+    Hessian2Input hi = new Hessian2Input(is);
+    try {
+        return (T) hi.readObject();
+    } finally {
+        hi.close();
+    }
+}
+</code></pre>
+<p>Hessian测试 :</p>
+<pre><code class="language-java">@Test
+public void testHessian2() throws IOException {
+    TestBean testBean = new TestBean(&quot;a&quot;, Collections.singletonList(&quot;b&quot;), Collections.singletonMap(&quot;c&quot;, &quot;d&quot;));
+    byte[] bytes = serialize(testBean);
+    System.out.printf(&quot;byte length : %d.\n&quot;, bytes.length);
+    TestBean bean = deserialize(bytes);
+    System.out.println(bean);
+    bean.printlnType();
+}
+</code></pre>
+<p>Hessian输出 :</p>
+<pre><code class="language-java">byte length : 138.
+TestBean{name='a', list=[b], map={c=d}}
+name: class java.lang.String , list : class java.util.ArrayList , map : class java.util.HashMap
+</code></pre>
+<p>Java输出 :</p>
+<pre><code class="language-java">byte length : 302.
+TestBean{name='a', list=[b], map={c=d}}
+name: class java.lang.String , list : class java.util.Collections$SingletonList , map : class java.util.Collections$SingletonMap
+</code></pre>
+<h4 id="总结">总结:</h4>
+<p>我们发现. Java的序列化大小是相差大小为两倍左右 ,Java序列化的体积是Hessian的两倍.</p>
+<p>Java序列化对于类型支持比较好. 可以将其恢复为原生类型. Hessian不可以.</p>
+<p>两者都需要将 序列化对象实现 <code>java.io.Serializable</code> 此接口.</p>
+<p>效率上面, 我们模拟了10次序列化与.  100个线程模拟.</p>
+<p>测试处理. 记得将上诉打印方法的都去掉.</p>
+<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
+    ExecutorService service = Executors.newFixedThreadPool(100);
+    long start = System.currentTimeMillis();
+    IntStream.range(0,100000).forEach(e-&gt;{
+        service.execute(()-&gt;{
+            try {
+                testJava();
+            } catch (IOException | ClassNotFoundException e1) {
+                e1.printStackTrace();
+            }
+        });
+    });
+    service.shutdown();
+    service.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
+    System.out.printf(&quot;cost : %dms&quot;, System.currentTimeMillis() - start);
+}
+</code></pre>
+<p>Java需要时间为 :</p>
+<pre><code class="language-java">cost : 1452ms
+</code></pre>
+<p>hessian2需要为 :</p>
+<pre><code class="language-java">cost : 11915ms
+</code></pre>
+<p>时间上相差大约为<code>8倍左右</code> , 可以多测试几下,所以Java的序列化方式更加高效, 但是占用体积大,类型支持好 .  Hessian序列化体积小, 类型支持不好, 时间消耗过长 .</p>
+<h4 id="实体bean">实体Bean</h4>
+<pre><code class="language-java">public class TestBean implements Serializable {
+
+    private String name;
+
+    private List&lt;String&gt; list;
+
+
+    private Map&lt;String, Object&gt; map;
+
+    public TestBean(String name, List&lt;String&gt; list, Map&lt;String, Object&gt; map) {
+        this.name = name;
+        this.list = list;
+        this.map = map;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;TestBean{&quot; +
+                &quot;name='&quot; + name + '\'' +
+                &quot;, list=&quot; + list +
+                &quot;, map=&quot; + map +
+                '}';
+    }
+    // 打印类型. 看看是否支持可靠
+    public void printlnType(){
+        System.out.printf(&quot;name: %s , list : %s , map : %s\n&quot;, name.getClass(), list.getClass(), map.getClass());
+    }
+}
+</code></pre>
+<h4 id="附加fastjson测试">附加FASTJSON测试</h4>
+<blockquote>
+<p>​	要求必须有get,set方法, 想要暴露的字段. 构造方法先不说, 没有构造器都不能进行实例化.</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testJson() {
+    TestBean testBean = new TestBean(&quot;a&quot;, Collections.singletonList(&quot;b&quot;), Collections.singletonMap(&quot;c&quot;, &quot;d&quot;));
+    String s = JSON.toJSONString(testBean);
+    System.out.printf(&quot;byte length : %d.\n&quot;, s.getBytes().length);
+    TestBean testBean1 = JSON.parseObject(s, TestBean.class);
+    System.out.println(testBean1);
+    testBean1.printlnType();
+}
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-java">byte length : 41.
+TestBean{name='a', list=[b], map={c=d}}
+name: class java.lang.String , list : class java.util.ArrayList , map : class java.util.HashMap
+</code></pre>
+<p>体积小. 类型支持适中 , 和 hessian2一样.</p>
+<p>效率测试. 记住进行byte转换一次.</p>
+<pre><code class="language-java">public static void testJson() {
+    TestBean testBean = new TestBean(&quot;a&quot;, Collections.singletonList(&quot;b&quot;), Collections.singletonMap(&quot;c&quot;, &quot;d&quot;));
+    // string -&gt; byte
+    String s = JSON.toJSONString(testBean);
+    byte[] bytes = s.getBytes();
+    // byte-&gt; string
+    String json = new String(bytes);
+    JSON.parseObject(json, TestBean.class);
+}
+</code></pre>
+<p>还是上面的模拟.</p>
+<pre><code class="language-java">cost : 985ms
+</code></pre>
+<p>时间为 985ms , 效率更高 . 所以FastJson 名副其实的快,  提交小, 类型支持适中.</p>
+<h4 id="messagepack测试">MessagePack测试</h4>
+<p>这里就不测试了 ,  记住一点 . 只需要实例化一个 MessagePack对象便可以了, 大量的实例化效率特别低, 差10倍. 单个对象序列化就是线程安全的. 必须要多个.</p>
+<p>类型支持差, 我们就不尝试了.</p>
+<h4 id="protobuff-测试">protobuff 测试</h4>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#java%E5%8E%9F%E7%94%9F-%E7%9A%84%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97">Java原生 的序列化与反序列</a></li>
+<li><a href="#hessian2-%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8E%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96">hessian2 序列化与反序列化</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结:</a></li>
+<li><a href="#%E5%AE%9E%E4%BD%93bean">实体Bean</a></li>
+<li><a href="#%E9%99%84%E5%8A%A0fastjson%E6%B5%8B%E8%AF%95">附加FASTJSON测试</a></li>
+<li><a href="#messagepack%E6%B5%8B%E8%AF%95">MessagePack测试</a></li>
+<li><a href="#protobuff-%E6%B5%8B%E8%AF%95">protobuff 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Guava - Java强大的类库 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/guava/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Guava - Java强大的类库</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-17</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/guava/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/L-xvm-udt-/"
+								class="tag">Google</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">542字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">3 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	<code>Guava</code>是Google推出的Java通用包, 很强大的类库 , 基本包含了 IO,多线程 ,集合, 字符串, 空指针检测, 很多</p>
+</blockquote>
+<blockquote>
+<p>​	<a href="https://github.com/google/guava/wiki">官方链接 : </a>  https://github.com/google/guava/wiki  ,可以挨着看.......</p>
+</blockquote>
+<h2 id="1-文件io">1. 文件IO</h2>
+<blockquote>
+<p>​	<code>ByteSource</code> , source是源的意思 , <code>ByteSink</code> 是下层的意思 ,  所以一个是进, 一个是出, 一个是读, 一个是写 , 同时你不用关系IO的关闭 ,</p>
+</blockquote>
+<h3 id="1-快速开始">1. 快速开始</h3>
+<p>下面这个代码就是一个文件拷贝 , 从 in.txt 拷贝到 out.txt</p>
+<pre><code class="language-java">@Test
+public void testStart() throws IOException {
+    ByteSource source = Files.asByteSource(new File(&quot;file/in.txt&quot;));
+    source.copyTo(Files.asByteSink(new File(&quot;file/out.txt&quot;)));
+   
+}
+</code></pre>
+<p>是不是相对于Java的Stream 方便了太多 ,</p>
+<h3 id="2-files">2. Files</h3>
+<blockquote>
+<p>他是文件操作的源 , 提供了很多静态方法</p>
+<p>主要实现的方法有以下几个 , 常用的流转换他都提供了 ,</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-08/179d1a99-e468-4d94-9f75-48e8b54589ff.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="2-bytesource">2. ByteSource</h3>
+<blockquote>
+<p>​	这个对象代表一个数据源,  可以将一个文件读取成一个字节流 , 其实就是Java的<code>InputStream</code> ,</p>
+</blockquote>
+<p>他的 <code>ByteSource#read</code>方法可以转换成字节数组 , 他的<code>ByteSource#openBufferedStream</code> 可以打开一个输入流, 他的<code>ByteSource#slice</code> 还可以切割输入自己流</p>
+<pre><code class="language-java">@Test
+public void testSource() throws IOException {
+
+    ByteSource source = Files.asByteSource(new File(&quot;file\\in.txt&quot;));
+
+    source.sizeIfKnown();// 防止空指针
+
+    source.copyTo(new FileOutputStream(&quot;file/out.txt&quot;)); // 拷贝
+
+    source.copyTo(Files.asByteSink(new File(&quot;file/out.txt&quot;), FileWriteMode.APPEND)); // 拷贝
+
+    source.slice(0, 10); // 切割
+
+    source.read();  // 读取一个流
+
+    source.asCharSource(Charset.forName(&quot;utf-8&quot;)); // 读取一个CharSource流(字符流)
+
+    source.hash() // 求hash码
+
+    source.openStream(); // 返回一个 inputStream 对象
+
+}
+</code></pre>
+<h3 id="3-charsource">3. CharSource</h3>
+<blockquote>
+<p>​	 字符流</p>
+</blockquote>
+<h3 id="4-bytesink">4. ByteSink</h3>
+<blockquote>
+<p>​	这个可以比作成一个 <code>OutputStream</code> 对象 , 他执行写操作</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testSink() throws IOException {
+
+    ByteSink byteSink = Files.asByteSink(new File(&quot;&quot;));
+
+    byteSink.openStream();  // 返回一个 OutputStream 对象
+
+    byteSink.write(new byte[1024]);  // 往文件中写入字节数组
+
+    byteSink.writeFrom(new FileInputStream(&quot;&quot;));  // 写入一个文件输入流
+
+    byteSink.asCharSink();  // 转换成 CharSink
+}
+</code></pre>
+<h3 id="5-charsink">5. CharSink</h3>
+<blockquote>
+<p>​	可以很轻松的写入日志 , 比如 .....</p>
+</blockquote>
+<pre><code class="language-java">CharSink charSink = Files.asCharSink(new File(&quot;file\\out4.txt&quot;), Charset.forName(&quot;utf-8&quot;), FileWriteMode.APPEND);
+// 写入操作很方便
+charSink.write(new StringBuilder(&quot;sb&quot;));
+</code></pre>
+<h2 id="2-eventbus">2. EventBus</h2>
+<p>就不讲解了 , 我的有一篇文章中写过 , <a href="https://anthony-dong.github.io/post/jian-ting-zhe-mo-shi">链接</a> : https://anthony-dong.github.io/post/jian-ting-zhe-mo-shi</p>
+<h2 id="3-集合类">3. 集合类</h2>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E6%96%87%E4%BB%B6io">1. 文件IO</a>
+<ul>
+<li><a href="#1-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">1. 快速开始</a></li>
+<li><a href="#2-files">2. Files</a></li>
+<li><a href="#2-bytesource">2. ByteSource</a></li>
+<li><a href="#3-charsource">3. CharSource</a></li>
+<li><a href="#4-bytesink">4. ByteSink</a></li>
+<li><a href="#5-charsink">5. CharSink</a></li>
+</ul>
+</li>
+<li><a href="#2-eventbus">2. EventBus</a></li>
+<li><a href="#3-%E9%9B%86%E5%90%88%E7%B1%BB">3. 集合类</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

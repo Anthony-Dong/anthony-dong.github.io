@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Dubbo  - 了解和入门 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/dubbo-liao-jie-he-ru-men/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Dubbo  - 了解和入门</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-12</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/dubbo-liao-jie-he-ru-men/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Wo2jNti0O/"
+								class="tag">Dubbo</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2049字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">10 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	<a href="http://dubbo.apache.org/zh-cn/docs/user/quick-start.html">Dubbo快速入门 : </a>  http://dubbo.apache.org/zh-cn/docs/user/quick-start.html</p>
+</blockquote>
+<blockquote>
+<p><strong>分布式服务架构</strong></p>
+<p>​	当垂直应用越来越多，应用之间交互不可避免，将核心业务抽取出来，作为独立的服务，逐渐形成稳定的服务中心，使前端应用能更快速的响应多变的市场需求。此时，用于提高业务复用及<strong>整合的分布式服务框架(RPC)是关键。</strong>  目前RPC主流的就是 Dubbo , gRPC , 之类的 , 传统的比如 RestRPC 请求比如目前比较火热的springcloud采用的就是http的方式 , 但是http我们都知道效率低, 所以走向rpc,采用dubbo很关键, 低延迟</p>
+</blockquote>
+<p>参考文章 : <a href="http://jm.taobao.org/2018/06/13/%E5%BA%94%E7%94%A8/">http://jm.taobao.org/2018/06/13/%E5%BA%94%E7%94%A8/</a></p>
+<h2 id="1-核心点">1. 核心点</h2>
+<h3 id="1-java-rmi-简介">1. Java RMI 简介</h3>
+<p>Java RMI （Remote Method Invocation）- 远程方法调用，能够让<strong>客户端</strong>像使用本地调用一样调用<strong>服务端</strong> Java 虚拟机中的对象方法。RMI 是面向对象语言领域对 RPC （Remote Procedure Call）的完善，用户无需依靠 IDL 的帮助来完成分布式调用，而是通过依赖接口这种更简单自然的方式。</p>
+<h3 id="2-dubbo-基本概念">2. Dubbo 基本概念</h3>
+<p>现代的分布式服务框架的基本概念与 RMI 是类似的，同样是使用 Java 的 Interface 作为服务契约，通过注册中心来完成服务的注册和发现，远程通讯的细节也是通过代理类来屏蔽。具体来说，Dubbo 在工作时有以下四个角色参与：</p>
+<ol>
+<li>服务提供者 - 启动时在指定端口上暴露服务，并将服务地址和端口注册到注册中心上</li>
+<li>服务消费者 - 启动时向注册中心订阅自己感兴趣的服务，以便获得服务提供方的地址列表</li>
+<li>注册中心 - 负责服务的注册和发现，负责保存服务提供方上报的地址信息，并向服务消费方推送</li>
+<li>监控中心 - 负责收集服务提供方和消费方的运行状态，比如服务调用次数、延迟等，用于监控</li>
+<li>运行容器 - 负责服务提供方的初始化、加载以及运行的生命周期管理</li>
+</ol>
+<figure data-type="image" tabindex="1"><img src="https://cdn.yuque.com/lark/0/2018/png/13615/1527499479031-19b76c2f-29dc-4766-8dcb-9dd7c0c089f7.png" alt="" loading="lazy"></figure>
+<p><strong>部署阶段</strong></p>
+<ul>
+<li>服务提供者在指定端口暴露服务，并向注册中心注册服务信息。</li>
+<li>服务消费者向注册中心发起服务地址列表的订阅。</li>
+</ul>
+<p><strong>运行阶段</strong></p>
+<ul>
+<li><strong>注册中心向服务消费者推送地址列表信息</strong>。</li>
+<li>服务消费者收到地址列表后，从其中选取一个向目标服务发起调用。</li>
+<li>调用过程服务消费者和服务提供者的运行状态上报给监控中心。</li>
+</ul>
+<h2 id="2-快速开始">2. 快速开始</h2>
+<h3 id="1-java的-rmi-我不会整-跑不通-可以百度">1. Java的 RMI  , 我不会整, 跑不通, 可以百度</h3>
+<h3 id="2-dubbo-api-方式">2. Dubbo - Api 方式</h3>
+<h4 id="1-对外提供的接口">1. 对外提供的接口</h4>
+<pre><code class="language-java">public interface DemoService {
+    String sayName(String name);
+}
+</code></pre>
+<h4 id="2-服务器端对接口的实现">2. 服务器端对接口的实现</h4>
+<pre><code class="language-java">public class DefaultService implements DemoService {
+	// 接口实现
+    public String sayName(String name) {
+        RpcContext rpcContext = RpcContext.getContext();
+        return String.format(&quot;Service [port : %d] %s(\&quot;%s\&quot;) : Hello,%s&quot;,
+                rpcContext.getLocalPort(),
+                rpcContext.getMethodName(),
+                name,
+                name);
+    }
+}
+</code></pre>
+<h4 id="4-服务器提供者代码">4. 服务器(提供者)代码</h4>
+<pre><code class="language-java">package com.example;
+
+import com.alibaba.dubbo.config.*;
+import com.example.dubboprovider.service.DefaultService;
+import com.example.dubboprovider.service.DemoService;
+import org.junit.Test;
+
+import javax.xml.ws.soap.MTOM;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * TODO
+ *
+ * @date:2019/12/11 21:25
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+
+public class Provider {
+
+
+    @Test
+    public void provider() throws IOException {
+        // 1. 提供的服务对象
+        DemoService providerService = new DefaultService();
+
+        // 2. 当前服务配置
+        ApplicationConfig application = new ApplicationConfig();
+        application.setName(&quot;provider&quot;);
+
+
+        // 3. 注册中心配置 , NO_AVAILABLE , 采用直连的方式
+        RegistryConfig registry = new RegistryConfig();
+        registry.setAddress(&quot;N/A&quot;);
+
+
+        // 4. 服务提供者协议配置
+        ProtocolConfig protocol = new ProtocolConfig();
+        // 协议名称
+        protocol.setName(&quot;dubbo&quot;);
+        // 服务器地址
+        protocol.setHost(&quot;0.0.0.0&quot;);
+        // 端口
+        protocol.setPort(8888);
+        // 配置线程数
+        protocol.setThreads(200);
+
+
+        // 5. 暴露的方法 // 如果不写全部方法都暴露在外面
+        List&lt;MethodConfig&gt; methods = new ArrayList&lt;MethodConfig&gt;();
+        MethodConfig method = new MethodConfig();
+        method.setName(&quot;sayName&quot;);
+        // ms
+        method.setTimeout(10000);
+        // 重试次数
+        method.setRetries(0);
+        methods.add(method);
+
+
+        // 注意：ServiceConfig为重对象，内部封装了与注册中心的连接，以及开启服务端口
+        // 6. (核心对象) 服务提供者暴露服务配置
+        ServiceConfig&lt;DemoService&gt; service = new ServiceConfig&lt;DemoService&gt;(); // 此实例很重，封装了与注册中心的连接，请自行缓存，否则可能造成内存和连接泄漏
+        service.setApplication(application);
+        service.setRegistry(registry); // 多个注册中心可以用setRegistries()
+        service.setProtocol(protocol); // 多个协议可以用setProtocols()
+        service.setInterface(DemoService.class); // 暴露接口
+        service.setRef(providerService); // 设置提供的引用对象
+        service.setMethods(methods);
+        service.setVersion(&quot;1.0.0&quot;); // 设置版本号
+
+
+        // 暴露及注册服务
+        service.export();
+
+
+        System.in.read();
+    }
+}
+</code></pre>
+<h4 id="4-引用方消费者实现">4. 引用方(消费者)实现</h4>
+<pre><code class="language-java">package com.example;
+
+import com.alibaba.dubbo.config.*;
+import com.alibaba.dubbo.rpc.RpcContext;
+import com.example.dubboprovider.service.DefaultService;
+import com.example.dubboprovider.service.DemoService;
+import org.junit.Test;
+
+
+/**
+ * TODO
+ *
+ * @date:2019/12/11 21:25
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+
+public class Consumer {
+
+
+    @Test
+    public void consumer() {
+
+        // 1. 当前服务配置
+        ApplicationConfig application = new ApplicationConfig();
+        application.setName(&quot;consumer&quot;);
+
+
+        //2. 配置注册中心 ,本地模式 , NO_AVAILABLE
+        RegistryConfig registry = new RegistryConfig();
+        registry.setAddress(&quot;N/A&quot;);
+
+
+        // 注意：ReferenceConfig为重对象，内部封装了与注册中心的连接，以及与服务提供方的连接
+        // 3. 实例化一个引用对象  引用远程服务
+        ReferenceConfig&lt;DemoService&gt; reference = new ReferenceConfig&lt;DemoService&gt;(); // 此实例很重，封装了与注册中心的连接，请自行缓存，否则可能造成内存和连接泄漏
+        reference.setApplication(application);
+        reference.setRegistry(registry);
+        // 直连方式
+        reference.setUrl(&quot;dubbo://192.168.28.1:8888/com.example.dubboprovider.service.DemoService&quot;);
+        reference.setInterface(DemoService.class);
+        reference.setVersion(&quot;1.0.0&quot;);
+
+
+        // 引用对象
+        DemoService referenceService = reference.get();
+        String dubbo = referenceService.sayName(&quot;Dubbo&quot;);
+
+        System.out.println(dubbo);
+    }
+
+}
+
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">Service [port : 8888] sayName(&quot;Dubbo&quot;) : Hello,Dubbo
+</code></pre>
+<h2 id="3-主要角色">3. 主要角色</h2>
+<figure data-type="image" tabindex="2"><img src="https://cdn.yuque.com/lark/0/2018/png/13615/1527499479031-19b76c2f-29dc-4766-8dcb-9dd7c0c089f7.png" alt="" loading="lazy"></figure>
+<p>其实我们关心的就是 provider 和 consumer , register  , (其他角色后期介绍)</p>
+<p>provider  : 核心就是<code>ServiceConfig</code> , 他是Dubbo 服务器提供者唯一的API 对象, 其他对象都是为这么一个对象服务的 . 一般需要 <code>ApplicationConfig</code> , <code>RegistryConfig</code> , <code>ProtocolConfig</code> , <code>MethodConfig</code></p>
+<p>consumer : 核心就是 <code>ReferenceConfig</code> , 他是Dubbo 引用方唯一的消费对象 , 其他对象对这个对象服务 ,一般需要  <code>ApplicationConfig</code> , <code>RegistryConfig</code> ,</p>
+<h2 id="4-spring-boot-整合">4. Spring-Boot 整合</h2>
+<p>主要依赖 , 各个模块都需要</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;dubbo-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;0.2.0&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>接口实现有所改变 ,注意这个<code>Service</code> 标签的含义是我们上面所说的 Dubbo对象唯一的引用实例 , 与SpringBoot的Service注解不一样的.</p>
+<pre><code class="language-java">@Service(version = &quot;${demo.service.version}&quot;)
+public class DefaultService implements DemoService {
+
+    @Value(&quot;${demo.service.name}&quot;)
+    private String serviceName;
+
+    public String sayName(String name) {
+        // 全局对象
+        RpcContext rpcContext = RpcContext.getContext();
+        return String.format(&quot;Service [name :%s , port : %d] %s(\&quot;%s\&quot;) : Hello,%s&quot;,
+                serviceName,
+                rpcContext.getLocalPort(),
+                rpcContext.getMethodName(),
+                name,
+                name);
+    }
+}
+</code></pre>
+<p>服务方的配置  <code>dubbo/provider-config.properties</code></p>
+<pre><code class="language-properties">## application
+dubbo.application.name = dubbo-provider-demo
+
+## Nacos registry address
+dubbo.registry.address = zookeeper://47.93.251.248:2181
+
+## Dubbo Protocol
+dubbo.protocol.name = dubbo
+dubbo.protocol.port = -1
+
+# Provider @Service version
+demo.service.version=1.0.0
+demo.service.name = demoService
+</code></pre>
+<p>服务启动类</p>
+<pre><code class="language-java">// spring 自动注入模式 ,其实类似于引入一个config类
+@EnableDubbo(scanBasePackages = {&quot;com.example.dubboprovider.service&quot;})
+@PropertySource(value = &quot;classpath:/dubbo/provider-config.properties&quot;)
+public class DubboProviderApplication {
+
+    public static void main(String[] args) throws IOException {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        // 注册 
+        context.register(DubboProviderApplication.class);
+        // 刷新 . 必须刷新
+        context.refresh();
+        
+        System.out.println(&quot;DemoService provider is starting...&quot;);
+        System.in.read();
+    }
+}
+</code></pre>
+<p>消费者配置</p>
+<pre><code class="language-properties">## Dubbo Application info
+dubbo.application.name = dubbo-consumer
+
+## Nacos registry address
+dubbo.registry.address = zookeeper://47.93.251.248:2181
+
+
+# @Reference version
+demo.service.version= 1.0.0
+</code></pre>
+<p>消费者启动类</p>
+<pre><code class="language-java">@EnableDubbo(scanBasePackages = {&quot;com.example.dubboprovider.service&quot;})
+@PropertySource(value = &quot;classpath:/dubbo/consumer-config.properties&quot;)
+public class DubboConsumerApplication {
+
+    @Reference(version = &quot;${demo.service.version}&quot;)
+    private DemoService demoService;
+
+    @PostConstruct
+    public void init() {
+        for (int i = 0; i &lt; 10; i++) {
+            System.out.println(demoService.sayName(&quot; Dubbo&quot;));
+        }
+    }
+
+    public static void main(String[] args) throws IOException {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        context.register(DubboConsumerApplication.class);
+        context.refresh();
+        context.close();
+    }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">20:15:01.480 [DubboClientHandler-192.168.28.1:20880-thread-1] DEBUG com.alibaba.dubbo.remoting.transport.DecodeHandler -  [DUBBO] Decode decodeable message com.alibaba.dubbo.rpc.protocol.dubbo.DecodeableRpcResult, dubbo version: 2.6.2, current host: 192.168.28.1
+Service [name :demoService , port : 20880] sayName(&quot; Dubbo&quot;) : Hello, Dubbo
+
+20:15:01.484 [DubboClientHandler-192.168.28.1:20880-thread-1] DEBUG com.alibaba.dubbo.remoting.transport.DecodeHandler -  [DUBBO] Decode decodeable message com.alibaba.dubbo.rpc.protocol.dubbo.DecodeableRpcResult, dubbo version: 2.6.2, current host: 192.168.28.1
+Service [name :demoService , port : 20880] sayName(&quot; Dubbo&quot;) : Hello, Dubbo
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E6%A0%B8%E5%BF%83%E7%82%B9">1. 核心点</a>
+<ul>
+<li><a href="#1-java-rmi-%E7%AE%80%E4%BB%8B">1. Java RMI 简介</a></li>
+<li><a href="#2-dubbo-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">2. Dubbo 基本概念</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">2. 快速开始</a>
+<ul>
+<li><a href="#1-java%E7%9A%84-rmi-%E6%88%91%E4%B8%8D%E4%BC%9A%E6%95%B4-%E8%B7%91%E4%B8%8D%E9%80%9A-%E5%8F%AF%E4%BB%A5%E7%99%BE%E5%BA%A6">1. Java的 RMI  , 我不会整, 跑不通, 可以百度</a></li>
+<li><a href="#2-dubbo-api-%E6%96%B9%E5%BC%8F">2. Dubbo - Api 方式</a>
+<ul>
+<li><a href="#1-%E5%AF%B9%E5%A4%96%E6%8F%90%E4%BE%9B%E7%9A%84%E6%8E%A5%E5%8F%A3">1. 对外提供的接口</a></li>
+<li><a href="#2-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E5%AF%B9%E6%8E%A5%E5%8F%A3%E7%9A%84%E5%AE%9E%E7%8E%B0">2. 服务器端对接口的实现</a></li>
+<li><a href="#4-%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8F%90%E4%BE%9B%E8%80%85%E4%BB%A3%E7%A0%81">4. 服务器(提供者)代码</a></li>
+<li><a href="#4-%E5%BC%95%E7%94%A8%E6%96%B9%E6%B6%88%E8%B4%B9%E8%80%85%E5%AE%9E%E7%8E%B0">4. 引用方(消费者)实现</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E4%B8%BB%E8%A6%81%E8%A7%92%E8%89%B2">3. 主要角色</a></li>
+<li><a href="#4-spring-boot-%E6%95%B4%E5%90%88">4. Spring-Boot 整合</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

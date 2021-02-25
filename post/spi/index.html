@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>SPI - 以及在Spring中的使用 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>SPI - 以及在Spring中的使用</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-07</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">880字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">4 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	SPI全称Service Provider Interface，是Java提供的一套用来被第三方实现或者扩展的API，它可以用来启用框架扩展和替换组件。可以理解为一种容器 , 我们可以依靠容器获取我们想要的实例化对象 .</p>
+</blockquote>
+<p><strong>机构图 :</strong></p>
+<p>调用方 : 需要一个被实现的接口类 和 一个类加载器 ,</p>
+<p>服务接口 : 就是你所需要实现的服务</p>
+<p>服务提供方 ; 就是服务真正的实现类</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-11-07/1d0135ff-e16d-4588-9c6b-d44e2c74185a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="1-快速使用">1. 快速使用</h2>
+<h3 id="1-简单使用">1. 简单使用</h3>
+<p>这个是一个目录结构 :</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-11-07/a7d26511-e805-48e7-8ea3-4e555a386bc4.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们需要在classpath 下面创建一个 META-INF/services目录 , 新建一个接口的全限定名称的文件</p>
+<p>文件内容 :</p>
+<pre><code class="language-java">com.example.spi.FinalEchoService
+com.example.spi.AdvancedEchoService
+</code></pre>
+<p>类的具体实现 :</p>
+<pre><code class="language-java">// 1. 接口
+public interface EchoService {
+    String echo(String msg);
+}
+
+// 2. 实现类一
+public class FinalEchoService implements EchoService {
+    @Override
+    public String echo(String msg) {
+        return &quot;FinalEchoService : &quot;+msg;
+    }
+}
+
+//3. 实现类二
+public class AdvancedEchoService implements EchoService{
+    @Override
+    public String echo(String msg) {
+        return &quot;AdvancedEchoService :&quot; + msg;
+    }
+}
+</code></pre>
+<p>启动 :</p>
+<pre><code class="language-java">public class RunDemo {
+
+    public static void main(String[] args) {
+        // 默认传入俩参数 , 一个是服务接口, 一个是类加载器, 因为他要去寻找你的classpath
+        ServiceLoader&lt;EchoService&gt; services = ServiceLoader.load(EchoService.class, RunDemo.class.getClassLoader());
+
+        Iterator&lt;EchoService&gt; iterator = services.iterator();
+        iterator.forEachRemaining(echoService -&gt; {
+            System.out.println(&quot;echoService.echo(\&quot;hello\&quot;) = &quot; + echoService.echo(&quot;hello&quot;));
+        });
+    }
+}
+</code></pre>
+<p>输出结果:</p>
+<pre><code class="language-java">echoService.echo(&quot;hello&quot;) = FinalEchoService : hello
+echoService.echo(&quot;hello&quot;) = AdvancedEchoService :hello
+</code></pre>
+<h3 id="2-查找问题">2. 查找问题</h3>
+<h4 id="问题一-类加载器">问题一 : 类加载器</h4>
+<pre><code class="language-java">// 1. 实现1 
+ServiceLoader&lt;EchoService&gt; services = ServiceLoader.load(EchoService.class);
+// 2. 实现2
+ServiceLoader&lt;EchoService&gt; services = ServiceLoader.load(EchoService.class, RunDemo.class.getClassLoader());
+</code></pre>
+<p>我们发现第一个不需要类加载器 ,这里就有一个技巧,可以快速获取当前线程的类加载器</p>
+<pre><code class="language-java">Thread.currentThread().getContextClassLoader();  //或者是 : 
+ClassLoader.getSystemClassLoader();
+
+输出是 : 
+Thread.currentThread().getContextClassLoader();
+</code></pre>
+<h4 id="问题二-如何实现">问题二 : 如何实现</h4>
+<p>它是如何实现的呢 ?</p>
+<p>秘密就藏在迭代器里面  :  , 迭代器里面</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-11-07/9309e875-cde1-48ad-bac4-b6ac2c2be035.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们发现每次迭代的时候都回去执行 Class.forName() 的方法</p>
+<h4 id="问题三-构造器">问题三 : 构造器</h4>
+<p>由于是反射所以只能呢个实现默认的构造方法,所以我们试试 ;</p>
+<pre><code class="language-java">public class FinalEchoService implements EchoService {
+
+    public FinalEchoService() {
+        System.out.println(&quot;FinalEchoService 无参构造器&quot;);
+    }
+    
+    private int x;
+
+    public FinalEchoService(int x) {
+        this.x = x;
+    }
+
+    @Override
+    public String echo(String msg) {
+        return &quot;FinalEchoService : &quot;+msg;
+    }
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">FinalEchoService 无参构造器
+echoService.echo(&quot;hello&quot;) = FinalEchoService : hello
+</code></pre>
+<h2 id="2-spring中的使用">2. Spring中的使用</h2>
+<h3 id="1-springservletcontainerinitializer">1. SpringServletContainerInitializer</h3>
+<blockquote>
+<p>1 . <code>Servlet 3.0</code>引入的接口，用于在web应用启动时动态添加<code>servlet</code>、<code>filter</code>和<code>listener</code>；</p>
+<p>2 . 基于<code>spi</code>机制，<code>META-INF/services/javax.servlet.ServletContainerInitializer</code>文件中存放实现该接口的类，这些类会被容器调用 ；</p>
+<p>3 . 只能使用在<code>Jar</code>文件中，不能使用在<code>web</code>项目中 ；</p>
+</blockquote>
+<h3 id="2-分析机制">2. 分析机制</h3>
+<p>我将 SpringServletContainerInitializer 自己实现了一个 , 没有过多的封装 . 其基本原理基本上是一致的 .</p>
+<pre><code class="language-java">@HandlesTypes({WebApplicationInitializer.class}) // 感兴趣的类 或者 叫做 处理的类
+public class MyServletContainerInitializer implements ServletContainerInitializer {
+
+    @Override
+    public void onStartup(Set&lt;Class&lt;?&gt;&gt; c, ServletContext ctx) throws ServletException {
+        // c 是你感兴趣的类{HandlesTypes} : WebApplicationInitializer 的实现类 ,都存里面了 , 是一些字节码 ,
+
+        // 我们将我们感兴趣的类 , 实例化 , 首先创建一个空的
+        List&lt;WebApplicationInitializer&gt; initializers = new LinkedList&lt;&gt;();
+
+        // 遍历所有的 类 {WebApplicationInitializer 的子类 } , 然后实例化 ,放入initializers中
+        for (Class&lt;?&gt; aClass : c) {
+            try {
+                initializers.add((WebApplicationInitializer) aClass.newInstance());
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 全部调用WebApplicationInitializer 的 onStartup() 方法 , 传入 参数 ServletContext , 初始化web 容器 
+        for (WebApplicationInitializer initializer : initializers) {
+            initializer.onStartup(ctx);
+        }
+    }
+}
+</code></pre>
+<pre><code class="language-java">public interface WebApplicationInitializer {
+	// 需要传入一个 ServletContext 
+	void onStartup(ServletContext  servletContext) throws ServletException;
+}
+</code></pre>
+<p>这个案例的 <a href="https://github.com/Anthony-Dong/servletContainerInitializer">Demo</a> 在 : https://github.com/Anthony-Dong/servletContainerInitializer</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8">1. 快速使用</a>
+<ul>
+<li><a href="#1-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8">1. 简单使用</a></li>
+<li><a href="#2-%E6%9F%A5%E6%89%BE%E9%97%AE%E9%A2%98">2. 查找问题</a>
+<ul>
+<li><a href="#%E9%97%AE%E9%A2%98%E4%B8%80-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8">问题一 : 类加载器</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E4%BA%8C-%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0">问题二 : 如何实现</a></li>
+<li><a href="#%E9%97%AE%E9%A2%98%E4%B8%89-%E6%9E%84%E9%80%A0%E5%99%A8">问题三 : 构造器</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-spring%E4%B8%AD%E7%9A%84%E4%BD%BF%E7%94%A8">2. Spring中的使用</a>
+<ul>
+<li><a href="#1-springservletcontainerinitializer">1. SpringServletContainerInitializer</a></li>
+<li><a href="#2-%E5%88%86%E6%9E%90%E6%9C%BA%E5%88%B6">2. 分析机制</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

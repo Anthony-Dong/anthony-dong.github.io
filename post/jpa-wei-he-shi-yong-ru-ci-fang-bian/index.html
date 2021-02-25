@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> JPA - 用起来真的很舒服 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/jpa-wei-he-shi-yong-ru-ci-fang-bian/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> JPA - 用起来真的很舒服</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-20</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/jpa-wei-he-shi-yong-ru-ci-fang-bian/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/NYP7PsS0Ewg/"
+								class="tag">JPA</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3345字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">16 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	JPA是Java Persistence API的简称，中文名Java持久层API，是JDK 5.0注解或XML描述对象－关系表的映射关系，并将运行期的实体<a href="https://baike.baidu.com/item/%E5%AF%B9%E8%B1%A1%E6%8C%81%E4%B9%85%E5%8C%96/7316192">对象持久化</a>到数据库中。 [1]</p>
+<p>Sun引入新的JPA ORM规范出于两个原因：其一，简化现有Java EE和Java SE应用开发工作；其二，Sun希望整合ORM技术，实现天下归一。</p>
+</blockquote>
+<blockquote>
+<p>JPA是需要Provider来实现其功能的，Hibernate就是JPA Provider中很强的一个，应该说无人能出其右。从功能上来说，JPA就是Hibernate功能的一个子集。Hibernate 从3.2开始，就开始兼容JPA。Hibernate3.2获得了Sun TCK的JPA(Java Persistence API) 兼容认证。</p>
+<p>Spring + Hibernate 常常被称为 Java Web 应用人气最旺的框架组合。</p>
+</blockquote>
+<p>所以JPA是规范 , Hibernate是实现 , 如果你用了JPA , 你会爱上他的, 太方便了 , 但是他学习起来可能需要一些成本 , 掌握了你会发现比Mybatis 方便一丢丢 ,</p>
+<h2 id="1-springboot-快速开始">1. springboot - 快速开始</h2>
+<p>我的版本是 2.0.4.RELEASE   springboot 版本  , 版本不一致可能出现不同的问题 .</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-data-jpa&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;mysql&lt;/groupId&gt;
+    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;
+&lt;/dependency&gt;
+&lt;!-- 方便测试 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.h2database&lt;/groupId&gt;
+    &lt;artifactId&gt;h2&lt;/artifactId&gt;
+    &lt;version&gt;1.4.197&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>springboot的配置 , 其中没必要去设置 <code>@EnableJpaRepositories</code> 注解, 默认会自动注入的.  这个是测试环境的配置文件.</p>
+<pre><code class="language-properties"># 使用H2为了测试方便.
+spring.datasource.url=jdbc:h2:mem:jpa;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.continue-on-error=false
+spring.datasource.hikari.minimum-idle=2
+
+# 就是每次运行完清空数据. 测试环境下, 最好使用这种.
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.jpa.show-sql=true
+# 修改数据库引擎.
+spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect
+</code></pre>
+<p>我们的pojo对象 , 按照规范,我们的对象应该是 <code>名字+Do</code> , 所以叫 <code>UserDo</code></p>
+<pre><code class="language-java">@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+// name含义就是你生成表的table的名称.
+// 默认是类名. 而且这个很有用处, 最好别自定义. 自定义的话 . JSQL就得按照这个名字来了.
+// 所以一般也不加@Table注解.
+@Entity
+public class UserDo {
+
+    @Id
+    // 这个策略只是用与MySQL自带的那种自增策略.更多解释下文讲解.
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long userId;
+    private String username;
+    private String password;
+
+}
+</code></pre>
+<p>mapper对象 - repository对象</p>
+<pre><code class="language-java">public interface UserMapper extends JpaRepository&lt;UserDo, Long&gt; {
+    // 后面解释为什么这么写
+    @Query(value = &quot;select u from user u where u.userId=:userId&quot;)
+    UserDo findByUserId(Long userId);
+}
+</code></pre>
+<h2 id="2-测试">2. 测试</h2>
+<h3 id="1-crud操作">1. CRUD操作</h3>
+<pre><code class="language-java">public interface UserMapper extends JpaRepository&lt;UserDo, Long&gt; {
+
+    @Query(value = &quot;select u from UserDo u where u.userId=:userId&quot;)
+    UserDo findByUserId(Long userId);
+
+
+    /**
+     * 第一必须加 @Transactional 注解, 不然报错.
+     * CUD 操作必须申明 @Modifying 注解, 不然报错 , 同时它的属性 clearAutomatically 可以帮助我们清空缓存, 最好设置为true.
+     * 这就是申明这俩的原因. 
+     */
+    @Transactional
+    @Modifying
+    @Query(&quot;delete from UserDo u where u.userId=:userId&quot;)
+    int deleteByUserId(Long userId);
+
+    @Transactional
+    @Modifying
+    @Query(&quot;update UserDo u set u.password=:password where u.userId=:userId&quot;)
+    int updateByUserId(Long userId, String password);
+}
+</code></pre>
+<p>测试代码 :</p>
+<pre><code class="language-java">@FixMethodOrder(value = MethodSorters.DEFAULT)
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+public class UserMapperTest {
+
+    @Autowired
+    private UserMapper mapper;
+
+    @Before
+    public void init() {
+        mapper.save(UserDo.builder().username(&quot;tom&quot;).password(&quot;123456&quot;).build());
+        mapper.save(UserDo.builder().username(&quot;tony&quot;).password(&quot;123456&quot;).build());
+    }
+
+    @After
+    public void drop() {
+        mapper.deleteAll();
+    }
+
+
+    @Test
+    public void findByUserId() {
+        // 执行两次的目的是看看是否使用了缓存
+        mapper.findByUserId(1L);
+        mapper.findByUserId(1L);
+    }
+
+    @Test
+    public void deleteByUserId() {
+        mapper.deleteByUserId(2L);
+    }
+
+    @Test
+    public void updateByUserId() {
+        int i = mapper.updateByUserId(1L, &quot;987654321&quot;);
+        System.out.println(i);
+        UserDo user = mapper.findByUserId(1L);
+        System.out.println(user);
+    }
+}
+</code></pre>
+<p>我把结果大致放这里.</p>
+<pre><code class="language-java">// 初始化流程 , 创建表
+Hibernate: create table user_do (user_id bigint not null auto_increment, password varchar(255), username varchar(255), primary key (user_id)) engine=InnoDB
+
+
+// 插入语句的流程
+Hibernate: insert into user_do (password, username) values (?, ?)
+Hibernate: insert into user_do (password, username) values (?, ?)
+    
+// 删除
+Hibernate: delete from user_do where user_id=?
+    
+//查询
+Hibernate: select userdo0_.user_id as user_id1_0_, userdo0_.password as password2_0_, userdo0_.username as username3_0_ from user_do userdo0_ where userdo0_.user_id=?
+//查询
+Hibernate: select userdo0_.user_id as user_id1_0_, userdo0_.password as password2_0_, userdo0_.username as username3_0_ from user_do userdo0_ where userdo0_.user_id=?
+
+
+// 更新    
+Hibernate: update user_do set password=? where user_id=?    
+</code></pre>
+<h3 id="2-问题">2. 问题</h3>
+<ul>
+<li>没有使用缓存,</li>
+<li>插入的流程是 ,先去sequence表中, 行锁查询ID字段. 然后根据ID去插入 , 没有使用数据库自带的自增策略.</li>
+<li>关于如何开启缓存 , 自行百度. 我觉得, 最好别从 dao层面开启缓存, 应该让我们从服务层手动写代码开启. 防止出现脏数据.</li>
+<li>关于 为何加 <code>@Transactional</code> 此注解的原因 , 以及 <code>@Modifying</code> 的原因.  上诉介绍了</li>
+<li>关于 <code>@Entity</code> 注解的问题以及 JSQL的问题. 为何介意只使用 <code>@Entity</code> 注解, 不使用多余使用<code>@Table</code>注解呢,</li>
+</ul>
+<p>因为在我们写 jsql的时候, 是根据entity 注解的标记走的.  所以, 如果你要写. table和entity的name值必须相同, 而且表名默认就是 entity的name, 也就是类名.</p>
+<p>所以对于我上面的user对象</p>
+<pre><code class="language-java">@Entity(name = &quot;user&quot;)
+public class UserDo {}
+</code></pre>
+<p>这个查询语句</p>
+<pre><code class="language-sql">@Query(value = &quot;select u from user u where u.userId=:userId&quot;)
+UserDo findByUserId(Long userId);
+</code></pre>
+<p>此时就是, 使用了<code>user</code> 作为表的映射字段.</p>
+<p>如果我们将entity的name取消掉. 如何写sql呢</p>
+<pre><code class="language-java">@Query(value = &quot;select u from UserDo u where u.userId=:userId&quot;)
+UserDo findByUserId(Long userId);
+</code></pre>
+<p>就是上诉这种了, 结合这点. 所以最好别将UserDo 名字设置为这个, 最好直接是表名称最好.</p>
+<p>为了写起来方便, 因此我将 <code>@Entity(name = &quot;user&quot;)</code> 改为了 <code>@Entity</code> 直接.</p>
+<h3 id="3-关于字段属性">3. 关于字段属性</h3>
+<p>发现了什么 , int类型,默认对应的字段时int(11) , 而long类型对应的是 bigint(20)  ,然后string对应的是 varchar(255) ,</p>
+<p>很不友好</p>
+<p>我们修改几个属性再 ,主要是 <code>@Column</code> 注解的属性</p>
+<pre><code class="language-java">public @interface Column {
+	
+    // 字段名
+    String name() default &quot;&quot;;
+
+    // 是否唯一
+    boolean unique() default false;
+
+    // 是否可以为空
+    boolean nullable() default true;
+
+    // 是否可插入
+    boolean insertable() default true;
+
+    // 是否可更新
+    boolean updatable() default true;
+
+    // 字段定义 , 这个很好用
+    String columnDefinition() default &quot;&quot;;
+
+    // table
+    String table() default &quot;&quot;;
+
+    // 这个只能作用于String类型, 
+    int length() default 255;
+
+    int precision() default 0;
+
+    int scale() default 0;
+}
+</code></pre>
+<p>所以我们应该这么建表</p>
+<pre><code class="language-java">@ToString
+@Setter
+@Getter
+@Entity
+@Table(name = &quot;jpa_user&quot;) // 默认是 user_do , 看自己业务需求,需不需要设置,感觉默认最好,不出事
+public class UserDo {
+
+    public UserDo() {
+
+    }
+
+    /**
+     * 用户ID
+     */
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = &quot;user_id&quot;)
+    private int id;
+
+    /**
+     * 用户名
+     */
+    @Column(name = &quot;user_name&quot;, nullable = false, length = 10)
+    private String name;
+
+    /**
+     * 用户性别 , 0 none 1 female ,2 male  只展示一位数
+     */
+    @Column(name = &quot;user_gender&quot;, nullable = false, columnDefinition = &quot;tinyint (1) zerofill&quot;)
+    private int gender;
+
+
+    /**
+     * 最长6位数 也就是最大是 999999.99
+     */
+    @Column(name = &quot;user_salary&quot;, nullable = true, columnDefinition = &quot;decimal(8,2)&quot;)
+    private double salary;
+}
+</code></pre>
+<h3 id="4-关于主键生成策略">4. 关于主键生成策略</h3>
+<p>我这里留一篇文章 ,  <a href="https://www.cnblogs.com/SummerinShire/p/7544897.html">https://www.cnblogs.com/SummerinShire/p/7544897.html</a>  , 大家自行去看, 很详细的.</p>
+<p>其中很多种方式, 比如 <code>org.hibernate.id.factory.internal.DefaultIdentifierGeneratorFactory#DefaultIdentifierGeneratorFactory</code> 这个定义了很多种 .</p>
+<h2 id="3-基本使用">3. 基本使用</h2>
+<h4 id="插入">插入</h4>
+<pre><code class="language-java">UserDo userDo = new UserDo();
+userDo.setName(&quot;tom&quot;);
+userDo.setSalary(1000.1);
+repository.save(userDo);
+</code></pre>
+<h4 id="排序查找">排序查找</h4>
+<pre><code class="language-java">// 这里的字段名是和Java字段名相同  , 不是MYSQL的, 还有就是注意实例化放到外面, 不然每次掉用实例化浪费内存
+final Sort sort = new Sort(Sort.Direction.DESC, &quot;salary&quot;);
+List&lt;UserDo&gt; salary = repository.findAll(sort);
+salary.forEach(System.out::println);
+</code></pre>
+<h4 id="条件查询">条件查询</h4>
+<pre><code class="language-java">Optional&lt;UserDo&gt; tom = repository.findOne(new Example&lt;UserDo&gt;() {
+    @Override
+    public UserDo getProbe() {
+        UserDo aDo = new UserDo();
+        aDo.setName(&quot;tom&quot;);
+        aDo.setSalary(1000.1);
+        aDo.setId(1);
+        return aDo;
+    }
+
+    @Override
+    public ExampleMatcher getMatcher() {
+        return ExampleMatcher.matchingAll();
+    }
+});
+
+
+Optional&lt;UserDo&gt; one = repository.findOne(Example.of(userDo)); 这个
+</code></pre>
+<p>这里比较坑 , 有两种模式 MatchMode 中有ALL 和 ANY , all 就是全部是and连接, any全部是or</p>
+<h4 id="分页查找">分页查找</h4>
+<pre><code class="language-java">Page&lt;UserDo&gt; all = repository.findAll(new PageRequest(0, 2));
+all.forEach(System.out::println);
+</code></pre>
+<pre><code class="language-java">Page&lt;UserDo&gt; list = repository.findAll(PageRequest.of(1, 2));
+list.forEach(System.out::println);
+</code></pre>
+<p><code>Pageable</code> 是一个接口类  , 显然我们不回去直接使用 , 一般使用 <code>PageRequest</code> 对象 , 他是一个现成的方法 , 还有就是对于其使用 , 可以直接new方法构造 和 of进行, 第一种方法被抛弃了 , 所以我们一般使用第二种 , 他需要三个参数 , page(从0开始) , size(页面大小)  , sort(排序) , 他不同于mysql的limit m n, 是通过计算得到的, 在mysql中 m指的是从第几行开始(不包含改行) , n指的是多少个 ,</p>
+<h4 id="删除">删除</h4>
+<pre><code class="language-java">userRepository.deleteAllInBatch();  //删库跑路 , go go go ,delete from jpa_user
+
+userRepository.deleteById(10); // 找不到抛出异常
+
+userRepository.delete(userDo);  // 也是用的 删除ID的方法 , 需要提供ID ,先查再删
+
+
+userRepository.deleteAll(); // 慢慢全部删除
+</code></pre>
+<p>还有其他</p>
+<h2 id="4-jpa-的-jql">4. JPA 的 JQL</h2>
+<h3 id="1-认识jql">1. 认识JQL</h3>
+<p>其实跟SQL 么多大区别  ,这里注意下 , 我们的实体类上的 <code>@Entity</code> 注解, 别乱写基本么问题,默认就行了</p>
+<pre><code class="language-java">@Query(value = &quot;select u from UserDo u where u.name= :name&quot;)
+UserDo selectByJQL(@Param(&quot;name&quot;) String name);
+</code></pre>
+<p>测试</p>
+<pre><code class="language-java">UserDo tom3 = userRepository.selectByJQL(&quot;tom3&quot;);
+System.out.println(&quot;tom3 = &quot; + tom3);
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">Hibernate: select userdo0_.user_id as user_id1_0_, userdo0_.user_gender as user_gen2_0_, userdo0_.user_name as user_nam3_0_, userdo0_.user_salary as user_sal4_0_ from jap_user userdo0_ where userdo0_.user_name=?
+tom3 = UserDo(id=3, name=tom3, gender=1, salary=1003.0)
+</code></pre>
+<p>基本么问题 , 其中 ? index 也可以使用 , 看你自己咋用,下面就介绍了</p>
+<h3 id="2-高级点的用法">2. 高级点的用法</h3>
+<p>首先定义一个构造方法</p>
+<pre><code class="language-java">public UserDo(String name, int gender) {
+    this.name = name;
+    this.gender = gender;
+}
+</code></pre>
+<p>其次进行改造</p>
+<pre><code class="language-java">//select new com.example.springdatajpastart01.pojo.UserDo(name,gender) from UserDo where name=?1
+// 或者这个都行,也可以是其他
+@Query(value = &quot;select new UserDo (name,gender) from UserDo where name=?1&quot;)
+UserDo selectByJQLConstructor(String name);
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">Hibernate: select userdo0_.user_name as col_0_0_, userdo0_.user_gender as col_1_0_ from jpa_user userdo0_ where userdo0_.user_name=?
+tom3 = UserDo(id=0, name=tom3, gender=1, salary=0.0)
+</code></pre>
+<p>发现是不是查到了, 还是很强大的,</p>
+<p>再来个强大的</p>
+<pre><code class="language-java">@Query(&quot;select new map(name as myname,gender as myaddress) from UserDo where name = :name&quot;)
+List&lt;Map&lt;String, Object&gt;&gt; selectByJQLMap(@Param(&quot;name&quot;) String name);
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Hibernate: select userdo0_.user_name as col_0_0_, userdo0_.user_gender as col_1_0_ from jpa_user userdo0_ where userdo0_.user_name=?
+[{myaddress=1, myname=tom3}]
+</code></pre>
+<h2 id="4-jpa-对原生sql的支持">4.  JPA 对原生SQL的支持</h2>
+<p>主要就是一个 <code>@Query</code>  对原生支持需要开启里面的属性 <code>nativeQuery</code> 改成true 就可以了,</p>
+<h3 id="1-index-使用">1. ? index 使用</h3>
+<blockquote>
+<p>​	这里的index 是我们参数的位置, 从0 开始</p>
+</blockquote>
+<pre><code class="language-java">@Query(nativeQuery = true, value = &quot;SELECT * FROM jap_user WHERE user_id=?1&quot;)
+List&lt;UserDo&gt; selectById(String id);
+</code></pre>
+<p>测试一下</p>
+<pre><code class="language-java">// 插入语句
+UserDo userDo = new UserDo();
+for (int x = 1; x &lt; 8; x++) {
+    userDo.setId(0);
+    userDo.setGender(x % 2);
+    userDo.setName(&quot;tom&quot; + x);
+    userDo.setSalary(1000 + x);
+    userRepository.save(userDo);
+}
+
+List&lt;UserDo&gt; dos = userRepository.selectById(&quot;2 or 1=1&quot;); //看看是不是预编译
+dos.forEach(System.out::println);
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">Hibernate: SELECT * FROM jap_user WHERE user_id=?
+UserDo(id=2, name=tom2, gender=0, salary=1002.0)
+</code></pre>
+<p>可以防止SQL 注入的问题</p>
+<h3 id="2-param">2.  @Param</h3>
+<pre><code class="language-java">@Query(nativeQuery = true, value = &quot;SELECT * FROM jap_user WHERE user_name = :user_name&quot;)
+List&lt;UserDo&gt; selectByUserName(@Param(&quot;user_name&quot;) String userName);
+</code></pre>
+<p>我们还是测试是不是预编译, 防止SQL注入呢</p>
+<pre><code class="language-java">List&lt;UserDo&gt; dos = userRepository.selectByUserName(&quot;tom3&quot;);
+dos.forEach(System.out::println);
+List&lt;UserDo&gt; sql = userRepository.selectByUserName(&quot;tom3 or 1=1&quot;);
+sql.forEach(System.out::println);
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Hibernate: SELECT * FROM jap_user WHERE user_name = ?
+UserDo(id=3, name=tom3, gender=1, salary=1003.0)
+Hibernate: SELECT * FROM jap_user WHERE user_name = ?
+</code></pre>
+<p>很显然是可以防止的</p>
+<h3 id="3-like-模糊查询">3. Like 模糊查询</h3>
+<blockquote>
+<p>百分比(<code>%</code>)通配符允许匹配任何字符串的零个或多个字符。</p>
+<p>下划线(<code>_</code>)通配符允许匹配任何单个字符。</p>
+</blockquote>
+<pre><code class="language-java">@Query(nativeQuery = true, value = &quot;SELECT * FROM jap_user WHERE user_name like :user_name&quot;)
+List&lt;UserDo&gt; selectByUserNames(@Param(&quot;user_name&quot;)String username);
+</code></pre>
+<p>测试</p>
+<pre><code class="language-java">List&lt;UserDo&gt; tom_ = userRepository.selectByUserNames(&quot;tom_&quot;);
+tom_.forEach(System.out::println); // tom1 - tom9
+
+System.out.println(&quot;================================&quot;);
+
+List&lt;UserDo&gt; toms = userRepository.selectByUserNames(&quot;tom%&quot;);
+toms.forEach(System.out::println); // tom1 - tom18
+</code></pre>
+<p>发现这里只是一个模式匹配 , 随便输入就行了</p>
+<h3 id="4-spel-表达式">4. SPEL 表达式</h3>
+<pre><code class="language-java">@Query(nativeQuery = true, value = &quot;SELECT * FROM #{#entityName} WHERE user_name = :user_name&quot;)
+UserDo selectBySPEL(@Param(&quot;user_name&quot;)String username);
+</code></pre>
+<p><code>#{#entityName}</code> 这个对应的是实体类的 <code>@Entity(name = &quot;jap_user&quot;)</code> 这里写的字段名</p>
+<p>测试</p>
+<pre><code class="language-java">UserDo userDos = userRepository.selectBySPEL(&quot;tom1&quot;);
+System.out.println(&quot;userDo = &quot; + userDos);
+</code></pre>
+<pre><code class="language-java">Hibernate: SELECT * FROM jap_user WHERE user_name = ?
+userDo = UserDo(id=1, name=tom1, gender=1, salary=1001.0)
+</code></pre>
+<h2 id="5-分页">5. 分页</h2>
+<p>测试 :</p>
+<pre><code class="language-java">@Query(value = &quot;SELECT * FROM jap_user WHERE user_salary &gt; ?1&quot;, countQuery = &quot;SELECT count(*) FROM jap_user WHERE user_salary &gt; ?1&quot;, nativeQuery = true)
+Page&lt;UserDo&gt; selectBySalary(Double salary, Pageable pageable);
+</code></pre>
+<p>这里注意 需要写一个 <code>countQuery</code>  是你查询的总条数要告诉他  , 对于SQL查询他会自动给你整合</p>
+<pre><code class="language-java">Page&lt;UserDo&gt; salary = userRepository.selectBySalary(1000.0, PageRequest.of(0, 10, new Sort(Sort.Direction.ASC, &quot;user_salary&quot;)));
+System.out.println(&quot;salary.getTotalPages() = &quot; + salary.getTotalPages());
+
+
+List&lt;UserDo&gt; content = salary.getContent();
+content.forEach(System.out::println);
+</code></pre>
+<p><strong>这里注意一点就是 , Sort字段的那个properties, 里面写的是表的字段名 , 这个需要注意</strong></p>
+<p>对比一下直接排序 ,区别就在这里</p>
+<pre><code class="language-java">List&lt;UserDo&gt; all = userRepository.findAll(new Sort(Sort.Direction.DESC, &quot;salary&quot;));
+all.forEach(System.out::println);
+</code></pre>
+<h2 id="6-ddl-策略">6. DDL 策略</h2>
+<blockquote>
+<p>​	DDL mode. This is actually a shortcut for the &quot;hibernate.hbm2ddl.auto&quot; property. Defaults to &quot;<strong>create-drop</strong>&quot; when using an embedded database and no schema manager was detected. Otherwise, defaults to &quot;none&quot;.</p>
+</blockquote>
+<p>create---- 每次运行该程序，会先删除表格，然后建表</p>
+<p>create-drop---- 在create模式中, 加入了每次程序运行结束删除表 (切入式数据库默认为这个)</p>
+<p>update---   每次运行程序，没有表格会新建表格，如果表格以及存在了 , 啥事情也不做 , (感觉最合理)</p>
+<p>validate---- 启动的时候会校验 ,如果数据库中没有表, 会直接报错 , 如果表存在会校验数据</p>
+<p>none --- 默认为这个,就是啥事也不做 (和 Mybatis一样 , 需要我们人工建表,也不校验)</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-springboot-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">1. springboot - 快速开始</a></li>
+<li><a href="#2-%E6%B5%8B%E8%AF%95">2. 测试</a>
+<ul>
+<li><a href="#1-crud%E6%93%8D%E4%BD%9C">1. CRUD操作</a></li>
+<li><a href="#2-%E9%97%AE%E9%A2%98">2. 问题</a></li>
+<li><a href="#3-%E5%85%B3%E4%BA%8E%E5%AD%97%E6%AE%B5%E5%B1%9E%E6%80%A7">3. 关于字段属性</a></li>
+<li><a href="#4-%E5%85%B3%E4%BA%8E%E4%B8%BB%E9%94%AE%E7%94%9F%E6%88%90%E7%AD%96%E7%95%A5">4. 关于主键生成策略</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">3. 基本使用</a><br>
+*
+<ul>
+<li><a href="#%E6%8F%92%E5%85%A5">插入</a></li>
+<li><a href="#%E6%8E%92%E5%BA%8F%E6%9F%A5%E6%89%BE">排序查找</a></li>
+<li><a href="#%E6%9D%A1%E4%BB%B6%E6%9F%A5%E8%AF%A2">条件查询</a></li>
+<li><a href="#%E5%88%86%E9%A1%B5%E6%9F%A5%E6%89%BE">分页查找</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4">删除</a></li>
+</ul>
+</li>
+<li><a href="#4-jpa-%E7%9A%84-jql">4. JPA 的 JQL</a>
+<ul>
+<li><a href="#1-%E8%AE%A4%E8%AF%86jql">1. 认识JQL</a></li>
+<li><a href="#2-%E9%AB%98%E7%BA%A7%E7%82%B9%E7%9A%84%E7%94%A8%E6%B3%95">2. 高级点的用法</a></li>
+</ul>
+</li>
+<li><a href="#4-jpa-%E5%AF%B9%E5%8E%9F%E7%94%9Fsql%E7%9A%84%E6%94%AF%E6%8C%81">4.  JPA 对原生SQL的支持</a>
+<ul>
+<li><a href="#1-index-%E4%BD%BF%E7%94%A8">1. ? index 使用</a></li>
+<li><a href="#2-param">2.  @Param</a></li>
+<li><a href="#3-like-%E6%A8%A1%E7%B3%8A%E6%9F%A5%E8%AF%A2">3. Like 模糊查询</a></li>
+<li><a href="#4-spel-%E8%A1%A8%E8%BE%BE%E5%BC%8F">4. SPEL 表达式</a></li>
+</ul>
+</li>
+<li><a href="#5-%E5%88%86%E9%A1%B5">5. 分页</a></li>
+<li><a href="#6-ddl-%E7%AD%96%E7%95%A5">6. DDL 策略</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

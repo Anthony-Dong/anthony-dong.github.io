@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java - 自定义Classloader的一些问题 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/cHEGNbBdy/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java - 自定义Classloader的一些问题</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-04-04</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/cHEGNbBdy/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/R7lRszjSRC/"
+								class="tag">Java</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1796字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	类加载器, 其实是一个很重要的东西 ,Java的类 其实就是元信息, 拿到元信息啥都可以做,  所以最后它放到了元信息的内存中 .</p>
+</blockquote>
+<p>其实有些时候需要自定义类加载器. 如果不同容器之间, 比如Tomcat这个服务器, 可以存在多个容器. 所以他就需要自定义个类加载器.</p>
+<h2 id="1-自己写一个类加载器">1. 自己写一个类加载器.</h2>
+<p>类加载器, 第一我们必须拿到字节流流, 也就是编译后的Class文件, 如何拿到 ,</p>
+<p>Classloader提供了 <code>getClass().getResourceAsStream(class_name)</code> 方法可以拿到与当前class对象同级目录下的代码.  于此同时还有一个 <code>getClassLoader().getResourceAsStream(class_name)</code>他是拿到path路径下的同级目录下的字节码.</p>
+<p>上面说的是依赖于Java生成的字节码. 其实很多工具可以生成字节码的. 比如 javassit , asm , cjlib哇.</p>
+<p>拿到字节流, (class文件的字节流) , 那么如何定义一个类呢 , 需要 <code>defineClass()</code> , 来定义类.</p>
+<p>下面是一个简单的例子.</p>
+<pre><code class="language-java">ClassLoader classLoader = new ClassLoader() {
+    @Override
+    public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+        // 输入 -&gt;com.example.Bean
+        // Bean.class
+        String class_name = name.substring(name.lastIndexOf(&quot;.&quot;) + 1) + &quot;.class&quot;;
+        try {
+            InputStream stream = getClass().getResourceAsStream(class_name);
+            // 如果我们拿不到对象, 就走父类加载(这就是双亲委派模型)
+            if (stream == null) {
+                return super.loadClass(name);
+            }
+            // 拿到字节流
+            byte[] bytes = new byte[stream.available()];
+            stream.read(bytes);
+            // 最后定义(native接口)
+            return defineClass(name, bytes, 0, bytes.length);
+        } catch (IOException e) {
+            throw new ClassNotFoundException(name);
+        }
+    }
+}
+</code></pre>
+<blockquote>
+<p>​	以上例子就是一个简单的自定义类加载器的过程 .</p>
+</blockquote>
+<p>一下是一个类加载器的关系图 , 一般面试喜欢问, 什么是双亲委派模型.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/f7f363ba-bda9-4716-9c93-2d33c8a83c91.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这个关系图 , 其实对于自定义来说, 是可以不遵循,双亲委派模型的. 但是对于系统自带的确实属于.</p>
+<pre><code class="language-java">protected Class&lt;?&gt; loadClass(String name, boolean resolve)
+    throws ClassNotFoundException
+{
+    synchronized (getClassLoadingLock(name)) {
+        // 1. 检查是否已经加载过了, 这里其实对于我们来说,平时使用LRU应该清楚.
+        Class&lt;?&gt; c = findLoadedClass(name);
+        if (c == null) {
+            long t0 = System.nanoTime();
+            try {
+            	// 2. 父类加载器有没有.有就递归指向父类的.(ext)
+                if (parent != null) {
+                    c = parent.loadClass(name, false);
+                } else {
+                // 3.如果到了跟,那么就走系统定义的加载器.(比如rt包)
+                    c = findBootstrapClassOrNull(name);
+                }
+            } catch (ClassNotFoundException e) {
+                // ClassNotFoundException thrown if class not found
+                // from the non-null parent class loader
+            }
+
+            if (c == null) {
+                // If still not found, then invoke findClass in order
+                // to find the class.
+                long t1 = System.nanoTime();
+                c = findClass(name);
+
+                // this is the defining class loader; record the stats
+                sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                sun.misc.PerfCounter.getFindClasses().increment();
+            }
+        }
+        if (resolve) {
+            resolveClass(c);
+        }
+        return c;
+    }
+}
+</code></pre>
+<blockquote>
+<p>​	双亲委派模型解决的问题就是一个进程中只会存在一个类 , 不存在覆盖的可能性 .  父类的优先级高于子类, 也就是我们永远无法覆盖 , Java定义的核心包中的类.</p>
+</blockquote>
+<p>其次就是我们自定义的class. 如果你使用 <code>-XX:+TraceClassLoading</code> 参数启动, 是我们定义的类加载器加载的话, 会打印这个 , form jvm define , (还有不能重复让JVM加载, 我们上诉代码的话是, 我们可以使用map存起来)</p>
+<pre><code class="language-java">[Loaded com.common.time.test.Bean from __JVM_DefineClass__]
+</code></pre>
+<h2 id="2-类加载器-如何卸载类-防止内存泄漏">2. 类加载器 如何卸载类 , 防止内存泄漏</h2>
+<blockquote>
+<p>​	文章主要是这一篇. <a href="https://www.jianshu.com/p/de971579fcac">https://www.jianshu.com/p/de971579fcac</a></p>
+</blockquote>
+<p>其中关于类的卸载  , 主要条件有一下几点</p>
+<p>1.该类所有实例对象不可达<br>
+2.该类的Class对象不可达<br>
+3.该类的ClassLoader不可达</p>
+<p>也就是满足一下三点, 可以满足卸载这个类.</p>
+<p>我们可以通过一下几个参数观察 :</p>
+<p>-verbose:class 用于同时跟踪类的加载和卸载<br>
+-XX:+TraceClassLoading 单独跟踪类的加载<br>
+-XX:+TraceClassUnloading 单独跟踪类的卸载</p>
+<p>其实满足一下三点很简单. 就是我们将我们的classloader 直接 被GC掉就行了.</p>
+<pre><code class="language-java">public class JavaLoad {
+
+    public static void main(String[] args) throws Exception {
+        ClassLoader classLoader = new ClassLoader() {
+            @Override
+            public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+                // 输入 -&gt;com.example.Bean
+                // Bean.class
+                String class_name = name.substring(name.lastIndexOf(&quot;.&quot;) + 1) + &quot;.class&quot;;
+                try {
+                    InputStream stream = getClass().getResourceAsStream(class_name);
+                    // 如果我们拿不到对象, 就走父类加载(这就是双亲委派模型)
+                    if (stream == null) {
+                        return super.loadClass(name);
+                    }
+                    // 拿到字节流
+                    byte[] bytes = new byte[stream.available()];
+                    stream.read(bytes);
+                    // 最后定义(native接口)
+                    return defineClass(name, bytes, 0, bytes.length);
+                } catch (IOException e) {
+                    throw new ClassNotFoundException(name);
+                }
+            }
+        };
+
+
+
+        Class&lt;?&gt; aClass = classLoader.loadClass(Demo.class.getCanonicalName());
+        Object obj =  aClass.getConstructor().newInstance();
+        // 1. 对象不可达
+        obj = null;
+        
+        // 2. 类不可达
+        aClass = null;
+        
+        // 3. load不可达
+        classLoader = null;
+
+        // 这个类被回收
+        System.gc();
+    }
+}
+</code></pre>
+<p>最终打印</p>
+<pre><code class="language-java">// 系统的加载器
+[Loaded com.javassit.Demo from file:/D:/%e4%bb%a3%e7%a0%81%e5%ba%93/aop/agent/java-agent/target/classes/]
+
+// 自定义加载器 加载的.
+[Loaded com.javassit.Demo from __JVM_DefineClass__]
+[Unloading class com.javassit.Demo 0x00000007c0061028]
+</code></pre>
+<h2 id="不同的类加载器加载的类">不同的类加载器加载的类</h2>
+<p>不同的类加载器加载的类, 是不能互通访问的.</p>
+<p>比如上面的 . 为啥Demo被加载两次.</p>
+<p>比如我们这么写</p>
+<pre><code class="language-java">Demo obj = (Demo) aClass.getConstructor().newInstance();
+</code></pre>
+<p>一定会报错的.</p>
+<p>那么如何解决这个问题呢, 那么就依赖于Java的继承(父类 或者 多接口)模式了.</p>
+<p>一下我依靠于Java的第三方库 JavaSSIT , 给大家展示一下如何实现单基础.</p>
+<p>加入这个是我们的父类</p>
+<pre><code class="language-java">public class Parent {
+
+    public void getName() {
+        System.out.println(&quot;classname : &quot; + this.getClass().getName());
+    }
+}
+</code></pre>
+<p>最终是一个这样的代码</p>
+<pre><code class="language-java">import javassist.*;
+
+import java.util.HashMap;
+import java.util.Map;
+/**
+ * &lt;dependency&gt;
+ * &lt;groupId&gt;org.javassist&lt;/groupId&gt;
+ * &lt;artifactId&gt;javassist&lt;/artifactId&gt;
+ * &lt;version&gt;3.25.0-GA&lt;/version&gt;
+ * &lt;/dependency&gt;
+ *
+ * @date:2020/4/3 22:25
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+public class CreatePerson {
+
+    /**
+     * 创建一个Person 对象
+     *
+     * @throws Exception
+     */
+    public static byte[] createPseson() throws Exception {
+        ClassPool pool = ClassPool.getDefault();
+
+        // 1. 创建一个空类
+        CtClass cc = pool.makeClass(&quot;com.javassist.Person&quot;);
+
+        
+        // 2. 创建一个父类
+        CtClass makeClass = pool.makeClass(CreatePerson.class.getClassLoader().getResourceAsStream(&quot;com/javassit/Parent.class&quot;));
+
+
+        // 3. 空类继承父类
+        cc.setSuperclass(makeClass);
+
+        // 4. 新增一个字段 private String name;
+        // 字段名为name
+        CtField param = new CtField(pool.get(&quot;java.lang.String&quot;), &quot;name&quot;, cc);
+        // 访问级别是 private
+        param.setModifiers(Modifier.PRIVATE);
+        // 初始值是 &quot;xiaoming&quot;
+        cc.addField(param, CtField.Initializer.constant(&quot;xiaoming&quot;));
+
+        // 5. 生成 getter、setter 方法
+        cc.addMethod(CtNewMethod.setter(&quot;setName&quot;, param));
+        cc.addMethod(CtNewMethod.getter(&quot;getName&quot;, param));
+
+        // 6. 添加无参的构造函数
+        CtConstructor cons = new CtConstructor(new CtClass[]{}, cc);
+        cons.setBody(&quot;{name = \&quot;xiaohong\&quot;;}&quot;);
+        cc.addConstructor(cons);
+
+        // 7. 添加有参的构造函数
+        cons = new CtConstructor(new CtClass[]{pool.get(&quot;java.lang.String&quot;)}, cc);
+        // $0=this / $1,$2,$3... 代表方法参数
+        cons.setBody(&quot;{$0.name = $1;}&quot;);
+        cc.addConstructor(cons);
+
+        // 8. 创建一个名为printName方法，无参数，无返回值，输出name值
+        CtMethod ctMethod = new CtMethod(CtClass.voidType, &quot;printName&quot;, new CtClass[]{}, cc);
+        ctMethod.setModifiers(Modifier.PUBLIC);
+        ctMethod.setBody(&quot;{System.out.println(name);}&quot;);
+        cc.addMethod(ctMethod);
+
+        return cc.toBytecode();
+    }
+
+
+    public static void main(String[] args) {
+        Map&lt;String, Class&lt;?&gt;&gt; cache = new HashMap&lt;&gt;();
+        try {
+            ClassLoader loader = new ClassLoader() {
+                @Override
+                public Class&lt;?&gt; loadClass(String name) throws ClassNotFoundException {
+                    if (name.equals(&quot;com.javassist.Person&quot;)) {
+                        synchronized (cache) {
+                            if (cache.get(name) == null) {
+                                try {
+                                    byte[] pseson = createPseson();
+                                    Class&lt;?&gt; defineClass = defineClass(name, pseson, 0, pseson.length);
+                                    cache.put(name, defineClass);
+                                    return defineClass;
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
+                    return super.loadClass(name);
+                }
+            };
+
+
+            Class&lt;?&gt; name = loader.loadClass(&quot;com.javassist.Person&quot;);
+            Parent parent = (Parent) name.getConstructor().newInstance();
+            System.out.println(parent);
+            parent.getName();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>最终输出</p>
+<pre><code class="language-java">com.javassist.Person@3b95a09c
+classname : com.javassist.Person
+</code></pre>
+<p>所以只能依赖于这个.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E8%87%AA%E5%B7%B1%E5%86%99%E4%B8%80%E4%B8%AA%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8">1. 自己写一个类加载器.</a></li>
+<li><a href="#2-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8-%E5%A6%82%E4%BD%95%E5%8D%B8%E8%BD%BD%E7%B1%BB-%E9%98%B2%E6%AD%A2%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F">2. 类加载器 如何卸载类 , 防止内存泄漏</a></li>
+<li><a href="#%E4%B8%8D%E5%90%8C%E7%9A%84%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E5%8A%A0%E8%BD%BD%E7%9A%84%E7%B1%BB">不同的类加载器加载的类</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

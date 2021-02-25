@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Scala - 数据结构 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/scala-ji-he/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Scala - 数据结构</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/scala-ji-he/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Af7c3Ltc0ra/"
+								class="tag">Scala</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1739字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	一门语言的数据结构 ,是入门一个语言必备的 ,虽然 <code>Scala</code>可以调用<code>Java</code>的集合类 , 但是 Scala语言带来的集合类 , 给Java带来了很多的补充 . 我会逐步更新 .. .. .. 可能写的有些不到位</p>
+</blockquote>
+<h2 id="开篇提示">开篇提示</h2>
+<p><code>scala.collection</code>包下有两个<code>collection.mutable</code>  <code>collection.immutable</code> 这俩包 , 其中<code>mutable</code>的意思是可变的意思, 其实就是一个不可变的集合类, 和一个可变的集合类 , 默认情况下使用的是<strong>不可变</strong>的集合类</p>
+<h2 id="1-option-选项">1. Option - 选项</h2>
+<p>Scala Option(选项)类型用来表示一个值是可选的（有值或无值)。如果你了解过Java的Option,我觉得你对这个并不陌生,他只是很好地处理和空值.</p>
+<p>Option[T] 是一个类型为 T 的可选值的容器： 如果值存在， Option[T] 就是一个 Some[T] ，如果不存在， Option[T] 就是对象 None 。</p>
+<h2 id="2-scala数组-array-len不可变">2. Scala数组 - Array (len不可变)</h2>
+<blockquote>
+<p>​	数组是定义好长度以后就不可以修改了长度了 ,</p>
+</blockquote>
+<h3 id="1-定义一维数组">1. 定义一维数组</h3>
+<pre><code class="language-scala">// 定义数组
+val array: Array[Int] = new Array[Int](3)
+//或者
+val array: Array[Int] = Array(1, 2, 3, 4)
+//或者
+val array = Array.apply(1, 2, 3, 4, 5)
+
+
+// 数组下标为4 , 用圆括号
+array(4) = 1
+</code></pre>
+<h3 id="2-遍历数组">2. 遍历数组</h3>
+<pre><code class="language-scala">1. 直接遍历
+// 直接遍历数组
+for (e &lt;- array) {
+      println(e)
+}
+
+2. 索引遍历
+// until 左闭右开  ,不用加括号 Unnecessary parentheses(括号)
+for (index &lt;- 0 until array.length) {
+  println(s&quot;$index - &quot;+array(index))
+}
+
+
+// to 左闭右闭
+for (index &lt;- 0 to array.length-1) {
+  println(s&quot;$index - &quot;+array(index))
+}
+
+// array 自带的 Array.indices 返回一个 range() 数组,获取数组下标
+for (index &lt;- array.indices) {
+  println(array(index))
+}
+
+4. foreach 遍历输出
+array.foreach(println)
+</code></pre>
+<h3 id="3-多维数组-arrayofdim">3. 多维数组  Array.ofDim(...)</h3>
+<pre><code class="language-scala">var arrays = Array.ofDim[Int](3, 3)
+
+arrays(1)(1) = 1
+</code></pre>
+<h3 id="4-连接数组-arrayconcatarr1arr2">4. 连接数组 Array.concat(arr1,arr2)</h3>
+<pre><code class="language-scala">var myList1 = Array(1.9, 2.9, 3.4, 3.5)
+var myList2 = Array(8.9, 7.9, 0.4, 1.5)
+
+var myList3 = Array.concat(myList1, myList2)
+
+for (x &lt;- myList3) {
+  println(x)
+}
+</code></pre>
+<h3 id="5-创建数组-arrayrangestart-len">5. 创建数组  Array.range(start, len)</h3>
+<pre><code class="language-scala">1. 左闭右开 , 第一个参数是start , 第二个参数是 end
+val ints = Array.range(0, 10)
+
+for (i &lt;- ints) {
+  printf(&quot;%d\t&quot; , i) // 0	1	2	3	4	5	6	7	8	9	
+}
+
+2. 带有第三个参数 step 
+val ints = Array.range(0, 10,2)
+for (i &lt;- ints) {
+  printf(&quot;%d\t&quot;,i)  //0	2	4	6	8	
+}
+</code></pre>
+<h3 id="6-数组拷贝-arrcopytoarraydeststartlen">6. 数组拷贝   arr.copyToArray(dest,start,len)</h3>
+<pre><code class="language-scala">val ints1 = Array.apply(1, 2, 3, 4, 5)
+
+
+val ints2 = new Array[Int](ints1.length)
+
+// dest  , start , len 
+ints1.copyToArray(ints2, 0, ints1.length)
+</code></pre>
+<h3 id="7-数组填充-arrayfilllenele">7. 数组填充 Array.fill(len)(ele)</h3>
+<pre><code class="language-scala">val ints = Array.fill(5)(2)
+
+for (elem &lt;- ints) {
+  println(elem)  // 2 2 2 2 2
+} 
+</code></pre>
+<h3 id="8-数组过滤-arrfilteretboolean">8. 数组过滤 arr.filter(e:T=&gt;Boolean)</h3>
+<pre><code class="language-scala">val fruit = Array(&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;)
+
+1. 简单写法
+val strings = fruit.filter(e =&gt; {
+  // x 指的是数组中的元素
+  e.contains(&quot;apple&quot;)
+})
+
+2. 由于e前后都一样, 所以可以使用下划线 , 返回一个数组
+val strings = fruit.filter(_.contains(&quot;apple&quot;))
+
+for (elem &lt;- strings) {
+  println(elem)  // out :  apple
+}
+</code></pre>
+<h3 id="9-map-arrmapftb">9. Map  - arr.map(f:T=&gt;B)</h3>
+<pre><code class="language-scala">val b = Array(1, 2, 3, 4, 5)
+
+1. 
+val value = b.map(x =&gt; x * 2)
+
+val value = b.map(_ * 2)
+
+println(value)
+</code></pre>
+<h3 id="10-reduce-arrreduceopbbb">10. Reduce  arr.reduce(op:(B,B)=&gt;B)</h3>
+<pre><code class="language-scala">val ints: Array[Int] = Array(1, 2, 3, 4, 5)
+
+// 1. 根据函数去写
+val i1 = ints.reduce((x1, x2) =&gt; x1 * x2)
+// 2. 可以省略成 _ 
+val i2 = ints.reduce(_ * _)
+println(i2)
+
+// 或者 scala提供的内置函数计算累乘
+val i2 = ints.product
+
+// 累加
+val i3 = ints.sum
+</code></pre>
+<h2 id="2-scala数组-arraybuffer-len可变">2. Scala数组 - ArrayBuffer (len可变)</h2>
+<blockquote>
+<p>​	这个数组长度随着数组元素的个数的变化而变化</p>
+</blockquote>
+<pre><code class="language-scala">val b = ArrayBuffer('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l')
+
+b -= 'a' //删除1个指定元素;  ArrayBuffer(b, c, d, e, f, g, h, i, j, k, l) 
+b -= ('b', 'c') //删除多个指定元素  ArrayBuffer(d, e, f, g, h, i, j, k, l)
+b --= Seq('d', 'e') //通过1个集合来删除元素(可以用Array,Set) ArrayBuffer(f, g, h, i, j, k, l)
+b.remove(0) //通过index来删除元素  ArrayBuffer(g, h, i, j, k, l)
+b.remove(1, 2) //通过index来删除多个元素  ArrayBuffer(g, j, k, l)
+b.clear() //清除所有元素  ArrayBuffer()
+</code></pre>
+<h2 id="3-scala列表-list">3. Scala列表  -  List</h2>
+<p>定义 : <code>val list:List[String] = List(&quot;1&quot;,&quot;2&quot;)</code></p>
+<p>定义 : <code>val list2: List[String] = &quot;aa&quot; :: (&quot;aaaa&quot; :: Nil)</code> , 其中 <code>::</code>用法为x::list ,表示像集合头部添加x, <code>Nil</code>代表空单位</p>
+<p>定义 : <code>val list3: List[List[String]] = List(List(&quot;a&quot;, &quot;b&quot;),List(&quot;c&quot;, &quot;d&quot;))</code></p>
+<p>定义 : <code>val list4: List[String] = Nil</code>  这就是一个控集合</p>
+<p><strong>list 相互 连接 :</strong></p>
+<pre><code class="language-scala">val fruit1 = &quot;apples&quot;::(&quot;oranges&quot;::(&quot;pears&quot;::Nil))
+val fruit2 = &quot;mangoes&quot;::(&quot;banana&quot;::Nil)
+
+// use two or more lists with ::: operator
+var fruit = fruit1 ::: fruit2
+println( &quot;fruit1 ::: fruit2 : &quot; + fruit )
+
+// use two lists with Set.:::() method
+fruit = fruit1.:::(fruit2)
+println( &quot;fruit1.:::(fruit2) : &quot; + fruit )
+
+// pass two or more lists as arguments
+fruit = List.concat(fruit1, fruit2)
+println( &quot;List.concat(fruit1, fruit2) : &quot; + fruit  )
+
+
+输出 : 
+fruit1 ::: fruit2 : List(apples, oranges, pears, mangoes, banana)
+fruit1.:::(fruit2) : List(mangoes, banana, apples, oranges, pears)
+List.concat(fruit1, fruit2) : List(apples, oranges, pears, mangoes, banana)
+</code></pre>
+<p>创建重复的元素集合 : <strong>List.fill(填充多少次)(元素)</strong></p>
+<pre><code class="language-scala">val fruit: List[String] = List.fill(3)(&quot;apples&quot;) // Repeats apples three times.
+println(&quot;fruit : &quot; + fruit)
+
+val num: List[Int] = List.fill(10)(2) // Repeats 2, 10 times.
+println(&quot;num : &quot; + num) //
+
+fruit : List(apples, apples, apples)
+num : List(2, 2, 2, 2, 2, 2, 2, 2, 2, 2)
+</code></pre>
+<p>翻转集合 : <code>List.reverse</code></p>
+<h2 id="4-scala集-set">4. Scala集 - Set</h2>
+<blockquote>
+<p>​	set 就是可以去重 , 和java一样</p>
+</blockquote>
+<h2 id="5-scala映射-map">5. Scala映射 - Map</h2>
+<blockquote>
+<p>​	scala中 有两种map , 默认的map是 <code>scala</code> , hashmap是 <code>import scala.collection.mutable.Map</code></p>
+</blockquote>
+<h3 id="1-定义map">1. 定义map</h3>
+<pre><code class="language-scala">val map: Map[String, Int] = Map()
+
+val map1: Map[String, Int] = Map(&quot;a&quot; -&gt; 1, &quot;a&quot; -&gt; 1)
+</code></pre>
+<h3 id="2-添加元素">2. 添加元素</h3>
+<pre><code class="language-scala">var map1: Map[String, Int] = Map(&quot;a&quot; -&gt; 1, &quot;a&quot; -&gt; 1)
+
+map1 = map1.+(&quot;c&quot; -&gt; 1)
+
+println(map1)  // Map(a -&gt; 1, c -&gt; 1)
+</code></pre>
+<h3 id="3-连接map">3. 连接map</h3>
+<pre><code class="language-scala">val colors1 = Map(&quot;red&quot; -&gt; &quot;#FF0000&quot;, &quot;azure&quot; -&gt; &quot;#F0FFFF&quot;, &quot;peru&quot; -&gt; &quot;#CD853F&quot;)
+val colors2 = Map(&quot;blue&quot; -&gt; &quot;#0033FF&quot;, &quot;yellow&quot; -&gt; &quot;#FFFF00&quot;, &quot;red&quot; -&gt; &quot;#FF0000&quot;)
+
+// 或者 colors1.concat(colors2)
+var colors = colors1 ++ colors2
+println(  colors )  // HashMap(blue -&gt; #0033FF, azure -&gt; #F0FFFF, peru -&gt; #CD853F, yellow -&gt; #FFFF00, red -&gt; #FF0000)
+</code></pre>
+<h3 id="4-遍历">4. 遍历</h3>
+<pre><code class="language-scala">val colors3 = Map(&quot;red&quot; -&gt; &quot;#FF0000&quot;, &quot;azure&quot; -&gt; &quot;#F0FFFF&quot;, &quot;peru&quot; -&gt; &quot;#CD853F&quot;)
+
+colors.foreach({
+  case (k, v) =&gt; println(s&quot;$k - $v&quot;)
+})
+
+//输出
+red - #FF0000
+azure - #F0FFFF
+peru - #CD853F
+</code></pre>
+<h3 id="5-查找">5. 查找</h3>
+<pre><code class="language-scala">val colors3 = Map(&quot;red&quot; -&gt; &quot;#FF0000&quot;, &quot;azure&quot; -&gt; &quot;#F0FFFF&quot;, &quot;peru&quot; -&gt; &quot;#CD853F&quot;)
+println(colors3.contains(&quot;red&quot;))  // true
+</code></pre>
+<h2 id="6-scala-seq">6. Scala -Seq</h2>
+<pre><code class="language-scala">1. 申明使用
+val unit = Seq[Int](1,2,3)
+val unit = Seq(1,2,3)
+
+2. 获取值
+unit(1)
+</code></pre>
+<h2 id="7-scala元组">7. Scala元组</h2>
+<blockquote>
+<p>​	<code>Tuple</code>这个类似于Python , Python里面就有元组的概念, 是一个不可变的数组 , 不能修改数组中的元素</p>
+</blockquote>
+<pre><code class="language-scala">1.最全写法
+val unit = Tuple3[Int, Int, Int](1, 2, 3)
+
+2. 默认写法,不指定类型
+val unit = Tuple3(1,2,3)
+
+3.不加任何类型申明的全部是元组
+val unit = (1,2,3)
+
+4.获取值 
+unit._1  // 1
+unit._2  // 2
+unit._3  // 3
+</code></pre>
+<h2 id="8-scala迭代器">8. Scala迭代器</h2>
+<blockquote>
+<p>​	和java的 <code>Iterator&lt;E&gt;</code> 接口很相似  , 是一个迭代器 , 一个类想要有迭代器 ,需要实现 <code>Iterable&lt;T&gt;</code>接口</p>
+</blockquote>
+<h3 id="定义">定义</h3>
+<pre><code class="language-scala">val it = Iterator(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;d&quot;)
+
+while (it.hasNext) {
+  println(it.next())
+}
+// 
+</code></pre>
+<h3 id="2-常用方法">2. 常用方法</h3>
+<pre><code class="language-scala">val it: Iterator[Int] = Iterator(1, 2, 3, 4)
+
+it.max(ord = Ordering[Int]) // 4
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%BC%80%E7%AF%87%E6%8F%90%E7%A4%BA">开篇提示</a></li>
+<li><a href="#1-option-%E9%80%89%E9%A1%B9">1. Option - 选项</a></li>
+<li><a href="#2-scala%E6%95%B0%E7%BB%84-array-len%E4%B8%8D%E5%8F%AF%E5%8F%98">2. Scala数组 - Array (len不可变)</a>
+<ul>
+<li><a href="#1-%E5%AE%9A%E4%B9%89%E4%B8%80%E7%BB%B4%E6%95%B0%E7%BB%84">1. 定义一维数组</a></li>
+<li><a href="#2-%E9%81%8D%E5%8E%86%E6%95%B0%E7%BB%84">2. 遍历数组</a></li>
+<li><a href="#3-%E5%A4%9A%E7%BB%B4%E6%95%B0%E7%BB%84-arrayofdim">3. 多维数组  Array.ofDim(...)</a></li>
+<li><a href="#4-%E8%BF%9E%E6%8E%A5%E6%95%B0%E7%BB%84-arrayconcatarr1arr2">4. 连接数组 Array.concat(arr1,arr2)</a></li>
+<li><a href="#5-%E5%88%9B%E5%BB%BA%E6%95%B0%E7%BB%84-arrayrangestart-len">5. 创建数组  Array.range(start, len)</a></li>
+<li><a href="#6-%E6%95%B0%E7%BB%84%E6%8B%B7%E8%B4%9D-arrcopytoarraydeststartlen">6. 数组拷贝   arr.copyToArray(dest,start,len)</a></li>
+<li><a href="#7-%E6%95%B0%E7%BB%84%E5%A1%AB%E5%85%85-arrayfilllenele">7. 数组填充 Array.fill(len)(ele)</a></li>
+<li><a href="#8-%E6%95%B0%E7%BB%84%E8%BF%87%E6%BB%A4-arrfilteretboolean">8. 数组过滤 arr.filter(e:T=&gt;Boolean)</a></li>
+<li><a href="#9-map-arrmapftb">9. Map  - arr.map(f:T=&gt;B)</a></li>
+<li><a href="#10-reduce-arrreduceopbbb">10. Reduce  arr.reduce(op:(B,B)=&gt;B)</a></li>
+</ul>
+</li>
+<li><a href="#2-scala%E6%95%B0%E7%BB%84-arraybuffer-len%E5%8F%AF%E5%8F%98">2. Scala数组 - ArrayBuffer (len可变)</a></li>
+<li><a href="#3-scala%E5%88%97%E8%A1%A8-list">3. Scala列表  -  List</a></li>
+<li><a href="#4-scala%E9%9B%86-set">4. Scala集 - Set</a></li>
+<li><a href="#5-scala%E6%98%A0%E5%B0%84-map">5. Scala映射 - Map</a>
+<ul>
+<li><a href="#1-%E5%AE%9A%E4%B9%89map">1. 定义map</a></li>
+<li><a href="#2-%E6%B7%BB%E5%8A%A0%E5%85%83%E7%B4%A0">2. 添加元素</a></li>
+<li><a href="#3-%E8%BF%9E%E6%8E%A5map">3. 连接map</a></li>
+<li><a href="#4-%E9%81%8D%E5%8E%86">4. 遍历</a></li>
+<li><a href="#5-%E6%9F%A5%E6%89%BE">5. 查找</a></li>
+</ul>
+</li>
+<li><a href="#6-scala-seq">6. Scala -Seq</a></li>
+<li><a href="#7-scala%E5%85%83%E7%BB%84">7. Scala元组</a></li>
+<li><a href="#8-scala%E8%BF%AD%E4%BB%A3%E5%99%A8">8. Scala迭代器</a>
+<ul>
+<li><a href="#%E5%AE%9A%E4%B9%89">定义</a></li>
+<li><a href="#2-%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95">2. 常用方法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

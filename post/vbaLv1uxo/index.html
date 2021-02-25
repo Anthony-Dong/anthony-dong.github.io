@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Quartz - 任务调度框架(可以分布式) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/vbaLv1uxo/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Quartz - 任务调度框架(可以分布式)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/vbaLv1uxo/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1421字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Quartz is a richly featured, open source job scheduling library that can be integrated within virtually any Java application - from the smallest stand-alone application to the largest e-commerce system.</p>
+<p>Quartz 是一个功能丰富,开源的任务调度的库, 可以和任何Java应用整合 .</p>
+</blockquote>
+<p><a href="https://github.com/quartz-scheduler/quartz">项目地址</a> : https://github.com/quartz-scheduler/quartz</p>
+<p><a href="https://github.com/quartz-scheduler/quartz/blob/master/docs/quick-start-guide.adoc">快速开始地址</a> : https://github.com/quartz-scheduler/quartz/blob/master/docs/quick-start-guide.adoc</p>
+<p><a href="https://github.com/quartz-scheduler/quartz/tree/master/docs/examples">Demo地址</a> :  https://github.com/quartz-scheduler/quartz/tree/master/docs/examples</p>
+<h2 id="1-快速开始">1. 快速开始</h2>
+<pre><code class="language-java">public class StdSchedulerTest {
+    public static void main(String[] args) {
+        try {
+            //1. StdSchedulerFactory工厂机制加载一个Scheduler
+            Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+
+            // 2. JobBuilder 定义一个JobDetail , 工作信息
+            JobDetail job = JobBuilder.newJob(HelloJob.class)
+                    .withIdentity(&quot;job1&quot;, &quot;group1&quot;)
+                    .build();
+
+            // 3. TriggerBuilder定义一个trigger , 触发器 , 告诉你这个Job何时触发
+            Trigger trigger = TriggerBuilder.newTrigger()
+                    .withIdentity(&quot;trigger1&quot;, &quot;group1&quot;)
+                    .startNow()
+                    .withSchedule(SimpleScheduleBuilder.simpleSchedule()
+                            .withIntervalInMilliseconds(1000)
+                            .repeatForever())
+                    .build();
+            
+            // 4.告诉Scheduler , 我这个工作需要这个trigger
+            scheduler.scheduleJob(job, trigger);
+
+            //5. 启动
+            scheduler.start();
+
+            // 这里我们先阻塞着.. 
+            System.in.read();
+            // 6. 关闭
+            scheduler.shutdown();
+        } catch (SchedulerException | IOException se) {
+            se.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>其中 <code>com.example.springquartz.HelloJob</code>   需要实现<code>org.quartz.Job</code> 此接口</p>
+<pre><code class="language-java">public class HelloJob implements Job {
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        JobKey key = jobExecutionContext.getJobDetail().getKey();
+        System.out.printf(&quot;group  %s , name : %s ,\t&quot;, key.getGroup(), key.getName());
+        System.out.printf(&quot;Thread : %s - %s\n&quot;, Thread.currentThread().getName(), &quot;Hello Job !&quot;);
+    }
+}
+</code></pre>
+<p>启动 :  日志信息 :   会告诉你任务何时调用的.</p>
+<pre><code class="language-java">11:12:09.682 [main] INFO org.quartz.impl.StdSchedulerFactory - Quartz scheduler 'DefaultQuartzScheduler' initialized from default resource file in Quartz package: 'quartz.properties'
+11:12:09.682 [main] INFO org.quartz.impl.StdSchedulerFactory - Quartz scheduler version: 2.3.0
+11:12:09.697 [main] INFO org.quartz.core.QuartzScheduler - Scheduler DefaultQuartzScheduler_$_NON_CLUSTERED started.
+11:12:09.697 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 1 triggers
+11:12:09.697 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.simpl.PropertySettingJobFactory - Producing instance of Job 'group1.job1', class=com.example.springquartz.HelloJob
+11:12:09.713 [DefaultQuartzScheduler_QuartzSchedulerThread] DEBUG org.quartz.core.QuartzSchedulerThread - batch acquisition of 1 triggers
+11:12:09.713 [DefaultQuartzScheduler_Worker-1] DEBUG org.quartz.core.JobRunShell - Calling execute on job group1.job1
+group  group1 , name : job1 ,	Thread : DefaultQuartzScheduler_Worker-1 - Hello Job !
+</code></pre>
+<h2 id="2-jobdata-同步问题">2. JobData 同步问题</h2>
+<p>可以通过 <code>org.quartz.JobBuilder#usingJobData(java.lang.String, java.lang.Long)</code> 给Job赋值参数. 对于我们这个使用的如果是静态的数据, 比如说数据一层不变, 或者说任务前后关系不是依赖的. 可以不考虑同步问题.</p>
+<pre><code class="language-java">JobDetail job = JobBuilder.newJob(HelloJob.class)
+        .withIdentity(&quot;job1&quot;, &quot;group1&quot;)
+        .usingJobData(HelloJob.START_TIME, System.currentTimeMillis())
+        .build();
+</code></pre>
+<p>如果选择了同步, 请选择在你的Job中这俩注解  , 保持其同步关系.</p>
+<pre><code class="language-java">@PersistJobDataAfterExecution // 这个希望刷新JobData,所以多线程环境下共享是安全
+@DisallowConcurrentExecution // 这个保证其同步执行, 其实就是任务挨着任务.
+</code></pre>
+<p>我们对比使用一下. 不使用同步</p>
+<pre><code class="language-java">public class HelloJob implements Job {
+    public static final String START_TIME = &quot;START_TIME&quot;;
+
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        long start = jobExecutionContext.getMergedJobDataMap().getLong(START_TIME);
+        long flag = System.currentTimeMillis()-start;
+        System.out.printf(&quot;Thread-%d start : %s - %dms\n&quot;, tag, Thread.currentThread().getName(), System.currentTimeMillis() - start);
+        sleep(2000);
+        System.out.printf(&quot;Thread-%d  end  : %s - %dms\n&quot;, tag, Thread.currentThread().getName(), System.currentTimeMillis() - start);
+    }
+}
+</code></pre>
+<p>输出 :  所以他们并不会因为任务延时导致同步执行, 这些任务之间都是不互相依赖的.</p>
+<pre><code class="language-java">Thread-15 start : DefaultQuartzScheduler_Worker-1 - 15ms
+Thread-1002 start : DefaultQuartzScheduler_Worker-2 - 1002ms
+Thread-2001 start : DefaultQuartzScheduler_Worker-3 - 2001ms
+Thread-15  end  : DefaultQuartzScheduler_Worker-1 - 2016ms
+Thread-1002  end  : DefaultQuartzScheduler_Worker-2 - 3010ms
+Thread-2001  end  : DefaultQuartzScheduler_Worker-3 - 4002ms
+</code></pre>
+<p>但是, 当我们加入了</p>
+<pre><code class="language-java">@DisallowConcurrentExecution
+@PersistJobDataAfterExecution
+public class HelloJob implements Job {
+    public static final String START_TIME = &quot;START_TIME&quot;;
+    @Override
+    public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
+        long start = jobExecutionContext.getMergedJobDataMap().getLong(START_TIME);
+        long flag = System.currentTimeMillis()-start;
+        System.out.printf(&quot;Thread-%d start : %s - %dms\n&quot;, flag, Thread.currentThread().getName(), System.currentTimeMillis() - start);
+        sleep(2000);
+        System.out.printf(&quot;Thread-%d  end  : %s - %dms\n&quot;, flag, Thread.currentThread().getName(), System.currentTimeMillis() - start);
+    }
+}
+</code></pre>
+<p>输出 :  所以同步执行 ,</p>
+<pre><code class="language-java">Thread-27 start : DefaultQuartzScheduler_Worker-1 - 28ms
+Thread-27  end  : DefaultQuartzScheduler_Worker-1 - 2032ms
+Thread-2033 start : DefaultQuartzScheduler_Worker-2 - 2033ms
+Thread-2033  end  : DefaultQuartzScheduler_Worker-2 - 4034ms
+</code></pre>
+<p>总结一下 , 他的功能性, 以及特性都十分的强.  可以保证其同步也可以不同步, 这里就要对比一下 . <code>ScheduledExecutorService</code> -&gt;  <code>java.util.concurrent.ScheduledThreadPoolExecutor</code>  -&gt; <code>java.util.concurrent.ScheduledExecutorService</code>   他的任务调度全部是同步执行的. 第二个任务必须等待第一个任务执行完毕才行.  我后面给大家展示</p>
+<p>他的颗粒度掌握的非常的好 .</p>
+<h2 id="4-trigger">4. Trigger</h2>
+<h3 id="1-cronschedulebuilder-支持-cron">1. CronScheduleBuilder - 支持 Cron</h3>
+<blockquote>
+<p>​	计划任务，是任务在约定的时间执行已经计划好的工作，这是表面的意思。在Linux中，我们经常用到 cron 服务器来完成这项工作。cron服务器可以根据配置文件约定的时间来执行特定的任务。</p>
+</blockquote>
+<p>怎么使用?  , 当然是触发器里面了 , 我们任务调度是靠的Triggers</p>
+<p>// 这里是每2S执行一次</p>
+<pre><code class="language-java">Trigger trigger = TriggerBuilder.newTrigger()
+        .startNow()
+        .withSchedule(CronScheduleBuilder.cronSchedule(&quot;0/2 * * * * ?&quot;))
+        .build();
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-java">DefaultQuartzScheduler_Worker-1 : Echo com.example.springquartz.EchoJob@5f02d7f6
+DefaultQuartzScheduler_Worker-2 : Echo com.example.springquartz.EchoJob@1d653213
+DefaultQuartzScheduler_Worker-3 : Echo com.example.springquartz.EchoJob@7d2e9543
+</code></pre>
+<p>其实<strong>发现Quartz框架对于每一个任务对象来说,他不是单例的, 每次都会依靠反射生成一个</strong></p>
+<h3 id="2-simpleschedulebuilder">2. SimpleScheduleBuilder</h3>
+<blockquote>
+<p>​	简单的编程实现</p>
+</blockquote>
+<pre><code class="language-java">SimpleScheduleBuilder.simpleSchedule()
+    // 2S 一次
+                    .withIntervalInMilliseconds(2000)
+    // 永远执行下去
+                    .repeatForever()
+    // 0 代表执行一次, 1代表执行两次
+                //    .withRepeatCount(1)
+</code></pre>
+<h3 id="3-jobexecutionexception-控制处理异常">3. JobExecutionException 控制处理异常</h3>
+<pre><code class="language-java">JobExecutionException e = new JobExecutionException(&quot;exception&quot;);
+
+//e.refireImmediately(); // 失败了可以重复执行 , This will force quartz to run this job over and over and over and over again. 
+e.setUnscheduleAllTriggers(true); // 失败了立马停止trigger ,This will force quartz to shutdown this job so that it does not run again.
+</code></pre>
+<p>这个异常需要放到 Job中抛出去, 只能抛出这个异常才能控制是否执行</p>
+<h3 id="4-trigger优先级-priority">4. Trigger优先级 Priority</h3>
+<blockquote>
+<p>​	Set the Trigger's priority. When more than one Trigger have the same fire time, the scheduler will fire the one with the highest priority first.</p>
+</blockquote>
+<p>俩任务一块触发, 优先触发优先级高的任务  .</p>
+<pre><code class="language-java">TriggerBuilder.newTrigger()
+                    .usingJobData(EchoJob.FAVORITE_COLOR,&quot;RED&quot;)
+                    .forJob(&quot;JOB&quot;)
+                    .startNow()
+        			// 设置优先级
+                    .withPriority(0)
+                    .withSchedule(CronScheduleBuilder.cronSchedule(&quot;0/2 * * * * ?&quot;))
+                    .build();
+</code></pre>
+<h3 id="5-误触发">5. 误触发</h3>
+<blockquote>
+<p>​	Instructs the Scheduler that upon a mis-fire situation, the SimpleTrigger wants to be fired now by Scheduler.</p>
+</blockquote>
+<p>有几种, 我也不知道他这个有啥用 , 误触发.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">1. 快速开始</a></li>
+<li><a href="#2-jobdata-%E5%90%8C%E6%AD%A5%E9%97%AE%E9%A2%98">2. JobData 同步问题</a></li>
+<li><a href="#4-trigger">4. Trigger</a>
+<ul>
+<li><a href="#1-cronschedulebuilder-%E6%94%AF%E6%8C%81-cron">1. CronScheduleBuilder - 支持 Cron</a></li>
+<li><a href="#2-simpleschedulebuilder">2. SimpleScheduleBuilder</a></li>
+<li><a href="#3-jobexecutionexception-%E6%8E%A7%E5%88%B6%E5%A4%84%E7%90%86%E5%BC%82%E5%B8%B8">3. JobExecutionException 控制处理异常</a></li>
+<li><a href="#4-trigger%E4%BC%98%E5%85%88%E7%BA%A7-priority">4. Trigger优先级 Priority</a></li>
+<li><a href="#5-%E8%AF%AF%E8%A7%A6%E5%8F%91">5. 误触发</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

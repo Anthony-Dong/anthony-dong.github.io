@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Golang - sync包 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/golang-bing-fa-yu-suo/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Golang - sync包</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-13</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/golang-bing-fa-yu-suo/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1389字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Golang的 sync包提供了大量的线程同步操作的类. 所以满足我们日常使用. 包含锁,和安全的集合.</p>
+</blockquote>
+<h2 id="1-syncmutex">1. sync.Mutex</h2>
+<p>第一种就是 <code>Mutex</code> 为互斥锁 , 实现跟Java的reentrantlock很像. 基本都是自旋锁,</p>
+<p>我们下面有一个场景 , 将变量x累加50000次 我们开启5个goroutine去执行</p>
+<pre><code class="language-go">func main() {
+	var x = 0
+	for num := 0; num &lt; 4; num++ {
+		go func() {
+			for i := 0; i &lt; 10000; i++ {
+				increase(&amp;x)
+			}
+		}()
+	}
+	// 等待子线程退出
+	time.Sleep(time.Millisecond * 2000)
+	fmt.Println(x)
+}
+// 这个操作是Java做不了的.只有C,C++和Golang可以
+func increase(x *int) {
+	*x = *x + 1
+}
+</code></pre>
+<p>如果输出结果是 50000那就对了, 我们看看结果</p>
+<pre><code class="language-java">23283
+</code></pre>
+<p>为什么呢, 因为多线程同时操作一个变量时就会出现这种问题 , 出现读写不一致的问题 , 如何处理呢</p>
+<p>我们申明一个锁,让他同步执行 , 这么申明就可以了</p>
+<pre><code class="language-go">var ILock = sync.Mutex{}
+
+func main() {
+	var x = 0
+	for num := 0; num &lt; 5; num++ {
+		go func() {
+			for i := 0; i &lt; 10000; i++ {
+				increase(&amp;x)
+			}
+		}()
+	}
+
+	// 等待子线程退出
+	time.Sleep(time.Millisecond * 2000)
+	fmt.Println(x)
+}
+
+func increase(x *int) 
+	// 1. 先加锁
+	ILock.Lock()
+	// 执行完方法释放锁. 跟Java的很像,但是不是reentrant
+    defer ILock.Unlock()
+	*x = *x + 1
+}
+</code></pre>
+<p>此时执行 发现结果</p>
+<pre><code class="language-go">50000
+</code></pre>
+<p>输出正确.</p>
+<p>其实还可以这么写. 效率更高</p>
+<pre><code class="language-go">go func() {
+    ILock.Lock()
+    defer ILock.Unlock()
+    for i := 0; i &lt; 10000; i++ {
+        increase(&amp;x)
+    }
+}()
+</code></pre>
+<h3 id="利用chan阻塞实现锁">利用Chan阻塞实现锁</h3>
+<pre><code class="language-go">var (
+	lock = make(chan int, 1)
+)
+
+func Lock() {
+	lock &lt;- 1
+}
+func Unlock() {
+	&lt;-lock
+}
+</code></pre>
+<p>此时这就是一个最简单的锁.</p>
+<h2 id="2-syncrwmutex-读写锁">2. sync.RWMutex 读写锁</h2>
+<blockquote>
+<p>​	跟Java的一模一样 , 我就不多说了, <strong>读写互斥, 可多读(读锁可以同时存在多个), 但读写不能同时存在, 写互斥</strong></p>
+</blockquote>
+<pre><code class="language-go">func main() {
+	// 读写锁
+	mutex := sync.RWMutex{}
+
+	go func() {
+		// 读锁
+		mutex.RLocker().Lock()
+		fmt.Println(&quot;读&quot;)
+		mutex.RLocker().Unlock()
+	}()
+	go func() {
+		mutex.RLocker().Lock()
+		fmt.Println(&quot;读&quot;)
+		time.Sleep(time.Millisecond * 5000)
+		mutex.RLocker().Unlock()
+	}()
+
+	time.Sleep(time.Millisecond * 1000)
+
+	go func() {
+		// 写锁 , 就是普通的锁了
+		fmt.Println(&quot;拿到了&quot;)
+		mutex.Lock()
+		fmt.Println(&quot;写&quot;)
+		mutex.Unlock()
+	}()
+	time.Sleep(time.Millisecond * 6000)
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">读
+读
+拿到了 // 耗时1ms
+写 // 对比前一步耗时 ms
+</code></pre>
+<h2 id="3-syncwaitgroup">3. sync.WaitGroup</h2>
+<blockquote>
+<p>​	这个类类似于Java的<code>CountDownLatch</code> 类, 但是比Java的好点. 第一Java的需要初始化告诉他计数器是多少, 所以他只有一个countdown和wait操作.</p>
+<p>​	但是 <code>sync.WaitGroup</code> 却是三个操作, 第一个 down , add(int) , wait 三个操作. 所以他实现更加好.</p>
+</blockquote>
+<p>简单以第一个例子为例子吧, 比如说 , 我们不知道goroutine啥时候退出是吧, 但是有了这玩意就知道了.</p>
+<pre><code class="language-go">func main() {
+	var WG = sync.WaitGroup{}
+
+	start := time.Now().UnixNano() / 1e6
+	for num := 0; num &lt; 5; num++ {
+		WG.Add(1)
+		go func(num int) {
+			defer WG.Done()
+			ran := rand.Int63n(1000)
+			fmt.Printf(&quot;goroutine-%d sleep : %dms\n&quot;, num, ran)
+			time.Sleep(time.Millisecond * time.Duration(ran))
+		}(num)
+	}
+	// 等待子线程退出
+	WG.Wait()
+	fmt.Printf(&quot;main waitting : %dms\n&quot;, time.Now().UnixNano()/1e6-start)
+}
+</code></pre>
+<p>输出 :  根据木桶原理, 耗时最长的是937ms, 所以主线程等待了939ms.</p>
+<pre><code class="language-go">goroutine-1 sleep : 410ms
+goroutine-0 sleep : 821ms
+goroutine-2 sleep : 51ms
+goroutine-3 sleep : 937ms
+goroutine-4 sleep : 551ms
+main waitting : 939ms
+</code></pre>
+<h3 id="注意点">注意点 :</h3>
+<blockquote>
+<p>​	由于<code>sync.WaitGroup</code>也是一个对象Structs, 所以需要指针传递, 不能使用值传递, 注意一下.因为状态值复制了就无效了.</p>
+</blockquote>
+<p>根据封装, 我们需要传递 sync.waitgroup .</p>
+<pre><code class="language-go">func fun(num int, wg *sync.WaitGroup) {
+	defer wg.Done()
+	ran := rand.Int63n(1000)
+	fmt.Printf(&quot;goroutine-%d sleep : %dms\n&quot;, num, ran)
+	time.Sleep(time.Millisecond * time.Duration(ran))
+}
+</code></pre>
+<p>然后main方法</p>
+<pre><code class="language-go">func main() {
+	var WG = &amp;sync.WaitGroup{}
+	start := time.Now().UnixNano() / 1e6
+
+	for num := 0; num &lt; 5; num++ {
+		WG.Add(1)
+		go fun(num, WG)
+	}
+
+	// 等待子线程退出
+	WG.Wait()
+	fmt.Printf(&quot;main waitting : %dms\n&quot;, time.Now().UnixNano()/1e6-start)
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-go">goroutine-4 sleep : 410ms
+goroutine-1 sleep : 551ms
+goroutine-0 sleep : 821ms
+goroutine-2 sleep : 51ms
+goroutine-3 sleep : 937ms
+main waitting : 939ms
+</code></pre>
+<h2 id="4-synconce-一次操作">4. sync.Once 一次操作</h2>
+<p>这个玩意可以让 <code>once.Do()</code> 方法只执行一次.  其实类似于一个flag,一开始为true.  每次执行判断是否为true , 当执行了一次以后改成false. 其实他就是这个原理 , 不过他使用了cas , 保证了线程安全性,</p>
+<pre><code class="language-go">func main() {
+	once := sync.Once{}
+	one(&amp;once)
+	one(&amp;once)
+	one(&amp;once)
+}
+
+func one(once *sync.Once)  {
+	fmt.Println(&quot;执行函数&quot;)
+	once.Do(func() {
+		fmt.Println(&quot;只会执行了一次&quot;)
+	})
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">执行函数
+只会执行了一次
+执行函数
+执行函数
+</code></pre>
+<p>所以他可以只执行一次  , 适合做初始化操作, 或者其他一次性的操作, 不需要多次</p>
+<h2 id="4-syncmap">4. sync.Map</h2>
+<p>提供的线程安全的map , 多线程访问时, 对于crud 操作, 会加锁.</p>
+<pre><code class="language-go">maps := sync.Map{}
+// 存
+maps.Store(&quot;&quot;,&quot;&quot;)
+// 删
+maps.Delete(&quot;&quot;)
+// 取
+maps.Load(&quot;&quot;)
+
+// 有就不存,返回已经存了的对象和true, 如果没有就返回存的value和false.
+maps.LoadOrStore(&quot;&quot;,&quot;&quot;)
+</code></pre>
+<h2 id="syncpool">sync.Pool</h2>
+<blockquote>
+<p>​	顾名思义一个池子, 那么我们看看这个池子主要做啥了.</p>
+<p><strong>Pool用于存储那些被分配了但是没有被使用，而未来可能会使用的值，以减小垃圾回收的压力。(适合大对象)</strong></p>
+<p>​	同时他提供了一个存储的地方. 减少大量实例化过程 .  但是效率未必要比实例化快奥 . 因为维护一个对象要考虑各种问题, 这就是效率 , 但是实例化啥也不用考虑.</p>
+</blockquote>
+<p>操作很简单.</p>
+<pre><code class="language-go">func main() {
+
+	pool := &amp;sync.Pool{
+		New: func() interface{} {
+			return &quot;new&quot;
+		},
+	}
+	
+	// 首先的放一个 , 由于put操作.
+	pool.Put(&quot;init&quot;)
+
+	go func() {
+		// 拿一个
+		s := pool.Get().(string)
+		// 使用
+		fmt.Println(s)
+		// 使用完放进去, 所以特别适合大对象. 
+		pool.Put(s)
+	}()
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-syncmutex">1. sync.Mutex</a>
+<ul>
+<li><a href="#%E5%88%A9%E7%94%A8chan%E9%98%BB%E5%A1%9E%E5%AE%9E%E7%8E%B0%E9%94%81">利用Chan阻塞实现锁</a></li>
+</ul>
+</li>
+<li><a href="#2-syncrwmutex-%E8%AF%BB%E5%86%99%E9%94%81">2. sync.RWMutex 读写锁</a></li>
+<li><a href="#3-syncwaitgroup">3. sync.WaitGroup</a>
+<ul>
+<li><a href="#%E6%B3%A8%E6%84%8F%E7%82%B9">注意点 :</a></li>
+</ul>
+</li>
+<li><a href="#4-synconce-%E4%B8%80%E6%AC%A1%E6%93%8D%E4%BD%9C">4. sync.Once 一次操作</a></li>
+<li><a href="#4-syncmap">4. sync.Map</a></li>
+<li><a href="#syncpool">sync.Pool</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

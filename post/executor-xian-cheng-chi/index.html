@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JUC - Executor | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/executor-xian-cheng-chi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JUC - Executor</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-19</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/executor-xian-cheng-chi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2440字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">12 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-executor">1. Executor</h2>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-19/4089681c-020d-45c7-ba5d-3c9a16e04caf.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ul>
+<li>Executor接口很简单，只有一个execute方法。  @since 1.5  java5开始有的</li>
+<li>ExecutorService是Executor的子接口，增加了一些常用的对线程的控制方法，之后使用线程池主要也是使用这些方法。</li>
+<li>AbstractExecutorService是一个抽象类。</li>
+<li>ThreadPoolExecutor就是实现了这个类。</li>
+</ul>
+<p><strong>其中主要分为两大部分</strong></p>
+<ul>
+<li><strong>Executors的几个实现方法</strong></li>
+</ul>
+<pre><code class="language-java">1. 创建固定大小的线程,可以延时或定时的执行任务;
+ExecutorService executorService = newCachedThreadPool();
+
+2. 创建单个线程池, 线程池中只有一个线程;
+ExecutorService executorService1 = newSingleThreadExecutor();
+
+3. 缓存线程池,线程池中线程的数量不固定,可以根据需求自动更改数量;
+ExecutorService executorService2 = Executors.newFixedThreadPool(10);
+
+4. 创建固定大小的线程,可以延时或定时的执行任务;
+ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
+
+
+5. jdk 1.8 新加的 ,它是新的线程池类ForkJoinPool的扩展，但是都是在统一的一个Executors类中实现，由于能够合理的使用CPU进行对任务操作（并行操作），所以适合使用在很耗时的任务中;
+ExecutorService newWorkStealingPool = Executors.newWorkStealingPool();   
+    
+</code></pre>
+<ul>
+<li>ThreadPoolExecutor</li>
+</ul>
+<p>主要讲解的对象</p>
+<h2 id="2-threadpoolexecutor">2. ThreadPoolExecutor</h2>
+<h3 id="1-构造方法">1. 构造方法</h3>
+<pre><code>/**
+     * Creates a new {@code ThreadPoolExecutor} with the given initial
+     * parameters.
+     
+    // 核心线程数
+     * @param corePoolSize the number of threads to keep in the pool, even
+     *        if they are idle(空闲), unless {@code allowCoreThreadTimeOut} is set
+     
+     // 总线程数(最大的)
+     * @param maximumPoolSize the maximum number of threads to allow in the
+     *        pool
+     
+     // 非corePool thread 的存活时间,到了 就回收了 
+     * @param keepAliveTime when the number of threads is greater than
+     *        the core, this is the maximum time that excess idle threads
+     *        will wait for new tasks before terminating.
+     
+     * @param unit the time unit for the {@code keepAliveTime} argument
+     
+     // 工作队列,会保存任务,在他们被调用之前, 一般是 corePoolSize 满了以后就放入队列中了
+     * @param workQueue the queue to use for holding tasks before they are
+     *        executed.  This queue will hold only the {@code Runnable}
+     *        tasks submitted by the {@code execute} method.
+     
+     // 创建线程的工厂
+     * @param threadFactory the factory to use when the executor
+     *        creates a new thread
+     
+     // 默认是  AbortPolicy() 模式 ,直接 throws a RejectedExecutionException 异常
+     * @param handler the handler to use when execution is blocked
+     *        because the thread bounds and queue capacities are reached
+     * @throws IllegalArgumentException if one of the following holds:&lt;br&gt;
+     *         {@code corePoolSize &lt; 0}&lt;br&gt;
+     *         {@code keepAliveTime &lt; 0}&lt;br&gt;
+     *         {@code maximumPoolSize &lt;= 0}&lt;br&gt;
+     *         {@code maximumPoolSize &lt; corePoolSize}
+     * @throws NullPointerException if {@code workQueue}
+     *         or {@code threadFactory} or {@code handler} is null
+     */   
+
+	public ThreadPoolExecutor(int corePoolSize,
+                              int maximumPoolSize,
+                              long keepAliveTime,
+                              TimeUnit unit,
+                              BlockingQueue&lt;Runnable&gt; workQueue,
+                              ThreadFactory threadFactory,
+                              RejectedExecutionHandler handler) {}
+</code></pre>
+<p>这七个参数 需要根据具体的业务流量以及业务需求来选择</p>
+<h3 id="2-rejectedexecutionhandler-的四种实现">2. <strong>RejectedExecutionHandler</strong> 的四种实现</h3>
+<ol>
+<li><strong>AbortPolicy</strong>  默认的实现方式 ,当 超过最大线程数时 会抛出异常</li>
+<li><strong>DiscardPolicy</strong>   (Discard 丢弃的意思)  就是直接丢弃 超过的线程任务</li>
+<li><strong>DiscardOldestPolicy</strong>  当满了时,会丢弃队列中最老的那个线程任务</li>
+<li><strong>CallerRunsPolicy</strong>    当满了时,会调用其(in the calling thread of the {@code execute} method,) 调用execute() 方法的线程 来执行 超出的线程任务 ,</li>
+</ol>
+<p>这四种根据具体业务选择</p>
+<h3 id="3-实现一个threadfactory">3. 实现一个ThreadFactory</h3>
+<pre><code class="language-java">public class MyThreadFactory implements ThreadFactory {
+	
+    // 多线程 需要用到cas 的 AtomicInteger
+    private AtomicInteger num = new AtomicInteger(0);
+
+    // 线程组需要一个线程组名字
+    private static ThreadGroup threadGroup;
+
+    private String groupName;
+    
+	// 是否为守护线程
+    private boolean  daemon = false;
+
+    // 传入 线程组名字
+    public MyThreadFactory(String groupName) {
+        this.groupName = groupName;
+        threadGroup = new ThreadGroup(groupName);
+    }
+
+    public MyThreadFactory(String groupName, boolean daemon) {
+        this.groupName = groupName;
+        this.daemon = daemon;
+        threadGroup = new ThreadGroup(groupName);
+    }
+
+    // 核心方法获取线程 
+    @Override
+    public Thread newThread(Runnable r) {
+        String name = getThreadName();
+        Thread thread = new Thread(threadGroup, r, name, 0);
+        thread.setDaemon(daemon);
+        return thread;
+    }
+
+    private String getThreadName() {
+        return groupName + &quot;-&quot; + num.incrementAndGet();
+    }
+
+    public static void main(String[] args) {
+        MyThreadFactory factory = new MyThreadFactory(&quot;name&quot;);
+        factory.newThread(() -&gt; System.out.println(Thread.currentThread().getName())).start();
+    }
+}
+</code></pre>
+<h3 id="4-判断流程">4. 判断流程</h3>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-19/4ef6d91e-2c80-4a9e-9ebe-fd317184bb64.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><strong>举个栗子</strong></p>
+<pre><code>// 实例化一个
+ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 3, 10L, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(2), new ThreadPoolExecutor.CallerRunsPolicy());
+
+调用6次
+        executor.execute(()-&gt;{
+            try {
+                TimeUnit.SECONDS.sleep(1);
+                System.out.println(Thread.currentThread().getName()+&quot;-- num&quot;);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+1. 当执行时, 会把 1 2 任务放入 核心线程池
+2. 此时 核心线程池 已经满了 &gt;2 ,此时 把 3 4 放入到了队列中 
+3. 由于队列也满了,于是创建新的线程(最大线程-核心线程),但是此时只能创建一个,因此 5 放入到了这个创建的线程中
+4. 6任务 于是就只能调用 handler ,此时会执行CallerRunsPolicy()策略,由于是main线程调用的此方法 ,此时只能main线程执行 6任务
+
+5. 结果就是
+pool-1-thread-1-- 1
+pool-1-thread-2-- 2
+pool-1-thread-3-- 5
+main-- 6
+pool-1-thread-2-- 4
+pool-1-thread-1-- 3
+    
+所以我们的分析是对的    
+</code></pre>
+<h3 id="5-blockingqueue-的五种实现队列">5. BlockingQueue 的五种实现队列</h3>
+<p><a href="%5Bhttps://anthony-dong.github.io/post/ni-zhen-zheng-liao-jie-java-ji-he-ma/#4%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0blockingqueue%E5%B8%B8%E7%94%A8%E7%9A%84%E4%BA%94%E4%B8%AA%E5%AE%9E%E7%8E%B0%E7%B1%BB%5D(https://anthony-dong.github.io/post/ni-zhen-zheng-liao-jie-java-ji-he-ma/#4%E7%AE%80%E8%A6%81%E6%A6%82%E8%BF%B0blockingqueue%E5%B8%B8%E7%94%A8%E7%9A%84%E4%BA%94%E4%B8%AA%E5%AE%9E%E7%8E%B0%E7%B1%BB)">可以参考我的这篇文章</a></p>
+<h2 id="3-threadpoolexecutor关闭的三种方式">3. ThreadPoolExecutor关闭的三种方式</h2>
+<p><a href="https://www.cnblogs.com/trust-freedom/p/6693601.html">实现方式大家可以参考我的推荐链接</a></p>
+<h3 id="1-shutdown方法">1. shutdown()方法</h3>
+<p>流程 : <strong>更新线程池状态为shutdown</strong>、<strong>中断所有空闲线程</strong>、<strong>tryTerminated()尝试终止线程池</strong></p>
+<p>将线程池状态置为<code>SHUTDOWN</code>,并不会立即停止：</p>
+<ul>
+<li>停止接收外部submit的任务</li>
+<li><strong>内部正在跑的任务和队列里等待的任务，会执行完成</strong></li>
+<li>等到第二步完成后，才真正停止</li>
+<li><strong>无返回值</strong></li>
+</ul>
+<h3 id="2-shutdownnow-方法">2. shutdownNow() 方法</h3>
+<p>流程 :  将线程池更新为stop状态 , 调用 interruptWorkers() 中断所有线程(包括正在运行的线程)，将workQueue中待处理的任务移到一个List中，并在方法最后返回</p>
+<p>将线程池状态置为<code>STOP</code>。<strong>企图</strong>立即停止，事实上不一定：</p>
+<ul>
+<li>跟shutdown()一样，先停止接收外部提交的任务</li>
+<li><strong>忽略队列里等待的任务</strong></li>
+<li>尝试将正在跑的任务<code>interrupt</code>中断</li>
+<li><strong>返回未执行的任务列表</strong></li>
+</ul>
+<h3 id="3-awaitterminationlong-timeout-timeunit-unit-方法">3.  awaitTermination(long timeout, TimeUnit unit) 方法</h3>
+<p><strong>当前线程阻塞</strong>，</p>
+<p>然后返回<strong>true（shutdown请求后所有任务执行完毕）<strong>或</strong>false（已超时）</strong></p>
+<h3 id="4-shutdown和awaittermination的区别">4. shutdown()和awaitTermination()的区别</h3>
+<ul>
+<li>shutdown()后，不能再提交新的任务进去；但是awaitTermination()后，可以继续提交。</li>
+<li>awaitTermination()是阻塞的，返回结果是线程池是否已停止（true/false）；shutdown()不阻塞。</li>
+<li>awaitTermination()与shutdown()方法结合使用时，尤其要注意的是shutdown()方法必须要在awaitTermination()方法之前调用，该方法才会生效。否则会造成死锁。</li>
+</ul>
+<pre><code>		es.shutdown();  
+		if(!es.awaitTermination(20,TimeUnit.SECONDS)){//20S
+		   System.out.println(&quot; 到达指定时间，还有线程没执行完，不再等待，关闭线程池!&quot;);
+		   es.shutdownNow();  
+		}
+
+	// 这里为啥我不死锁.... 第三点我试着么啥事,大家可以试试,这个
+</code></pre>
+<h3 id="4-对比">4. 对比</h3>
+<ul>
+<li>优雅的关闭，用shutdown()</li>
+<li>想立马关闭，并得到未执行任务列表，用shutdownNow()</li>
+<li>优雅的关闭，并允许关闭声明后新任务能提交，用awaitTermination()</li>
+</ul>
+<p>举个栗子</p>
+<pre><code> private static ThreadPoolExecutor executor = new ThreadPoolExecutor(2, 4, 10L,  TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(2), new ThreadPoolExecutor.CallerRunsPolicy());  
+
+ public static void main(String[] args) throws InterruptedException {
+
+        executor.execute(() -&gt; new Task(1).run());
+        executor.execute(() -&gt; new Task(2).run());
+        executor.execute(() -&gt; new Task(3).run());
+        executor.execute(() -&gt; new Task(4).run());
+        executor.execute(() -&gt; new Task(5).run());
+        executor.execute(() -&gt; new Task(6).run());
+
+		// 查看队列中的任务
+        executor.getQueue().forEach(System.out::println);
+		
+     	// 设置2000L 其中不需要加 L 因为他是 long不是 Long类型
+     	// 设置等待时间, 等待完毕还可以 继续执行其他任务
+        executor.awaitTermination(2000L, TimeUnit.MILLISECONDS);
+
+
+        executor.execute(() -&gt; new Task(7).run());
+
+    }
+
+
+    private static class Task implements Runnable{
+        private int num;
+
+        public Task(int num) {
+            this.num = num;
+        }
+
+        @Override
+        public void run() {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+                System.out.println(Thread.currentThread().getName() + &quot; ---- &quot; + num);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+</code></pre>
+<h2 id="4-提交方式-submit-execute">4. 提交方式 -  submit &amp; execute</h2>
+<p>使用方式 :</p>
+<pre><code class="language-java">public class TestThreadPoolExecutor {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ThreadPoolExecutor executor = new ThreadPoolExecutor(10, 20, 240, TimeUnit.SECONDS, new ArrayBlockingQueue&lt;&gt;(1024),
+                new ThreadPoolExecutor.CallerRunsPolicy());
+
+        // 我一种 方式
+        executor.execute(()-&gt;{
+            System.out.println(&quot;new  runnable&quot;);
+
+        });
+
+
+        // 第二种 方式
+        Future&lt;String&gt; over = executor.submit(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    TimeUnit.SECONDS.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }, &quot;over&quot;);
+        // 这个方法会阻塞
+
+
+
+
+        // submit 方法
+        Future&lt;String&gt; future = executor.submit(new Callable&lt;String&gt;() {
+            @Override
+            public String call() throws Exception {
+                TimeUnit.SECONDS.sleep(2);
+                return &quot;HELLO WORLD , Future&quot;;
+            }
+        });
+
+
+        FutureTask&lt;String&gt; task = new FutureTask&lt;String&gt;(new Callable&lt;String&gt;() {
+            @Override
+            public String call() throws Exception {
+                TimeUnit.SECONDS.sleep(3);
+                return  &quot;HELLO WORLD , FutureTask&quot;;
+            }
+        });
+
+        // execute 方法
+        executor.execute(task);
+
+        // get 方法 获取结果 
+        System.out.println(&quot;task.get() = &quot; + task.get());
+
+        System.out.println(&quot;future.get() = &quot; + future.get());
+
+        System.out.println(&quot;over.get() = &quot; + over.get());
+
+        executor.shutdown();
+
+    }
+}
+</code></pre>
+<p>结果</p>
+<pre><code class="language-java">new  runnable
+task.get() = HELLO WORLD , FutureTask
+future.get() = HELLO WORLD , Future
+over.get() = over
+</code></pre>
+<blockquote>
+<p>​	上面我们发现  submit 提交了 一个<code>Callable</code> 对象 ,  那么 <code>Callable</code> 和 <code>Runnable</code> 有啥区别 , 我们发现 一个携带了返回值 , 一个不携带 ,</p>
+<p>​	那我们知道创建一个线程唯一的方法就是执行 <code>Runnable</code>  的实现类,然后执行 , , 所以 submit 实际上 做的就是 execute 我们看看源码就知道了, 最终执行的还是 去实现一个 <code>FutureTask</code>  ,然后执行 <code>execute()</code> 方法</p>
+</blockquote>
+<pre><code class="language-java">   public &lt;T&gt; Future&lt;T&gt; submit(Callable&lt;T&gt; task) {
+        if (task == null) throw new NullPointerException();
+       // FutureTask&lt;V&gt; 是 RunnableFuture的实现类 , 
+        RunnableFuture&lt;T&gt; ftask = newTaskFor(task);
+       // 执行 execute 
+        execute(ftask);
+        return ftask;
+    }
+</code></pre>
+<blockquote>
+<p><code>RunnableFuture</code> 是什么</p>
+</blockquote>
+<pre><code class="language-java">public interface RunnableFuture&lt;V&gt; extends Runnable, Future&lt;V&gt; {
+    /**
+     * Sets this Future to the result of its computation
+     * unless it has been cancelled.
+     */
+    将这个Future 作为计算结果,直到他被取消,  
+    所以他只是一个执行结果, 还是需要实现Runnable,开启一个线程
+    void run();
+}
+</code></pre>
+<blockquote>
+<p>​	我们看看 Runnable</p>
+<p><code>The &lt;code&gt;Runnable&lt;/code&gt; interface should be implemented by any class whose instances are intended to be executed by a thread.</code></p>
+<p>说的大概就是  这个接口可以被任意一个类去实现,这个类被用来让一个线程去执行的 ,</p>
+</blockquote>
+<blockquote>
+<p>​	我们再去看看 <code>Thread</code> 类</p>
+<p><code>A &lt;i&gt;thread&lt;/i&gt; is a thread of execution in a program. The Java Virtual Machine allows an application to have multiple threads of execution running concurrently.</code></p>
+<p>在一个程序中一个<code>thread</code>是一个执行线程,java虚拟机允许一个应用去拥有多个执行线程并发运行</p>
+</blockquote>
+<blockquote>
+<p>​	所以创建一个线程 终究还是需要实现一个 <code>thread</code>  然后 start 一个 runnable任务</p>
+</blockquote>
+<pre><code class="language-java">start 方法 解释说 
+Any new functionality added to this method in the future may have to also be added to the VM.\
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-executor">1. Executor</a></li>
+<li><a href="#2-threadpoolexecutor">2. ThreadPoolExecutor</a>
+<ul>
+<li><a href="#1-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">1. 构造方法</a></li>
+<li><a href="#2-rejectedexecutionhandler-%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%AE%9E%E7%8E%B0">2. <strong>RejectedExecutionHandler</strong> 的四种实现</a></li>
+<li><a href="#3-%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAthreadfactory">3. 实现一个ThreadFactory</a></li>
+<li><a href="#4-%E5%88%A4%E6%96%AD%E6%B5%81%E7%A8%8B">4. 判断流程</a></li>
+<li><a href="#5-blockingqueue-%E7%9A%84%E4%BA%94%E7%A7%8D%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97">5. BlockingQueue 的五种实现队列</a></li>
+</ul>
+</li>
+<li><a href="#3-threadpoolexecutor%E5%85%B3%E9%97%AD%E7%9A%84%E4%B8%89%E7%A7%8D%E6%96%B9%E5%BC%8F">3. ThreadPoolExecutor关闭的三种方式</a>
+<ul>
+<li><a href="#1-shutdown%E6%96%B9%E6%B3%95">1. shutdown()方法</a></li>
+<li><a href="#2-shutdownnow-%E6%96%B9%E6%B3%95">2. shutdownNow() 方法</a></li>
+<li><a href="#3-awaitterminationlong-timeout-timeunit-unit-%E6%96%B9%E6%B3%95">3.  awaitTermination(long timeout, TimeUnit unit) 方法</a></li>
+<li><a href="#4-shutdown%E5%92%8Cawaittermination%E7%9A%84%E5%8C%BA%E5%88%AB">4. shutdown()和awaitTermination()的区别</a></li>
+<li><a href="#4-%E5%AF%B9%E6%AF%94">4. 对比</a></li>
+</ul>
+</li>
+<li><a href="#4-%E6%8F%90%E4%BA%A4%E6%96%B9%E5%BC%8F-submit-execute">4. 提交方式 -  submit &amp; execute</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

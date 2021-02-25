@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> Netty - 自带的几个编解码器 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/netty-zi-dai-de-ji-ge-bian-jie-ma-qi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> Netty - 自带的几个编解码器</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-30</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/netty-zi-dai-de-ji-ge-bian-jie-ma-qi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/fn4lTiaKxHO/"
+								class="tag">netty</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3554字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">17 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-objectdecoder和objectencoder-编解码器">1. ObjectDecoder和ObjectEncoder 编解码器</h2>
+<h3 id="1-objectencoder">1. ObjectEncoder</h3>
+<blockquote>
+<p>An encoder which serializes a Java object into a {@link ByteBuf}.</p>
+</blockquote>
+<p>将一个java对象序列化成一个 ByteBuf 对象  , 注意Java对象需要实现<code>java.io.Serializable</code> 接口</p>
+<h3 id="2-objectdecoder">2. ObjectDecoder</h3>
+<blockquote>
+<p>A decoder which deserializes the received {@link ByteBuf}s into Java objects.</p>
+<p>将一个 ByteBuf 反序列成一个java对象 ,  注意Java对象需要实现<code>java.io.Serializable</code> 接口</p>
+</blockquote>
+<h3 id="3-快速开始">3. 快速开始</h3>
+<p>第一步一个java对象 必须是实现Serializable接口</p>
+<pre><code class="language-java">public class OPack implements Serializable {
+
+    private static final long serialVersionUID = -5734509523963527363L;
+    String name;
+    String msg;
+    
+    .... 其他省略 , get , set方法之类的
+}
+</code></pre>
+<p>客户端服务器都添加这两个 编码器和解码器</p>
+<pre><code class="language-java">ch.pipeline().addLast(new ObjectEncoder());
+
+ch.pipeline().addLast(new ObjectDecoder(1004, new ClassResolver() {
+    @Override
+    public Class&lt;?&gt; resolve(String className) throws ClassNotFoundException {
+        return OPack.class;
+    }
+}));
+</code></pre>
+<p>自己写一个 <code>ChannelInboundHandlerAdapter</code>实现<code>channelRead()</code> 方法就可以了 , 很简单 , 或者 <code>SimpleChannelInboundHandler&lt;T&gt;</code> 的 <code>channelRead0()</code> 方法,</p>
+<h3 id="4-编解码器源码分析">4. 编解码器源码分析</h3>
+<h4 id="1-objectencoder-编码器">1. ObjectEncoder 编码器</h4>
+<pre><code class="language-java">public class ObjectEncoder extends MessageToByteEncoder&lt;Serializable&gt; {
+    // 这是一个int 的 byte数组 , 因为int是四个字节
+    private static final byte[] LENGTH_PLACEHOLDER = new byte[4];
+
+    @Override
+    protected void encode(ChannelHandlerContext ctx, Serializable msg, ByteBuf out) throws Exception {
+        // 写指针
+        int startIdx = out.writerIndex();
+
+        // 
+        ByteBufOutputStream bout = new ByteBufOutputStream(out);
+        //
+        ObjectOutputStream oout = null;
+        try {
+            // 首先写入一个4字节的数组
+            bout.write(LENGTH_PLACEHOLDER);
+			
+            oout = new CompactObjectOutputStream(bout);
+            
+            // 其次再写入一个对象
+            oout.writeObject(msg);
+            oout.flush();
+        } finally {
+            ....
+        }
+
+        // 获取写指针
+        int endIdx = out.writerIndex();
+
+        // 设置长度值
+        out.setInt(startIdx, endIdx - startIdx - 4);
+    }
+}
+
+</code></pre>
+<p>自己玩一玩 ........</p>
+<pre><code class="language-java">ByteBuf out = Unpooled.buffer(1024);
+
+// w指针位置
+int start = out.writerIndex();
+
+// 设置一个输出流
+ByteBufOutputStream bbos = new ByteBufOutputStream(out);
+
+// 首先写一个 4个字节长度的数组
+bbos.write(new byte[4]);
+
+// 对象流
+ObjectOutputStream objectOutputStream = new ObjectOutputStream(bbos);
+
+// 写一个obj
+objectOutputStream.writeObject(new OPack(&quot;hhh&quot;, &quot;hhh&quot;));
+
+// W 最终位置
+int end = out.writerIndex();
+
+// 在buf对象的 start 位置 设置一个 int值为 end-start-4 就是对象的长度 ,所以对象长度就算出来了
+out.setInt(start, end - start - 4);
+
+System.out.println(&quot;out = &quot; + out);
+
+System.out.println(&quot;out.readInt() = &quot; + out.readInt());
+
+// 看看计数引用
+System.out.println(&quot;out.refCnt() = &quot; + out.refCnt());
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">out = UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeHeapByteBuf(ridx: 0, widx: 117, cap: 1024)
+out.readInt() = 113
+out.refCnt() = 1
+</code></pre>
+<h3 id="2-objectdecoder-解码器">2. ObjectDecoder 解码器</h3>
+<pre><code class="language-java">public class ObjectDecoder extends LengthFieldBasedFrameDecoder {
+
+    private final ClassResolver classResolver;
+
+    public ObjectDecoder(ClassResolver classResolver) {
+        this(1048576, classResolver);
+    }
+	
+    // 这个意思每帧 1048576 长度
+    // 长度的偏移量为0 , 占用 4个字节 , 最后去掉前面的4个字节
+    public ObjectDecoder(int maxObjectSize, ClassResolver classResolver) {
+        super(maxObjectSize, 0, 4, 0, 4);
+        this.classResolver = classResolver;
+    }
+
+    @Override
+    protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+        // 直接调用父类的decode() 方法 , 返回的是已经扣除了我们4个字节长度的 ByteBuf方法
+        ByteBuf frame = (ByteBuf) super.decode(ctx, in);
+        if (frame == null) {
+            return null;
+        }
+
+        // 这个代码有两处 一处是释放ByteBuf , 一处是转成一个ObjectInputStream对象
+        ObjectInputStream ois = new CompactObjectInputStream(new ByteBufInputStream(frame, true), classResolver);
+        try {
+            // 最后读取就行了
+            return ois.readObject();
+        } finally {
+            ois.close();
+        }
+    }
+}
+</code></pre>
+<p>我这里有一张图 , 可以清晰的看到前面变化 , 变化点就是我上面提到的 , 我会在下面讲解<strong>LengthFieldBasedFrameDecoder</strong> 源码的时候对其分析 , 还要注意一点就是你获取的计数引用此时是2 ,这个需要手动释放 , 上面注释我已经提到了 ....netty已经帮我们释放了 ,但是我debug 发现并没有释放,而是后面有一处进行了一次release .</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-17/920bee30-4966-4a0c-848c-e46ac27a914c.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="2-stringencoder和stringdecoder-字符串编解码器">2. StringEncoder和StringDecoder - 字符串编解码器</h2>
+<blockquote>
+<p>​	这俩实现了 <code>MessageToMessageEncoder&lt;I&gt;</code> 和 <code>MessageToMessageDecoder&lt;I&gt;</code> 实现还是蛮简单的</p>
+<p>​	StringDecoder 就是将ByteBuf转换成了 String ,调用的是 <code>ByteBuf.toString(charset)</code> 方法 ,</p>
+<p>​	StringEncoder 就是将 String转换成了 ByteBuf , 调用的是 <code>ByteBufUtil.encodeString(ctx.alloc(), CharBuffer.wrap(msg), charset)</code> 这个方法</p>
+</blockquote>
+<p>服务器端 :</p>
+<pre><code class="language-java">final StringServerHandler stringServerHandler = new StringServerHandler();
+
+// 管道中添加处理器
+ChannelPipeline pipeline = ch.pipeline();
+// 添加 字符串编解码器 , 
+pipeline.addLast(new StringEncoder(CharsetUtil.UTF_8));
+pipeline.addLast(new StringDecoder(CharsetUtil.UTF_8));
+// 自己实现的
+pipeline.addLast(&quot;serverHandler&quot;, stringServerHandler);
+</code></pre>
+<p>我们的处理器<code>StringServerHandler</code> 实现了 <code>SimpleChannelInboundHandler&lt;String&gt;</code> ,</p>
+<pre><code class="language-java">private static class StringServerHandler extends SimpleChannelInboundHandler&lt;String&gt; {
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, String msg) throws Exception {
+        logger.info(&quot;[服务器] 接收到信息 : {}&quot;, msg);
+        ctx.writeAndFlush(&quot;服务器收到信息&quot;);
+    }
+}
+</code></pre>
+<p>测试用例 :  发现OK</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-19/0dff36ce-e2fd-405c-a4a0-2ab9e881c78c.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><code>io.netty.handler.codec.string.StringEncoder</code>  基本实现代码</p>
+<pre><code class="language-java">@Override
+protected void encode(ChannelHandlerContext ctx, CharSequence msg, List&lt;Object&gt; out) throws Exception {
+    if (msg.length() == 0) {
+        return;
+    }
+
+    out.add(ByteBufUtil.encodeString(ctx.alloc(), CharBuffer.wrap(msg), charset));
+}
+</code></pre>
+<p><code>io.netty.handler.codec.string.StringDecoder</code> 基本实现</p>
+<pre><code class="language-java">@Override
+protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List&lt;Object&gt; out) throws Exception {
+    out.add(msg.toString(charset));
+}
+</code></pre>
+<h2 id="3-fixedlengthframedecoder-定长解码器">3. FixedLengthFrameDecoder - 定长解码器</h2>
+<h3 id="1-源码">1. 源码</h3>
+<pre><code class="language-java">public class FixedLengthFrameDecoder extends ByteToMessageDecoder {
+
+    // 定长
+    private final int frameLength;
+
+    public FixedLengthFrameDecoder(int frameLength) {
+        checkPositive(frameLength, &quot;frameLength&quot;);
+        this.frameLength = frameLength;
+    }
+
+    // ByteToMessageDecoder 的实现方法
+    @Override
+    protected final void decode(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out) throws Exception {
+        // 先去执行这个方法 -- &gt;
+        Object decoded = decode(ctx, in);   
+        // null 直接不管了 , 直接丢入缓冲区了 
+        if (decoded != null) {
+            // 不为空就添加进去
+            out.add(decoded);
+        }
+    }
+
+    // -- &gt; 到这里
+    protected Object decode(
+            @SuppressWarnings(&quot;UnusedParameters&quot;) ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+        
+        // 小于直接返回null
+        if (in.readableBytes() &lt; frameLength) {
+            return null;
+        } else {
+            // 等于或者等于就截取固定长度
+            return in.readRetainedSlice(frameLength);
+        }
+    }
+}
+</code></pre>
+<h3 id="2-基本使用">2. 基本使用</h3>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(8);
+
+// 0000 0000 , 0000 0000 , 0010 0111 , 0001 0000
+/ 0   0   39   16 
+ buf.writeInt(10000);
+//0000 0000 , 0000 0000 , 0000 0000 ,  0110 0100
+// 0  0  0 100
+buf.writeInt(100);
+
+// 我们将服务器端 new FixedLengthFrameDecoder(6) 长度调整为6个字节
+// 然后客户端发送两次给服务器 -&gt; 连续发两次buf对象
+</code></pre>
+<p>结果 :</p>
+<pre><code class="language-java">第一次  :  0	0	39	16	0	0	
+第二次  :  0	100	 0	 0	39	16	
+</code></pre>
+<p>我们发现第一次发送过去的数据 , 后两个字节在第二次发送的前面两个字节 , 此时 我们就肯定了 , 第一次发送过去没有收到的在缓冲区里面 , 这个缓冲区是每一个客户端与服务器连接都会有一个与这个客户端想对应的缓冲区 , 不是共同缓冲区 ...</p>
+<h2 id="4-lengthfieldbasedframedecoder-自定义解码器">4. LengthFieldBasedFrameDecoder - 自定义解码器</h2>
+<h3 id="1-构造方法">1. 构造方法</h3>
+<pre><code class="language-java">new LengthFieldBasedFrameDecoder(ByteOrder byteOrder, int maxFrameLength, int lengthFieldOffset, int lengthFieldLength,int lengthAdjustment, int initialBytesToStrip, boolean failFast);
+
+// byteOrder  :  大端\小端
+
+// maxFrameLength : 帧指的意思就是每次一客户端像服务器发送的数据包接收的缓冲区最大值 , 
+
+// lengthFieldOffset : 数据包长度的偏移量
+
+// lengthFieldLength : 数据包长度的长度 ,比如short就是2个字节 , int 就是4个字节
+
+// lengthAdjustment : 比如我们输入的是(10, 0, 2,-2,0), 传入入的数据是[10(short),100(int),1000(int)], 那么我们就需要调整一下,就是-2 , 让长度-2,就是我们实际的数据长度为8 , 数据为(100,10000),此时才能正常读取
+
+// initialBytesToStrip : 返回的ByteBuf的时候跳过的字节数
+
+// failFast : 快速失败
+</code></pre>
+<h3 id="2-简单使用">2. 简单使用</h3>
+<h4 id="1-第一种简单情况10-0-200">1. 第一种简单情况(10, 0, 2,0,0)</h4>
+<pre><code class="language-java">1. 服务器中添加进去 , 然后添加自己的Handler
+ch.pipeline().addLast(new LengthFieldBasedFrameDecoder(8, 0, 2,0,0));
+
+
+2. 客户端发送数据
+// 客户端发送给服务器的数据
+ByteBuf buf = Unpooled.buffer(10);
+// 长度为8 
+buf.writeShort(8);
+buf.writeInt(10000);
+buf.writeInt(100);
+
+3. 服务器端代码
+@Override
+public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    if (msg instanceof ByteBuf) {
+        ByteBuf messages = (ByteBuf) msg;
+        System.out.println(&quot;数据长度 = &quot; + messages.readShort());
+        System.out.println(&quot;数据1 = &quot; + messages.readInt());
+        System.out.println(&quot;数据2 = &quot; + messages.readInt());
+    } else {
+        super.channelRead(ctx, msg);
+    }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">数据长度 = 8
+数据1 = 10000
+数据2 = 100
+</code></pre>
+<p>一切OK ,</p>
+<h4 id="2-第二种情况10-0-2-20">2. 第二种情况(10, 0, 2,-2,0)</h4>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(10);
+// 长度为10 ,包含长度字段 ,所以调整为 -2
+buf.writeShort(10);
+buf.writeInt(10000);
+buf.writeInt(100);
+
+服务器端代码不变
+</code></pre>
+<p>输出 , 输出数据一致</p>
+<pre><code class="language-java">数据长度 = 10
+数据1 = 10000
+数据2 = 100
+</code></pre>
+<h4 id="3-第三种情况-10-0-2-22">3. 第三种情况 (10, 0, 2,-2,2)</h4>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(10);
+// 长度为10 ,包含长度字段 ,所以调整为 -2
+buf.writeShort(10);
+buf.writeInt(10000);
+buf.writeInt(100);
+
+服务器端代码只是去掉长度
+@Override
+public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    if (msg instanceof ByteBuf) {
+        ByteBuf messages = (ByteBuf) msg;
+        System.out.println(&quot;数据1 = &quot; + messages.readInt());
+        System.out.println(&quot;数据2 = &quot; + messages.readInt());
+    } else {
+        super.channelRead(ctx, msg);
+    }
+}
+</code></pre>
+<p>输出 , 结果一致 ,很正确 ,是不是会玩了 .........</p>
+<pre><code class="language-java">数据1 = 10000
+数据2 = 100
+</code></pre>
+<h3 id="3-源码分析">3. 源码分析 :</h3>
+<pre><code class="language-java">// 注意 in 直接内存 
+protected Object decode(ChannelHandlerContext ctx, ByteBuf in) throws Exception {
+    // 太长丢弃 , 一开始是false
+   if (discardingTooLongFrame) {
+        discardingTooLongFrame(in);
+    }
+    
+    //  lengthFieldEndOffset = lengthFieldOffset + lengthFieldLength;
+    // 可读长度小于长度末端的偏移量 ,直接返回空
+    if (in.readableBytes() &lt; lengthFieldEndOffset) {
+        return null;
+    }
+
+    // 长度的真实偏移量 = r指针+长度偏移量
+    int actualLengthFieldOffset = in.readerIndex() + lengthFieldOffset;
+
+    // 每一帧的长度 ,其实这个方法就是switch语句1 2 4 8 那种的根据你长度占的字节数进行读取数据长度
+    long frameLength = getUnadjustedFrameLength(in, actualLengthFieldOffset, lengthFieldLength, byteOrder);
+
+    // 长度小于0 
+    if (frameLength &lt; 0) {
+        failOnNegativeLengthField(in, frameLength, lengthFieldEndOffset);
+    }
+
+    // 比如我的长度包含了长度的字节, 此时就需要调整去处长度所占的字节
+    // 数据包真实长度 = frameLength + 调整的长度 + 长度末端偏移量
+    frameLength += lengthAdjustment + lengthFieldEndOffset;
+
+    // 长度小于
+    if (frameLength &lt; lengthFieldEndOffset) {
+        failOnFrameLengthLessThanLengthFieldEndOffset(in, frameLength, lengthFieldEndOffset);
+    }
+
+    // 数据包长度如果大于maxFrameLength 直接抛出异常了其实
+    if (frameLength &gt; maxFrameLength) {
+        exceededFrameLength(in, frameLength);
+        return null;
+    }
+   	....
+	
+    // 跳过初始化的initialBytesToStrip
+    in.skipBytes(initialBytesToStrip);
+
+    // r 指针
+    int readerIndex = in.readerIndex();
+    // 真实长度  = 长度-initialBytesToStrip
+    int actualFrameLength = frameLengthInt - initialBytesToStrip;
+    
+    // 这里也是切片 , 会计数+1 ,后面会讲到
+    ByteBuf frame = extractFrame(ctx, in, readerIndex, actualFrameLength);
+    
+    // 修改reader指针 位置
+    in.readerIndex(readerIndex + actualFrameLength);
+    
+    return frame;
+}
+</code></pre>
+<h2 id="5-delimiterbasedframedecoder-自定义分隔符解码器">5. DelimiterBasedFrameDecoder - 自定义分隔符解码器</h2>
+<blockquote>
+<p>自定义分隔符 解码器</p>
+</blockquote>
+<h3 id="1-构造方法-2">1. 构造方法</h3>
+<pre><code class="language-java">new DelimiterBasedFrameDecoder(50, false, true, Unpooled.copiedBuffer(&quot;a&quot;, CharsetUtil.UTF_8))
+
+// maxFrameLength 每一次的数据包最大多少
+// stripDelimiter  是够去除分隔符
+// failFast  如果异常快速抛出
+// delimiter  分隔符
+</code></pre>
+<h3 id="2-简单使用-2">2. 简单使用</h3>
+<pre><code class="language-java">// 1. 服务器端 , 添加解码器
+// 分隔符解码器
+ch.pipeline().addLast(new DelimiterBasedFrameDecoder(50, false, true, Unpooled.copiedBuffer(&quot;a&quot;, CharsetUtil.UTF_8)));
+// 字符串解码器
+ch.pipeline().addLast(new StringDecoder());
+// 自己的解码器
+ ch.pipeline().addLast(new MyDecoder());
+
+// channelRead() 方法
+if (msg instanceof String) {
+	System.out.println(msg);
+}
+
+// 2. 我们在客户端注册的是否发送了 : 
+run.channel().writeAndFlush(Unpooled.copiedBuffer(&quot;你好a你真的很棒&quot;, CharsetUtil.UTF_8));
+run.channel().writeAndFlush(Unpooled.copiedBuffer(&quot;啊a&quot;, CharsetUtil.UTF_8));
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">服务器端输出结果 : 
+你好a
+你真的很棒啊a
+</code></pre>
+<p>我们发现 分隔符是在句尾分割 , 如果没有分隔符另外一部分就放入缓冲区了,等待下一次读取后一起放入进去.</p>
+<h2 id="6-linebasedframedecoder-按行解码器">6. LineBasedFrameDecoder - 按行解码器</h2>
+<h3 id="1-构造方法-3">1. 构造方法</h3>
+<pre><code class="language-java">LineBasedFrameDecoder(final int maxLength, final boolean stripDelimiter, final boolean failFast)
+// maxLength : 最大帧
+// failFast : 快速抛出异常
+// stripDelimiter : 去除分隔符
+</code></pre>
+<h3 id="2-快速使用">2. 快速使用</h3>
+<pre><code class="language-java">// 1.换行符解码器
+ch.pipeline().addLast(new LineBasedFrameDecoder(1000, true, true));
+// 2. 字符串解码器
+ch.pipeline().addLast(new StringDecoder());
+// 3. 自己的处理器
+ch.pipeline().addLast(new MyHandler());
+
+服务器端发送 : 
+ctx.writeAndFlush(Unpooled.copiedBuffer(&quot;HELLO,我是服务器\n&quot;, CharsetUtil.UTF_8));
+
+客户端发送 : 
+run.channel().writeAndFlush(Unpooled.copiedBuffer(&quot;你好,你真的很棒&quot;, CharsetUtil.UTF_8))
+run.channel().writeAndFlush(Unpooled.copiedBuffer(&quot;啊,\n&quot;, CharsetUtil.UTF_8))
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">服务器端 : 
+你好,你真的很棒啊,
+
+客户端: 
+HELLO,我是服务器
+</code></pre>
+<h3 id="3-分析-bufforeachbyte方法的使用">3. 分析 - buf.forEachByte()方法的使用</h3>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(10);
+
+buf.writeCharSequence(&quot;hell\n&quot;, CharsetUtil.UTF_8);
+
+byte x = '\n';
+
+//ByteProcessor.FIND_LF
+int i = buf.forEachByte(0, 10, new ByteProcessor() {
+    @Override
+    public boolean process(byte value) throws Exception {
+        //不想循环 返回 false
+        if (value == x) {
+            return false;
+        }
+        // 想继续循环返回 true
+        return true;
+    }
+});
+
+System.out.println(&quot;index : &quot;+i);
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">index : 4
+</code></pre>
+<p>所以很简单就能发现换行符在哪里,然后切割就行了 .......</p>
+<h2 id="7-idlestatehandler-心跳检测处理器">7. IdleStateHandler - 心跳检测处理器</h2>
+<blockquote>
+<p>Triggers an IdleStateEvent when a Channel has not performed read, write, or both operation for a while.</p>
+<p>触发一个 IdleStateEvent  事件 ,当一个channel在一段时间内没有执行 read write 或者两者 , 所以他属于一个事件流</p>
+</blockquote>
+<p>官方源码中的推荐用法 , 其实一般使用也是如此 ,</p>
+<p>第一个参数是 : (READER_IDLE)  No data was received for a while.</p>
+<p>第一个参数是 : (WRITER_IDLE)  No data was sent for a while.</p>
+<p>第一个参数是 : (ALL_IDLE)  No data was either received or sent for a while.</p>
+<pre><code class="language-java">public class MyChannelInitializer extends ChannelInitializer&lt;Channel&gt; {
+    @Override
+   public void initChannel(Channel channel) {
+       channel.pipeline().addLast(&quot;idleStateHandler&quot;, new IdleStateHandler(60, 30, 0));
+       channel.pipeline().addLast(&quot;myHandler&quot;, new MyHandler());
+   }
+}
+
+// Handler should handle the IdleStateEvent triggered by IdleStateHandler.
+public class MyHandler extends ChannelDuplexHandler {
+    @Override
+   public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+       if (evt instanceof IdleStateEvent) {
+           IdleStateEvent e = (IdleStateEvent) evt;
+           if (e.state() == IdleState.READER_IDLE) {
+            
+           } else if (e.state() == IdleState.WRITER_IDLE) {
+               
+           }
+       }
+   }
+}
+</code></pre>
+<h3 id="1-如何去设计一个合理心跳检测">1. 如何去设计一个合理心跳检测</h3>
+<pre><code>文章也找不到了, 我是参考一篇阿里Dubbo的文章的 , 他的思想就是 主在于客户端, 从在于服务器端 ,因为我们的思想一般是让服务器端发送心跳包,定时去检测,如果累计达到几次没有的话,那么直接out掉, 这样给我们带来的不好处就是逻辑复杂 ,考虑情况太多 , 所以改成客主服从,特别适用于客户端开发的 .
+
+思路大致就是客户端和服务器端 , 客户端当60S没有收到服务器端发来的消息,会主动给服务器端发送一个心跳包, 此时,当服务器端没有收到和发送给客户端的时长超过120S我们就断开与客户端的连接 , 所以服务器端很简单,客户端也很简单
+</code></pre>
+<h4 id="1-服务器端代码">1. 服务器端代码</h4>
+<pre><code class="language-java">@Override
+protected void initChannel(SocketChannel socketChannel) throws Exception {
+
+	ChannelPipeline pipeline = socketChannel.pipeline();
+	// 心跳检测 , 读写超时时间是120S , 没有收到也没有发送消息
+	pipeline.addLast(&quot;idleStateHandler&quot;, new IdleStateHandler(0, 0, 120));
+
+	// 心跳检测处理器
+	pipeline.addLast(&quot;serverHeartBeatHandler&quot;, new ServerHeartBeatHandler(listener));
+
+}
+
+// 处理器逻辑
+public class ServerHeartBeatHandler extends ChannelDuplexHandler {
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+		// 判断是否是IdleStateEvent
+        if (evt instanceof IdleStateEvent) {
+             // 心跳检测服务器端  超时直接关闭
+             // 交给 handlerremove处理
+            ctx.close();
+        } else {
+            //否则不做处理
+            super.userEventTriggered(ctx, evt);
+        }
+    }
+}
+</code></pre>
+<h4 id="2-客户端代码">2. 客户端代码</h4>
+<pre><code class="language-java">@Override
+protected void initChannel(SocketChannel socketChannel) throws Exception {
+    ChannelPipeline pipeline = socketChannel.pipeline();
+
+    // 心跳检测 , 如果60S我们没有收到服务器信息,我们就发送一个心跳包
+    pipeline.addLast(&quot;nettyHeartBeatHandler&quot;, new IdleStateHandler(60, 0 , 0)
+
+    pipeline.addLast(&quot;heartBeatHandler&quot;, new ClientHeartBeatHandler(listener));
+}
+
+//处理器
+public class ClientHeartBeatHandler extends ChannelDuplexHandler {
+    private ChatBootListener listener;
+    public ClientHeartBeatHandler(ChatBootListener listener) {
+        this.listener = listener;
+    }
+    @Override
+    public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
+        if (evt instanceof IdleStateEvent) {
+            // 发送一个心跳包
+            ctx.channel().writeAndFlush(Constants.HEART_BEAT_NPACK).addListener(new GenericFutureListener&lt;Future&lt;? super Void&gt;&gt;() {
+                @Override
+                public void operationComplete(Future&lt;? super Void&gt; future) throws Exception {
+                    if (future.isSuccess()) {
+                    // 成功一般是发送到了缓冲区 , 但是并不是代表服务器端收到了请求
+                    } else {
+                        // TODO: 2019/11/16  失败 ........... 看需求
+                    }
+                }
+            });
+        } else {
+            // 交给父类处理
+            super.userEventTriggered(ctx, evt);
+        }
+    }
+}
+</code></pre>
+<h3 id="2-基本原理">2. 基本原理</h3>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-19/f4cb4318-c7a6-4d9e-97f9-0ae2f95218ed.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>就是 ChannelHandlerContext 的 EventExecutor 定期去执行一个任务 ,需要传入一个runnable对象和一个延迟时间 ,人后一直定期执行 ..........</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-objectdecoder%E5%92%8Cobjectencoder-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8">1. ObjectDecoder和ObjectEncoder 编解码器</a>
+<ul>
+<li><a href="#1-objectencoder">1. ObjectEncoder</a></li>
+<li><a href="#2-objectdecoder">2. ObjectDecoder</a></li>
+<li><a href="#3-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">3. 快速开始</a></li>
+<li><a href="#4-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90">4. 编解码器源码分析</a>
+<ul>
+<li><a href="#1-objectencoder-%E7%BC%96%E7%A0%81%E5%99%A8">1. ObjectEncoder 编码器</a></li>
+</ul>
+</li>
+<li><a href="#2-objectdecoder-%E8%A7%A3%E7%A0%81%E5%99%A8">2. ObjectDecoder 解码器</a></li>
+</ul>
+</li>
+<li><a href="#2-stringencoder%E5%92%8Cstringdecoder-%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8">2. StringEncoder和StringDecoder - 字符串编解码器</a></li>
+<li><a href="#3-fixedlengthframedecoder-%E5%AE%9A%E9%95%BF%E8%A7%A3%E7%A0%81%E5%99%A8">3. FixedLengthFrameDecoder - 定长解码器</a>
+<ul>
+<li><a href="#1-%E6%BA%90%E7%A0%81">1. 源码</a></li>
+<li><a href="#2-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">2. 基本使用</a></li>
+</ul>
+</li>
+<li><a href="#4-lengthfieldbasedframedecoder-%E8%87%AA%E5%AE%9A%E4%B9%89%E8%A7%A3%E7%A0%81%E5%99%A8">4. LengthFieldBasedFrameDecoder - 自定义解码器</a>
+<ul>
+<li><a href="#1-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">1. 构造方法</a></li>
+<li><a href="#2-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8">2. 简单使用</a>
+<ul>
+<li><a href="#1-%E7%AC%AC%E4%B8%80%E7%A7%8D%E7%AE%80%E5%8D%95%E6%83%85%E5%86%B510-0-200">1. 第一种简单情况(10, 0, 2,0,0)</a></li>
+<li><a href="#2-%E7%AC%AC%E4%BA%8C%E7%A7%8D%E6%83%85%E5%86%B510-0-2-20">2. 第二种情况(10, 0, 2,-2,0)</a></li>
+<li><a href="#3-%E7%AC%AC%E4%B8%89%E7%A7%8D%E6%83%85%E5%86%B5-10-0-2-22">3. 第三种情况 (10, 0, 2,-2,2)</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90">3. 源码分析 :</a></li>
+</ul>
+</li>
+<li><a href="#5-delimiterbasedframedecoder-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%88%86%E9%9A%94%E7%AC%A6%E8%A7%A3%E7%A0%81%E5%99%A8">5. DelimiterBasedFrameDecoder - 自定义分隔符解码器</a>
+<ul>
+<li><a href="#1-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95-2">1. 构造方法</a></li>
+<li><a href="#2-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8-2">2. 简单使用</a></li>
+</ul>
+</li>
+<li><a href="#6-linebasedframedecoder-%E6%8C%89%E8%A1%8C%E8%A7%A3%E7%A0%81%E5%99%A8">6. LineBasedFrameDecoder - 按行解码器</a>
+<ul>
+<li><a href="#1-%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95-3">1. 构造方法</a></li>
+<li><a href="#2-%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8">2. 快速使用</a></li>
+<li><a href="#3-%E5%88%86%E6%9E%90-bufforeachbyte%E6%96%B9%E6%B3%95%E7%9A%84%E4%BD%BF%E7%94%A8">3. 分析 - buf.forEachByte()方法的使用</a></li>
+</ul>
+</li>
+<li><a href="#7-idlestatehandler-%E5%BF%83%E8%B7%B3%E6%A3%80%E6%B5%8B%E5%A4%84%E7%90%86%E5%99%A8">7. IdleStateHandler - 心跳检测处理器</a>
+<ul>
+<li><a href="#1-%E5%A6%82%E4%BD%95%E5%8E%BB%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E5%90%88%E7%90%86%E5%BF%83%E8%B7%B3%E6%A3%80%E6%B5%8B">1. 如何去设计一个合理心跳检测</a>
+<ul>
+<li><a href="#1-%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E4%BB%A3%E7%A0%81">1. 服务器端代码</a></li>
+<li><a href="#2-%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BB%A3%E7%A0%81">2. 客户端代码</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86">2. 基本原理</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

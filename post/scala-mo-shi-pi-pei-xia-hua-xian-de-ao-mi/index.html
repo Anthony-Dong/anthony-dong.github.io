@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Scala模式匹配 - 下划线的奥秘 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/scala-mo-shi-pi-pei-xia-hua-xian-de-ao-mi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Scala模式匹配 - 下划线的奥秘</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/scala-mo-shi-pi-pei-xia-hua-xian-de-ao-mi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Af7c3Ltc0ra/"
+								class="tag">Scala</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1035字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-匿名函数参数占位符">1. 匿名函数参数占位符</h2>
+<blockquote>
+<p>​	当匿名函数传递给方法或其他函数时，如果该匿名函数的参数在=&gt;的右侧只出现一次，那么就可以省略=&gt;，并将参数用下划线代替。这对一元函数和二元函数都适用。</p>
+</blockquote>
+<pre><code class="language-scala">scala&gt; val list = List(5,3,7,9,1)
+list: List[Int] = List(5, 3, 7, 9, 1)
+
+scala&gt; list.map
+   final override def map[B](f: Int =&gt; B): List[B]
+
+scala&gt; list.map(x=&gt;x*10)
+res5: List[Int] = List(50, 30, 70, 90, 10)
+
+scala&gt; list.map(_*10)
+res6: List[Int] = List(50, 30, 70, 90, 10)
+</code></pre>
+<h2 id="2-无用匿名函数参数">2. 无用匿名函数参数</h2>
+<blockquote>
+<p>​	当匿名函数的参数未被实际使用到时，可以不给它一个命名，而直接用下划线代替。</p>
+</blockquote>
+<pre><code class="language-scala">scala&gt; list.foreach
+   final override def foreach[U](f: Int =&gt; U): Unit
+
+scala&gt; list.foreach(x=&gt;println(&quot;hello&quot;))
+hello
+hello
+hello
+hello
+hello
+
+scala&gt; list.foreach(_=&gt;println(&quot;hello&quot;))
+hello
+hello
+hello
+hello
+hello
+</code></pre>
+<h2 id="3-泛型定义中的通配符">3. <strong>泛型定义中的通配符</strong></h2>
+<p>跟java的 <code>List&lt;?&gt;</code> 是等效的</p>
+<pre><code class="language-scala">scala&gt; def listPrint(list: List[_]): Unit = {
+     |     list.foreach(_$1 =&gt; print(_$1))
+     |   }
+listPrint: (list: List[_])Unit
+
+
+scala&gt;listPrint(List(1,&quot;2&quot;,3))
+123
+</code></pre>
+<h2 id="4-模式匹配中的通配符占位符">4. <strong>模式匹配中的通配符/占位符</strong></h2>
+<pre><code class="language-scala">
+    println(&quot;=======模式匹配 - 默认匹配====================&quot;)
+    val x: String = &quot;1&quot;
+    x match {
+      case &quot;1&quot; =&gt; println(&quot;match 1&quot;)
+      case _ =&gt; println(&quot;其他&quot;)
+    }
+
+
+    println(&quot;=======模式匹配 - 匹配以0开头，长度为三的列表 ====================&quot;)
+    val unit = List(0, 1, 2)
+    unit match {
+      case List(0, _, _) =&gt; println(s&quot;found  $List&quot;)
+      case _ =&gt; print(&quot;no found&quot;)
+    }
+
+
+    println(&quot;=======模式匹配 - 匹配以0开头，长度任意的列表====================&quot;)
+    unit match {
+      case List(0, _*) =&gt; println(&quot;found it &quot;)
+      case _ =&gt; println(&quot;not found&quot;)
+    }
+
+    println(&quot;=======模式匹配 - 匹配元组元素====================&quot;)
+    val tuple = (&quot;Sugar&quot;, 25): Tuple2[String, Int]
+    tuple match {
+      case (&quot;&quot;, _) =&gt; println(&quot;found&quot;)
+      case _ =&gt; println(&quot;no found&quot;)
+    }
+
+    println(&quot;=======模式匹配 - 将首元素赋值给head变量====================&quot;)
+    val List(head, _*) = List(&quot;a&quot;)
+    println(head)
+
+</code></pre>
+<h2 id="变长参数的转化"><strong>变长参数的转化</strong></h2>
+<p>下划线与星号连用，可以将序列转化为变长参数的序列，方便调用变长参数的方法。例：</p>
+<pre><code class="language-scala">def sum(args: Int*): Int = {
+  var result = 0
+  for (arg &lt;- args) {
+    result += arg
+  }
+  result
+}
+
+
+println(sum(1, 2, 3, 4))
+println(sum(1 to 4: _*))
+</code></pre>
+<h2 id="将方法转换成函数"><strong>将方法转换成函数</strong></h2>
+<blockquote>
+<p>我们都知道Scala中方法与函数的不同点。其中最显著的不同就在于，函数在Scala中是一种对象实例，因此它可以赋值给变量，也可以作为参数。如果方法在赋值时直接写名称的话，编译器会认为是对方法的调用，因此会报没有参数列表的错误。在方法名称后加一个下划线，会将其转化为偏应用函数（partially applied function），就能直接赋值了。例：</p>
+</blockquote>
+<pre><code class="language-scala">scala&gt; def twoSum(a: Int, b: Int) = a + b
+twoSum: (a: Int, b: Int)Int
+
+scala&gt; val two = twoSum _
+two: (Int, Int) =&gt; Int = $$Lambda$991/1080911253@2a25dd46
+
+scala&gt; list.foreach(println _)
+5
+3
+7
+9
+1
+
+scala&gt; list foreach println _
+5
+3
+7
+9
+1
+</code></pre>
+<h2 id="定义偏应用函数"><strong>定义偏应用函数</strong></h2>
+<blockquote>
+<p>​	偏应用函数就是不提供或者只提供部分参数调用时返回的函数，我们也可以用下划线来代替那些不提供的参数。</p>
+</blockquote>
+<pre><code class="language-scala">scala&gt; def threeMult(a: Int, b: Int, c:Int) = a * b * c
+threeMult: (a: Int, b: Int, c: Int)Int
+
+scala&gt; val parThreeMult = threeMult(8, _: Int, 42)
+parThreeMult: Int =&gt; Int = $$Lambda$1007/1023818098@53e57cee
+
+scala&gt; parThreeMult(1)
+res35: Int = 336
+</code></pre>
+<h2 id="导入通配符">导入通配符</h2>
+<pre><code class="language-java">// import java.util.concurrent.*
+scala&gt; import java.util.concurrent._
+import java.util.concurrent._
+
+// import java.util.*，并将ArrayList重命名为al
+scala&gt; import java.util.{ArrayList =&gt; al, _}
+import java.util.{ArrayList=&gt;al, _}
+
+// import java.util.*，但不导入Timer类
+scala&gt; import java.util.{Timer =&gt; _, _}
+import java.util.{Timer=&gt;_, _}
+
+// import static java.lang.Math.*
+scala&gt; import java.lang.Math._
+import java.lang.Math._
+</code></pre>
+<h2 id="for">for</h2>
+<pre><code class="language-scala">val twentySomethings = for (user &lt;- userBase if (user.age &gt;= 20 &amp;&amp; user.age &lt; 30))
+  yield user.name // i.e. add this to a list
+
+twentySomethings.foreach(println _) // prints Travis Dennis
+
+
+//
+def foo(n: Int, v: Int): IndexedSeq[(Int, Int)] =
+  for (i &lt;- 0 until n; j &lt;- i until n if i + j == v)
+    yield (i, j)
+
+foo(10, 10) foreach {
+  case (i, j) =&gt;
+    println(s&quot;($i, $j) &quot;) // prints (1, 9) (2, 8) (3, 7) (4, 6) (5, 5)
+}
+
+foo(10, 10).foreach(x =&gt; println(x._1, x._2))
+
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%8D%A0%E4%BD%8D%E7%AC%A6">1. 匿名函数参数占位符</a></li>
+<li><a href="#2-%E6%97%A0%E7%94%A8%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0">2. 无用匿名函数参数</a></li>
+<li><a href="#3-%E6%B3%9B%E5%9E%8B%E5%AE%9A%E4%B9%89%E4%B8%AD%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6">3. <strong>泛型定义中的通配符</strong></a></li>
+<li><a href="#4-%E6%A8%A1%E5%BC%8F%E5%8C%B9%E9%85%8D%E4%B8%AD%E7%9A%84%E9%80%9A%E9%85%8D%E7%AC%A6%E5%8D%A0%E4%BD%8D%E7%AC%A6">4. <strong>模式匹配中的通配符/占位符</strong></a></li>
+<li><a href="#%E5%8F%98%E9%95%BF%E5%8F%82%E6%95%B0%E7%9A%84%E8%BD%AC%E5%8C%96"><strong>变长参数的转化</strong></a></li>
+<li><a href="#%E5%B0%86%E6%96%B9%E6%B3%95%E8%BD%AC%E6%8D%A2%E6%88%90%E5%87%BD%E6%95%B0"><strong>将方法转换成函数</strong></a></li>
+<li><a href="#%E5%AE%9A%E4%B9%89%E5%81%8F%E5%BA%94%E7%94%A8%E5%87%BD%E6%95%B0"><strong>定义偏应用函数</strong></a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E9%80%9A%E9%85%8D%E7%AC%A6">导入通配符</a></li>
+<li><a href="#for">for</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

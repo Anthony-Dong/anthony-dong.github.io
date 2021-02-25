@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>MySQL - 事务隔离界级别 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/mysql-shi-wu-ge-chi-jie-ji-bie/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>MySQL - 事务隔离界级别</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-29</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/mysql-shi-wu-ge-chi-jie-ji-bie/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/ECQCi6IDpNB/"
+								class="tag">数据库</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">926字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">4 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	JTA，即Java Transaction API，JTA允许应用程序执行分布式事务处理——在两个或多个网络计算机资源上访问并且更新数据。<a href="https://baike.baidu.com/item/JDBC">JDBC</a><a href="https://baike.baidu.com/item/%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F">驱动程序</a>的JTA支持极大地增强了数据访问能力。</p>
+</blockquote>
+<p><code>isolation</code> 隔离的意思</p>
+<blockquote>
+<p>​	隔离级别主要分为四种 : 读未提交, 读已提交 , 可重复读, 序列化 , 越来越强</p>
+</blockquote>
+<p>可以通过下面这个查询当前事务等级</p>
+<pre><code class="language-sql">mysql&gt; SELECT @@tx_isolation;
++-----------------+
+| @@tx_isolation  |
++-----------------+
+| REPEATABLE-READ |
++-----------------+
+1 row in set, 1 warning (0.00 sec)
+</code></pre>
+<p>设置隔离级别</p>
+<pre><code class="language-sql">//设置read uncommitted级别：
+set session transaction isolation level read uncommitted;
+
+//设置read committed级别：
+set session transaction isolation level read committed;
+
+//设置repeatable read级别：
+set session transaction isolation level repeatable read;
+
+//设置serializable级别：
+set session transaction isolation level serializable;
+</code></pre>
+<p>这个事务级别是相对于客户端的, 比如A客户端设置了,B客户端并没有改变</p>
+<p>相关操作</p>
+<pre><code class="language-sql"> // 开启事务
+ start transaction;
+ 
+ // 回滚
+ rollback;
+ 
+ // 提交
+ commit;
+</code></pre>
+<h2 id="1-read-uncommitted-读未提交">1. READ-UNCOMMITTED 读未提交</h2>
+<p>比如A,B都开启了事务, 此时A更新了数据 ,B此时读到了A更新的数据 ,但是此时A并未提交事务 . 所以出现了脏数据 ,</p>
+<p>当A执行rollback 时 ,  B也会读到他回滚前的数据  ,</p>
+<p>注意 : 就算B不开启事务, 也是这种情况</p>
+<h2 id="2-read-committed-读已提交">2.  READ-COMMITTED  读已提交</h2>
+<p>AB同时开启了事务 , A此时更新了数据 ,此时没有提交 ,B此时读到的数据是A没有更新之前的数据 , 只有当A提交了数据后 , B才能读到A修改后的数据 ,</p>
+<p>注意 : B如果没有开启事务也是上述情况</p>
+<h2 id="3-repeatable-read-可重复读-默认">3. REPEATABLE-READ 可重复读 (默认)</h2>
+<p>AB 同时开启事务  , A执行写操作, 此时A更新后的数据,B是可以读不到的 , 此时A将事务提交了, 此时B读到的数据还是A未修改的数据 , 但是当我们执行B的更新操作时 <code>update orders set count=6 where id=1 and count&gt;8;</code>  此时去更新是失败的,是因为执行这个操作会执行一个查询操作 , 此时再去查询数据就会发现数据更改了 .....</p>
+<h2 id="4-serializable-序列化">4. SERIALIZABLE  序列化</h2>
+<p>不允许两个事物同时执行 , 就是A事物操作 开始, B事物全部在等待 ,只有当A事物commit;B事物才能执行</p>
+<h2 id="5-总结">5. 总结</h2>
+<p>我真的觉得 第二种和第三种级别么区别 .... 无非一个是A提交事务, B可以读到A提交后的数据 , 一个读的是A提交前的数据 ..... 各有所长 , 就是这俩的区别 ....</p>
+<p>对于事务来说 , 合理的解决方案优于执行</p>
+<p>一下语句在执行的时候会执行update, 所以会等待另外更新的事务执行完毕才要查询完毕.</p>
+<pre><code class="language-sql">select * from orders for update;
+</code></pre>
+<h2 id="6开发中如何开启">6.开发中如何开启</h2>
+<p>springboot 一般这么开启</p>
+<pre><code class="language-java">// 开启事务支持
+@EnableTransactionManagement
+// 开启可重复读事务级别
+@Transactional(isolation = Isolation.REPEATABLE_READ)
+@Component
+public class TestServiceImpl implements TestService {
+
+    @Override
+    public void echo(String msg) {
+        // 模拟
+    }
+}
+</code></pre>
+<p>其中 <code>org.springframework.transaction.annotation.Transactional</code> 注解中会发现</p>
+<p>还有一些属性 :</p>
+<ul>
+<li><code>readOnly</code>表示是否只读, 比如查询语句是只读</li>
+</ul>
+<pre><code class="language-java">boolean readOnly() default false;
+</code></pre>
+<ul>
+<li><code>Propagation</code> 是事务传播类型 , 默认是REQUIRED类型,</li>
+</ul>
+<pre><code class="language-java">Propagation propagation() default Propagation.REQUIRED;
+</code></pre>
+<ul>
+<li><code>transactionManager</code> 属性是指 <code>PlatformTransactionManager</code>的bean的id , 比如 <code>@Bean</code>的name</li>
+</ul>
+<pre><code class="language-java">@Bean(&quot;platform1&quot;)
+public PlatformTransactionManager transactionManager1() {
+    return new PlatformTransactionManager() {
+        @Override
+        public TransactionStatus getTransaction(TransactionDefinition definition) throws TransactionException {
+            System.out.println(&quot;get transaction ...&quot;);
+            return new SimpleTransactionStatus();
+        }
+
+        @Override
+        public void commit(TransactionStatus status) throws TransactionException {
+            System.out.println(&quot;commit transaction ...&quot; + status.isCompleted());
+        }
+
+        @Override
+        public void rollback(TransactionStatus status) throws TransactionException {
+            System.out.println(&quot;rollback transaction ...&quot;);
+        }
+    };
+}
+</code></pre>
+<ul>
+<li><code>rollbackFor</code> , <code>noRollbackFor</code> 以及<code>noRollbackForClassName</code> 和 <code>rollbackForClassName</code> 事务回滚异常的类的类型 , 很显然 能try-catch的基本都是Exception的子类 ,使用 :</li>
+</ul>
+<pre><code class="language-java">noRollbackFor = {RuntimeException.class}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-read-uncommitted-%E8%AF%BB%E6%9C%AA%E6%8F%90%E4%BA%A4">1. READ-UNCOMMITTED 读未提交</a></li>
+<li><a href="#2-read-committed-%E8%AF%BB%E5%B7%B2%E6%8F%90%E4%BA%A4">2.  READ-COMMITTED  读已提交</a></li>
+<li><a href="#3-repeatable-read-%E5%8F%AF%E9%87%8D%E5%A4%8D%E8%AF%BB-%E9%BB%98%E8%AE%A4">3. REPEATABLE-READ 可重复读 (默认)</a></li>
+<li><a href="#4-serializable-%E5%BA%8F%E5%88%97%E5%8C%96">4. SERIALIZABLE  序列化</a></li>
+<li><a href="#5-%E6%80%BB%E7%BB%93">5. 总结</a></li>
+<li><a href="#6%E5%BC%80%E5%8F%91%E4%B8%AD%E5%A6%82%E4%BD%95%E5%BC%80%E5%90%AF">6.开发中如何开启</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Golang - 函数和方法(面向对象的产物) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/golang-fang-fa-yu-han-shu/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Golang - 函数和方法(面向对象的产物)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-13</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/golang-fang-fa-yu-han-shu/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1379字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>其实就是一字之差 , 函数是一个指针变量(前提是你不做多余操作,人家生下来就是,你要指手画脚也没办法), 方法是一个对象的(面向对象的产物,比如<code>a.run(100)</code>) , 懂了吧.</p>
+</blockquote>
+<h2 id="1-函数">1. 函数</h2>
+<p>函数声明包括函数名、形式参数列表、返回值列表（可省略）以及函数体。</p>
+<pre><code class="language-go">func name(parameter-list)(result-list){
+    body 
+}
+</code></pre>
+<p><strong>形式参数</strong>列表描述了函数的参数名以及参数类型。这些参数作为局部变量，其值由参数调用者提供。<strong>返回值列表</strong>描述了函数返回值的变量名以及类型。如果函数返回一个无名变量或者没有返回值返回值列表的括号是可以省略的。如果一个函数声明不包括返回值列表，那么 函数体执行完毕后，不会返回任何值。</p>
+<p>例如一个翻转切片的函数 , 你可以直接调用</p>
+<pre><code class="language-go">func reserve(arr []int) {
+	for x, y := 0, len(arr)-1; x &lt; y; x, y = x+1, y-1 {
+		arr[x], arr[y] = arr[y], arr[x]
+	}
+}
+</code></pre>
+<p>main函数调用 :</p>
+<pre><code class="language-go">arr := []int{0, 1, 2, 3, 4, 5}
+
+reserve(arr)
+ 
+fmt.Println(arr)  //[5 4 3 2 1 0]
+</code></pre>
+<p>这就是一个函数 .</p>
+<h3 id="匿名函数">匿名函数</h3>
+<p>什么是匿名函数 , 就死没有名字呗 ,  或者直接说Lambda也可以 , 就是函数没有名字 , 就是函数没有名字</p>
+<pre><code class="language-go">var f1 = func(x, y int) (int) {
+    fmt.Println(x + y)
+    return x + y
+}
+
+sum := f1(1, 2)
+
+fmt.Println(sum)
+</code></pre>
+<h3 id="立即执行函数">立即执行函数</h3>
+<p>其实就是只允许一次, 不能重复使用.</p>
+<p>他呢很简单, 三部分组成 , 第一部分填充参数, 第二部分就是函数体, 第三部分就是传参</p>
+<pre><code class="language-go">返回值:=func(args)(返回类型){
+    //body
+}(args)
+</code></pre>
+<p>举个例子</p>
+<pre><code class="language-go">s := func(s string) string {
+    fmt.Println(&quot;调用我了 : &quot;,s)
+    return s
+}(&quot;a&quot;)
+
+fmt.Println(s)
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">调用我了 :  a
+a
+</code></pre>
+<h3 id="函数对象">函数对象</h3>
+<p>每一个函数都是一个对象, 他可以互相传递, 所以可以当做参数, 当做返回值. 都可以</p>
+<p>记住func变量他就是一个指针, 懂了吧, 怎么区分一个变量是不是指针, 你用过编辑器的拿到func对象输入 <code>func==nil</code> , 看他提不提示异常, 提示了就说明是指针.</p>
+<h4 id="作为参数">作为参数</h4>
+<pre><code class="language-go">/**
+传入一个函数 来处理我们传入的参数 , 打印一下他的地址
+ */
+func fun1(f func(string) string, s string) string {
+	fmt.Printf(&quot;%p\n&quot;, f)
+	return f(s)
+}
+</code></pre>
+<p>实现 .</p>
+<pre><code class="language-go">func main() {
+	// 创建一个函数对象指针
+	fun := func(s string) string {
+		return strings.Join(strings.Split(s, &quot; &quot;), &quot;-&quot;)
+	}
+
+	// 传递
+	res := fun1(fun, &quot;hello world&quot;)
+
+	// 打印
+	fmt.Printf(&quot;%p\n&quot;, fun)
+
+    // 结果.
+	fmt.Printf(&quot;result : %s\n&quot;, res)
+}
+</code></pre>
+<p>输出 : 说明啥....</p>
+<pre><code class="language-go">0x494950
+0x494950
+result : hello-world
+</code></pre>
+<h4 id="作为返回值-这个也很方便">作为返回值 ,这个也很方便.</h4>
+<pre><code class="language-go">func fun2(name string) func(string) string {
+	return func(s string) string {
+		// 这里的name就是一种闭包行为
+		return name + &quot; run &quot; + s
+	}
+}
+
+func main() {
+    // 创建一个函数
+	fun := fun2(&quot;fun2&quot;)
+    // 使用
+	res := fun(&quot;hello&quot;)
+	fmt.Println(res)
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">fun2 run hello
+</code></pre>
+<h3 id="闭包">闭包</h3>
+<p>就是参数 从内到外找 , 么了 .  所以就近原则.</p>
+<h2 id="2-方法">2. 方法</h2>
+<h3 id="方法申明">方法申明</h3>
+<p>在函数声明时，在其名字之前放上一个变量，即是一个方法。这个附加的参数会将该函数附加到这种类型上，即相当于为这种类型定义了一个独占的方法。</p>
+<pre><code class="language-go">type Singer struct {
+	name string
+}
+
+func (s Singer) getName() string {
+	return s.name
+}
+
+func main() {
+	singer := Singer{name: &quot;张靓颖&quot;}
+    // get方法
+	fmt.Println(singer.getName())
+}
+</code></pre>
+<p>上面的代码里那个附加的参数s，可以认为是Java中的this关键字 , 这个在go里面叫做接收器 , 我们的写法他相当于拷贝了一个Singer对象给getName方法.</p>
+<h3 id="指针对象的方法">指针对象的方法</h3>
+<p>当调用一个函数时，会对其每一个参数值进行拷贝，如果一个函数需要更新一个变量，或者函数的其中一个参数实在太大我们希望能够避免进行这种默认的拷贝，这种情况下我们就需要用到指针了。</p>
+<pre><code class="language-go">type Singer struct {
+	name string
+}
+
+func (s *Singer) setName(name string) {
+	s.name = name
+}
+
+func main() {
+	singer := Singer{name: &quot;张靓颖&quot;}
+
+	fmt.Println(singer.name) //张靓颖
+
+    (&amp;singer).setName(&quot;邓紫棋&quot;) // 指针调用
+
+	fmt.Println(singer.name) // 邓紫棋
+}
+</code></pre>
+<p>其实有心的人会发现不需要指针变量也可以对其修改的, 所以改成了下面的 ,也是可以编译成功的 ,原因如下</p>
+<pre><code class="language-go">func main() {
+    singer := Singer{name: &quot;张靓颖&quot;}
+
+    fmt.Println(singer.name)
+
+    singer.setName(&quot;邓紫棋&quot;)
+
+    fmt.Println(singer.name)
+}
+</code></pre>
+<blockquote>
+<p>​	go语言本身在这种地方会帮到我们,如果接收器s是 一个Singer类型的变量，并且其方法需要一个Singer指针作为接收器，编译器会隐式地帮我们用&amp;s去调用setName这个方法 , 这种简写方法只适用于“变量&quot;.</p>
+</blockquote>
+<h2 id="3-function-type">3. Function Type</h2>
+<p>定义一个function-type , 他对比接口的区别就是他只有一个方法而已, 其他都一样的 . 他需要传入一个匿名函数(跟Java特别像) , 但是它有着匿名函数没有的功能, 他同时也是一个对象 .</p>
+<pre><code class="language-go">type HandlerString func(string, []string) string
+</code></pre>
+<p>也可以作为对象.</p>
+<pre><code class="language-go">func (fun HandlerString) Merger(w string, r []string) {
+    // 验证
+    fmt.Printf(&quot;%p\n&quot;,fun)
+    // 调用
+	fun(w, r)
+}
+</code></pre>
+<p>对于<code>Function Type</code> , 他是一个指针对象.</p>
+<p>怎么说呢. 我们可以</p>
+<pre><code class="language-go">func main() {
+
+	fun := HandlerString(func(s string, arr []string) string {
+		return &quot;ok&quot;
+	})
+
+	fmt.Printf(&quot;%p\n&quot;,fun)
+
+	fun.test(&quot;&quot;,nil)
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-go">0x492be0
+0x492be0
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%87%BD%E6%95%B0">1. 函数</a>
+<ul>
+<li><a href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0">匿名函数</a></li>
+<li><a href="#%E7%AB%8B%E5%8D%B3%E6%89%A7%E8%A1%8C%E5%87%BD%E6%95%B0">立即执行函数</a></li>
+<li><a href="#%E5%87%BD%E6%95%B0%E5%AF%B9%E8%B1%A1">函数对象</a>
+<ul>
+<li><a href="#%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0">作为参数</a></li>
+<li><a href="#%E4%BD%9C%E4%B8%BA%E8%BF%94%E5%9B%9E%E5%80%BC-%E8%BF%99%E4%B8%AA%E4%B9%9F%E5%BE%88%E6%96%B9%E4%BE%BF">作为返回值 ,这个也很方便.</a></li>
+</ul>
+</li>
+<li><a href="#%E9%97%AD%E5%8C%85">闭包</a></li>
+</ul>
+</li>
+<li><a href="#2-%E6%96%B9%E6%B3%95">2. 方法</a>
+<ul>
+<li><a href="#%E6%96%B9%E6%B3%95%E7%94%B3%E6%98%8E">方法申明</a></li>
+<li><a href="#%E6%8C%87%E9%92%88%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E6%B3%95">指针对象的方法</a></li>
+</ul>
+</li>
+<li><a href="#3-function-type">3. Function Type</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

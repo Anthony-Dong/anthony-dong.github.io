@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>CSRF和Cookie的利与弊以及安全的Token设计 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/LLr3ga1l-/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>CSRF和Cookie的利与弊以及安全的Token设计</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-03-02</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/LLr3ga1l-/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1706字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>​	   我们知道Http是一个无状态协议, 这个是指当前的Http协议, 并不是掺杂着其他的比如Websocket 或者其他基于Http之上的实现.</p>
+<p>​		那么无状态并不适合当前的网站或者API设计 , 因为更多人不是为了浏览新闻, 而且个人空间, 这就加入了个人认证. 随着时代的进步, 不得不加入一个方式来如何解决个人信息的问题, 这个信息要满足安全 要满足可以有收缩性, 等等很多. 随之而来cookie诞生了. 这是一个Http规范, 指的是浏览器方的实现要基于这个规范来做. 比如跨域等限制等等. 比如cookie-set命令等实现. 很多的规范需要客户端和服务端都遵循.</p>
+<p>​		这样就很好地满足了用户信息的保存. 我们先不考虑身份认证这点.  比如A用户去请求www.xxx.com网站,此时这个网站是一个新闻网站, 需要个性推荐, 但是服务器不认识这个人, 因此他会在他第一次访问改网站给他一个唯一标识符. 并且放在他本地 , 这样以后每次访问都会携带上做这个标识符 , 服务器知道这个人喜欢看啥, 并且就给予推荐, 网站流量就增加了, 网站就得以快速发展.</p>
+<p>​		但是有些人想到的是, 如果cookie可以用来做身份认证多好哇, 就不用每次输入密码了, 因为为了用户体验. 所以在用户输入密码确认后, 会将一个身份认证的token信息保存本地的cookie ,服务器就可以很轻松的做到身份认证, 比如讲这个信息存储在进程内部, 获取存储在一个统一的服务器中, 比如redis等等. 就可以很好地实现身份认证,还有身份信息保存等.</p>
+<p>​		但是哇, 有些人就想到了这个漏洞. 你拿着cookie用来做身份校验. 那么我是不是可以借助这个cookie做点啥.</p>
+<p>因此出现了一群人开始利用这个cookie了.</p>
+<p>举个例子. (先不考虑技术漏洞,别说你可以这么实现防止等问题.)</p>
+<p>比如A用户身份认证了一个存在交易风险的网站. 比如银行等. 每次转账只需要 www.bank.com?transfer=1000&amp;id=123456  , 这个接口, 并且每次携带这cookie. 就可以完成等 给123456这张银行卡转账1000元.</p>
+<p>但是有些网站知道了 www.bank.com的漏洞, 所以他会在各种论坛发送链接. 他发送的是 www.bank.com?transfer=1000&amp;id=654321  这个链接, 有些人就胡点击进去 . 此时有些人可能登陆过www.bank.com认证过, 此时就会给 654321这个账号转账1000元.</p>
+<p>首先上诉问题, 我们如何防止呢 ?</p>
+<p>一 . 聪明的人会说, 用post请求哇. 这么链接就不行了哇.  (可以)  但是我不会写那个post请求的脚本,他的链接可以做到post请求.</p>
+<p>二. 有些人就说, 限制上时间, 比如cookie过期时间, 也是可以的 .</p>
+<p>三. 有些人说, 可以让cookie无法让脚本获取到 . 比如这么设置 <code>response.setHeader( &quot;Set-Cookie&quot;, &quot;cookiename=cookievalue;HttpOnly&quot;);</code>   , 这样脚本无法拿到.</p>
+<p>四. 就是弥补cookie的不足. 就是增加额外信息. 比如加入随机token值. 可以这么实现,比如要二次校验, 因为对于大多数交易平台来说 , 并不会存在一个密码就可以交易的, 比如支付宝, 有登录账号的密码, 也有支付密码.  这种双重认证就可以弥补住. 你可以通过cookie去请求转账, 但是你必须输入用户的支付密码.  这些都是为了安全考虑.</p>
+<p>​			总结一下, 其实现在主流的网站都是基于一个校验值来做的.</p>
+<p>​			API请求必须携带校验值(可以说是token), 如果没有你的请求无效的. 比如你请求查看好友信息等私密信息. 请求时必须携带有唯一的校验值. 这个校验值他会通过特定的方式给你的,是一个安全的.  (第三方授权也是基于这个的.)</p>
+<p>​		  我给大家设计一个简单的校验值, 比如我们通过一种加密方式(不限制) , 加密一段  <code>校验值+过期时间+IP</code>, 那么在不考虑攻击者知道我们的加密方式的情况下, 也不知道用户IP是什么. 那么他即便使用了我们的校验值, 他的请求IP和校验值的IP对不上也是不行, 或者他知道的时候已经过期了.</p>
+<p>​		 没有绝对的安全, 只有相对的, 越安全越麻烦.  但是我觉得密码这种死的东西是会被淘汰的. 二维码登录, 短信验证码登录等等这些短期时效性的就是一个好的方式. 如何做到token的安全其实就是我们设计授权API的一个核心问题. 设计到普通接口API , 授权认证API等 , 以及拓展第三方业务登录.</p>
+<p>​		如果有兴趣我接触到微信,QQ,支付宝等我会介绍给大家的. 最近太忙了. 以后会补跟的, 其实不要在乎什么安全框架,没有绝对的,只有加入我们灵活可靠的设计, 项目才有灵魂. 一层不变的框架会限制住我们的思想,但是可以学习别人框架的设计的亮点.</p>
+<p>​</p>
+<p>​		可以看看<strong>OAuth2.0</strong>协议的设计. 留个链接,阮一峰大佬写的. http://www.ruanyifeng.com/blog/2019/04/oauth_design.html , 阮一峰大佬写文章并不会通篇的概念, 我觉得是一个很好地学习参考.</p>
+<p>​	名词解释: 我就不说了, 留个链接大家自己看..</p>
+<p>​	一. <strong>COOKIE</strong> :  https://baike.baidu.com/item/cookie/1119?fr=aladdin</p>
+<p>​		cookie的几个参数值 : 我觉得是有必要了解几个参数的含义.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-30-33/1cdd13f1-e821-4738-87d5-63fcea01a4ba.png" alt="" loading="lazy"></figure>
+<p>​	<a href="https://blog.csdn.net/cuishizun/article/details/81536860?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task">这篇文章</a>不错 , 讲的比较全 : <a href="https://blog.csdn.net/cuishizun/article/details/81536860?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task">https://blog.csdn.net/cuishizun/article/details/81536860?depth_1-utm_source=distribute.pc_relevant.none-task&amp;utm_source=distribute.pc_relevant.none-task</a></p>
+<p>二. <strong>跨站请求伪造</strong>（英语：Cross-site request forgery），也被称为 <strong>one-click attack</strong> 或者 <strong>session riding</strong>，通常缩写为 <strong>CSRF</strong> 或者 <strong>XSRF</strong>， 是一种挟制用户在当前已登录的Web应用程序上执行非本意的操作的攻击方法。跟<a href="https://baike.baidu.com/item/%E8%B7%A8%E7%BD%91%E7%AB%99%E8%84%9A%E6%9C%AC">跨网站脚本</a>（XSS）相比，<strong>XSS</strong> 利用的是用户对指定网站的信任，CSRF 利用的是网站对用户网页浏览器的信任。</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"></div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

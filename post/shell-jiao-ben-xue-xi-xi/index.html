@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> Shell脚本学习 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/shell-jiao-ben-xue-xi-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> Shell脚本学习</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-14</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/shell-jiao-ben-xue-xi-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3484字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">17 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1入门-shell-实例">1.入门 shell 实例</h2>
+<pre><code class="language-shell">ping -c1 www.baidu.com &amp;&gt;/home/user/null &amp;&amp; echo &quot;www.baidu.com is up&quot; || echo &quot;www.baidu.com is down&quot;
+</code></pre>
+<ol>
+<li>在这里面我们 -c1 的意思是</li>
+</ol>
+<ul>
+<li>-c1 是 -c&lt;完成次数&gt; 设置完成要求回应的次数。</li>
+<li>其中 &amp;&amp; 是 逻辑与 当我前面的数据正确时,他可以输出 || 是 要么要么,如果前面对就执行前面的不对级执行我</li>
+<li>输出重定向
+<ul>
+<li>&quot;&amp;&gt;&quot;是 将指令正确和错误信息都不输出在屏幕上直接输到你重定向的一个文件内。</li>
+<li>&quot;&gt;&quot; 代表将数据全部定向输入到一个文件内同时覆盖文件内容。</li>
+<li>&quot;&gt;&gt;&quot; 是把输出追加到文件中, 如果文件存在, 追加到末尾, 不存在则创建文件.</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>执行 shell 脚本</li>
+</ol>
+<ul>
+<li>bash test.sh</li>
+<li>然后 bash 和 sh 的关系</li>
+</ul>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz script]# which bash
+ /usr/bin/bash
+[root@iz2zegua78a74kqn8clokfz script]# ll /usr/bin/bash
+-rwxr-xr-x 1 root root 960472 Dec  7  2016 /usr/bin/bash
+
+[root@iz2zegua78a74kqn8clokfz script]# ll /usr/bin/sh
+lrwxrwxrwx 1 root root 4 Aug 18  2017 /usr/bin/sh -&gt; bash
+
+</code></pre>
+<ul>
+<li>我们发现 bash 是执行文件,当你使用 sh 他只是一个软连接</li>
+</ul>
+<ol start="3">
+<li>
+<p>再次修改 加权限</p>
+<blockquote>
+<p>Linux文件的三种身份和四种权限，三种身份分别为：</p>
+<ol>
+<li>u: 文件拥有者</li>
+<li>g: 文件所属的群主</li>
+<li>o : 其他用户</li>
+<li>a 表示“所有（all）用户”。它是系统默认值。</li>
+</ol>
+<p>对于每个身份，又有四种权限，分别为：</p>
+<ol>
+<li>r：读取文件的权限（read）</li>
+<li>w：写入文件的权限（write）</li>
+<li>x：执行的权限（execute）</li>
+<li>s：特殊权限</li>
+</ol>
+</blockquote>
+<p>此时执行 : chmod 新的权限 文件列表</p>
+<pre><code class="language-shell">chmod +x test.sh
+</code></pre>
+<p>此时去执行  相对路径下 或绝对 路径吓得 的 test.sh 就可以直接执行</p>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz script]# ./test01.sh
+www.baidu.com is up
+</code></pre>
+</li>
+<li>
+<p>shebang : 就是可以 选择默认的执行文件</p>
+<pre><code class="language-shell">#!/usr/bin/bash
+ping -c1 www.baidu.com &amp;&gt;/home/user/null &amp;&amp; echo &quot;www.baidu.com is up&quot; || echo &quot;www.baidu.com is down&quot;
+</code></pre>
+<p>当我们么有明确指定 解释器时,会选择 我们的shebang</p>
+</li>
+<li>
+<p>当我们选择 python 2.X时  linux自带的懒得换</p>
+<pre><code class="language-python">#!/usr/bin/python
+print &quot;hello&quot;
+</code></pre>
+</li>
+<li>
+<p>我们将 他也 进行chmod -x python.py  就可以直接 输入文件执行了</p>
+</li>
+<li>
+<p>cat pyhton.py &gt;&gt; test.sh  可以将py文件添加到sh文件后面</p>
+</li>
+<li>
+<p>输入 重定向</p>
+<pre><code class="language-shell">- &quot;&lt;&lt;&quot;  命令&lt;&lt;标识符  ......  标识符   命令把标准输入中读入内容，直到遇到“标识符”分解符为止
+- &quot;&lt;&quot;     命令&lt;文件1   命令把文件1的内容作为标准输入设备
+- &quot;命令&lt; 文件1 &gt;文件2&quot;  命令把文件1的内容作为标准输入，把文件2作为标准输出。
+
+cat &lt; pyhton.py         其实和 cat python.py 效果一样
+
+cat &lt;&lt; eof
+&gt; hhh
+&gt; yyy
+&gt; eof
+hhh
+yyy
+</code></pre>
+</li>
+<li>
+<p>修改我们原来合并的文件</p>
+<pre><code class="language-shell">#!/usr/bin/bash
+ping -c1 www.baidu.com &amp;&gt;/home/user/null &amp;&amp; echo &quot;www.baidu.com is up&quot; || echo &quot;www.baidu.com is down&quot;
+/usr/bin/python &lt;&lt;-eof
+print &quot;hello&quot;
+print &quot;hello 2&quot;
+eof
+
+echo &quot;hello world&quot;                    
+</code></pre>
+</li>
+<li>
+<p>此时 就可以同时在 shell中 执行 python和shell 脚本了</p>
+</li>
+<li>
+<pre><code class="language-shell">test02.sh 脚本如下
+#!/usr/bin/bash
+cd /home
+ls
+
+1.   赋予权限 chmod +x test02.sh
+2.   ./test02.sh   目录不变  (子shell中执行)
+3.  . test02.sh   目录会切换到home路径下 (当前shell中执行)
+4.  source test02.sh  同样目录也换切换到 home路径下
+</code></pre>
+</li>
+</ol>
+<h2 id="2shell插件">2.shell插件</h2>
+<pre><code class="language-shell">```shell
+$ yum install -y epel-release  
+$ yum clean all
+$ yum makecache
+
+$ yum install -y bash-completion
+
+最后 
+[root@iz2zegua78a74kqn8clokfz home]# rpm -qa | grep bash-completion
+bash-completion-2.1-6.el7.noarch
+```
+</code></pre>
+<h2 id="3shell变量">3.shell变量</h2>
+<ul>
+<li>
+<pre><code class="language-shell">#!/usr/bin/bash
+#author fanhaodong
+
+name=&quot;fanhaodong&quot;
+
+echo &quot;my name is $name&quot;
+</code></pre>
+</li>
+<li>
+<p>注意 :</p>
+<ul>
+<li>shell的变量 中间的 等于号 必须  跟前后两个字母 无空格</li>
+<li>引用只需要 加一个 $name  就可以</li>
+</ul>
+</li>
+<li>
+<p>常用的变量</p>
+<ul>
+<li>
+<p>&quot;$?&quot;  代表执行结果</p>
+</li>
+<li>
+<p>&quot;$0&quot;  代表当前sh文件名+后缀</p>
+</li>
+<li>
+<p>&quot;$pwd&quot;  当前sh文件所在位置</p>
+</li>
+<li>
+<p>&quot;$SHELL&quot;  当前执行的shell</p>
+</li>
+<li>
+<p>&quot;$n&quot; 代表第几个变量</p>
+<ul>
+<li>
+<pre><code class="language-shell">#!/usr/bin/bash
+#author fanhaodong
+
+name=&quot;fanhaodong&quot;
+
+echo &quot;my name is $name&quot;
+
+echo $0
+
+echo $1
+
+echo $2
+
+
+然后
+[root@iz2zegua78a74kqn8clokfz script]# ./variables.sh 1 2
+my name is fanhaodong
+./variables.sh
+1
+2
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>&quot;$*&quot;  代表全部变量  但是 会当做一个整体 比如说</p>
+<pre><code class="language-shell">$*=&quot;aaa  bbb  ccc&quot; 输出 就是 aaa  bbb  ccc
+</code></pre>
+</li>
+<li>
+<p>&quot;$@&quot;  也是代表全部变量  ,但是不管怎么写  他都是不会把他当做一个整体,</p>
+</li>
+<li>
+<p>&quot;$#&quot;  表示 参数的个数</p>
+</li>
+</ul>
+</li>
+<li>
+<p>常用指令</p>
+<ul>
+<li>
+<pre><code class="language-shell">1. 赋值变量操作
+[user@iz2zegua78a74kqn8clokfz script]$ a=5
+[user@iz2zegua78a74kqn8clokfz script]$ echo $a   	---&gt;5
+2. unset 取消赋值变量
+[user@iz2zegua78a74kqn8clokfz script]$ unset a
+[user@iz2zegua78a74kqn8clokfz script]$ echo $a
+
+3. readonly  只可以读的变量
+[user@iz2zegua78a74kqn8clokfz script]$ readonly a=6
+[user@iz2zegua78a74kqn8clokfz script]$ echo $a    ---&gt; 6
+[user@iz2zegua78a74kqn8clokfz script]$ a=7
+-bash: a: readonly variable
+[user@iz2zegua78a74kqn8clokfz script]$ unset a
+-bash: unset: a: cannot unset: readonly variable
+
+当我们去修改 a的值时会报错,而且 也不可以车削
+</code></pre>
+</li>
+<li></li>
+</ul>
+</li>
+<li>
+<p>注意事项</p>
+<ul>
+<li>shell 命令的区分参数  是以空格为分界线 ,所以不要随意的写空格 ,</li>
+</ul>
+</li>
+</ul>
+<h2 id="4shell运算符">4.shell运算符</h2>
+<ol>
+<li>
+<p>基本语法</p>
+<pre><code class="language-shell">$((运算式))  或者 $[运算式]
+expr + - * / % 中间参数之间用空格隔开
+
+exp:
+[user@iz2zegua78a74kqn8clokfz script]$ expr 1 + 2          -------&gt;3
+
+[user@iz2zegua78a74kqn8clokfz script]$ x=6
+[user@iz2zegua78a74kqn8clokfz script]$ y=7
+//挨着也没事 分开隔着空格也么事 (这里空格不需要那么讲究)
+[user@iz2zegua78a74kqn8clokfz script]$ echo $[$x + $y]     --------&gt;13
+[user@iz2zegua78a74kqn8clokfz script]$ echo $[ $x + $y ]     --------&gt;13
+[user@iz2zegua78a74kqn8clokfz script]$ echo $[$x+$y]     --------&gt;13
+[user@iz2zegua78a74kqn8clokfz script]$ echo $(($x + $y))   --------&gt;13
+[user@iz2zegua78a74kqn8clokfz script]$ expr $x + $y       -----------&gt;13
+
+</code></pre>
+</li>
+</ol>
+<h2 id="5条件判断式">5.条件判断式</h2>
+<ul>
+<li>
+<p>基本语法</p>
+</li>
+<li>
+<p>[条件判断式  参数之间用 空格 隔开,首位空格隔开]</p>
+</li>
+<li>
+<p>数值间比较</p>
+<ul>
+<li>
+<p>&quot;=&quot;  比较数值相等</p>
+<pre><code class="language-shell">[user@iz2zegua78a74kqn8clokfz script]$ [ $x = $y ]
+[user@iz2zegua78a74kqn8clokfz script]$ echo $?         --&gt;1(状态码 0位true,1为false)
+
+*注意
+1. 空格 一个不能少 [空格+变量(/数值)+空格+判断词+空格+变量(/数值)+空格]  一共需要四个空格
+2. $?  是 上此次执行的结果
+</code></pre>
+</li>
+<li>
+<p>&quot;-lt&quot;   less than   &lt;</p>
+</li>
+<li>
+<p>&quot;-le&quot;  less equal    &lt;=</p>
+</li>
+<li>
+<p>&quot;-eq&quot;  equal    =</p>
+</li>
+<li>
+<p>&quot;-gt&quot;  greater than   =</p>
+</li>
+<li>
+<p>&quot;-ge&quot;  greater equal   &gt;=</p>
+</li>
+<li>
+<p>&quot;-ne&quot;  not equal   !=</p>
+</li>
+</ul>
+</li>
+<li>
+<p>文件权限</p>
+<ul>
+<li>
+<p>&quot;-x&quot;  查看是否有执行权限</p>
+<ul>
+<li>
+<pre><code class="language-shell">[user@iz2zegua78a74kqn8clokfz script]$ [ -x test02.sh ]
+[user@iz2zegua78a74kqn8clokfz script]$ echo $?      ---&gt;0
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>&quot;-w&quot;  写</p>
+</li>
+<li>
+<p>&quot;-r&quot;  读</p>
+</li>
+</ul>
+</li>
+<li>
+<p>文件类型判断并且判断是否存在</p>
+<ul>
+<li>
+<p>&quot;-f&quot; 是否是个常规文件且存在</p>
+<ul>
+<li>
+<pre><code class="language-shell">[user@iz2zegua78a74kqn8clokfz script]$ [ -f test02.sh ]
+[user@iz2zegua78a74kqn8clokfz script]$ echo $? 	------&gt;0
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>&quot;-d&quot;  是否是个目录且存在</p>
+</li>
+<li>
+<p>&quot;-e&quot; 是否存在</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="6-if判断式">6. if判断式</h2>
+<ul>
+<li>
+<ol>
+<li>基本语法</li>
+</ol>
+<ul>
+<li>
+<pre><code class="language-shell">if[条件判断式]
+then
+	程序
+fi
+
+或者
+if[条件判断式]
+	then
+		程序
+elif
+	then
+		程序
+else 
+	程序
+fi
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>2.使用</p>
+<ul>
+<li>
+<pre><code class="language-shell">#!/bin/bash
+if [ $1 -eq 1 ]
+then
+        echo 1111
+fi
+
+[user@iz2zegua78a74kqn8clokfz script]$ ./test04.sh 1      ----&gt;1111
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">#!/bin/bash
+if [ -d /home/user/logs ]
+then
+        rm -rf /home/user/logs
+elif [ -f /home/user/logs ]
+then
+        rm -rf /home/user/logs
+else
+        mkdir /home/user/logs
+fi
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="7switch-case-语句">7.switch case 语句</h2>
+<ul>
+<li>
+<p>1.基本语法</p>
+<ul>
+<li>
+<pre><code class="language-shell">case $变量名 in
+	&quot;值1&quot;)
+		程序
+	;;
+	&quot;值2&quot;)
+		程序
+	;;
+	*)
+		程序(这个相当于default)
+	;;
+esac
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>2.使用</p>
+<ul>
+<li>
+<pre><code class="language-shell">#!/bin/bash
+case $1 in
+  &quot;1&quot;)
+        echo this is 1
+   ;;
+ &quot;2&quot;)
+    echo this is 2
+  ;;
+  *)
+   echo i do not konw
+  ;;
+esac
+
+
+执行
+[user@iz2zegua78a74kqn8clokfz script]$ ./test04.sh 1
+this is 1
+[user@iz2zegua78a74kqn8clokfz script]$ ./test04.sh 2
+this is 2
+[user@iz2zegua78a74kqn8clokfz script]$ ./test04.sh 3
+i do not konw
+[user@iz2zegua78a74kqn8clokfz script]$ ./test04.sh 4
+i do not konw
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="8-for循环">8. for循环</h2>
+<ul>
+<li>
+<p>1.基本语法</p>
+<ul>
+<li>
+<pre><code class="language-shell">for((变量初始值;循环条件;变量变化))
+do 
+	程序
+done
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>2.使用</p>
+<ul>
+<li>
+<pre><code class="language-shell">#!/bin/bash
+#实现累加
+sum=0
+for((i=1;i&lt;=100;i++))
+do
+        sum=$[$sum + $i]
+done
+
+echo $sum
+
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>3.注意事项</p>
+<ul>
+<li>
+<ol>
+<li>赋值  直接 sum=0  ;sum=1   就是等于多少</li>
+<li>引用   比如说我要取值 我要加减  就是引用变量 必须用  $sum</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p>4.for in 语句</p>
+<ul>
+<li>
+<p>1.语法</p>
+<ul>
+<li>
+<pre><code class="language-shell">for 变量  in  数值1 数值2 数值3 (数值之间用空格隔开)
+do
+	程序
+done
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>2.使用</p>
+<ul>
+<li>
+<pre><code class="language-shell">#!/bin/bash
+for i in &quot;$*&quot;
+do
+        echo $i
+done
+
+echo '----------------'
+for i in &quot;$@&quot;
+do
+        echo $i
+done
+
+echo '----------------'
+for i in $*
+do
+        echo $i
+done
+
+echo '----------------'
+for i in $@
+do
+        echo $i
+done
+
+
+
+[user@iz2zegua78a74kqn8clokfz script]$ ./test05.sh 111 222 333
+111 222 333
+----------------
+111
+222
+333
+----------------
+111
+222
+333
+----------------
+111
+222
+333
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="9while循环">9.while循环</h2>
+<ul>
+<li>
+<p>1.语法</p>
+<ul>
+<li>
+<pre><code class="language-shell">while [条件判断式]  (while和[] 必须有空格)
+do
+	程序
+done
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>2.实例</p>
+<ul>
+<li>
+<pre><code class="language-shell">#!/bin/bash
+# 实现 1-100 累加
+sum=0
+num=1
+while [ $num -le 100 ]
+do
+  sum=$[$sum + $num]
+  num=$[$num + 1]
+done
+
+echo $sum
+
+
+
+[user@iz2zegua78a74kqn8clokfz script]$ ./while.sh 
+5050
+
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="10-read-用法">10. read 用法</h2>
+<pre><code class="language-shell">1. 用法
+read i  (无条件参数时;程序运行无提示)
+echo $i
+
+
+read -p &quot;输入数值:&quot; i
+echo $i
+
+#!/bin/bash
+read -p '请在5S内输入数值:' -t 5 i
+echo $i
+	
+</code></pre>
+<h2 id="11function用法">11.function用法</h2>
+<pre><code class="language-shell">#!/bin/bash
+
+function aaa(){
+  echo '我是个函数'
+}
+
+aaa
+
+bbb(){
+        echo '我是个函数bbb'
+}
+bbb
+
+
+ccc(){
+
+  s=0
+  s=$[ $1 + $2 ]
+  echo $s
+}
+
+read -p &quot;请输入参数1: &quot; i
+read -p &quot;请输入参数2: &quot; j
+ccc $i $j
+
+
+
+[user@iz2zegua78a74kqn8clokfz script]$ ./function.sh
+我是个函数
+我是个函数bbb
+请输入参数1: 12
+请输入参数2: 12
+24
+
+注意函数调用 必须在申明函数之后
+
+
+
+
+</code></pre>
+<h2 id="12cut-命令">12.cut 命令</h2>
+<ul>
+<li>
+<p>&quot;-d&quot;  切割的字符  记住是字符</p>
+</li>
+<li>
+<p>&quot;-f&quot;  切割后的数组的第几个位置 从 1开始</p>
+</li>
+<li>
+<p>&quot;-c&quot;  切割字符  从1开始</p>
+</li>
+<li>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz ~]# ifconfig | grep  broadcast 
+inet 172.24.22.95  netmask 255.255.192.0  broadcast 172.24.63.255
+
+
+[root@iz2zegua78a74kqn8clokfz ~]# ifconfig | grep  broadcast | cut -d &quot;i&quot; -f 2
+net 172.24.22.95  netmask 255.255.192.0  broadcast 172.24.63.255
+
+[root@iz2zegua78a74kqn8clokfz ~]# ifconfig | grep  broadcast | cut -d &quot;i&quot; -f 2 | cut -c 1,2,3
+net
+[root@iz2zegua78a74kqn8clokfz ~]# ifconfig | grep  broadcast | cut -d &quot;i&quot; -f 2 | cut -c 1-3
+net
+
+
+</code></pre>
+</li>
+</ul>
+<h2 id="13sed命令">13.sed命令</h2>
+<ul>
+<li>
+<pre><code class="language-shell">&quot;a&quot;  代表 匹配/inet/的行 然后在匹配行后面 添加一行 xxx
+ifconfig | sed '/inet/axxx'
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">&quot;d&quot;  删除
+ifconfig | sed '1,2d'  删除第 1-2行
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">&quot;s&quot; 替换  1-3行中 将 /172/的地方 替换为 /sss/  全局
+ifconfig | sed '1,3s/172/sss/g'
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">&quot;-e&quot;  添加多条指令  
+ifconfig | sed -e '1,3s/172/sss/g' -e '4,5s/RX/RR/g'
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">&quot;-i&quot;  直接修改数据源  将 1-2行删除 并且 直接给数据源修改
+sed -i '1,2d' tt
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">格式:
+
+set -e '{范围}操作'   范围:&quot;/start/,/end/&quot;  以start开始end结尾  &quot;1,2&quot; 第一行到第二行
+
+&quot;s&quot;操作:  s/匹配条件/修改内容/g
+&quot;a&quot;操作:  axxx   xxx内容为添加的
+&quot;d&quot; 直接 d    就删除了
+</code></pre>
+</li>
+</ul>
+<h2 id="14-awk命令">14. awk命令</h2>
+<ul>
+<li>
+<p>默认分词器是 空格 所以是空格分开的可以不指定 分隔符</p>
+</li>
+<li>
+<pre><code class="language-shell"> &quot;-F&quot; 指定 分隔符 这里是 :   后面是指定输出内容  
+ &quot;/^a/&quot;  指定匹配的模式  以a开头
+ cat tt | awk -F: '/^a/{print}'      匹配/^a/ 开头的 然后打印此行
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">cat tt | awk -F: '/^a/{print $2}'   匹配/^a/ 开头的   然后打印此行第二个参数 
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">awk '$1&gt;2 &amp;&amp; $2==&quot;Are&quot; {print $1,$2,$3}' log.txt   过滤提哦啊见可以写
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">cat tt | awk -F: 'BEGIN{print &quot;BEGIN&quot;}{print '6666'}END{print &quot;END&quot;}'
+
+&quot;BEGIN&quot; 开始函数
+中间执行流程
+&quot;END&quot; 函数做什么
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">cat tt | awk -F: 'BEGIN{print &quot;begin&quot;;sum=0}{sum+=$2}END{print &quot;end:&quot; sum}'
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">cat tt | awk -F: -v sum=3 '{sum+=$2}END{print &quot;sum:&quot; sum}'
+
+&quot;-v&quot; 指定参数
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">split(&quot;2012/08/23&quot;,da,&quot;/&quot;)  内置的函数
+awk 'BEGIN{split(&quot;2012/08/23&quot;,da,&quot;/&quot;);print da[2],da[3],da[1]}'
+</code></pre>
+</li>
+<li>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz test]# awk -F: '{print FILENAME, NF ,NR}' tt
+tt 2 1
+tt 2 2
+tt 2 3
+tt 2 4
+tt 2 5
+
+FILENAME : 文件名
+NF :  参数个数
+NR : 行数
+
+</code></pre>
+</li>
+<li>
+<p>变量名称</p>
+</li>
+<li>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-02/b13102fd-f112-4f28-881d-9af6279ba746.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+</ul>
+<h2 id="15sort-命令">15.sort 命令</h2>
+<ul>
+<li>默认分词器是 空格 所以是空格分开的可以不指定 分隔符</li>
+</ul>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz test]# cat tt | grep ^a
+a:1
+aa:2
+aaa:3
+aaaa:4
+aaaaa:5
+[root@iz2zegua78a74kqn8clokfz test]# vim tt
+[root@iz2zegua78a74kqn8clokfz test]# cat tt | grep ^a
+a:1
+aaa:32
+aaaaa:15
+[root@iz2zegua78a74kqn8clokfz test]# cat tt | grep ^a | sort -t : -k 2 -n
+a:1
+aaaaa:15
+aaa:32
+
+cat tt | grep ^a | sort -t : -k 2 -n
+
+1.&quot;-t&quot;  以什么切割
+2.&quot;-k&quot;  取切割后的第几个数字
+3.&quot;-n&quot;  以数值排序  默认 ASC
+4.&quot;-u&quot;  去重
+5.&quot;-o&quot;  重定向到一个文件中取
+6:&quot;-r&quot;  倒叙排列  DESC
+7.&quot;-f&quot;  脚本文件
+
+exp  awk -f a.awk  a.txt
+</code></pre>
+<h2 id="16wc">16.wc</h2>
+<ul>
+<li>
+<p>1.语法</p>
+<ul>
+<li>
+<pre><code class="language-shell">wc [选项] 文件名　　#统计
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>2.功能</p>
+<ul>
+<li>
+<pre><code class="language-shell">&quot;-l&quot; 显示行数
+[user@iz2zegua78a74kqn8clokfz script]$ wc -l score.txt 
+5 score.txt
+
+&quot;-w&quot; 只统计单词数
+[user@iz2zegua78a74kqn8clokfz script]$ wc -w score.txt
+25 score.txt
+
+&quot;-m&quot;　　只统计字符数
+[user@iz2zegua78a74kqn8clokfz script]$ wc -m score.txt
+110 score.txt
+</code></pre>
+</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<h2 id="17综合练习">17.综合练习</h2>
+<ol>
+<li>
+<p>printf 用法</p>
+<ol>
+<li>
+<p>输出类型</p>
+<blockquote>
+<ol>
+<li>%s　　输出字符串，n是数字，指代输出几个字符  比如 %8s 8位</li>
+<li>%d　　输出整数。n是数字，指代输出几个数字   比如 %8d  8位</li>
+<li>%m.nf　　位数和小数位数。例如：%8.2f 代表输出8位数，其中2位是小数，6位是整数</li>
+</ol>
+</blockquote>
+</li>
+<li>
+<p>输出格式</p>
+<blockquote>
+<p>\a　　输出警告声音<br>
+\b　　输出退格键，也就是BackSpace键<br>
+\f　　消除屏幕<br>
+\n　　换行<br>
+\r　　回车<br>
+\t　　水平制表符<br>
+\v　　垂直制表符</p>
+</blockquote>
+</li>
+</ol>
+</li>
+<li>
+<p>练习</p>
+<pre><code class="language-shell">[user@iz2zegua78a74kqn8clokfz script]$ cat score.txt 
+Marry   2143 78 84 77
+Jack    2321 66 78 45
+Tom     2122 48 77 71
+Mike    2537 87 97 95
+Bob     2415 40 57 62
+
+
+
+#!/bin/bash
+# 按学号顺序排列
+
+sort -k 2 score.txt |
+awk '
+BEGIN{
+printf &quot;NAME    NO.   MATH  ENGLISH  COMPUTER   TOTAL\n&quot;
+printf &quot;----------------------------------------------\n&quot;
+sum=0;
+sum1=0;
+sum2=0;
+sum3=0;
+}
+{
+sum=sum+1
+sum1=sum1+$3
+sum2=sum2+$4
+sum3=sum3+$5
+printf &quot;%s\t%s\t%d\t%d\t%d\t%d\n&quot;, $1, $2, $3,$4,$5, $3+$4+$5
+}
+END{      
+printf &quot;TOTAL:\t\t%d\t%d\t%d\n&quot;,sum1,sum2,sum3
+printf &quot;AVERAGE:%10.2f %8.2f %8.2f\n&quot;, sum1/NR, sum2/NR, sum3/NR
+}
+'
+
+
+[user@iz2zegua78a74kqn8clokfz script]$ ./score.sh 
+NAME    NO.   MATH  ENGLISH  COMPUTER   TOTAL
+----------------------------------------------
+Tom		2122	48	77	71	196
+Marry	2143	78	84	77	239
+Jack	2321	66	78	45	189
+Bob		2415	40	57	62	159
+Mike	2537	87	97	95	279
+TOTAL:			319	393	350
+AVERAGE:     	63.80   78.60 70.00
+
+
+
+
+
+awk文件的
+
+#!/bin/awk -f
+#运行前
+BEGIN {
+math = 0
+english = 0
+computer = 0
+
+printf &quot;NAME    NO.   MATH  ENGLISH  COMPUTER   TOTAL\n&quot;
+printf &quot;---------------------------------------------\n&quot;
+}
+#运行中
+{
+math+=$3
+english+=$4
+computer+=$5
+printf &quot;%-6s %-6s %4d %8d %8d %8d\n&quot;, $1, $2, $3,$4,$5, $3+$4+$5
+}
+#运行后
+END {
+printf &quot;---------------------------------------------\n&quot;
+printf &quot;  TOTAL:%10d %8d %8d \n&quot;, math, english, computer
+printf &quot;AVERAGE:%10.2f %8.2f %8.2f\n&quot;, math/NR, english/NR, computer/NR
+}
+
+怎么运行 awk -f score.awk  score.txt
+</code></pre>
+</li>
+</ol>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1%E5%85%A5%E9%97%A8-shell-%E5%AE%9E%E4%BE%8B">1.入门 shell 实例</a></li>
+<li><a href="#2shell%E6%8F%92%E4%BB%B6">2.shell插件</a></li>
+<li><a href="#3shell%E5%8F%98%E9%87%8F">3.shell变量</a></li>
+<li><a href="#4shell%E8%BF%90%E7%AE%97%E7%AC%A6">4.shell运算符</a></li>
+<li><a href="#5%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E5%BC%8F">5.条件判断式</a></li>
+<li><a href="#6-if%E5%88%A4%E6%96%AD%E5%BC%8F">6. if判断式</a></li>
+<li><a href="#7switch-case-%E8%AF%AD%E5%8F%A5">7.switch case 语句</a></li>
+<li><a href="#8-for%E5%BE%AA%E7%8E%AF">8. for循环</a></li>
+<li><a href="#9while%E5%BE%AA%E7%8E%AF">9.while循环</a></li>
+<li><a href="#10-read-%E7%94%A8%E6%B3%95">10. read 用法</a></li>
+<li><a href="#11function%E7%94%A8%E6%B3%95">11.function用法</a></li>
+<li><a href="#12cut-%E5%91%BD%E4%BB%A4">12.cut 命令</a></li>
+<li><a href="#13sed%E5%91%BD%E4%BB%A4">13.sed命令</a></li>
+<li><a href="#14-awk%E5%91%BD%E4%BB%A4">14. awk命令</a></li>
+<li><a href="#15sort-%E5%91%BD%E4%BB%A4">15.sort 命令</a></li>
+<li><a href="#16wc">16.wc</a></li>
+<li><a href="#17%E7%BB%BC%E5%90%88%E7%BB%83%E4%B9%A0">17.综合练习</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

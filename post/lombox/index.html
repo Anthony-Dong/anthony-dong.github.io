@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Lombox - Java的开发伴侣 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/lombox/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Lombox - Java的开发伴侣</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-31</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/lombox/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/VGFs7LxPgW/"
+								class="tag">中间件</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">937字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">4 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Java中添加maven依赖, IDEA添加lombox插件. 就可以使用了.</p>
+</blockquote>
+<h2 id="介绍">介绍</h2>
+<p><a href="https://projectlombok.org/">官网地址 </a>  :  https://projectlombok.org/</p>
+<blockquote>
+<pre><code>  ​	Project Lombok is a java library that automatically plugs into your editor and build tools, spicing up your java. Never write another getter or equals method again, with one annotation your class has a fully featured builder, Automate your logging variables, and much more.
+</code></pre>
+</blockquote>
+<p>在日常开发中会经常遇见， 为此我专门写了一下它主要的涉及到的点，</p>
+<h2 id="data"><code>@Data</code></h2>
+<pre><code class="language-java">public @interface Data {
+	String staticConstructor() default &quot;&quot;;
+}
+</code></pre>
+<p>这个有一个 <code>staticConstructor</code> , 可以生成一个静态的构造方法, 默认是没有的.</p>
+<p>同时 <code>@Data</code> 等效于 <code>@Getter</code>  <code>@Setter</code> <code>@RequiredArgsConstructor</code> <code>@ToString</code> <code>@EqualsAndHashCode</code>.  这五个注解的效果.</p>
+<p>默认情况下， 如果普通字段有加final关键字， <code>@Data</code> 将final关键字的字段放入构造器中（因为final关键字必须在对象实例化的时候初始化）， 也就是出现覆盖无参构造器。</p>
+<h2 id="requiredargsconstructor"><code>@RequiredArgsConstructor</code></h2>
+<blockquote>
+<p>​	它一共三个属性</p>
+</blockquote>
+<pre><code class="language-java">public @interface RequiredArgsConstructor {
+    // 一个静态的构造器.是否需要生成
+	String staticName() default &quot;&quot;;
+    // 生成构造器上需要标记什么注解. JDK1.8可以通过`onConstructor_`来加入
+	AnyAnnotation[] onConstructor() default {};
+    // 构造器的域
+	AccessLevel access() default lombok.AccessLevel.PUBLIC;
+}
+</code></pre>
+<p>既然上面说了这个玩意. 那么一定有它的含义.</p>
+<p>比如常见的. 我们Spring中注入 <code>@Autowired</code> 字段, 确实不方便. 但是如果加了这个. 我们可以省略不写.  <strong>但是这个作为构造器参数的前提是我们的字段必须被 <code>final</code>所修饰.</strong></p>
+<p>像在spring中, 我们可以这么愉快的注入. 由于Spring的构造器自动发现. <strong>其实可以不加<code>@Autowired</code>注解给构造器.</strong></p>
+<pre><code class="language-java">@RequiredArgsConstructor(onConstructor_ = {@Autowired})
+@RestController
+@RequestMapping(path = &quot;/v1/user&quot;)
+public class UserController {
+    private final UserService userService;
+}
+</code></pre>
+<h2 id="accessors"><code>@Accessors</code></h2>
+<p>@Accessors(存取器)用于配置getter和setter方法的生成结果，下面介绍三个属性</p>
+<h3 id="fluent">fluent</h3>
+<p><strong>fluent的中文含义是流畅的，设置为true，则getter和setter方法的方法名都是基础属性名，且setter方法返回当前对象</strong>。如下</p>
+<pre><code class="language-java">// 生成的getter和setter方法如下，方法体略
+public Long id() {}
+public User id(Long id) {}
+public String name() {}
+public User name(String name) {}
+</code></pre>
+<h3 id="chain">chain</h3>
+<p><strong>chain的中文含义是链式的，设置为true，则setter方法返回当前对象</strong>。如下</p>
+<pre><code class="language-java">// 生成的setter方法如下，方法体略
+public User setId(Long id) {}
+public User setName(String name) {}
+</code></pre>
+<h3 id="prefix">prefix</h3>
+<p><strong>prefix的中文含义是前缀，用于生成getter和setter方法的字段名会忽视指定前缀（遵守驼峰命名）</strong>。如下</p>
+<pre><code class="language-java">@Data
+@Accessors(prefix = &quot;p&quot;)
+class User {
+	private Long pId;
+	// 生成的getter和setter方法如下，方法体略
+	public Long getId() {}
+	public void setId(Long id) {}
+}
+</code></pre>
+<h2 id="builder"><code>@Builder</code></h2>
+<p>当加入builder注解后. 会默认生成一个<code>OrdersBuilder</code>内部类, 去构建对象. 这个我最喜欢。</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    Orders build = Orders.builder().count(1).name(&quot;1&quot;).id(1).build();
+}
+</code></pre>
+<blockquote>
+<p>​	需要特别注意的是, 如果加入<code>@Builder</code>注解后. 那么此时你的无参构造器会消失. 而且存在的构造器会私有化了. 所以还需要配合  <code>@AllArgsConstructor</code>   和 <code>@NoArgsConstructor</code></p>
+</blockquote>
+<p>因此如果你喜欢使用 <code>@Builder</code> , 最好多个注解一起配合。也就是四者合一， 天下无敌</p>
+<pre><code class="language-java">@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
+</code></pre>
+<h2 id="nonnull"><code>@NonNull</code></h2>
+<blockquote>
+<p>​	会自动生成NUll监测的代码.  同时抛出<code>NullPointerException</code> 运行时异常.</p>
+</blockquote>
+<pre><code class="language-java">public void test(@NonNull String msg) {
+    System.out.println(msg.getBytes().length);
+}
+</code></pre>
+<p>结果 :</p>
+<pre><code class="language-java">public void test(@NonNull String msg) {
+    if (msg == null) {
+        throw new NullPointerException(&quot;msg&quot;);
+    } else {
+        System.out.println(msg.getBytes().length);
+    }
+}
+</code></pre>
+<h2 id="sneakythrows"><code>@SneakyThrows</code></h2>
+<p>就是帮你写 try-catch   , 比如下列代码.</p>
+<pre><code class="language-java">@SneakyThrows({NullPointerException.class})
+public void test(String msg) {
+    System.out.println(msg.getBytes().length);
+}
+</code></pre>
+<p>生成 :</p>
+<pre><code class="language-java">public void test(String msg) {
+    try {
+        System.out.println(msg.getBytes().length);
+    } catch (NullPointerException var3) {
+        throw var3;
+    }
+}
+</code></pre>
+<h2 id="synchronized"><code>@Synchronized</code></h2>
+<p>生成一个lock对象. 然后sync给你套住. 玩了. 就是加个锁 . 也不建议使用.</p>
+<h2 id="cleanup"><code>@Cleanup</code></h2>
+<p>try - resource  , 其实也不是, 就是他会帮助你调用close. 方法. 我觉得没啥必要. 用这个.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BB%8B%E7%BB%8D">介绍</a></li>
+<li><a href="#data"><code>@Data</code></a></li>
+<li><a href="#requiredargsconstructor"><code>@RequiredArgsConstructor</code></a></li>
+<li><a href="#accessors"><code>@Accessors</code></a>
+<ul>
+<li><a href="#fluent">fluent</a></li>
+<li><a href="#chain">chain</a></li>
+<li><a href="#prefix">prefix</a></li>
+</ul>
+</li>
+<li><a href="#builder"><code>@Builder</code></a></li>
+<li><a href="#nonnull"><code>@NonNull</code></a></li>
+<li><a href="#sneakythrows"><code>@SneakyThrows</code></a></li>
+<li><a href="#synchronized"><code>@Synchronized</code></a></li>
+<li><a href="#cleanup"><code>@Cleanup</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

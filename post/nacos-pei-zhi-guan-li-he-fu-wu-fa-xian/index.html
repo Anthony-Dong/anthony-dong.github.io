@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Nacos - 配置管理和服务发现 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/nacos-pei-zhi-guan-li-he-fu-wu-fa-xian/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Nacos - 配置管理和服务发现</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-17</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/nacos-pei-zhi-guan-li-he-fu-wu-fa-xian/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/zxweVMb3lRd/"
+								class="tag">Nacos</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1569字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>他和ZK一样都可以当做服务发现中心 , 但是他比ZK的优点就是他是AP,ZK是CP, 但是他没有ZK的ZKclient界面, 但是提供了一个web界面</p>
+</blockquote>
+<h2 id="1-前期准备">1. 前期准备</h2>
+<p>下载链接 : https://github.com/alibaba/nacos/releases</p>
+<p>解压找到启动脚本 , startup.sh -m standalone  , 单机模式</p>
+<h2 id="2-配置管理">2. 配置管理</h2>
+<h3 id="1-api-configservice-核心类">1. API - ConfigService 核心类</h3>
+<pre><code class="language-java">public class NacosConfigApplicationTests {
+
+    public static void main(String[] args) throws NacosException, InterruptedException {
+        String serverAddr = &quot;192.168.58.131&quot;;
+        String dataId = &quot;example&quot;;
+        String group = &quot;DEFAULT_GROUP&quot;;
+        Properties properties = new Properties();
+        properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
+
+        // 核心类
+        ConfigService configService = NacosFactory.createConfigService(properties);
+        String content = configService.getConfig(dataId, group, 5000);
+		// 启动查到的配置
+        System.out.println(&quot;content : &quot;+content);
+
+        configService.addListener(dataId, group, new Listener() {
+            @Override
+            public void receiveConfigInfo(String configInfo) {
+                // 监听到变化
+                System.out.println(&quot;recieve:&quot; + configInfo);
+            }
+
+            @Override
+            public Executor getExecutor() {
+                return null;
+            }
+        });
+
+        TimeUnit.SECONDS.sleep(Integer.MAX_VALUE);
+    }
+}
+</code></pre>
+<h3 id="2-spring-启动">2. Spring 启动</h3>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.nacos&lt;/groupId&gt;
+    &lt;artifactId&gt;nacos-spring-context&lt;/artifactId&gt;
+    &lt;version&gt;${latest.version}&lt;/version&gt;
+&lt;/dependency&gt;
+// 版本 : 0.2.2-RC1
+</code></pre>
+<p>设置一个配置类</p>
+<pre><code class="language-java">@Configuration
+@EnableNacosConfig(globalProperties = @NacosProperties(serverAddr = &quot;192.168.58.131:8848&quot;))
+@NacosPropertySource(dataId = &quot;example&quot;, autoRefreshed = true)
+public class NacosConfiguration {
+
+}
+</code></pre>
+<p>暴露接口</p>
+<pre><code class="language-java">@Controller
+@RequestMapping(&quot;config&quot;)
+public class ConfigController {
+
+    @NacosValue(value = &quot;${useLocalCache:false}&quot;, autoRefreshed = true)
+    private boolean useLocalCache;
+
+    @RequestMapping(value = &quot;/get&quot;, method = GET)
+    @ResponseBody
+    public boolean get() {
+        return useLocalCache;
+    }
+}
+</code></pre>
+<p>然后请求<code>curl -X POST &quot;http://192.168.58.131:8848/nacos/v1/cs/configs?dataId=example&amp;group=DEFAULT_GROUP&amp;content=useLocalCache=true&quot;</code> 这个发布配置, 然后访问我们的暴露接口</p>
+<p><code>curl http://localhost:8080/config/get</code> 会返回true</p>
+<h3 id="3-spring-boot-启动">3. Spring-Boot 启动</h3>
+<blockquote>
+<p>​	由于Nacos遵循了spring-boot 自动装配的原理 , 不用我们手动 enable ,当加入依赖就会启动nacos</p>
+</blockquote>
+<h4 id="1-依赖">1. 依赖</h4>
+<pre><code class="language-java">&lt;nacos-config-spring-boot.version&gt;0.2.1&lt;/nacos-config-spring-boot.version&gt;
+
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;nacos-config-spring-boot-actuator&lt;/artifactId&gt;
+    &lt;version&gt;${nacos-config-spring-boot.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;nacos-config-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;${nacos-config-spring-boot.version}&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h4 id="2-启动">2. 启动</h4>
+<p>你可以看看官网的例子</p>
+<pre><code class="language-java">@SpringBootApplication
+@NacosPropertySource(dataId = &quot;example&quot;, autoRefreshed = true)
+public class NacosConfigApplication implements CommandLineRunner {
+
+    public static void main(String[] args) {
+        SpringApplication.run(NacosConfigApplication.class, args);
+    }
+}
+</code></pre>
+<p>测试接口</p>
+<pre><code class="language-java">@RestController
+@RequestMapping(&quot;config&quot;)
+public class ConfigController {
+
+    @NacosValue(value = &quot;${useLocalCache:false}&quot;, autoRefreshed = true)
+    private boolean useLocalCache;
+
+    @GetMapping(value = &quot;/get&quot;)
+    public boolean get() {
+        return useLocalCache;
+    }
+}
+</code></pre>
+<p>启动springboot , 然后访问下面这个</p>
+<pre><code class="language-shell">curl -X GET &quot;http://localhost:8811/config/get&quot;
+</code></pre>
+<h3 id="4-configservice使用">4. ConfigService使用</h3>
+<p>ConfigService 接口提供的抽象方法 ,几乎是nacos的全部 , 所以基本会这个就行了</p>
+<pre><code class="language-java">public interface ConfigService {
+
+	public String getConfig(String dataId, String group, long timeoutMs) throws NacosException;
+
+	public void addListener(String dataId, String group, Listener listener) throws NacosException;
+
+	public boolean publishConfig(String dataId, String group, String content) throws NacosException;
+
+	public boolean removeConfig(String dataId, String group) throws NacosException;
+
+	public void removeListener(String dataId, String group, Listener listener);
+
+	public String getServerStatus();
+
+}
+</code></pre>
+<h4 id="1-注入-configservice">1. 注入 ConfigService</h4>
+<pre><code class="language-java">@NacosInjected(properties = @NacosProperties(encode = &quot;UTF-8&quot;))
+private ConfigService configService;
+</code></pre>
+<h4 id="2-启动监听">2. 启动监听</h4>
+<pre><code class="language-java">/**
+* 方式二 需要注入一个ConfigService对象
+* @param args
+* @throws Exception
+*/
+configService.addListener(&quot;example&quot;, &quot;DEFAULT_GROUP&quot;, new AbstractListener() {
+    @Override
+    public void receiveConfigInfo(String config) {
+        System.out.println(&quot;configService 监听到变化 : &quot;+config);
+    }
+});
+</code></pre>
+<p>或者,这里可以定义接收类型 , 如果是Properties ,就可以取值了</p>
+<pre><code class="language-java">@NacosConfigListener(dataId = &quot;example&quot;,groupId = &quot;DEFAULT_GROUP&quot;,timeout = 2000)
+public void onMessage(Properties config) {
+    System.out.println(&quot;监听到变化 : &quot;+config);
+}
+</code></pre>
+<h4 id="3-注入value">3. 注入Value</h4>
+<pre><code class="language-java">/**
+* 方式一
+* @param config
+ */
+@NacosValue(value = &quot;${useLocalCache:false}&quot;, autoRefreshed = true)
+private boolean useLocalCache;
+</code></pre>
+<h4 id="4-发布配置">4. 发布配置</h4>
+<pre><code class="language-java">configService.publishConfig(PROPERTIES_DATA_ID, DEFAULT_GROUP,builder.toString());
+</code></pre>
+<h4 id="5-获取状态">5. 获取状态</h4>
+<pre><code class="language-java">configService.getServerStatus()  //  UP or DOWN
+</code></pre>
+<h4 id="4-总结">4. 总结</h4>
+<p>发现还可以哇 ....</p>
+<h3 id="5-通过api接口设置配置信息">5. 通过API接口设置配置信息</h3>
+<h4 id="1-发布配置信息">1. 发布配置信息</h4>
+<pre><code class="language-java">curl -X POST &quot;http://192.168.58.131:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&amp;content=HelloWorld&quot;
+</code></pre>
+<h4 id="2-获取配置信息">2. 获取配置信息</h4>
+<pre><code class="language-java">curl -X GET &quot;http://192.168.58.131:8848/nacos/v1/cs/configs?dataId=nacos.cfg.dataId&amp;group=test&quot;
+</code></pre>
+<p>其实这种接口看看源码 很容易发现 ,,,, 官网提供的以上的几个</p>
+<h2 id="3-服务发现">3. 服务发现</h2>
+<h3 id="1-spring-boot-服务">1 Spring-Boot 服务</h3>
+<p>核心类 :</p>
+<pre><code class="language-java">public static void main(String[] args) throws NacosException {
+    String serverAddr = &quot;192.168.58.131&quot;;
+    String serverName = &quot;example&quot;;
+    Properties properties = new Properties();
+    properties.put(PropertyKeyConst.SERVER_ADDR, serverAddr);
+    NamingService namingService = NacosFactory.createNamingService(properties);
+	
+    // NamingService 就是服务发现的管理
+    namingService.registerInstance(serverName, &quot;127.0.0.1&quot;, 8811);
+	//有一些方法进行选择
+    Instance example = namingService.selectOneHealthyInstance(serverName);
+}
+</code></pre>
+<p>这里我要吐槽一下了 , 大家看</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-17/371549e1-fb9d-4937-8fd1-97241849f6cb.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这里走的是 PUT方法 ,我们再看看nacos 提供的请求方法 <code>curl -X POST &quot;http://192.168.58.131:8848/nacos/v1/ns/instance?serviceName=nacos.naming.serviceName&amp;ip=20.18.7.10&amp;port=8080&quot;</code> 显然是一个PUT方法 , 但是post也支持 , 哈哈哈哈 , 我感觉设计上有问题哇 ,因为Put是幂等性 , 而post不是的,</p>
+<p>整个springboot</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;nacos-discovery-spring-boot-starter&lt;/artifactId&gt;
+    &lt;version&gt;0.2.1&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>配置</p>
+<pre><code class="language-properties">nacos.discovery.server-addr=192.168.58.131:8848
+</code></pre>
+<p>启动</p>
+<pre><code class="language-java">@Controller
+@RequestMapping(&quot;discovery&quot;)
+public class DiscoveryController {
+
+    @NacosInjected
+    private NamingService namingService;
+
+    @RequestMapping(value = &quot;/get&quot;, method = GET)
+    @ResponseBody
+    public List&lt;Instance&gt; get(@RequestParam String serviceName) throws NacosException {
+        return namingService.getAllInstances(serviceName);
+    }
+}
+</code></pre>
+<pre><code class="language-ssh">crul -PUT &quot;http://192.168.58.131:8848/nacos/v1/ns/instance?serviceName=example&amp;ip=127.0.0.1&amp;port=8811&quot;
+</code></pre>
+<p>然后 获取服务节点</p>
+<pre><code class="language-ssh">crul -GET &quot;http://localhost:8888/discovery/get?serviceName=example&quot;
+</code></pre>
+<p>我们发现并没有啥用 ....  ,所以还需要走springcloud</p>
+<h3 id="2-spring-cloud-服务">2. Spring-Cloud 服务</h3>
+<p>感觉 springboot中并不需要 服务发现, 做微服务的话就转向springcloud了 , 所以这里展示springcloud,还是以springboot建立工程</p>
+<p>服务提供方和消费方都需要的依赖 , 同时启动类上都需要加上 <code>@EnableDiscoveryClient</code> 注解</p>
+<pre><code class="language-java">&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba.cloud&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-cloud-starter-alibaba-nacos-discovery&lt;/artifactId&gt;
+    &lt;version&gt;2.1.0.RELEASE&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h4 id="1-服务消费方">1. 服务消费方</h4>
+<p>服务提供方启动类</p>
+<pre><code class="language-java">@EnableDiscoveryClient
+@SpringBootApplication
+public class NacosProviderApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(NacosProviderApplication.class, args);
+    }
+
+    @RestController
+    class EchoController {
+
+        @GetMapping(value = &quot;/echo/{string}&quot;)
+        public String echo(@PathVariable String string) {
+            return string;
+        }
+    }
+}
+</code></pre>
+<p>服务提供方配置:</p>
+<pre><code class="language-properties">spring.cloud.nacos.discovery.server-addr=192.168.58.131:8848
+spring.application.name=service-provider
+server.port=18082
+</code></pre>
+<h4 id="2-服务提供方">2. 服务提供方</h4>
+<p>服务消费方启动类 :</p>
+<pre><code class="language-java">@Slf4j
+@EnableDiscoveryClient
+@SpringBootApplication
+public class SpringConsumerApplication implements ApplicationRunner {
+
+    public static void main(String[] args) {
+        new SpringApplicationBuilder().bannerMode(Banner.Mode.OFF).sources(SpringConsumerApplication.class)
+                .web(WebApplicationType.SERVLET).run(args);
+    }
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+	// 必须实现 @LoadBalanced , 不然会无法找到service-provider的地址
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate(RestTemplateBuilder builder){
+        return builder.build();
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        URI uri = UriComponentsBuilder.fromUriString(&quot;http://service-provider/echo/{id}&quot;).build(&quot;hello&quot;);
+        ResponseEntity&lt;String&gt; forEntity = restTemplate.getForEntity(uri, String.class);
+        log.info(&quot;data : {}&quot;, forEntity.getBody());
+    }
+}
+</code></pre>
+<pre><code class="language-properties">server.port=9200
+spring.application.name=server-consumer
+spring.cloud.nacos.discovery.server-addr=192.168.58.131:8848
+</code></pre>
+<p><a href="https://circleci.com/gh/alibaba/spring-cloud-alibaba/tree/master"><img src="https://circleci.com/gh/alibaba/spring-cloud-alibaba/tree/master.svg?style=svg" alt="CircleCI" loading="lazy"></a><a href="https://search.maven.org/search?q=g:com.alibaba.cloud%20AND%20a:spring-cloud-alibaba-dependencies"><img src="https://img.shields.io/maven-central/v/com.alibaba.cloud/spring-cloud-alibaba-dependencies.svg?label=Maven%20Central" alt="Maven Central" loading="lazy"></a><a href="https://codecov.io/gh/alibaba/spring-cloud-alibaba"><img src="https://codecov.io/gh/alibaba/spring-cloud-alibaba/branch/master/graph/badge.svg" alt="Codecov" loading="lazy"></a><a href="https://www.apache.org/licenses/LICENSE-2.0.html"><img src="https://img.shields.io/badge/license-Apache%202-4EB1BA.svg" alt="License" loading="lazy"></a></p>
+<figure data-type="image" tabindex="2"><img src="https://circleci.com/gh/alibaba/spring-cloud-alibaba/tree/master.svg?style=svg" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="3"><img src="https://circleci.com/gh/alibaba/spring-cloud-alibaba/tree/master.svg?style=svg" alt="CircleCI" loading="lazy"></figure>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87">1. 前期准备</a></li>
+<li><a href="#2-%E9%85%8D%E7%BD%AE%E7%AE%A1%E7%90%86">2. 配置管理</a>
+<ul>
+<li><a href="#1-api-configservice-%E6%A0%B8%E5%BF%83%E7%B1%BB">1. API - ConfigService 核心类</a></li>
+<li><a href="#2-spring-%E5%90%AF%E5%8A%A8">2. Spring 启动</a></li>
+<li><a href="#3-spring-boot-%E5%90%AF%E5%8A%A8">3. Spring-Boot 启动</a>
+<ul>
+<li><a href="#1-%E4%BE%9D%E8%B5%96">1. 依赖</a></li>
+<li><a href="#2-%E5%90%AF%E5%8A%A8">2. 启动</a></li>
+</ul>
+</li>
+<li><a href="#4-configservice%E4%BD%BF%E7%94%A8">4. ConfigService使用</a>
+<ul>
+<li><a href="#1-%E6%B3%A8%E5%85%A5-configservice">1. 注入 ConfigService</a></li>
+<li><a href="#2-%E5%90%AF%E5%8A%A8%E7%9B%91%E5%90%AC">2. 启动监听</a></li>
+<li><a href="#3-%E6%B3%A8%E5%85%A5value">3. 注入Value</a></li>
+<li><a href="#4-%E5%8F%91%E5%B8%83%E9%85%8D%E7%BD%AE">4. 发布配置</a></li>
+<li><a href="#5-%E8%8E%B7%E5%8F%96%E7%8A%B6%E6%80%81">5. 获取状态</a></li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+</li>
+<li><a href="#5-%E9%80%9A%E8%BF%87api%E6%8E%A5%E5%8F%A3%E8%AE%BE%E7%BD%AE%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF">5. 通过API接口设置配置信息</a>
+<ul>
+<li><a href="#1-%E5%8F%91%E5%B8%83%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF">1. 发布配置信息</a></li>
+<li><a href="#2-%E8%8E%B7%E5%8F%96%E9%85%8D%E7%BD%AE%E4%BF%A1%E6%81%AF">2. 获取配置信息</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E6%9C%8D%E5%8A%A1%E5%8F%91%E7%8E%B0">3. 服务发现</a>
+<ul>
+<li><a href="#1-spring-boot-%E6%9C%8D%E5%8A%A1">1 Spring-Boot 服务</a></li>
+<li><a href="#2-spring-cloud-%E6%9C%8D%E5%8A%A1">2. Spring-Cloud 服务</a>
+<ul>
+<li><a href="#1-%E6%9C%8D%E5%8A%A1%E6%B6%88%E8%B4%B9%E6%96%B9">1. 服务消费方</a></li>
+<li><a href="#2-%E6%9C%8D%E5%8A%A1%E6%8F%90%E4%BE%9B%E6%96%B9">2. 服务提供方</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

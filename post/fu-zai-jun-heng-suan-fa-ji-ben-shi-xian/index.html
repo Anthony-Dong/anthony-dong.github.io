@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>负载均衡算法 - 基本实现 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/fu-zai-jun-heng-suan-fa-ji-ben-shi-xian/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>负载均衡算法 - 基本实现</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-02</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/fu-zai-jun-heng-suan-fa-ji-ben-shi-xian/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/h-oLWzEpzKL/"
+								class="tag">算法</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2254字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	最近在比赛一个项目 , 是给Dubbo写一个负载均衡接口 , 其实dubbo已经实现了下面四种, 所以他做的不是这个单面负载均衡, 需要做双向负载均衡 , 负载均衡的权重取决于服务端,所以有些时候我们不知道如何计算权重, 权重受到很多因素影响 ,所以就需要动态考虑了.</p>
+</blockquote>
+<blockquote>
+<p>​	Dubbo 提供了4种负载均衡实现，分别是基于权重随机算法的 RandomLoadBalance、基于最少活跃调用数算法的 LeastActiveLoadBalance、基于 hash 一致性的 ConsistentHashLoadBalance，以及基于加权轮询算法的 RoundRobinLoadBalance。</p>
+</blockquote>
+<h2 id="1-randomloadbalance">1. RandomLoadBalance</h2>
+<p>RandomLoadBalance 是<strong>加权随机算法</strong>的具体实现，它的算法思想很简单。假设我们有<strong>一组服务器 servers = [A, B, C]，他们对应的权重为 weights = [5, 3, 2]，权重总和为10</strong>。现在把这些权重值平铺在一维坐标值上，[0, 5) 区间属于服务器 A，[5, 8) 区间属于服务器 B，[8, 10) 区间属于服务器 C。接下来通过随机数生成器生成一个范围在 [0, 10) 之间的随机数，然后计算这个随机数会落到哪个区间上。比如数字3会落到服务器 A 对应的区间上，此时返回服务器 A 即可。权重越大的机器，在坐标轴上对应的区间范围就越大，因此随机数生成器生成的数字就会有更大的概率落到此区间内。只要随机数生成器产生的随机数分布性很好，在经过多次选择后，每个服务器被选中的次数比例接近其权重比例。比如，经过一万次选择后，服务器 A 被选中的次数大约为5000次，服务器 B 被选中的次数约为3000次，服务器 C 被选中的次数约为2000次。</p>
+<pre><code class="language-java">private &lt;T&gt; Invoker&lt;T&gt; doSelect(List&lt;Invoker&lt;T&gt;&gt; invokers, URL url, Invocation invocation) {
+
+    int len = invokers.size();
+    int[] arr = new int[len];
+    int count = 0;
+    int totalWight = 0;
+    for (Invoker&lt;T&gt; invoker : invokers) {
+        int wight = invoker.getUrl().getParameter(org.apache.dubbo.common.Constants.WEIGHT_KEY, 1);
+        arr[count++] = wight;
+        totalWight += wight;
+    }
+
+    // 随机偏移量
+    int offset = ThreadLocalRandom.current().nextInt(totalWight);
+
+    for (int i = 0; i &lt; arr.length; i++) {
+
+        // 比如 [2 , 3 , 5]  , offset=7 , 此时 offset-2=5 , offset-3=2 , offset-5=-3 ,此时当他为负数时,说明就在这个区间内, 我们是左闭右开[0,2) ,[2,5) ,[5,10)
+        offset -= arr[i];
+
+        // 此时已经小于0了, 说明在这个区间内
+        if (offset &lt; 0) {
+            // 返回就行了
+            return invokers.get(i);
+        }
+    }
+
+    return ... 
+}
+</code></pre>
+<h2 id="2-leastactiveloadbalance">2. LeastActiveLoadBalance</h2>
+<p>LeastActiveLoadBalance 翻译过来是<strong>最小活跃数负载均衡</strong>。活跃调用数越小，表明该服务提供者效率越高，单位时间内可处理更多的请求。此时应优先将请求分配给该服务提供者。在具体实现中，每个服务提供者对应一个活跃数 active。初始情况下，所有服务提供者活跃数均为0。每收到一个请求，活跃数加1，完成请求后则将活跃数减1。在服务运行一段时间后，性能好的服务提供者处理请求的速度更快，因此活跃数下降的也越快，此时这样的服务提供者能够优先获取到新的服务请求、这就是最小活跃数负载均衡算法的基本思想。除了最小活跃数，LeastActiveLoadBalance 在实现上还引入了权重值。所以准确的来说，LeastActiveLoadBalance 是基于加权最小活跃数算法实现的。举个例子说明一下，在一个服务提供者集群中，有两个性能优异的服务提供者。某一时刻它们的活跃数相同，此时 Dubbo 会根据它们的权重去分配请求，权重越大，获取到新请求的概率就越大。如果两个服务提供者权重相同，此时随机选择一个即可。</p>
+<blockquote>
+<p>​	这个需要我们去维护一个最小连接数的计算, 配合加权 ,当连接数相同的时候,选择加权分最高的 ...</p>
+</blockquote>
+<h2 id="3-consistenthashloadbalance">3. ConsistentHashLoadBalance</h2>
+<p>一致性 hash 算法由麻省理工学院的 Karger 及其合作者于1997年提出的，算法提出之初是用于大规模缓存系统的负载均衡。它的工作过程是这样的，首先根据 ip 或者其他的信息为缓存节点生成一个 hash，并将这个 hash 投射到 [0, 232 - 1] 的圆环上。当有查询或写入请求时，则为缓存项的 key 生成一个 hash 值。然后查找第一个大于或等于该 hash 值的缓存节点，并到这个节点中查询或写入缓存项。如果当前节点挂了，则在下一次查询或写入缓存时，为缓存项查找另一个大于其 hash 值的缓存节点即可。</p>
+<blockquote>
+<p>​	这个主要是靠hash算法 , 通过hash % 服务器数量 = 服务器索引</p>
+<p>​	Java中可以使用这个  :  <code>int identityHashCode = System.identityHashCode(invokers);</code>来获取</p>
+</blockquote>
+<h2 id="4-roundrobinloadbalance">4. RoundRobinLoadBalance</h2>
+<p><strong>加权轮询负载均衡的实现 RoundRobinLoadBalance</strong> , 我选择的就是这种</p>
+<p>这里从<strong>最简单的轮询</strong>开始讲起，所谓轮询是指将请求轮流分配给每台服务器。举个例子，我们有三台服务器 A、B、C。我们将第一个请求分配给服务器 A，第二个请求分配给服务器 B，第三个请求分配给服务器 C，第四个请求再次分配给服务器 A。这个过程就叫做轮询。轮询是一种无状态负载均衡算法，实现简单，适用于每台服务器性能相近的场景下。但现实情况下，我们并不能保证每台服务器性能均相近。如果我们将等量的请求分配给性能较差的服务器，这显然是不合理的。</p>
+<p>因此，这个时候我们需要对<strong>轮询过程进行加权</strong>，以调控每台服务器的负载。经过加权后，每台服务器能够得到的请求数比例，接近或等于他们的权重比。比如服务器 A、B、C 权重比为 5:2:1。那么在8次请求中，服务器 A 将收到其中的5次请求，服务器 B 会收到其中的2次请求，服务器 C 则收到其中的1次请求。</p>
+<p>下面有个表格 , 默认权重是 [5,1,1]</p>
+<table>
+<thead>
+<tr>
+<th>请求编号</th>
+<th>currentWeight 数组</th>
+<th>选择结果</th>
+<th>减去权重总和后的 currentWeight 数组</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>[5, 1, 1]</td>
+<td>A</td>
+<td>[-2, 1, 1]</td>
+</tr>
+<tr>
+<td>2</td>
+<td>[3, 2, 2]</td>
+<td>A</td>
+<td>[-4, 2, 2]</td>
+</tr>
+<tr>
+<td>3</td>
+<td>[1, 3, 3]</td>
+<td>B</td>
+<td>[1, -4, 3]</td>
+</tr>
+<tr>
+<td>4</td>
+<td>[6, -3, 4]</td>
+<td>A</td>
+<td>[-1, -3, 4]</td>
+</tr>
+<tr>
+<td>5</td>
+<td>[4, -2, 5]</td>
+<td>C</td>
+<td>[4, -2, -2]</td>
+</tr>
+<tr>
+<td>6</td>
+<td>[9, -1, -1]</td>
+<td>A</td>
+<td>[2, -1, -1]</td>
+</tr>
+<tr>
+<td>7</td>
+<td>[7, 0, 0]</td>
+<td>A</td>
+<td>[0, 0, 0]</td>
+</tr>
+</tbody>
+</table>
+<p>此时 7 次中A节点被选中的次数是 5 , B 是1 ,C是1 ,所以符合我们的需求</p>
+<p>计算方法如下 ,  首先有三个变量 , 记录了 currentWeight , effectiveWeight , totalWeight</p>
+<pre><code class="language-java"> private class Node {
+        private int currentWeight; // 当前权重
+        private int effectiveWeight; // 有效权重,初始化的时候等于当前权重
+        private int totalWeight; // 总权重
+ }     
+</code></pre>
+<p>我们先看初始化 , 初始化时 ,计算权重</p>
+<pre><code class="language-java">比如我们知道权重了 A : 5 , B : 1 , C : 1
+</code></pre>
+<p>初始化节点</p>
+<pre><code class="language-java">A : new Node(5, 5, 7)
+B : new Node(1, 1, 7)
+C : new Node(1, 1, 7)
+    
+此时currentWeight的和是 : 7    
+</code></pre>
+<p>当第一次的时候 , A节点权重最大 ,此时 5-7=-2, A节点变成了 Node(-2, 5, 7)</p>
+<pre><code class="language-java">A : new Node(-2, 5, 7)
+B : new Node(1, 1, 7)
+C : new Node(1, 1, 7)
+
+此时currentWeight的和是 : 0
+</code></pre>
+<p>然后重新回归, 回归需要currentWeight= currentWeight+effectiveWeight</p>
+<pre><code>A : new Node(3, 5, 7)
+B : new Node(2, 1, 7)
+C : new Node(2, 1, 7)
+
+此时currentWeight的和是 : 7 // 所以又回来了 .. .. 
+</code></pre>
+<p><strong>怎样做呢 ?</strong></p>
+<p>此时我们用一个 <code>PriorityQueue&lt;Pair&lt;String, Node&gt;&gt;</code> 维护所有节点的信息 , 同时使用 <code>Pair&lt;String, Node&gt;</code>维护单个节点</p>
+<pre><code class="language-java">1. 初始化队列
+PriorityBlockingQueue&lt;Pair&lt;String, Node&gt;&gt; weightQueue = new PriorityBlockingQueue&lt;&gt;(3, (o1, o2) -&gt; o2.getValue().getCurrentWeight() - o1.getValue().getCurrentWeight());
+
+
+2. 遍历放入权重
+weightQueue.add(new Pair&lt;&gt;(key, new Node(currentWeight, effectiveWeight, totalWeight))); 
+
+3. 当放入以后, 此时就可以拿到一个当前权重最大的节点 , 如果不想使用优先队列, 可以自己实现一个大顶堆 ,很简单的. 
+    
+// 获取当前节点权重最大的 ,     
+Pair&lt;String, Node&gt; hPair = weightQueue.take(); 
+// 此时hPair节点的值应当是 5 - 7 = -2 
+int afterCurrentWeight = value.getCurrentWeight() - value.getTotalWeight();
+// 设置值
+hNode.setCurrentWeight(afterCurrentWeight);
+
+// 遍历
+for (Pair&lt;String, Node&gt; stringNodePair : weightQueue) {
+    //获取节点 
+    Node node = stringNodePair.getValue();
+    // 剩余每个节点值 + 有效值 
+    int after = node.getCurrentWeight() + node.getEffectiveWeight();
+    
+    // 设置节点值 
+    node.setCurrentWeight(after);
+}
+// 由于我们拿出来的节点还没有 重新计算, 还要计算
+hNode.setCurrentWeight(value.getCurrentWeight() + value.getEffectiveWeight());
+// 重新放入节点. ... ,重新排序
+weightQueue.add(hPair);
+</code></pre>
+<p>其实自己维护的话可以进行 heapfy的 , 我们只能依赖JDK提供的数据结构进行的这种取巧方式</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-randomloadbalance">1. RandomLoadBalance</a></li>
+<li><a href="#2-leastactiveloadbalance">2. LeastActiveLoadBalance</a></li>
+<li><a href="#3-consistenthashloadbalance">3. ConsistentHashLoadBalance</a></li>
+<li><a href="#4-roundrobinloadbalance">4. RoundRobinLoadBalance</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

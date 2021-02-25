@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Apollo-Client 设计架构和Spring集成原理解析 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/apollo-client-she-ji-jia-gou-jie-xi-he-ying-yong/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Apollo-Client 设计架构和Spring集成原理解析</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-08</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/apollo-client-she-ji-jia-gou-jie-xi-he-ying-yong/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/t2J0gSv9kxo/"
+								class="tag">Apollo</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2227字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-apollo官方介绍">1. Apollo官方介绍</h2>
+<h3 id="1-基本架构">1. 基本架构</h3>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-08/b10e6287-c239-453c-9ce8-b6937848ed49.png" alt="" loading="lazy"></figure>
+<p>上图简要描述了Apollo客户端的实现原理：</p>
+<ol>
+<li>客户端和服务端保持了一个长连接，从而能第一时间获得配置更新的推送。（通过Http Long Polling实现）</li>
+<li>客户端还会定时从Apollo配置中心服务端拉取应用的最新配置。</li>
+<li>客户端从Apollo配置中心服务端获取到应用的最新配置后，会保存在内存中</li>
+<li>客户端会把从服务端获取到的配置在本地文件系统缓存一份，以免服务器宕机</li>
+<li>应用程序可以从Apollo客户端获取最新的配置、订阅配置更新通知</li>
+</ol>
+<h3 id="2和spring集成的原理">2.和Spring集成的原理</h3>
+<p>Spring从3.1版本开始增加了<code>ConfigurableEnvironment</code>和<code>PropertySource</code>：</p>
+<ul>
+<li>ConfigurableEnvironment
+<ul>
+<li>Spring的ApplicationContext会包含一个Environment（实现ConfigurableEnvironment接口），包含</li>
+</ul>
+</li>
+<li>PropertySource
+<ul>
+<li>属性源，可以理解为我们的application.properties</li>
+</ul>
+</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-08/11e976ca-f750-4889-93f1-5e19ae4194ed.png" alt="" loading="lazy"></figure>
+<p>需要注意的是，PropertySource之间是有优先级顺序的，如果有一个Key在多个property source中都存在，那么在前面的property source优先。</p>
+<p>所以对上图的例子：</p>
+<ul>
+<li>env.getProperty(“key1”) -&gt; value1</li>
+<li><strong>env.getProperty(“key2”) -&gt; value2</strong></li>
+<li>env.getProperty(“key3”) -&gt; value4</li>
+</ul>
+<p>在理解了上述原理后，Apollo和Spring/Spring Boot集成的手段就呼之欲出了：在应用启动阶段，Apollo从远端获取配置，然后组装成PropertySource并插入到第一个即可，如下图所示：</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-08/d093f6f8-dc93-4e74-9f75-071c8579bd97.png" alt="" loading="lazy"></figure>
+<p><strong>知道设计思路了我们就开始吧</strong></p>
+<h2 id="2-apollo-client-源码">2. Apollo-Client 源码</h2>
+<p>这里介意看看我的那一篇文章  , <a href="https://github.com/Anthony-Dong/spring-example/tree/master/Spring-Boot%E6%95%99%E7%A8%8B/spring-boot-di">本篇自己实现的源码链接</a> , 可以说还是不错的 , 虽然写的不咋好</p>
+<h3 id="项目图">项目图</h3>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-08/612a1d81-7400-470d-bbd1-1c3d850d9e52.png" alt="" loading="lazy"></figure>
+<p>这个是一个大题的目录</p>
+<h3 id="整个设计思路">整个设计思路</h3>
+<p>这个是我绘制的希望能看懂</p>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-08/f049026b-de86-4dde-a189-4a36ea1caf5f.jpg" alt="" loading="lazy"></figure>
+<h3 id="1-apolloapplicationcontextinitializer">1. ApolloApplicationContextInitializer</h3>
+<pre><code class="language-java">/**
+  Initialize apollo system properties and inject the Apollo config in Spring Boot bootstrap phase Configuration example:
+  
+ app.id = 100004458
+ apollo.bootstrap.enabled = true
+ apollo.bootstrap.namespaces = application,FX.apollo
+*/
+
+public class ApolloApplicationContextInitializer implements
+    ApplicationContextInitializer&lt;ConfigurableApplicationContext&gt; , EnvironmentPostProcessor, Ordered {
+    // 在SPRING 启动的时候就加载了 ,最早加载的
+     public void initialize(ConfigurableApplicationContext context) {
+         ConfigurableEnvironment environment = context.getEnvironment();
+         // 初始化环境
+         initialize(environment);
+     }
+    
+    // 为了在Spring加载日志系统阶段之前加载Apollo配置
+      public void postProcessEnvironment(ConfigurableEnvironment configurableEnvironment, SpringApplication springApplication) {
+      // 初始化环境
+       initialize(configurableEnvironment);
+  }
+}
+</code></pre>
+<p>它启动的目的是 :</p>
+<p>1 .  初始化apollo系统属性，并在Spring Boot引导阶段注入apollo配置</p>
+<p>2  . 为了 第一时间加载Config端远程的配置文件<code>Config config = ConfigService.getConfig(namespace);</code>这个类有一个方法可以获取,在初始化的时候执行的 , 用于 application.properties 里面写的那些namespace都加载进去, 用于启动Apollo配置</p>
+<h3 id="2apolloautoconfiguration">2.ApolloAutoConfiguration</h3>
+<pre><code class="language-java">@Configuration
+// 条件注入 
+@ConditionalOnProperty(PropertySourcesConstants.APOLLO_BOOTSTRAP_ENABLED)
+@ConditionalOnMissingBean(PropertySourcesProcessor.class)
+public class ApolloAutoConfiguration {
+
+  @Bean
+  public ConfigPropertySourcesProcessor configPropertySourcesProcessor() {
+      // 主要是这个初始化 ConfigPropertySourcesProcessor
+    return new ConfigPropertySourcesProcessor();
+  }
+}
+
+</code></pre>
+<p><code>ApolloAutoConfiguration</code>他的主要目的就是为了初始化 <code>ConfigPropertySourcesProcessor</code></p>
+<h3 id="3-configpropertysourcesprocessor">3. ConfigPropertySourcesProcessor</h3>
+<pre><code class="language-java">public class ConfigPropertySourcesProcessor extends PropertySourcesProcessor
+    implements BeanDefinitionRegistryPostProcessor {
+
+  private ConfigPropertySourcesProcessorHelper helper = ServiceBootstrap.loadPrimary(ConfigPropertySourcesProcessorHelper.class);
+
+  @Override
+  public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+  // 这里的目的是为了 
+    helper.postProcessBeanDefinitionRegistry(registry);
+  }
+}
+</code></pre>
+<p><code>ConfigPropertySourcesProcessor</code> 他的目的有两个 :</p>
+<p>1 .  就是初始化 PropertySourcesProcessor</p>
+<p>2 .  就是初始化 Processor ,Apollo的一堆监听器处理器<code>ApolloProcessor</code></p>
+<h3 id="4-propertysourcesprocessor">4. PropertySourcesProcessor</h3>
+<p>说到这个我们必须要说一下 : <code>@EnableApolloConfig</code> , 先去看看它去 ,看完几乎就懂了 ,</p>
+<pre><code class="language-java">// Apollo Property Sources processor for Spring Annotation Based Application 
+// 文档上说他主要是为了处理基于spring的注解
+public class PropertySourcesProcessor implements BeanFactoryPostProcessor, EnvironmentAware, PriorityOrdered {
+    
+   // 处理逻辑和ApolloApplicationContextInitializer 它一目一样
+}
+</code></pre>
+<p>所以 看起来真的很简单</p>
+<h3 id="5-enableapolloconfig">5. @EnableApolloConfig</h3>
+<pre><code class="language-java">@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+@Import(ApolloConfigRegistrar.class)
+public @interface EnableApolloConfig {
+
+  String[] value() default {ConfigConsts.NAMESPACE_APPLICATION};
+
+  int order() default Ordered.LOWEST_PRECEDENCE;
+}
+</code></pre>
+<p>它呢 , 引入了一个 <code>ApolloConfigRegistrar</code> 主要目的就是那<code>String[] value()</code> , 其实就是引入多个namespace , 这个很人性化 , 其实就是让注解导入 , 脱离配置文件(例如 application.properties) ,</p>
+<h3 id="6-apolloconfigregistrar">6. ApolloConfigRegistrar</h3>
+<pre><code class="language-java">public class ApolloConfigRegistrar implements ImportBeanDefinitionRegistrar {
+
+  // SPI 使用的是
+  private ApolloConfigRegistrarHelper helper = ServiceBootstrap.loadPrimary(ApolloConfigRegistrarHelper.class);
+
+  @Override
+  public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+    helper.registerBeanDefinitions(importingClassMetadata, registry);
+  }
+}
+
+# registerBeanDefinitions() 方法中 : 
+    AnnotationAttributes attributes = AnnotationAttributes     .fromMap(importingClassMetadata.getAnnotationAttributes(EnableApolloConfig.class.getName()));
+    String[] namespaces = attributes.getStringArray(&quot;value&quot;);
+// 关键在这里 
+PropertySourcesProcessor.addNamespaces(Lists.newArrayList(namespaces), order);
+</code></pre>
+<p>这个类目的也是两个 :</p>
+<p>1 .  将<code>@EnableApolloConfig</code>注解上写的 <code>namespace</code>注入到 <code>PropertySourcesProcessor</code>中</p>
+<p>2 . 也是初始化一堆 <code>ApolloProcessor</code> ,他也是做了一些判断 , 我也不懂他为啥重复做同样的事情 ,可能考虑到加载时机的问题 .</p>
+<h2 id="3-简单使用">3. 简单使用</h2>
+<p>我这里直接复制我写的代码了  , 我感觉注释很详细</p>
+<h3 id="1-启动时为bean设置属性">1. 启动时为bean设置属性</h3>
+<pre><code class="language-java">/**
+ * {@link BeanFactoryPostProcessor} 可以获取  BeanFactory 对象 操作元信息 {@link BeanDefinition} , 在 bean 初始化之前操作的
+ *
+ * {@link EnvironmentAware} 可以获取环境上下文 , 其实就是我们的配置文件的信息
+ *
+ * {@link PriorityOrdered}  设置Bean的加载顺序 , 我们设置的是最高优先级
+ * @date:2019/11/6 16:26
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+public class MyBeanFactoryPostProcessor implements EnvironmentAware, PriorityOrdered, BeanFactoryPostProcessor {
+
+    private ConfigurableEnvironment environment;
+
+    // source name
+    private final String proName = &quot;AnthonyPropertySources&quot;;
+
+
+    private final Map&lt;String, Object&gt; map = new ConcurrentHashMap&lt;&gt;();
+
+
+    public Map&lt;String, Object&gt; getMap() {
+        return map;
+    }
+
+    private static final Multimap&lt;Integer, String&gt; NAMESPACE_NAMES = LinkedHashMultimap.create();
+
+
+    public static boolean addNamespaces(Collection&lt;String&gt; namespaces, int order) {
+
+        return NAMESPACE_NAMES.putAll(order,namespaces);
+    }
+
+
+    /**
+     * Modify the application context's internal bean factory after its standard
+     * initialization. All bean definitions will have been loaded, but no beans
+     * will have been instantiated yet. This allows for overriding or adding
+     * properties even to eager-initializing beans.
+     */
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+
+        Object bean = beanFactory.getBean(&quot;noRegisterService&quot;);
+
+        if (bean instanceof NoRegisterService) {
+            NoRegisterService noRegisterService = (NoRegisterService) bean;
+            noRegisterService.setValue(&quot;hhhhhhhhhhhhhhh&quot;);
+        }
+
+
+        System.out.println(&quot;==========PropertySourcesProcessor    postProcessBeanFactory=============&quot;);
+
+        Collection&lt;String&gt; strings = NAMESPACE_NAMES.get(Ordered.LOWEST_PRECEDENCE);
+
+        // namespace 输出
+        strings.forEach(e-&gt;{
+//            System.out.println(&quot;namespace : &quot;+e);
+        });
+
+        // 获取pro
+        getPro(beanFactory);
+
+        // 设置配置属性 , 可以直接设置 对象的属性  , 不依靠spring
+        setPro(beanFactory);
+
+        
+        // 初始化 bean , 用存在的source 初始化对象
+        initWithHivingSource();
+
+
+        // 可以自己创建一个  source  , 这里有问题, 好多source不可以使用 ,会出现一堆问题
+        initWittCustomSource();
+
+
+        // 判断类型
+        /**
+         * {@link DefaultListableBeanFactory}  存储了所有的元信息  spring的大家族所有存储的信息 都在里面
+         */
+        if (beanFactory instanceof DefaultListableBeanFactory) {
+            System.out.println(&quot;-----YES , is  DefaultListableBeanFactory--------&quot;);
+        }
+
+    }
+
+
+    /**
+     * 初始化
+     * {@link OriginTrackedMapPropertySource} 是  application.properties 的默认加载配置 ,它是最低优先级 ,
+     *
+     * 其实我们可以在第一个设置 ,可惜是私有的 : {@link ConfigurationPropertySourcesPropertySource} 它是最高优先级 , {name='configurationProperties'} ,但是人家是私有的
+     *
+     *  {@link MapPropertySource}   {name='systemProperties'}
+     *
+     * // spring - boot
+     *  OriginTrackedMapPropertySource {name='applicationConfig: [classpath:/application.properties]'}
+     *
+     *  // spring -cloud
+     *  OriginTrackedMapPropertySource {name='applicationConfig: [classpath:/bootstrap.properties]'}
+     */
+    void initWithHivingSource(){
+
+        System.out.println(&quot;--------initWithHivingSource-----------&quot;);
+
+        PropertySource&lt;?&gt; applicationConfig = environment.getPropertySources().get(&quot;applicationConfig: [classpath:/application.properties]&quot;);
+
+/*
+        // 这个优先级高
+        PropertySource&lt;?&gt; systemProperties = environment.getPropertySources().get(&quot;systemProperties&quot;);
+        if (systemProperties instanceof MapPropertySource) {
+            MapPropertySource propertySource = (MapPropertySource) systemProperties;
+            propertySource.getSource().put(&quot;test.value&quot;, &quot;我又改了&quot;);
+        }*/
+
+
+        // 这个优先级低
+        if (applicationConfig instanceof OriginTrackedMapPropertySource) {
+            OriginTrackedMapPropertySource source = (OriginTrackedMapPropertySource) applicationConfig;
+            source.getSource().put(&quot;test.value&quot;, &quot;333333333333&quot;);
+        }
+    }
+
+
+    /**
+     * 定义自己的 source , 这里很有点坑 , {@link PropertySource}不能随意的定义 ,
+     * 我这里使用的是 {@link MapPropertySource} 可以使用, 我使用 Apollo开发的时候,
+     * 发现 {@link CompositePropertySource} 不能使用
+     */
+    private void initWittCustomSource() {
+
+        System.out.println(&quot;----------initWittCustomSource------------&quot;);
+
+        // 存在我们就不操作了
+        if (environment.getPropertySources().contains(proName)) {
+            //already initialized
+            return ;
+        }
+
+
+        /**
+         * 创建一个   {@link MapPropertySource}  这个可以么问题 ,但是其他的却有问题 .
+         * CompositePropertySource
+         */
+        // name 是这个 map的名字 ---- , key 是这个map的 属性 , 跟name 么联系 ,
+        // 比如 test.key=key  就是这么用 , 不需要加 proName.test.key=key
+
+        MapPropertySource propertySource = new MapPropertySource(proName,map);
+
+        map.put(&quot;test.value&quot;, &quot;我比你application.properties优先级高&quot;);
+        map.put(&quot;test.key&quot;, &quot;key&quot;);
+
+        map.put(&quot;server.port&quot;, 8098);
+
+
+        // 设置环境 , 可以随意设置
+        // environment.getPropertySources().addBefore(&quot;applicationConfig: [classpath:/application.properties]&quot;, propertySource);
+
+        // 设置环境 , she置在第一位
+        environment.getPropertySources().addFirst(propertySource);
+    }
+
+
+    /**
+     * 获取 bean 的元信息
+     * {@link BeanDefinition}
+     * @param beanFactory
+     */
+    private void getBeanDefinition(ConfigurableListableBeanFactory beanFactory) {
+        // 获取名字
+        String[] definitionNames = beanFactory.getBeanDefinitionNames();
+
+        for (String definitionName : definitionNames) {
+            // 通过名字获取 definition
+            BeanDefinition definition = beanFactory.getBeanDefinition(definitionName);
+        }
+    }
+
+
+
+
+    /**
+     * 过滤 bean 的字段
+     * @param beanFactory
+     */
+    private void filterBean(ConfigurableListableBeanFactory beanFactory) {
+        String[] beanNames = beanFactory.getBeanDefinitionNames();
+        for (String beanName : beanNames) {
+            BeanDefinition definition = beanFactory.getBeanDefinition(beanName);
+            StringValueResolver valueResolver = new StringValueResolver() {
+                @Override
+                public String resolveStringValue(String strVal) {
+                    return strVal;
+                }
+            };
+            BeanDefinitionVisitor visitor = new BeanDefinitionVisitor(valueResolver);
+            // 处理 bean 的配置信息
+            visitor.visitBeanDefinition(definition);
+        }
+    }
+
+
+
+    /**
+     * 设置属性 , 已知 bean 才用
+     * @param beanFactory
+     */
+    private void setPro(ConfigurableListableBeanFactory beanFactory) {
+
+        AbstractBeanDefinition abstractBeanDefinition = (AbstractBeanDefinition) beanFactory.getBeanDefinition(&quot;calculateService&quot;);
+
+        System.out.println(&quot;BeanFactoryPostProcessor  : setPro&quot;);
+
+        MutablePropertyValues pv =  abstractBeanDefinition.getPropertyValues();
+
+        pv.addPropertyValue(&quot;desc&quot;, &quot;Desc is changed from bean factory post processor&quot;);
+
+
+        abstractBeanDefinition.setScope(BeanDefinition.SCOPE_SINGLETON);
+    }
+
+
+
+    /**
+     * 获取属性 , 已知 bean 才用
+     * @param beanFactory
+     */
+    private void getPro(ConfigurableListableBeanFactory beanFactory) {
+        BeanDefinition beanDefinition = beanFactory.getBeanDefinition(&quot;calculateService&quot;);
+        System.out.println(&quot;BeanFactoryPostProcessor  : getPro&quot;);
+
+
+        MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
+        PropertyValue[] propertyValues1 = propertyValues.getPropertyValues();
+
+        for (PropertyValue propertyValue : propertyValues1) {
+           //
+        }
+    }
+
+
+    /**
+     * 设置环境属性   你要知道 spring由于是 单例对象 , 你的私有成员变量的 改变也会改变源对象的.
+     * @param environment
+     */
+    @Override
+    public void setEnvironment(Environment environment) {
+        System.out.println(&quot;==========PropertySourcesProcessor    setEnvironment=============&quot;);
+
+        if (environment instanceof ConfigurableEnvironment) {
+            this.environment = (ConfigurableEnvironment) environment;
+        }
+    }
+
+
+    /**
+     * 设置优先级 , 不管最高最低都会加载的
+     * @return
+     */
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
+    }
+
+}
+
+</code></pre>
+<h3 id="2-启动后修改bean">2. 启动后修改bean</h3>
+<pre><code class="language-java">@Component
+public class MyBeanPostProcessor implements BeanPostProcessor {
+
+    // 实例化、依赖注入完毕，在调用显示的初始化之前完成一些定制的初始化任务
+    @Override
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+
+        if (beanName.equals(&quot;calculateService&quot;)) {
+            if (bean instanceof CalculateService) {
+                System.out.println(&quot;==========MyBeanPostProcessor    postProcessBeforeInitialization=============&quot;);
+                CalculateService bean1 = (CalculateService) bean;
+                bean1.setDesc(&quot;MyBeanPostProcessor 设置的属性&quot;);
+            }
+        }
+        return bean;
+    }
+
+
+    //实例化、依赖注入、初始化完毕时执行 
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+
+        if (beanName.equals(&quot;calculateService&quot;)) {
+            if (bean instanceof CalculateService) {
+                System.out.println(&quot;==========MyBeanPostProcessor    postProcessAfterInitialization=============&quot;);
+            }
+        }
+        return bean;
+    }
+}
+
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-apollo%E5%AE%98%E6%96%B9%E4%BB%8B%E7%BB%8D">1. Apollo官方介绍</a>
+<ul>
+<li><a href="#1-%E5%9F%BA%E6%9C%AC%E6%9E%B6%E6%9E%84">1. 基本架构</a></li>
+<li><a href="#2%E5%92%8Cspring%E9%9B%86%E6%88%90%E7%9A%84%E5%8E%9F%E7%90%86">2.和Spring集成的原理</a></li>
+</ul>
+</li>
+<li><a href="#2-apollo-client-%E6%BA%90%E7%A0%81">2. Apollo-Client 源码</a>
+<ul>
+<li><a href="#%E9%A1%B9%E7%9B%AE%E5%9B%BE">项目图</a></li>
+<li><a href="#%E6%95%B4%E4%B8%AA%E8%AE%BE%E8%AE%A1%E6%80%9D%E8%B7%AF">整个设计思路</a></li>
+<li><a href="#1-apolloapplicationcontextinitializer">1. ApolloApplicationContextInitializer</a></li>
+<li><a href="#2apolloautoconfiguration">2.ApolloAutoConfiguration</a></li>
+<li><a href="#3-configpropertysourcesprocessor">3. ConfigPropertySourcesProcessor</a></li>
+<li><a href="#4-propertysourcesprocessor">4. PropertySourcesProcessor</a></li>
+<li><a href="#5-enableapolloconfig">5. @EnableApolloConfig</a></li>
+<li><a href="#6-apolloconfigregistrar">6. ApolloConfigRegistrar</a></li>
+</ul>
+</li>
+<li><a href="#3-%E7%AE%80%E5%8D%95%E4%BD%BF%E7%94%A8">3. 简单使用</a>
+<ul>
+<li><a href="#1-%E5%90%AF%E5%8A%A8%E6%97%B6%E4%B8%BAbean%E8%AE%BE%E7%BD%AE%E5%B1%9E%E6%80%A7">1. 启动时为bean设置属性</a></li>
+<li><a href="#2-%E5%90%AF%E5%8A%A8%E5%90%8E%E4%BF%AE%E6%94%B9bean">2. 启动后修改bean</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

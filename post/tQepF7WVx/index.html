@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>APM系统 - SkyWalking | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/tQepF7WVx/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>APM系统 - SkyWalking</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-04-05</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/tQepF7WVx/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/dGVkcv6SSP/"
+								class="tag">SkyWalking</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/qhhgo9yWrj/"
+								class="tag">链路追踪</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1052字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>官方地址就是在这里 : https://github.com/apache/skywalking</p>
+<p>官方给的设计图在这里 :   这个就是整体的设计架构图. <img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-40-44/624299cd-c18e-4153-9f2d-64e9c53be449.jpg" alt="" loading="lazy"></p>
+<h2 id="1-安装">1. 安装</h2>
+<p>由于我小白的原因, 其中skywalking 配置文件先介绍一下吧.</p>
+<pre><code class="language-java">[admin@hadoop1 apache-skywalking-apm-bin]$ ll
+total 96
+drwxrwxr-x 8 admin admin   136 Nov 12 21:36 agent
+drwxrwxr-x 2 admin admin  4096 Apr  4 03:20 bin
+drwxrwxr-x 2 admin admin  4096 Apr  4 03:21 config
+-rwxrwxr-x 1 admin admin 28903 Nov 12 21:26 LICENSE
+drwxrwxr-x 3 admin admin  4096 Apr  4 03:21 licenses
+drwxrwxr-x 2 admin admin    94 Apr  4 03:23 logs
+drwxrwxr-x 2 admin admin    75 Apr  4 03:24 mesh-buffer
+-rwxrwxr-x 1 admin admin 31850 Nov 12 21:26 NOTICE
+drwxrwxr-x 2 admin admin 12288 Nov 12 21:43 oap-libs
+-rw-rw-r-- 1 admin admin  1978 Nov 12 21:26 README.txt
+drwxrwxr-x 3 admin admin    84 Apr  4 03:24 trace-buffer
+drwxrwxr-x 2 admin admin    51 Apr  4 03:20 webapp
+</code></pre>
+<p>这个是我已经启动过一次的目录.</p>
+<p>我们只需要关注 :</p>
+<p><code>bin</code>  目录, 就是启动脚本了.</p>
+<p><code>agent</code> 目录是Skywalking中的可以说是叫做探针的玩意, agent去实现客户端的探针.  对于客户端来说, 主要关注这里.</p>
+<p><code>config</code> 目录, 主要是关于skywalking项目的配置  , 比如你的数据源存放在哪里, 默认是在H2 .</p>
+<p><code>webapp</code> 目录 , 就是一个springboot项目, 提供一个web-ui的功能.  可以通过配置告诉你web的端口号, 默认是8080 ,</p>
+<p>基本就是这些了.</p>
+<p>其中注意的是 :  比如启动会启动俩服务, 其实就是为了方便罢了. ,web 和 服务是分开的.</p>
+<pre><code class="language-java">[admin@hadoop1 bin]$ ./startup.sh 
+SkyWalking OAP started successfully!
+SkyWalking Web Application started successfully
+</code></pre>
+<p>我们通过 net 命令, 发现启动了三个监听的端口,.  然后jps 发下是俩引用,</p>
+<pre><code class="language-java">[admin@hadoop1 bin]$ sudo netstat -nlp
+Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name    
+tcp6       0      0 :::12800                :::*                    LISTEN      2234/java           
+tcp6       0      0 :::8080                 :::*                    LISTEN      2241/java           
+tcp6       0      0 :::22                   :::*                    LISTEN      1135/sshd   
+
+tcp6       0      0 :::11800                :::*                    LISTEN      2234/java 
+
+[admin@hadoop1 bin]$ jps
+2241 skywalking-webapp.jar
+2325 Jps
+2234 OAPServerStartUp
+</code></pre>
+<p>那什么是 <code>OAP</code> 呢, 全程是 <strong>观测分析平台(Observability Analysis Platform, OAP)</strong>  , 这里有个文档介绍 : https://skyapm.github.io/document-cn-translation-of-skywalking/zh/6.2.0/concepts-and-designs/backend-overview.html</p>
+<p>大致就是这些内容了, .</p>
+<h2 id="2-java-web-应用-快速开始">2. Java-Web 应用, 快速开始</h2>
+<p>那我们快速开始吧 .</p>
+<p>我这里是一个  jpa + springboot的项目 .  由于我的SkyWalking服务端部署在远程, 此时需要我们整一些配置文件了.</p>
+<p>启动就是 加一个-javaagent:sky.jar 就可以了.  主要是利用RPC接口进行操作的, 性能很高 .</p>
+<p>其中 <code>restPort</code>是12800 , <code>gRPCPort</code> 是11800 端口.  每一个服务必须制定一个服务名称.</p>
+<pre><code class="language-java">java -javaagent:/apache-skywalking-apm-incubating/agent/skywalking-agent.jar 
+     -Dskywalking.agent.service_name=trace-api 
+     -Dskywalking.collector.backend_service=localhost:11800 
+     -jar xxxx.jar
+</code></pre>
+<p>使用起来很简单,  页面有吞吐量 ,  百分比的相应时间哇, 那个P50 , P99都是百分比的意思. 还有显示你的平均吞吐量</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-40-44/67afa269-2cac-44ae-8885-1e5aa0aafce9.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-40-44/c8c933aa-3eda-4330-997d-661e49083939.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>基本就是这些了.</p>
+<p>服务 - &gt; 对应着你的服务名称 , 一个服务下可以有多个实例. 多个端点.</p>
+<p>端点 -&gt; 对应着你的HTTP请求</p>
+<p>实例 -&gt;  对应着你服务多少台机器.</p>
+<p>Service 的含义就是服务 .</p>
+<p>Database 其实你Service中使用了数据库他就会帮你记录这个database. 包含查询的日志等等.</p>
+<p>这个是链路图 .</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-40-44/18a132c6-1069-4540-a78d-140fd014b692.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>更多详细的可以自行百度.</p>
+<p>像客户端配置 ,  其实最好每一个客户端都配置一个 agent 配置. 这样使用起来也很方便. 就是把agent包的拷贝一下. 客户端都.  这个是官方给的agent的目录 , 最好每一个服务都拷贝一份 agent文件.</p>
+<pre><code class="language-java">+-- agent
+    +-- activations
+         apm-toolkit-log4j-1.x-activation.jar
+         apm-toolkit-log4j-2.x-activation.jar
+         apm-toolkit-logback-1.x-activation.jar
+         ...
+    +-- config
+         agent.config  
+    +-- plugins
+         apm-dubbo-plugin.jar
+         apm-feign-default-http-9.x.jar
+         apm-httpClient-4.x-plugin.jar
+         .....
+    +-- optional-plugins
+         apm-gson-2.x-plugin.jar
+         .....
+    +-- bootstrap-plugins
+         jdk-http-plugin.jar
+         .....
+    +-- logs
+    skywalking-agent.jar
+</code></pre>
+<p>基本就是这两个 .</p>
+<pre><code class="language-properties"># The service name in UI , 这个是你当前的服务ID ,这个是唯一值.默认走的是SW_AGENT_NAME
+agent.service_name=${SW_AGENT_NAME:spring-boot}
+
+# 这就是你trace的IP地址了.
+collector.backend_service=${SW_AGENT_COLLECTOR_BACKEND_SERVICES:0.0.0.0:11800}
+</code></pre>
+<p>更多属性介绍 : https://github.com/apache/skywalking/blob/v6.6.0/docs/en/setup/service-agent/java-agent/README.md</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85">1. 安装</a></li>
+<li><a href="#2-java-web-%E5%BA%94%E7%94%A8-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">2. Java-Web 应用, 快速开始</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

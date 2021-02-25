@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java8  -  Lambda的魅力以及其他Syntactic Sugar的讲解 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/java8-yu-fa-tang/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java8  -  Lambda的魅力以及其他Syntactic Sugar的讲解</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-28</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/java8-yu-fa-tang/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1446字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h1 id="java-8-语法糖syntactic-sugar">java 8 语法糖(Syntactic sugar)</h1>
+<blockquote>
+<p>​	函数式编程的思想, 近几年也别火热, 因为他的语法让人吃惊 , 可以以最少的代码量完成同样的任务 , 此时作为老牌语言Java也不会放弃 , 在JDK1.7的时候引入的 <code>invokedynamic</code> 这个jvm指令就是为了JDK1.8的<code>lambda</code>打基础了 ,</p>
+<p>​	对于函数式编程大家其实可以以面向对象编程思想来思考, 函数是什么 ? 函数和方法的区别在哪 ? 如果你明白了前面俩问题, 其实对于Java语言这种面向对象语言的函数式编程的实现就迎刃而解了  ,  如果你想不明白继续看下面的 .</p>
+<p>​	函数和方法这俩概念和定义是不一样的, 因为函数是一个对象 , 而方法是对象的组成部分 ,  所以他俩关系就是函数对象包含方法 , 同时这个函数对象只能有一个方法 , 同时函数对象必须是只有一个抽象方法的接口类 , 此时就是Java的函数式编程的实现了  .</p>
+</blockquote>
+<h2 id="1-函数式接口functional-interfaces">1. 函数式接口(Functional Interfaces)</h2>
+<blockquote>
+<ul>
+<li>
+<p>Lambda表达式是Java SE 8中一个重要的新特性。允许你通过表达式<code>()-&gt;{}</code>来代替功能接口，其几乎解决了匿名内部类(单个方法的内部类)带来的所有问题。同时他编译采用的是 <code>invokedynamic</code> 属于jvm优化的, 速度上优于匿名内部类的执行速度. 因为内部类需要运行时生成字节码, lambda不需要</p>
+</li>
+<li>
+<p>Functional Interfaces 是一个只有<code>一个抽象方法的接口</code>。这里我提一下Object的方法他也有, 因为Object是所有Java类的顶层父类 . 这个不需要解释吧 .</p>
+</li>
+<li>
+<p>还可以声明 Java8 带来的<code>default</code>修饰的方法 还有 常见的<code>静态方法</code> , 还有一些被<code>public static final</code>修饰的字段</p>
+</li>
+</ul>
+</blockquote>
+<p>1.8中 局部内部类访问的局部变量不必用final修饰 (1.8之后java隐式的将x修饰为final) ,为什么添加,主要是考虑到了 变量的生命周期问题.如果我的x是非 final的,当我去调用时,发现他已经被GC了,此时就会输出0 ,  可以看出来是自动加上的(借助IDE工具可以查看编译后的class文件)</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-20/ca51b967-e026-4bdd-9b4b-cf915d5c262e.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="2-方法引用method-reference">2. 方法引用(method reference)</h2>
+<blockquote>
+<p>​	方法引用是对lambda的进步一简写, 为什么这么说的 , 举一个场景的例子</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void test() {
+    List&lt;String&gt; list = Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;);
+    list.forEach(e -&gt; System.out.println(e));
+}
+</code></pre>
+<p>这里e变量的作用是啥, 前面参数是e,后面方法需要只有e,那么是不是可以省略不写,因为前后参数都是e,可以让编译器来做补充,  所以此时就变成了</p>
+<pre><code class="language-java">@Test
+public void test() {
+    List&lt;String&gt; list = Arrays.asList(&quot;a&quot;, &quot;b&quot;, &quot;c&quot;);
+    list.forEach(System.out::println);
+}
+</code></pre>
+<p>这就是方法 引用,  如果你写过scala的模式匹配, 你会发现跟这个如出一辙 , 所以他只是lambda的简写形式, 为了语法美观 .</p>
+<p>主要分为3类 ,</p>
+<ul>
+<li>静态方法引用    <code>静态类::方法名称</code></li>
+<li>构造函数引用  <code>类::new</code></li>
+<li>实例化方法引用  <code>实例化对象::方法</code></li>
+</ul>
+<p>所以基本写法就是 <code>引用对象::方法</code> 这个了 ;  所以叫方法引用了, 其实不如叫引用方法 , 哈哈哈 , 开玩笑</p>
+<h3 id="这里注意几点大家遇到的问题">这里注意几点大家遇到的问题</h3>
+<p>下面这个语句 , 他会执行吗 ? , 会执行输出 <code>hello method reference</code> 吗 , 你可以先试着想一下, 我上面说的解释回想一下,</p>
+<pre><code class="language-java">public class TestMethodReference implements Runnable {
+
+    public static void main(String[] args) {
+        new Thread(TestMethodReference::new).start();
+    }
+
+    @Override
+    public void run() {
+        System.out.println(&quot;hello method reference&quot;);
+    }
+}
+</code></pre>
+<p>很显然运行一下 ,啥也不会输出 , 那是为什么 .</p>
+<p>因为 runnable接口, 改写成lambda表达式是 <code>()-&gt;{....}</code> , 此时如果改成方法引用,只要是任何空参方法都可以填写进去 , 比如我给大家试试</p>
+<pre><code class="language-java">public class TestMethodReference implements Runnable {
+
+    public static void main(String[] args) {
+        new Thread(TestMethodReference::test).start();
+    }
+
+    @Override
+    public void run() {
+        System.out.println(&quot;hello method reference&quot;);
+    }
+
+    public static void test() {
+        System.out.println(&quot;test&quot;);
+    }
+}
+</code></pre>
+<p>此时就会输出 test , 那是为什么 , 我们要技术 , 好记性不如烂笔头, 我们把这两个输出都改写成 ,lambda ,会是什么样子 ?</p>
+<pre><code class="language-java">new Thread(() -&gt; TestMethodReference.test()).start();
+new Thread(() -&gt; new TestMethodReference()).start();
+</code></pre>
+<p>会是这个样子 ,如果你还是不明白 , 我们继续改写</p>
+<pre><code class="language-java">new Thread(new Runnable() {
+    @Override
+    public void run() {
+        TestMethodReference.test();
+    }
+}).start();
+
+new Thread(new Runnable() {
+    @Override
+    public void run() {
+        new TestMethodReference();
+    }
+}).start();
+</code></pre>
+<p>这下子改明白为什么了吧 . 刚刚那个 <code>TestMethodReference::new</code> 不执行 ,是为什么了吧 . 此时他run方法中执行的是实例化<code>TestMethodReference</code>对象, 而不是调用他的run方法 .</p>
+<p>我们简单证明一下</p>
+<pre><code class="language-java">public class TestMethodReference implements Runnable {
+    public TestMethodReference() {
+        System.out.println(&quot;实例化成功&quot;);
+    }
+
+    public static void main(String[] args) {
+        new Thread(TestMethodReference::new).start();
+    }
+    
+    @Override
+    public void run() {
+        System.out.println(&quot;hello method reference&quot;);
+    }
+}
+</code></pre>
+<p>此时会输出</p>
+<pre><code class="language-java">实例化成功
+</code></pre>
+<p>还有一种写法也需要注意</p>
+<pre><code class="language-java">public class TestMethodReference implements Runnable {
+
+    public static void main(String[] args) {
+        TestMethodReference reference = new TestMethodReference();
+        new Thread(reference::runnable).start(); // 输出为空
+    }
+
+    private Runnable runnable() {
+        return () -&gt; {
+            System.out.println(&quot;run 方法执行成功&quot;);
+        };
+    }
+
+    @Override
+    public void run() {
+        System.out.println(&quot;hello method reference&quot;);
+    }
+}
+</code></pre>
+<p>也是上面同样的问题</p>
+<p>​</p>
+<h2 id="3-总结">3. 总结</h2>
+<p>总结一句就是 , 对于方法引用我们对于不了解的时候, 尽可能的使用lambda写法, 这样子可以避免发生错误 , 同时对于方法引用的问题 , 也可以通过转换成 lambda来思考</p>
+<p>如果你还对Java中其他语法糖感兴趣 , 可以去<a href="https://www.cnblogs.com/qingshanli/p/9375040.html">这个链接</a> : https://www.cnblogs.com/qingshanli/p/9375040.html .</p>
+<blockquote>
+<p>https://blog.csdn.net/HuakePeng/article/details/90081622)</p>
+</blockquote>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#java-8-%E8%AF%AD%E6%B3%95%E7%B3%96syntactic-sugar">java 8 语法糖(Syntactic sugar)</a>
+<ul>
+<li><a href="#1-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3functional-interfaces">1. 函数式接口(Functional Interfaces)</a></li>
+<li><a href="#2-%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8method-reference">2. 方法引用(method reference)</a>
+<ul>
+<li><a href="#%E8%BF%99%E9%87%8C%E6%B3%A8%E6%84%8F%E5%87%A0%E7%82%B9%E5%A4%A7%E5%AE%B6%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98">这里注意几点大家遇到的问题</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

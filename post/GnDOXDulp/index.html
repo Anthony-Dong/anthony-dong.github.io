@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>SpringBoot 单元测试之Junit &amp; Mockito | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/GnDOXDulp/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>SpringBoot 单元测试之Junit &amp; Mockito</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-04-05</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/GnDOXDulp/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/BaTiJbDH3I/"
+								class="tag">Spring</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/jTc_UulT-_/"
+								class="tag">SpringBoot</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2151字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>关于<code>junit</code>和<code>mockito</code>的相关知识, 如果说junit提供了测试方法, 那么mockito则是提供了bean的管理以及bean的方法调用  , 如果这两块某些注解和方法的用法不熟悉的话 , 介意看看这篇文章 : <a href="https://www.jianshu.com/p/ecbd7b5a2021">https://www.jianshu.com/p/ecbd7b5a2021</a>  内容很全, 必须先铺垫一下.</p>
+<blockquote>
+<p>​	下面就开始本文内容了  .  spring-test的话主要依赖于 <code>mockito</code> 和 <code>junit</code> 这两个库.</p>
+</blockquote>
+<h2 id="controller层">Controller层</h2>
+<blockquote>
+<p>​	Controller测试一般是web接口测试  , 但是往往依赖于service层,所以不适合做测试. 但是提供了mock 很好的帮助了我们测试.</p>
+</blockquote>
+<p>我们这里就拿登录来说吧  , 模拟这个是用户</p>
+<pre><code class="language-java">@Data
+public class UserDto {
+    private String username;
+    private String password;
+}
+</code></pre>
+<p>其次就是用户服务</p>
+<pre><code class="language-java">@Service
+public class UserService {
+
+    /**
+     * 验证用户密码是否正确
+     * @param userDto 用户
+     * @return 验证成功 返回 false
+     */
+    public boolean verify(UserDto userDto) {
+        // 模拟异常 , 表示次业务线跑不通, 目前还没有写完
+        throw new RuntimeException();
+    }
+}
+</code></pre>
+<p>其次就是我们的Controller层 ,</p>
+<pre><code class="language-java">@Slf4j
+@RestController
+@RequiredArgsConstructor
+@RequestMapping(path = &quot;/v1/user&quot;)
+public class UserController {
+
+    private final UserService userService;
+
+    /**
+     * 登录
+     * @param userDto 用户
+     * @return 登录成功返回 true
+     */
+    @PostMapping(&quot;/login&quot;)
+    public boolean login(UserDto userDto) {
+        // 记录日志
+        log.info(&quot;login username: {}, password :{}.&quot;, userDto.getUsername(), userDto.getPassword());
+        return userService.verify(userDto);
+    }
+}
+</code></pre>
+<p>此时拿 postman绝对跑不通. 怎么办呢.</p>
+<p>主角来了</p>
+<pre><code class="language-java">import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+// 会自动注入 mockmvc对象
+@AutoConfigureMockMvc
+public class UserControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    // 标记service表示无效,走我们的service
+    @MockBean
+    private UserService service;
+
+    @Test
+    public void findAddr() throws Exception {
+        // 当访问service的 verify方法时. 任何对象都返回true
+        when(service.verify(any(UserDto.class))).thenReturn(true);
+        MvcResult result = mockMvc.perform(
+                post(&quot;/v1/user/login&quot;)
+                // application/x-www-form-urlencoded , 一般都是选择这个
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+                // 输入参数
+                .param(&quot;username&quot;, &quot;root&quot;)
+                .param(&quot;password&quot;, &quot;123456&quot;)
+        )
+            // 打印一些必要的请求信息.
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn();
+
+        String content = result.getResponse().getContentAsString();
+        Assert.assertEquals(content, &quot;true&quot;);
+    }
+}
+</code></pre>
+<p>我们最终启动跑一下</p>
+<pre><code class="language-java">2020-04-01 19:56:58.054  INFO 17140 --- [           main] c.e.s.controller.UserController          : login username: root, password :123456.
+</code></pre>
+<p>结果完全OK . 是不是很神奇呢.</p>
+<p>注意这里的 <code>@MockBean</code>  是Spring提供的. 同时还有, mock官方提供了 <code>@Mock</code> 和 <code>@InjectMocks</code>  , 具体可以看看这篇文章 , 怕使用的时候出错误 , 记录一下 : <a href="https://www.jianshu.com/p/c68ee5d08fdd">https://www.jianshu.com/p/c68ee5d08fdd</a></p>
+<h2 id="service层">Service层</h2>
+<p>service层 往往依赖于dao层</p>
+<h3 id="1-关闭web-环境">1. 关闭web 环境</h3>
+<p>所以解决方式也是 , 但是不是web层, 所以往往不需要web环境. <code>@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)</code> 这个可以关闭web环境.</p>
+<pre><code class="language-java">@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+public class UserServiceTest {
+
+    @Autowired
+    UserService service;
+    
+    @Test
+    public void testUser() {
+        service.verify(UserDto.builder().password(&quot;111&quot;).build());
+    }
+}
+</code></pre>
+<h3 id="2-测试用例-每个都需要单独的context">2. 测试用例 , 每个都需要单独的context</h3>
+<pre><code class="language-java">@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+public class UserServiceTest {
+
+    @Autowired
+    private UserService service;
+
+    @DirtiesContext
+    @Test
+    public void test1() {
+        System.out.println(&quot;test-1 &quot; + service.hashCode());
+    }
+
+    @DirtiesContext
+    @Test
+    public void test2() {
+        System.out.println(&quot;test-2 &quot; + service.hashCode());
+    }
+}
+</code></pre>
+<p>我们发现输出的是</p>
+<pre><code class="language-java">test-1 2125470482
+test-2 1846539844
+</code></pre>
+<p>这个 <code>@DirtiesContext</code> 有两种</p>
+<p>第一种就是方法隔离 .</p>
+<p>第二种就是类隔离.  使用场景的话各有差异 ..</p>
+<p>测试用例的运行 . 可以直接通过 mvn  test  就可以了 , 重定向输出可以用 &gt;&gt; log.log ,这里切记一点. <code>mvn test -Dtest=*Test -DfailIfNoTests=true</code>  , 这个是默认的缺省值.   也就是只会监测到Test后缀的文件进行测试.</p>
+<h2 id="dao层面">DAO层面</h2>
+<p>其中 <code>@MockBean</code> 可以帮助我们实例化一个mapper对象, 同时我们可以直接调用. 此时就可以直接隔离数据库访问层面.</p>
+<pre><code class="language-java">@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
+public class UserMapperTest {
+
+    @MockBean
+    private UserMapper mapper;
+
+    @Test
+    public void findAddr() {
+        when(mapper.findAddr(anyInt())).thenReturn(&quot;北京&quot;);
+        String addr = mapper.findAddr(100);
+        assertEquals(&quot;北京&quot;, addr);
+        verify(mapper).findAddr(100);
+    }
+}
+</code></pre>
+<h3 id="h2数据库-方便测试">H2数据库 方便测试</h3>
+<p>加入依赖,</p>
+<pre><code class="language-xml">&lt;!-- 方便测试 --&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;com.h2database&lt;/groupId&gt;
+    &lt;artifactId&gt;h2&lt;/artifactId&gt;
+    &lt;version&gt;1.4.197&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>配置文件的话, 很简单, 我是用的是JPA.</p>
+<pre><code class="language-properties"># H2的配置. 就两行其实. 其他我多余加上的. 
+spring.datasource.url=jdbc:h2:mem:jpa;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.continue-on-error=false
+spring.datasource.hikari.minimum-idle=2
+
+# 没次启动创建, 每次结束进程删除
+spring.jpa.hibernate.ddl-auto=create-drop
+# SQL打印开启
+spring.jpa.show-sql=true
+# 数据库引擎修改一下
+spring.jpa.database-platform=org.hibernate.dialect.MySQL5InnoDBDialect
+</code></pre>
+<p>这个就是一个完整的测试环境.  soeasy .</p>
+<h2 id="swagger-ui">swagger-ui</h2>
+<p>首先呢  , 依赖少不了 .</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;io.springfox&lt;/groupId&gt;
+    &lt;artifactId&gt;springfox-swagger-ui&lt;/artifactId&gt;
+    &lt;version&gt;2.9.2&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.springfox&lt;/groupId&gt;
+    &lt;artifactId&gt;springfox-swagger2&lt;/artifactId&gt;
+    &lt;version&gt;2.9.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>其次呢  , 加入配置.</p>
+<pre><code class="language-xml">@Configuration
+@EnableSwagger2
+public class SwaggerConfig {
+
+    /**
+     * 访问接口在
+     * @return
+     */
+    @Bean
+    public Docket api() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(&quot;com.example.springswagger.controller&quot;))
+                .paths(PathSelectors.any())
+                .build()
+                .apiInfo(apiEndPointsInfo())
+                .useDefaultResponseMessages(false);
+    }
+
+    private ApiInfo apiEndPointsInfo() {
+        return new ApiInfoBuilder().title(&quot;REST API&quot;)
+                .description(&quot;Spring Swaager2 REST API&quot;)
+                .contact(new Contact(&quot;anthony&quot;, &quot;https://github.com/Anthony-Dong&quot;, &quot;574986060@qq.com&quot;))
+                .license(&quot;The Apache License&quot;)
+                .licenseUrl(&quot;https://opensource.org/licenses/MIT&quot;)
+                .version(&quot;V1&quot;)
+                .build();
+    }
+}
+</code></pre>
+<p>其他就直接映射好了</p>
+<p>直接访问 <a href="http://localhost:8080/swagger-ui.html">http://localhost:8080/swagger-ui.html</a>  既可</p>
+<p>比较坑的点 . 第一点, 要写注释就写清楚点像<code>@ApiParam(value = &quot;用户ID&quot;,required = true,example = &quot;1&quot;)</code>  , 如果不加 example会抛出异常, 比如<code>java.lang.NumberFormatException:For input string:&quot;&quot;</code> , 因为我们format的时候失败了. 默认是空. 所以比较坑.</p>
+<pre><code class="language-java">@Slf4j
+@RestController
+@RequestMapping(path = &quot;/v1/user&quot;)
+public class UserController {
+
+    @GetMapping(&quot;/info/{id}&quot;)
+    @ApiOperation(&quot;根据ID获取用户信息&quot;)
+    public Map&lt;String, UserDo&gt; userInfo(@ApiParam(value = &quot;用户ID&quot;,required = true,example = &quot;1&quot;) @PathVariable(&quot;id&quot;) Long id) {
+        return Collections.singletonMap(&quot;user-info&quot;, UserDo.builder().userId(id).username(&quot;tom&quot;).password(&quot;123&quot;).build());
+    }
+} 
+</code></pre>
+<p>具体的解决方案就是 如果写 就要加上最好了.</p>
+<pre><code class="language-java">syms x;
+a = -15;
+b = -a;
+step = 0.01;
+gap = 15;
+e = 1e-3;
+while (1)
+    for w= a : step : b
+            s1 = int(exp(-(x-1000)^2/50), -inf, (16-w)/18);
+            s2 = exp(-((16 - w) / 18 - 1000) ^ 2  / 50);
+            u = 5 * sqrt(2 * pi) / s1 + 36 * (16 - w) + 250 + 5 * sqrt(2 * pi) * (w - 5)  / s2 * ( - 1 / 18);
+            if abs(u) &lt; gap
+                display(['gap=', num2str(gap), ' w=', num2str(w)])
+                step = gap / 100;
+                a = w - gap;
+                b = w + gap;
+                gap = gap / 10;
+                break;
+            end
+    end
+    if gap &lt; e
+        break;
+    end
+end
+</code></pre>
+<h2 id="mockito-的使用">MockITO  的使用</h2>
+<p>第一种  使用 , 很方便</p>
+<pre><code class="language-java">public class MockTest {
+    @Test
+    public void test(){
+        UserMapper mapper = mock(UserMapper.class);
+        UserDo tom = UserDo.builder().userId(1L).username(&quot;tom&quot;).password(&quot;123&quot;).build();
+        when(mapper.findByUserId(anyLong())).thenReturn(tom);
+        // 第一次调用
+        System.out.println(mapper.findByUserId(1L));
+        // 第二次调用
+        System.out.println(mapper.findByUserId(2L));
+
+        // 校验
+        verify(mapper).findByUserId(1L);
+        verify(mapper).findByUserId(2L);
+    }
+}
+</code></pre>
+<p>第二种 , 更方便</p>
+<pre><code class="language-java">@RunWith(MockitoJUnitRunner.class)
+public class MockTest {
+
+    @Mock
+    private UserMapper mapper;
+
+    @Test
+    public void test(){
+        UserDo byUserId = mapper.findByUserId(1L);
+        System.out.println(byUserId);
+    }
+}
+</code></pre>
+<p>第三种 , 一般吧, 其实和第一种相似 .</p>
+<pre><code class="language-java">public class MockTest {
+
+    @Mock
+    private UserMapper mapper;
+
+    public MockTest() {
+        mapper = Mockito.mock(UserMapper.class);
+    }
+
+    @Test
+    public void test(){
+        UserDo byUserId = mapper.findByUserId(1L);
+        System.out.println(byUserId);
+    }
+}
+</code></pre>
+<h2 id="sql脚本的执行">SQL脚本的执行</h2>
+<h3 id="1-spring自带的-注意坑">1. Spring自带的 注意坑</h3>
+<p>第一种就是在配置文件中告诉, 他, 你要启动时注入的脚本</p>
+<pre><code class="language-properties"># 必须设置这个.原因可以看 org.springframework.boot.autoconfigure.jdbc.DataSourceInitializer.isEnabled , 像H2是可以不设置的,默认是只有切入式数据库才可以加载启动脚本.
+spring.datasource.initialization-mode=always
+# 建表语句
+spring.datasource.schema=classpath:schema.sql
+# 多个的时候可以如下这么写.
+# spring.datasource.schema[0]=classpath:schema.sql
+# 插入数据语句
+spring.datasource.data=classpath:schema.sql
+</code></pre>
+<p>其中Spring加载的原理是  , 相当的简单. 反正. 因此我写了个脚本.  反正底层原理也是解析SQL语句 , 然后执行. 很简单的. 直接调用它的就可以了.</p>
+<pre><code class="language-java">/**
+ * spring的模式 , 可以执行脚本 , 这个脚本在classpath下面.
+ */
+public static void runSql(DataSource dataSource, String... fileInClassPathResources) {
+    if (fileInClassPathResources == null || fileInClassPathResources.length == 0) return;
+    ResourceDatabasePopulator populator = new ResourceDatabasePopulator();
+    for (String source : fileInClassPathResources) {
+        populator.addScript(new ClassPathResource(source));
+    }
+    DatabasePopulatorUtils.execute(populator, dataSource);
+}
+</code></pre>
+<h3 id="2-mybatis的工具">2. Mybatis的工具.</h3>
+<p>利用Mybatis的工具 , 它可以展示SQL. 这个最好了</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.mybatis&lt;/groupId&gt;
+    &lt;artifactId&gt;mybatis&lt;/artifactId&gt;
+    &lt;version&gt;3.5.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>执行脚本</p>
+<pre><code class="language-java">public class RunSqlScript {
+    /**
+     * &lt;p&gt;运行指定的sql脚本
+     * @param sqlStream 需要执行的sql脚本的数据流
+     */
+    public static void run(DataSource dataSource, InputStream sqlStream) throws SQLException {
+        // try - with - resource
+        try (Connection conn = dataSource.getConnection()) {
+            // 创建ScriptRunner，用于执行SQL脚本
+            ScriptRunner runner = new ScriptRunner(conn);
+            runner.setErrorLogWriter(new PrintWriter(System.err));
+            runner.setLogWriter(new PrintWriter(System.out));
+            // 执行SQL脚本
+            runner.runScript(new InputStreamReader(sqlStream));
+            // 成功就输出成功
+            System.out.println(&quot;load sql script successful&quot;);
+        }
+    }
+}
+</code></pre>
+<p>SpringBoot整合的话. 可以通过</p>
+<pre><code class="language-java">@SpringBootApplication
+public class SpringTestApplication implements CommandLineRunner {
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringTestApplication.class, args);
+    }
+
+    @Autowired
+    private DataSource dataSource;
+
+    @Override
+    public void run(String... args) throws Exception {
+        InputStream stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(&quot;schema.sql&quot;);
+        RunSqlScript.run(dataSource, stream);
+        stream.close();
+    }
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#controller%E5%B1%82">Controller层</a></li>
+<li><a href="#service%E5%B1%82">Service层</a>
+<ul>
+<li><a href="#1-%E5%85%B3%E9%97%ADweb-%E7%8E%AF%E5%A2%83">1. 关闭web 环境</a></li>
+<li><a href="#2-%E6%B5%8B%E8%AF%95%E7%94%A8%E4%BE%8B-%E6%AF%8F%E4%B8%AA%E9%83%BD%E9%9C%80%E8%A6%81%E5%8D%95%E7%8B%AC%E7%9A%84context">2. 测试用例 , 每个都需要单独的context</a></li>
+</ul>
+</li>
+<li><a href="#dao%E5%B1%82%E9%9D%A2">DAO层面</a>
+<ul>
+<li><a href="#h2%E6%95%B0%E6%8D%AE%E5%BA%93-%E6%96%B9%E4%BE%BF%E6%B5%8B%E8%AF%95">H2数据库 方便测试</a></li>
+</ul>
+</li>
+<li><a href="#swagger-ui">swagger-ui</a></li>
+<li><a href="#mockito-%E7%9A%84%E4%BD%BF%E7%94%A8">MockITO  的使用</a></li>
+<li><a href="#sql%E8%84%9A%E6%9C%AC%E7%9A%84%E6%89%A7%E8%A1%8C">SQL脚本的执行</a>
+<ul>
+<li><a href="#1-spring%E8%87%AA%E5%B8%A6%E7%9A%84-%E6%B3%A8%E6%84%8F%E5%9D%91">1. Spring自带的 注意坑</a></li>
+<li><a href="#2-mybatis%E7%9A%84%E5%B7%A5%E5%85%B7">2. Mybatis的工具.</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

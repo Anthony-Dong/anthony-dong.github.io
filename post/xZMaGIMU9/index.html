@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>让我们重新认识 Java-Servlet | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/xZMaGIMU9/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>让我们重新认识 Java-Servlet</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-16</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/xZMaGIMU9/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1489字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>对于<a href="https://www.ibm.com/developerworks/cn/java/j-lo-servlet/index.html">Servlet 讲的文章</a>比较好的是 https://www.ibm.com/developerworks/cn/java/j-lo-servlet/index.html , 大家可以看看这篇文章 .</p>
+<p>对于<a href="https://blog.csdn.net/qq_25933249/article/details/94172473">Servlet深入理解</a>可以看看 : https://blog.csdn.net/qq_25933249/article/details/94172473</p>
+<p>很明确 , Servlet他其实由两部分 , 第一部分就Servlet容器, 第二部分就是我们编写的Servlet接口.</p>
+<p>本文以SpringBoot进行阐述 .</p>
+<h2 id="servlet">Servlet</h2>
+<p>注册一个 Servlet  ,这个注册机制其实设计到tomcat的内部实现<code>org.springframework.boot.web.embedded.tomcat.TomcatStarter#onStartup</code> 这里进行注册.</p>
+<pre><code class="language-java">@Bean
+public ServletRegistrationBean&lt;Servlet&gt; servletRegistrationBean() {
+    ServletRegistrationBean&lt;Servlet&gt; registrationBean = new ServletRegistrationBean&lt;&gt;();
+    registrationBean.addUrlMappings(&quot;/get&quot;);
+    registrationBean.setName(&quot;servlet 1&quot;);
+    registrationBean.addInitParameter(&quot;port&quot;, &quot;8080&quot;);
+    registrationBean.setOrder(Integer.MAX_VALUE);
+    registrationBean.setServlet(new MyServlet());
+    return registrationBean;
+}
+
+public static class MyServlet implements Servlet {
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        String conf = config.getInitParameter(&quot;port&quot;);
+        System.out.printf(&quot;init config  k : %s, v: %s.\n&quot;, &quot;port&quot;, conf);
+    }
+
+    @Override
+    public ServletConfig getServletConfig() {
+        return null;
+    }
+
+    @Override
+    public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
+        res.getWriter().write(&quot;HELLO WORLD&quot;);
+    }
+
+    @Override
+    public String getServletInfo() {
+        return null;
+    }
+
+    @Override
+    public void destroy() {
+        System.out.println(&quot;destroy &quot;);
+    }
+}
+</code></pre>
+<p>Servlet有 5个方法, <code>init</code>  ,  <code>getServletConfig()</code> , <code>service</code> , <code>destroy</code> <code>getServletInfo</code> 之类的.</p>
+<p>init 和 destroy 只会在服务初始化和销毁执行一次.</p>
+<p>service 方法则是在每次服务都会被调用的 .</p>
+<p>SpringBoot中Servlet注册是在 <code>org.springframework.boot.web.servlet.RegistrationBean#onStartup</code>  , 其实对于<code>org.springframework.web.servlet.DispatcherServlet</code> 也是在这里注册的.  这个是Spring基于Tomcat的回调机制实现的一种 注入方式.</p>
+<pre><code class="language-java">@Override
+public final void onStartup(ServletContext servletContext) throws ServletException {
+    String description = getDescription();
+    if (!isEnabled()) {
+        logger.info(StringUtils.capitalize(description)
+                + &quot; was not registered (disabled)&quot;);
+        return;
+    }
+    // 注册 , 其实
+    register(description, servletContext);
+}
+</code></pre>
+<h2 id="session-与-cookie">Session 与 Cookie</h2>
+<p>Session 与 Cookie 的作用都是为了保持访问用户与后端服务器的交互状态。</p>
+<p>我们以简单的例子 , 看看Session和Cookie是如何运作的.  (测试前清空cookie)</p>
+<p>第一我们不关闭浏览的cookie .</p>
+<pre><code class="language-java">@RestController
+public class Test {
+
+    @GetMapping(&quot;/test&quot;)
+    public Object get(HttpServletRequest request, HttpServletResponse response) {
+        System.out.println(&quot;cookie&quot; + &quot; : &quot; + request.getHeader(&quot;cookie&quot;));
+        Cookie cookie = new Cookie(&quot;time&quot;, &quot;&quot; + System.currentTimeMillis());
+        response.addCookie(cookie);
+        HttpSession session = request.getSession();
+        Object user = session.getAttribute(&quot;user&quot;);
+        if (user == null) {
+           session.setAttribute(&quot;user&quot;, UUID.randomUUID().toString());
+        }
+        return user;
+    }
+}
+</code></pre>
+<p>第一次请求响应是 :</p>
+<pre><code class="language-java">HTTP/1.1 200
+Set-Cookie: time=1580539709072
+Set-Cookie: JSESSIONID=AE10A3E001E312061E071234ACDBA36A; Path=/; HttpOnly
+Content-Length: 0
+Date: Sat, 01 Feb 2020 06:48:29 GMT
+</code></pre>
+<p>我们发现除了我们自己定义的还有一个 <code>JSESSIONID=AE10A3E001E312061E071234ACDBA36A</code>  这个是什么 ?</p>
+<p>我们发现我们本地多了俩</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/b826bc1a-24da-44c1-a44b-3b7be2222a43.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这个就是我们存入的cookie . 所以 session其实就是cookie的表示 . 作为用户的key , <strong>他的生命周期只有一次会话</strong>.  也就是我们关闭浏览器, 这个cookie就会被删除.  这个是Session的默认实现 . 他不允许在浏览器保存 .</p>
+<p>Session可以设置 存活时间.</p>
+<pre><code class="language-java">HttpSession session = request.getSession();
+// 设置为10S, 当用户10S未请求客户端的时候, 会自动认为这个session无效
+session.setMaxInactiveInterval(10);
+</code></pre>
+<p>而且如果我们不关闭浏览器, 那么每次访问响应给我们的永远是不变的 <code>JSESSIONID</code></p>
+<p>所以我们看一下流程其实就是 .</p>
+<p>当用户发送一个请求给服务器时,  用户会携带cookie去访问服务器. 这个是浏览器默认实现的. 当服务器拿到cookie发现Cookie中没有<code>JSESSIONID</code>  , 会给用户创建一个 <code>JSESSIONID</code> 的cookie . 这个cookie在浏览器保存最长时间只能是一次会话(就是浏览器打开关闭代表一次会话).   所以用户可以在浏览器未关闭之前一直拿着这个 <code>JSESSIONID</code>作为身份认证.   当浏览器关闭后这个cookie也会被删除. 此时下次打开浏览器再请求又循环到开始了.</p>
+<p>其实这里有一个BUG , 就是我可以伪装用户的<code>JSESSIONID</code> 访问浏览器 . 这样子很能出现危险 . 所以不要在 session中存入用户认证信息. 这样子会很危险.</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/8d8dda8b-b87c-4dcb-9b96-249963c1298a.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>根据这个图. 我们可以发现我们很轻松的伪装信息.  所以不要在 Session中存入敏感信息或者认证信息.</p>
+<p>但是当我们把Cookie禁用了 会怎么办呢 ?</p>
+<p>那么 浏览器的Cookie失效了, 那么代表Session也失效了(因为Session也是基于Cookie). .最简单的测试就是</p>
+<p><code>curl http://localhost:8080/test</code>  会发现永远返回空 .</p>
+<p>但是我们要记住 , 还有一种方式可以传递 cookie. 那就是 url传递.</p>
+<p>如何传递呢 .  <code>http://localhost:8080/test;use=493B013E8DC852A7BFDE40DCDFAD06B5</code></p>
+<p>比如说我们访问 <code>http://localhost:8080/test</code> 将 cookie写入到服务器, 需要 <code>http://localhost:8080/test;auth=D92A968FA16D00F511F5B8EECB8733A6</code> 这么写  , 但是问题你咋获取这个SessionID , 那么就需要参数返回了.</p>
+<p>springboot开启只需要</p>
+<pre><code class="language-properties"># 设置session模式 , 运行时是不能修改的. 
+server.servlet.session.tracking-modes=url
+
+# 设置session 的name
+server.servlet.session.cookie.name=auth
+</code></pre>
+<p>关于Session的具体实现问题 , 可以看看<a href="https://www.cnblogs.com/chenpi/p/5434537.html">这篇文章</a>  https://www.cnblogs.com/chenpi/p/5434537.html</p>
+<h2 id="listener-监听器">Listener  监听器</h2>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/d538de33-a5d3-4cc1-832e-e219ded80173.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>其实 <code>ServletContextListener</code> 这个也挺有用的 .</p>
+<p>我们来使用 <code>HttpSessionListener</code> 测试一下</p>
+<pre><code class="language-java">// 注册Listener
+@Bean
+public ServletListenerRegistrationBean&lt;HttpSessionListener&gt; sessionListenerServletListenerRegistrationBean() {
+    ServletListenerRegistrationBean&lt;HttpSessionListener&gt; registrationBean = new ServletListenerRegistrationBean&lt;&gt;();
+    registrationBean.setListener(new MyHttpSessionListener());
+    return registrationBean;
+}
+
+// 这里是触发事件
+public static class MyHttpSessionListener implements HttpSessionListener {
+    @Override
+    public void sessionCreated(HttpSessionEvent se) {
+        System.out.println(&quot;创建 session 成功&quot;);
+    }
+
+    @Override
+    public void sessionDestroyed(HttpSessionEvent se) {
+        System.out.println(&quot;销毁 session 成功&quot;);
+    }
+}
+</code></pre>
+<p>可以监听session的创建和销毁.</p>
+<p>Session好像默认存活时间是20mine .</p>
+<h2 id="filter-过滤器">Filter  过滤器</h2>
+<p>类似于Spring的 <code>org.springframework.web.servlet.HandlerInterceptor</code>  , 只不过 Filer是事情通知. 不过他要比 <code>HandlerInterceptor</code> 早.</p>
+<p>其中 <code>chain.doFilter(request, response);</code> 主要是用来放行的 .</p>
+<pre><code class="language-java">@Bean
+public FilterRegistrationBean&lt;Filter&gt; filterRegistrationBean() {
+
+    FilterRegistrationBean&lt;Filter&gt; registrationBean = new FilterRegistrationBean&lt;&gt;();
+
+    registrationBean.setFilter(new Filter() {
+        @Override
+        public void init(FilterConfig filterConfig) throws ServletException {
+			//
+        }
+
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+            System.out.println(&quot;doFilter&quot;);
+            chain.doFilter(request, response);
+        }
+
+        @Override
+        public void destroy() {
+			// 
+        }
+    });
+
+    registrationBean.setName(&quot;filter 1&quot;);
+
+    // 拦截所有请求
+    registrationBean.addUrlPatterns(&quot;/*&quot;);
+    return registrationBean;
+}
+</code></pre>
+<h2 id="servletcontext">ServletContext</h2>
+<p>SpringBoot注入可以使用 , 可以获取ServletContext  , 但是我感觉没啥用, 毕竟现在是前后端分离</p>
+<pre><code class="language-java">@Configuration
+public class Config implements ServletContextAware{
+
+    public ServletContext servletContext;
+
+    @Override
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#servlet">Servlet</a></li>
+<li><a href="#session-%E4%B8%8E-cookie">Session 与 Cookie</a></li>
+<li><a href="#listener-%E7%9B%91%E5%90%AC%E5%99%A8">Listener  监听器</a></li>
+<li><a href="#filter-%E8%BF%87%E6%BB%A4%E5%99%A8">Filter  过滤器</a></li>
+<li><a href="#servletcontext">ServletContext</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

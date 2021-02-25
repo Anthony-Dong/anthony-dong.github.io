@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JUC - CompletableFuture 异步编程和流式编程 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/juc-completablefuture-yi-bu-bian-cheng-he-liu-shi-bian-cheng/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JUC - CompletableFuture 异步编程和流式编程</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-07</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/juc-completablefuture-yi-bu-bian-cheng-he-liu-shi-bian-cheng/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3386字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">16 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	<code>CompletableFuture</code>类实现了<code>Future</code>接口和<code>CompletionStage</code> 接口, <code>Future</code>接口我们就不多介绍了, 他就是一个异步的回调,并且调用<code>get</code>方法是阻塞的 , 这个并不是这个类的特点 , 他的关键是 <code>CompletionStage</code>这个接口, 他更像是一个一段程序执行的各个阶段, 每个阶段执行结束都会返回一个阶段, 所以阶段可能相互依赖, 也可能不依赖 , 也有各自情况 ,他更符合流式编程的特点 ,特别像<code>JavaScript</code>的<code>Promise</code>对象 , 一种then , 就是这玩意 , 估计你听懂了我们就开始吧</p>
+<p>​	还有这玩意是流式编程 ,代表根本没有尾, 只要你不想结束 ....</p>
+</blockquote>
+<h2 id="1-completionstage">1. CompletionStage</h2>
+<blockquote>
+<p>​	A stage of a possibly asynchronous computation, that performs an action or computes a value when another CompletionStage completes.</p>
+<p>​	就是代表一个阶段, 一种流式编程</p>
+</blockquote>
+<blockquote>
+<p>​	The computation performed by a stage may be expressed as <code>a Function, Consumer, or Runnable</code> (using methods with names including apply, accept, or run, respectively) depending on whether it requires arguments and/or produces results. For example,<code>stage.thenApply(x -&gt; square(x)).thenAccept(x -&gt; System.out.print(x)).thenRun(() -&gt; System.out.println())</code> .An additional form (compose) applies functions of stages themselves, rather than their results.</p>
+</blockquote>
+<p>我感觉这一段就是他表述的精髓  : 根据是够需要参数和返回结果 , 一个阶段的计算可以表示为一个方法, 一个消费 , 一个 runnable ,</p>
+<p>其中 <code>CompletableFuture</code>也是基于这个接口去实现的</p>
+<h2 id="2-completablefuture">2. CompletableFuture</h2>
+<blockquote>
+<p>​	When two or more threads attempt to complete, completeExceptionally, or cancel a CompletableFuture, only one of them succeeds.  他保证了多线程的安全性,其实就是这段话表述的意思 ,</p>
+</blockquote>
+<blockquote>
+<p>​	感觉如果你使用这玩意就不要使用 <code>Future</code>带的方法,比如<code>get</code></p>
+</blockquote>
+<h3 id="1-简单开始">1. 简单开始</h3>
+<p>比如举个例子 , 我们需要去查询一下数据库当前一共有多少数据 , 此时我们查询线程需要很耗时 ,我们需要做其他事情,然后查询完我们还要对他进行数据加工</p>
+<pre><code class="language-java">@Test
+public void test3() throws IOException {
+    CompletableFuture&lt;Integer&gt; future = new CompletableFuture&lt;&gt;();
+    // 线程一
+    future.thenApply((r) -&gt; r * 10).whenComplete((r, e) -&gt; System.out.println(&quot;拿到最终数据 : &quot;+r));
+
+    // 线程二
+    new Thread(() -&gt; {
+        // 模拟耗时
+        ThreadUtil.sleep(100);
+        System.out.println(&quot;查询到数据 1000 条&quot;);
+        future.complete(1000);
+    }).start();
+
+    // 阻塞你懂得
+    System.in.read();
+}
+
+// 输出 : 
+// 查询到数据 1000 条
+// 拿到最终数据 : 10000
+</code></pre>
+<p>这就是异步 , 我们输入和输出是两个线程执行 ,</p>
+<p>还有一种就是我们可能查询失败了,没有结果返回怎么办呢 ?</p>
+<pre><code class="language-java">@Test
+public void test3() throws IOException {
+    CompletableFuture&lt;Integer&gt; future = new CompletableFuture&lt;&gt;();
+    // 线程一
+    future.thenApply((r) -&gt; r * 10).whenComplete((r, e) -&gt; System.out.println(e.getMessage()));
+
+
+    // 线程二
+    new Thread(() -&gt; {
+        // 模拟耗时
+        ThreadUtil.sleep(100);
+        System.out.println(&quot;查询失败 : &quot;+Thread.currentThread().getName());
+        future.completeExceptionally(new RuntimeException(&quot;查询失败&quot;));
+    }).start();
+
+    // 阻塞你懂得
+    System.in.read();
+}
+// 输出
+// 查询失败 : Thread-0
+// java.lang.RuntimeException: 查询失败
+</code></pre>
+<h3 id="2-静态方法-实例化">2. 静态方法-实例化</h3>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-06/661a03c4-5ef4-4213-bfa1-de2d22a7aaa5.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们大致看看这几个方法 . <code>supply</code> 是提供一个返回值 , <code>run</code>是提供一个无返回值的run方法, <code>allOf</code> 是将几个<code>CompletableFuture</code> 合并 , <code>completedFuture</code> 是将结果立马返回一个带有结果的对象 ,</p>
+<h3 id="3立即完成-complete-和-completeexceptionally-方法">3.立即完成  complete 和 completeExceptionally 方法</h3>
+<blockquote>
+<p>​	<code>complete</code> : If not already completed, sets the value returned by get() and related methods to the given value.</p>
+</blockquote>
+<p>​	<code>complete</code>方法就是如果此阶段(<code>此阶段很重要,要懂得阶段指的是啥,因为每一个方法的调用都需要一个CompletionStage对象,这个就是指的此阶段</code>)没有完成 , 立马设置值完成 ,</p>
+<blockquote>
+<p>​	<code>completeExceptionally</code> : If not already completed, causes invocations of get() and related methods to throw the given exception.</p>
+<p>​		true if this invocation caused this CompletableFuture to transition to a completed state, else false</p>
+</blockquote>
+<p>​	<code>completeExceptionally</code> 方法就是没有完成, 立马抛出异常, 如果返回true , 表示成功将其此阶段完成, false表示失败</p>
+<pre><code class="language-java">public static void main(String[] args) throws IOException {
+    final long start = System.currentTimeMillis();
+
+    final CompletableFuture&lt;String&gt; compute = CompletableFuture.supplyAsync(() -&gt; {
+        ThreadUtils.sleep(1000);
+        System.out.println(&quot;我就是要拖拉 , 耗时 : &quot; + (System.currentTimeMillis() - start));
+        return &quot;我就是要拖拉&quot;;
+    });
+
+
+    new Thread(() -&gt; {
+        CompletableFuture&lt;Void&gt; future = compute.thenAccept(v -&gt; {
+            System.out.println(&quot;接收到结果 : &quot; + v + &quot; , 耗时 : &quot; + (System.currentTimeMillis() - start));
+        });
+    }).start();
+
+    new Thread(() -&gt; {
+        boolean b = compute.complete(&quot;那个烂货,太磨叽了,我先将他任务感觉结算了&quot;);
+        System.out.println(&quot;快速完成是否成功 : &quot; + b);
+    }).start();
+
+	// 阻塞
+    System.in.read();
+}
+</code></pre>
+<p>如果你看懂我上面写的是什么 , 你就理解了这个 <code>CompletionStage</code> 究竟只做了些什么 , 试着猜一下输出结果  ,</p>
+<p>输出 :</p>
+<pre><code class="language-java">接收到结果 : 那个烂货,太磨叽了,我先将他任务感觉结算了 , 耗时 : 64
+快速完成是否成功 : true
+我就是要拖拉 , 耗时 : 1072
+</code></pre>
+<p>那个 <code>completeExceptionally</code> 他是提供一个异常 , 可能我上面的<code>thenAccept</code>方法接收不了, 你可以换其他方法去处理,</p>
+<h3 id="4-抓取异常-exceptionally-方法">4.  抓取异常 - exceptionally 方法</h3>
+<pre><code class="language-java">@Test
+public void testException() throws ExecutionException, InterruptedException {
+
+    CompletableFuture&lt;String&gt; future = CompletableFuture.supplyAsync(() -&gt; {
+        error();
+        return getName();
+    }).exceptionally(new Function&lt;Throwable, String&gt;() {
+        @Override
+        public String apply(Throwable throwable) {
+            return &quot;获取失败&quot;;
+        }
+    }).whenComplete(new BiConsumer&lt;String, Throwable&gt;() {
+        @Override
+        public void accept(String s, Throwable throwable) {
+            System.out.println(s);
+        }
+    });
+}
+
+// 输出 :  获取失败
+</code></pre>
+<h3 id="5-加工-supplyasync-thenapply-thenaccept-方法">5 加工 - supplyAsync &amp; thenApply &amp; thenAccept 方法</h3>
+<p>对于<code>CompletableFuture</code> 我感觉你理解成流式编程比较好 , 和<code>Stream</code>很相似, 这种编程</p>
+<pre><code class="language-java">@Test
+public void testOperation() throws IOException {
+
+    CompletableFuture.supplyAsync(new Supplier&lt;String&gt;() {
+        @Override
+        public String get() {
+            // 获取名字
+            return getName();
+        }
+    }).thenApply(new Function&lt;String, Person&gt;() {
+        @Override
+        public Person apply(String s) {
+            // 封装对象
+            return new Person(s, System.currentTimeMillis());
+        }
+    }).thenAccept(new Consumer&lt;Person&gt;() {
+        @Override
+        public void accept(Person person) {
+            // 消费对象
+            System.out.println(person);
+        }
+    });
+
+    System.in.read();
+}
+// 输出 : Person{name='tom', timestamp=1575645761277}
+</code></pre>
+<h3 id="6-加工-whencomplete-方法">6. 加工-  whenComplete 方法</h3>
+<p><code>public CompletionStage&lt;T&gt; whenComplete (BiConsumer&lt;? super T, ? super Throwable&gt; action);</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage with the same result or exception as this stage, that executes the given action when this stage completes.</p>
+<p>​	返回上一阶段的结果或者异常信息,</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testComplete() {
+
+    CompletableFuture.supplyAsync(() -&gt; &quot;Hello CompletableFuture !&quot;)
+            .whenComplete(new BiConsumer&lt;String, Throwable&gt;() {
+                @Override
+                public void accept(String s, Throwable throwable) {
+                    System.out.println(s);
+                }
+            });
+}
+输出 : Hello CompletableFuture !
+</code></pre>
+<p><strong>我们发现个问题 , <code>accept</code>意思是接收(被动的)方法的意思,太自私了自己消费不管返回 ,  <code>apply</code> 意思是申请(主动的)方法比较好,我用了我还返回一个值 , 哎 ,知道这个就好吧了</strong></p>
+<h3 id="7-加工-handle-方法">7. 加工 - handle 方法</h3>
+<p><code>public &lt;U&gt; CompletionStage&lt;U&gt; handle (BiFunction&lt;? super T, Throwable, ? extends U&gt; fn);</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage that, when this stage completes either normally or exceptionally, is executed with this stage's result and exception as arguments to the supplied function.</p>
+<p>​	返回一个新的阶段,当此阶段完成可能是正常也可能是异常 , 将使用此阶段的结果和异常作为提供的函数的参数执行。同时可以有返回值</p>
+</blockquote>
+<p>所以怎么说呢  , 我觉得他是 <code>whenComplete</code>的改进版本 , 他有返回值, 他绝对是一个 <code>apply</code>方法</p>
+<pre><code class="language-java">@Test
+public void testHandle() throws ExecutionException, InterruptedException {
+
+    String msg = CompletableFuture.supplyAsync(() -&gt; &quot;hello CompletableFuture&quot;)
+            .handle(new BiFunction&lt;String, Throwable, String&gt;() {
+                @Override
+                public String apply(String s, Throwable throwable) {
+                    return &quot;我收到了 : &quot; + s;
+                }
+            }).get();
+
+   System.out.println(msg);
+}
+
+// 输出 :  我收到了 : hello CompletableFuture
+</code></pre>
+<h3 id="8-加工-thencompose">8. 加工 - thenCompose</h3>
+<p><code>public &lt;U&gt; CompletionStage&lt;U&gt; thenCompose (Function&lt;? super T, ? extends CompletionStage&lt;U&gt;&gt; fn)</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage that, when this stage completes normally, is executed with this stage as the argument to the supplied function.</p>
+</blockquote>
+<p>就是上一阶段正常执行完毕会执行这个方法 返回一个新的阶段 , 不过这个阶段提供了一个 function 函数 , 可以对上一阶段的返回进行处理  , 并且function函数返回一个新的 <code>CompletionStage</code>对象得</p>
+<pre><code class="language-java">@Test
+public void testCompose() throws IOException {
+
+    CompletableFuture.supplyAsync(() -&gt; &quot;tony&quot;)
+            .thenCompose(s -&gt; {
+                System.out.println(&quot;name : &quot; + s);
+                return CompletableFuture.supplyAsync(() -&gt; &quot;hello world&quot;);
+            });
+
+	// 不使用lambda 有的时候类型推断需要自己改,如果你敲你绝对会遇见的, 还是推荐大家用lambda
+    CompletableFuture.supplyAsync(() -&gt; &quot;tony&quot;)
+            .thenCompose(new Function&lt;String, CompletionStage&lt;Object&gt;&gt;() {
+                @Override
+                public CompletionStage&lt;Object&gt; apply(String s) {
+                    return CompletableFuture.supplyAsync(() -&gt; &quot;hello world&quot;);
+                }
+            });
+
+    System.in.read();
+}
+
+// 输出 : 
+// name : tony
+</code></pre>
+<p>由于他不能处理异常信息 , 会出现以下情况</p>
+<pre><code class="language-java">@Test
+public void testCompose() throws IOException {
+
+    CompletableFuture.supplyAsync(() -&gt; {
+        int i = 1 / 0;
+        return &quot;tony&quot;;
+    }).thenCompose(s -&gt; {
+        System.out.println(&quot;name : &quot; + s);
+        return CompletableFuture.supplyAsync(() -&gt; &quot;hello world&quot;);
+    });
+
+
+    System.in.read();
+}
+
+// 输出 :  就没有输出结果 .. . ..
+</code></pre>
+<h3 id="9-取消-cancel">9.  取消 - cancel</h3>
+<p><code>public boolean cancel(boolean mayInterruptIfRunning)</code></p>
+<blockquote>
+<p>​	If not already completed, completes this CompletableFuture with a CancellationException. Dependent CompletableFutures that have not already completed will also complete exceptionally, with a CompletionException caused by this CancellationException.</p>
+</blockquote>
+<blockquote>
+<p>​	参数 : mayInterruptIfRunning – this value has no effect in this implementation because interrupts are not used to control processing.</p>
+<p>​	意思就是<code>取消该阶段执行</code>, 取消失败返回异常, true 与 false 对取消没有影响 ,</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testCompose() throws IOException {
+
+    CompletableFuture.runAsync(() -&gt; {
+        ThreadUtil.sleep(100);
+        System.out.println(&quot;我执行1&quot;);
+    }).thenRun(() -&gt; {
+        System.out.println(&quot;我执行2&quot;);
+    });
+
+    System.in.read();
+
+}
+
+输出 : 
+// 我执行1
+</code></pre>
+<h3 id="10-顺序合并">10. 顺序合并</h3>
+<h4 id="1-thencombine">1. thenCombine</h4>
+<p><code>public &lt;U,V&gt; CompletionStage&lt;V&gt; thenCombine (CompletionStage&lt;? extends U&gt; other,BiFunction&lt;? super T,? super U,? extends V&gt; fn);</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage that, when this and the other given stage both complete normally, is executed with the two results as arguments to the supplied function.</p>
+<p>​	返回一个新的stage , 当这个和另一个给定的阶段都正常完成执行 , 将结果提供给fn方法</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testCombine() throws IOException {
+
+    CompletableFuture.supplyAsync(() -&gt; getName())
+            .thenCombine(CompletableFuture.completedFuture(&quot;tony&quot;)
+                    , new BiFunction&lt;String, String, Object&gt;() {
+                        @Override
+                        public Object apply(String s, String s2) {
+                            System.out.println(&quot;s1  : &quot; + s);
+                            System.out.println(&quot;s2 : &quot; + s2);
+                            return &quot;完成&quot;;
+                        }
+                    });
+
+    System.in.read();
+}
+
+// 输出 : 
+// s1  : tom
+// s2 : hello
+</code></pre>
+<h4 id="2-thenacceptboth">2. thenAcceptBoth</h4>
+<p><code>public &lt;U&gt; CompletionStage&lt;Void&gt; thenAcceptBoth (CompletionStage&lt;? extends U&gt; other,BiConsumer&lt;? super T, ? super U&gt; action);</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage that, when this and the other given stage both complete normally, is executed with the two results as arguments to the supplied action.</p>
+</blockquote>
+<p>这个和上面 <code>thenCombine</code> 的区别就是 , 他不提供返回值 ,  所以就不写了 , 都需要两个任务同时完成</p>
+<h4 id="3-runafterboth">3. runAfterBoth</h4>
+<p><code>public CompletionStage&lt;Void&gt; runAfterBoth(CompletionStage&lt;?&gt; other,Runnable action);</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage that, when this and the other given stage both complete normally, executes the given action.</p>
+</blockquote>
+<p>这个是前面俩阶段完成后 ,执行这个方法 , 不提供两个阶段的结果 , 所以不展示了</p>
+<h4 id="4-applytoeither">4. applyToEither</h4>
+<p><code>public &lt;U&gt; CompletionStage&lt;U&gt; applyToEither (CompletionStage&lt;? extends T&gt; other,Function&lt;? super T, U&gt; fn);</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage that, when either this or the other given stage complete normally, is executed with the corresponding result as argument to the supplied function.</p>
+</blockquote>
+<p>他呢就是 当两个任务有一个完成的时候就执行这个 , 将完成那个阶段的返回值提供给这个方法 fn</p>
+<pre><code class="language-java">@Test
+public void testEither() throws IOException {
+    CompletableFuture.supplyAsync(() -&gt; {
+        ThreadUtil.sleep(100);
+        System.out.println(&quot;stage 1 执行&quot;);
+        return &quot;stage 1&quot;;
+    }).applyToEither(CompletableFuture.supplyAsync(() -&gt; {
+        ThreadUtil.sleep(200);
+        System.out.println(&quot;stage 2 执行&quot;);
+        return &quot;stage 2&quot;;
+    }), new Function&lt;String, Object&gt;() {
+        @Override
+        public Object apply(String s) {
+            System.out.println(&quot;收到最快完成的任务 : &quot; + s);
+            return null;
+        }
+    });
+
+    System.in.read();
+}
+
+// 输出 : 
+// stage 1 执行
+// 收到最快完成的任务 : stage 1
+// stage 2 执行
+</code></pre>
+<p>说明就算是有一个任务后执行, 也会执行的, 只不过这个方法是只要有一个任务有返回值就会执行 ...</p>
+<h4 id="5-accepteither">5. acceptEither</h4>
+<p><code>public CompletionStage&lt;Void&gt; acceptEither (CompletionStage&lt;? extends T&gt; other, Consumer&lt;? super T&gt; action);</code></p>
+<blockquote>
+<p>​	Returns a new CompletionStage that, when either this or the other given stage complete normally, is executed with the corresponding result as argument to the supplied action.</p>
+</blockquote>
+<p>当有一个任务正常完成就会执行他 , 他是一个消费方法, 所以不会提供返回值 , 不展示了</p>
+<h4 id="6-runaftereither">6. runAfterEither</h4>
+<p><code>public CompletionStage&lt;Void&gt; runAfterEither(CompletionStage&lt;?&gt; other, Runnable action);</code></p>
+<blockquote>
+<p>Returns a new CompletionStage that, when either this or the other given stage complete normally, executes the given action.</p>
+</blockquote>
+<p>这个和前两个一样 , 都是有一个正常完成就会执行后面的方法 , 不过他只是一个runnable 方法, 只是一个执行任务 ,</p>
+<p>所以不展示了 ....</p>
+<p>到这里基本上 <code>CompletionStage</code> 的方法都讲完了 , 基本上大家看JavaDoc 就可以随便写了 , 他主要是就是三个方法一个是 只提供, 一个是又消费又提供 ,一个只消费 ,一个我也不消费我也不提供, 就是这几个.</p>
+<h3 id="11-并行合并">11. 并行合并</h3>
+<blockquote>
+<p>allOf方法是当所有的<code>CompletableFuture</code>都执行完完毕后才执行下一阶段。</p>
+<p>anyOf方法是当任意一个<code>CompletableFuture</code>执行完后执行下一阶段。</p>
+</blockquote>
+<h4 id="1-allof">1. allOf</h4>
+<p>allOf 会将添加的阶段全部执行完毕后才执行下一阶段的任务 , 其中所有阶段都是<code>并行执行</code> ;</p>
+<pre><code class="language-java">@Test
+public void testAddAll() throws IOException {
+
+    CompletableFuture&lt;Void&gt; fun1 = CompletableFuture.runAsync(() -&gt; {
+        ThreadUtil.sleep(100);
+        System.out.println(&quot;fun1&quot;);
+    });
+
+    CompletableFuture&lt;Void&gt; fun2 = CompletableFuture.runAsync(() -&gt; {
+        System.out.println(&quot;fun2&quot;);
+    });
+
+
+    CompletableFuture.allOf(fun1, fun2).thenRun(() -&gt; {
+        System.out.println(&quot;添加完毕&quot;);
+    });
+
+    System.in.read();
+}
+
+// 输出 : 
+// fun2
+// fun1
+// 添加完毕	
+</code></pre>
+<h4 id="2-anyof">2.  anyOf</h4>
+<p>anyOf 会其中一个执行完毕就会执行下一阶段,其中添加的任务都是<code>并行执行</code> ;</p>
+<pre><code class="language-java">@Test
+public void testAddAll() throws IOException {
+
+    CompletableFuture&lt;Void&gt; fun1 = CompletableFuture.runAsync(() -&gt; {
+        ThreadUtil.sleep(100);
+        System.out.println(&quot;fun1&quot;);
+    });
+
+    CompletableFuture&lt;Void&gt; fun2 = CompletableFuture.runAsync(() -&gt; {
+        System.out.println(&quot;fun2&quot;);
+    });
+
+
+    CompletableFuture.anyOf(fun1, fun2).thenRun(() -&gt; {
+        System.out.println(&quot;添加完毕&quot;);
+    });
+
+    System.in.read();
+}
+
+输出 :
+// fun2
+// 添加完毕
+// fun1
+</code></pre>
+<h4 id="3测试并行执行">3.测试并行执行</h4>
+<pre><code class="language-java">@Test
+public void testAddAll() throws IOException {
+
+    long start = System.currentTimeMillis();
+
+    CompletableFuture&lt;Void&gt; fun1 = CompletableFuture.runAsync(() -&gt; {
+        ThreadUtil.sleep(100);
+        System.out.println(&quot;fun1&quot;);
+    });
+
+    CompletableFuture&lt;Void&gt; fun2 = CompletableFuture.runAsync(() -&gt; {
+        ThreadUtil.sleep(200);
+        System.out.println(&quot;fun2&quot;);
+    });
+
+    CompletableFuture.allOf(fun1, fun2).thenRun(() -&gt; {
+        System.out.println(&quot;添加完毕&quot;);
+        System.out.println(System.currentTimeMillis() - start);
+    });
+
+    System.in.read();
+}
+</code></pre>
+<p>如果输出时间小于300ms 就表示是并行执行的 , 输出</p>
+<pre><code class="language-java">fun1
+fun2
+添加完毕
+265  // 确实是并行执行 ...
+</code></pre>
+<h2 id="3-总结">3. 总结</h2>
+<p>希望我上面的总结你可以对于 <code>CompletionStage</code> 这个思想有新的认识 , 这种思想很重要, 流式编程 , 想异步想同步, 全在自己把握中 ,  第二节主要是讲了  <code>CompletionStage</code> 中的全部方法, 如果不想看我写的, 可以看看文档中的表述 , 其实Java编程中提供了 很多这种的例子, 可以学习一下 <code>guava</code> 的编程,或者基于 <code>scala</code>的编程</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-completionstage">1. CompletionStage</a></li>
+<li><a href="#2-completablefuture">2. CompletableFuture</a>
+<ul>
+<li><a href="#1-%E7%AE%80%E5%8D%95%E5%BC%80%E5%A7%8B">1. 简单开始</a></li>
+<li><a href="#2-%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95-%E5%AE%9E%E4%BE%8B%E5%8C%96">2. 静态方法-实例化</a></li>
+<li><a href="#3%E7%AB%8B%E5%8D%B3%E5%AE%8C%E6%88%90-complete-%E5%92%8C-completeexceptionally-%E6%96%B9%E6%B3%95">3.立即完成  complete 和 completeExceptionally 方法</a></li>
+<li><a href="#4-%E6%8A%93%E5%8F%96%E5%BC%82%E5%B8%B8-exceptionally-%E6%96%B9%E6%B3%95">4.  抓取异常 - exceptionally 方法</a></li>
+<li><a href="#5-%E5%8A%A0%E5%B7%A5-supplyasync-thenapply-thenaccept-%E6%96%B9%E6%B3%95">5 加工 - supplyAsync &amp; thenApply &amp; thenAccept 方法</a></li>
+<li><a href="#6-%E5%8A%A0%E5%B7%A5-whencomplete-%E6%96%B9%E6%B3%95">6. 加工-  whenComplete 方法</a></li>
+<li><a href="#7-%E5%8A%A0%E5%B7%A5-handle-%E6%96%B9%E6%B3%95">7. 加工 - handle 方法</a></li>
+<li><a href="#8-%E5%8A%A0%E5%B7%A5-thencompose">8. 加工 - thenCompose</a></li>
+<li><a href="#9-%E5%8F%96%E6%B6%88-cancel">9.  取消 - cancel</a></li>
+<li><a href="#10-%E9%A1%BA%E5%BA%8F%E5%90%88%E5%B9%B6">10. 顺序合并</a>
+<ul>
+<li><a href="#1-thencombine">1. thenCombine</a></li>
+<li><a href="#2-thenacceptboth">2. thenAcceptBoth</a></li>
+<li><a href="#3-runafterboth">3. runAfterBoth</a></li>
+<li><a href="#4-applytoeither">4. applyToEither</a></li>
+<li><a href="#5-accepteither">5. acceptEither</a></li>
+<li><a href="#6-runaftereither">6. runAfterEither</a></li>
+</ul>
+</li>
+<li><a href="#11-%E5%B9%B6%E8%A1%8C%E5%90%88%E5%B9%B6">11. 并行合并</a>
+<ul>
+<li><a href="#1-allof">1. allOf</a></li>
+<li><a href="#2-anyof">2.  anyOf</a></li>
+<li><a href="#3%E6%B5%8B%E8%AF%95%E5%B9%B6%E8%A1%8C%E6%89%A7%E8%A1%8C">3.测试并行执行</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

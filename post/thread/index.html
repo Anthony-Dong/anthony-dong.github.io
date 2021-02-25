@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java - 你真的了解 Thread 吗 (介意多看看,多理解) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/thread/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java - 你真的了解 Thread 吗 (介意多看看,多理解)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-09</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/thread/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2915字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">13 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Java语言一共设置了10个级别的线程优先级（Thread.MIN_PRIORITY至Thread.MAX_PRIORITY）。在两个线程同时处于Ready状态时，优先级越高的线程越容易被系统选择执行。(这个是Java定义的, 但是操作系统另有实现, 不过是JVM的事)</p>
+<p>​	关于Java的线程具体实现, 是根据虚拟机决定的, 虚拟机提供了怎样的实现, 那么就是如何实现的. 一般是内核态线程, 用户态线程, 还有两者相结合. 都有使用. 这都是看JVM如何实现的, 所以广义上来说, 多线程的实现并不受限. 所以没有统一,对于C语言多线程实现方式有很多种呢都 .</p>
+<p>​		但是对于我们主流的JVM都是内核态线程(问题 : 映射到操作系统上的线程天然的缺陷是切换、调度成本高昂，系统能容纳的线程数量也很有限), 与操作系统的线程是1:1的关系.</p>
+<p>​		比如新兴的Golang和Kotlin使用的就是用户态, 这种基于用户态实现的线程一般称之为 协程(Routine)或者纤程(Fiber) , 他的做法是所有调度全部由用户实现.  也就是说举个例子, 操作系统的线程是死的,但是线程是基于CPU的(对于操作系统来说就是要实现一个CPU上如何实现多线程,所以线程数是有操作系统决定的,所以用户直接用就行了), 但是协程则是基于线程的, 一个道理, 一个线程上可以运行多个协程, 所以需要用户去设计如何在一个线程上调度多个协程,  同时线程stack默认值是1M(可以通过-Xss设置), 但是协程可以是几k不等由用户定义, 所以对于一个线程可以运行几百个协程 .  关于操作系统多线程的实现可以自行百度(时间片算法), 其实明白了协程自然也明白了.</p>
+<p>​	还有一种实现是两者的结合. 不多讲.</p>
+<p>​	所以对于开发者来说, 只有JVM规范和Java规范. 没有所谓的绝对的做法.</p>
+</blockquote>
+<p>关于以上这段话不懂的, 可以看看深入理解Java虚拟机这本书. 关于线程,协程,纤程如果还是不懂的可以看看<a href="https://www.cnblogs.com/Leo_wl/p/10943969.html">这篇文章</a> .</p>
+<p>一下就是Java的Thread了. 带你进入Java的世界. 你是否有些没有领略过呢.</p>
+<h2 id="1-thread">1. Thread</h2>
+<blockquote>
+<p>​	这个是Java线程唯一入口类, 其他都是封装, 不管线程池, 还是其他. 都是继承了Thread . runnable实际上是一个接口方法, 线程启动会调用罢了. 可以说是一个回调函数.</p>
+</blockquote>
+<h3 id="实例化">实例化</h3>
+<h4 id="1-无参">1. 无参</h4>
+<pre><code class="language-java">public Thread() {
+        init(null, null, &quot;Thread-&quot; + nextThreadNum(), 0);
+}
+</code></pre>
+<h4 id="2-最常用的">2. 最常用的</h4>
+<blockquote>
+<p>​	target – the object whose run method is invoked when this thread is started. If null, this classes run method does nothing.</p>
+<p><strong>target 这个对象的run方法当线程开始是被运行 , 如果没有 , 这个类运行方法什么也不做 ,</strong></p>
+<p><strong>这种也是我们最常用的一种了</strong></p>
+</blockquote>
+<pre><code class="language-java">public Thread(Runnable target) {
+    init(null, target, &quot;Thread-&quot; + nextThreadNum(), 0);
+}
+</code></pre>
+<h4 id="3-参数最全的">3. 参数最全的</h4>
+<pre><code class="language-java">public Thread(ThreadGroup group, Runnable target, String name,
+                  long stackSize) {
+        init(group, target, name, stackSize);
+}
+</code></pre>
+<blockquote>
+<p>group :  the thread group. If null and there is a security manager, the group is determined by SecurityManager.getThreadGroup(). If there is not a security manager or SecurityManager.getThreadGroup() returns null, the group is set to the current thread's thread group.</p>
+<p>name – the name of the new thread</p>
+<p>stackSize – the desired stack size for the new thread, or zero to indicate that this parameter is to be ignored.</p>
+<p>group - 线程组 , 如果没有的话,这里有一个security manager , 则由SecurityManager的<code>getThreadGroup()</code>方法确定组 , 如果没有security manager 等 ,则将该组设置为当前线程的线程组。</p>
+<p>target -  Runnable对象的run方法当线程开始是被运行 , 如果没有 , 这个类运行方法什么也不做 ,</p>
+<p>name  - 当前线程的名字</p>
+<p>stackSize - 新线程所需的堆栈大小，或者0表示忽略该参数。这里设置0可以让JVM自动管理 ,如果我们手动设置 ,会造成 ,栈溢出<code>StackOverflowError</code>或者栈太小了,内存溢出了 <code>OutOfMemoryError</code>或者 <code>内部 error</code></p>
+</blockquote>
+<h3 id="核心-start">核心 - start</h3>
+<p>对于Java来说, 启动一个线程只有一个途径就是 ,  拿到一个Thread实例, 然后start , Java的线程和系统线程是等价的.</p>
+<p>对于一些人说创建一个线程的途径, 也是 所有继承或者直接实例化Thread都可以创建一个线程. 但是启动就一个方法入口就是start . 跟golang的 go关键字一样.</p>
+<p>这个是 start()方法的JavaDOC .</p>
+<blockquote>
+<p>Causes this thread to begin execution; the Java Virtual Machine calls the run method of this thread.<br>
+The result is that two threads are running concurrently: the current thread (which returns from the call to the start method) and the other thread (which executes its run method).<br>
+It is never legal to start a thread more than once. In particular, a thread may not be restarted once it has completed execution.</p>
+</blockquote>
+<p>当前线程开始执行, JVM会用调用当前线程的run方法.</p>
+<p>结果是两个线程并发执行(这两个线程, 一个是执行start方法的线程(可能是主线程,执行完start方法后, 会立马返回), 一个就是你实例化的线程(他会执行run方法)</p>
+<p>我们不允许start方法被调用两次 ,这样是不合理的. 线程执行完毕大概是不会重启的 . (其实是靠线程内部一个状态量控制的,启动后就修改了,你调用start绝对会失败,而且start方法是sync修饰的)</p>
+<h2 id="2-守护线程">2. 守护线程</h2>
+<p><code>final void setDaemon(boolean on)</code></p>
+<blockquote>
+<p>Marks this thread as either a daemon thread or a user thread. The Java Virtual Machine exits when the only threads running are all daemon threads.<br>
+This method must be invoked before the thread is started.</p>
+<p><strong>描述的是当JVM中的运行的线程就省下守护线程了, JVM就退出了  , 守护线程这个方法 必须在线程开始前调用,也就是说在start() 方法前调用的.</strong></p>
+</blockquote>
+<pre><code class="language-java">public final void setDaemon(boolean on) {
+    //  the current thread cannot modify this thread
+    checkAccess();
+    // strat 运行后 ,线程状态会改成 isAlive ,此时会抛出异常
+    if (isAlive()) {
+        throw new IllegalThreadStateException();
+    }
+    // 默认是非守护线程
+    daemon = on;
+}
+</code></pre>
+<p>所谓守护线程,是指在程序运行的时候在后台提供一种通用服务的线程，比如垃圾回收线程就是一个很称职的守护者，并且这种线程并不属于程序中不可或缺的部分。</p>
+<p>​		<strong>其实对于后期开发, 对于服务线程, 尤其是线程池一般都是设置成deamon , 除了主线程尽可能的使用守护线程, 好处就是好控制JVM进程的关闭.  对于Golang来说,GoRoutine其实就是一个守护线程.  所以一般你运行,不加锁或者不等待,一般直接进程关闭了.</strong></p>
+<h2 id="3-线程状态">3. 线程状态</h2>
+<p>Java的 线程一共有六种状态  , 其实对于 new , runnable , terminated 大家都懂 , 就是其他三个不知道处于啥场景.</p>
+<h3 id="种类">种类 :</h3>
+<p>NEW  : Thread state for a thread which has not yet started.(执行实例化一个线程的操作后的状态)</p>
+<p>RUNNABLE  : Thread state for a runnable thread. A thread in the runnable state is executing in the Java virtual machine but it may be waiting for other resources from the operating system such as processor. (这里其实是你执行了start方法后的 , 但是启动线程其实分为两步, 第一步就是去准备一些资源吧, 此时处于就绪状态, 等真正分配好了,才会进入真正的启动过程, 所以启动一个线程的代价比较大)</p>
+<p><code>BLOCKED</code>:  Thread state for a thread blocked waiting for a monitor lock.(sync)</p>
+<p><code>WAITING</code>:  Thread state for a waiting thread. (Object.wait)</p>
+<p><code>TIMED_WAITING</code>:  Thread state for a waiting thread with a specified waiting time. (Sleep)</p>
+<p>TERMINATED :  Thread state for a terminated thread. The thread has completed execution.</p>
+<h4 id="首先说这几个状态如何查看吧">首先说这几个状态如何查看吧,</h4>
+<p>利用JDK自带的工具  , jstack 和  jconsole 都可以. .不然你手动咋查看状态. 开一个线程传入当前线程, 然后.... 太麻烦了 .</p>
+<h4 id="1-threadsleeptime">1. Thread.sleep(time)</h4>
+<p>这个其实是线程处于了 <code>TIMED_WAITING</code>  , 所以上面解释到 <code>Thread state for a waiting thread with a specified waiting time.</code>  , 是一致的.</p>
+<h4 id="2-objectwait">2. Object.wait()</h4>
+<p>这个是处于 <code>WAITING</code> 状态. 处于对象锁, 所以处于wait中.</p>
+<p>对于加了 timeout参数的则是出于 <code>TIMED_WAITING</code> 状态</p>
+<pre><code class="language-java">名称: anthony
+状态: java.lang.Object@3f462b58上的TIMED_WAITING
+总阻止数: 0, 总等待数: 1
+</code></pre>
+<h4 id="3-unsafepark">3. Unsafe.park()</h4>
+<blockquote>
+<p>​	同理LockSupport也是一样的.  其实他就是基于Unsafe实现的.</p>
+</blockquote>
+<p>当你没有指定时间则是 <code>WAITING</code>  , 指定了等待时间则是 <code>TIMED_WAITING</code></p>
+<pre><code class="language-java">名称: anthony2
+状态: TIMED_WAITING
+总阻止数: 0, 总等待数: 1
+</code></pre>
+<p>但是这个为啥和上面那个不同 , 他没有等待对象, 是因为每一个线程内部都会有一个Blocker对象. 你需要设置这个对象. 那么调用park操作才会显示的展示出来</p>
+<pre><code class="language-java">LockSupport.parkUntil(new Object(), System.currentTimeMillis() + 1111111L);
+</code></pre>
+<pre><code class="language-java">volatile Object parkBlocker;
+</code></pre>
+<h4 id="4-synchronize">4. synchronize</h4>
+<p>同步代码快,还是同步方法, 都是处于一个 <code>BLOCKED</code> 状态 .</p>
+<p>我们可以通过 jconsole 查看anthony线程这个对象被哪个线程拿着 . 显然是anthony-2这个线程.</p>
+<pre><code class="language-java">名称: anthony
+状态: java.lang.Object@18961ed8上的BLOCKED, 拥有者: anthony-2
+总阻止数: 1, 总等待数: 0
+</code></pre>
+<p>总结一下, 就这么一张图, 引用自实战Java虚拟机.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/e19e449c-46c4-4989-bf71-96e3628f4ae8.png" alt="" loading="lazy"></figure>
+<h3 id="阻塞与等待的区别">阻塞与等待的区别</h3>
+<p>**“阻塞状态”与“等待状态”的区别 : **</p>
+<p><strong>“阻塞状态”在等待着获取到一个排它锁，这个事件将在另外一个线程放弃这个锁的时候发生；</strong></p>
+<p><strong>“等待状态”则是在等待一段时间，或者唤醒动作的发生。在程序等待进入同步区域的时候，线程将进入这种状态。</strong></p>
+<h2 id="4-如何关闭线程">4. 如何关闭线程</h2>
+<h3 id="1-interrupt-方法">1. interrupt() 方法</h3>
+<pre><code class="language-java">public static void main(String[] args) throws InterruptedException {
+
+    Thread thread = new Thread(() -&gt; {
+        // 这个方法只是测试是否当前时刻被打断.记住是某一刻.所以`thread.interrupt`并不能处理这里.
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
+                say();
+                // 必须强制抓取InterruptedException异常,核心在这里.
+            } catch (InterruptedException e) {
+                // throw抛出去, 停止当前线程
+                throw new RuntimeException(e.getMessage());
+            }
+        }
+    });
+    thread.start();
+    // 运行1S ,然后发送一个打断命令.
+    TimeUnit.MILLISECONDS.sleep(1000);
+    thread.interrupt();
+}
+
+static void say() throws InterruptedException {
+    TimeUnit.MILLISECONDS.sleep(100);
+    System.out.printf(&quot;Thread : %s in %s.\n&quot;, Thread.currentThread().getName(), Thread.currentThread().getState());
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Thread : Thread-0 in RUNNABLE.
+Exception in thread &quot;Thread-0&quot; java.lang.RuntimeException: sleep interrupted
+	at com.guava.TestCondition.lambda$main$0(TestCondition.java:23)
+	at java.lang.Thread.run(Thread.java:748)
+</code></pre>
+<h3 id="2-throw-new-exception">2. throw new Exception()</h3>
+<pre><code class="language-java">public static void main(String[] args) {
+    new Thread(() -&gt; {
+        int x = 1;
+        while (true) {
+            System.out.println(Thread.currentThread().getName() + &quot; : &quot; + x++);
+            if (x == 5) {
+                // 抛出异常
+                throw new RuntimeException(&quot;exception&quot;);
+            }
+        }
+    }).start();
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Thread-0 : 1
+Thread-0 : 2
+Thread-0 : 3
+Thread-0 : 4
+Exception in thread &quot;Thread-0&quot; java.lang.RuntimeException: exception
+	at com.threadstatus.StopThreadByException.lambda$main$0(StopThreadByException.java:20)
+	at java.lang.Thread.run(Thread.java:748)
+</code></pre>
+<h3 id="3-设置标识符">3. 设置标识符</h3>
+<blockquote>
+<p>注意可见性.</p>
+</blockquote>
+<pre><code class="language-java">public class StopThreadWithFlag {
+    private static volatile boolean flag = true;
+    public static void main(String[] args) throws InterruptedException {
+        Thread thread = new Thread(() -&gt; {
+            int x = 1;
+            while (flag) {
+
+                try {
+                    TimeUnit.MILLISECONDS.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println(Thread.currentThread().getName() + &quot; : &quot; + x++);
+            }
+        });
+        thread.start();
+        thread.join();
+
+        flag = false;
+    }
+}
+</code></pre>
+<p>结果呢 ? 不会停止 , 因为主线程根本不执行 , 此时thread.join ,其实是一种阻塞状态 , 根本不会让主线程去执行 ,怎么办 .所以这种情况下 ,我们需要互换角色 , 此时主线程执行,子线程也会执行.</p>
+<pre><code class="language-java">public class StopThreadWithFlag {
+    private static volatile boolean flag = true;
+
+    public static void main(String[] args) throws InterruptedException {
+        int x = 1;
+        Thread thread = new Thread(() -&gt; {
+            flag = false;
+        });
+        thread.start();
+
+        while (flag) {
+            System.out.println(Thread.currentThread().getName() + &quot; : &quot; + x++);
+        }
+    }
+}
+</code></pre>
+<p>参考文章 : 深入理解Java虚拟机.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-thread">1. Thread</a>
+<ul>
+<li><a href="#%E5%AE%9E%E4%BE%8B%E5%8C%96">实例化</a>
+<ul>
+<li><a href="#1-%E6%97%A0%E5%8F%82">1. 无参</a></li>
+<li><a href="#2-%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84">2. 最常用的</a></li>
+<li><a href="#3-%E5%8F%82%E6%95%B0%E6%9C%80%E5%85%A8%E7%9A%84">3. 参数最全的</a></li>
+</ul>
+</li>
+<li><a href="#%E6%A0%B8%E5%BF%83-start">核心 - start</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%AE%88%E6%8A%A4%E7%BA%BF%E7%A8%8B">2. 守护线程</a></li>
+<li><a href="#3-%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81">3. 线程状态</a>
+<ul>
+<li><a href="#%E7%A7%8D%E7%B1%BB">种类 :</a>
+<ul>
+<li><a href="#%E9%A6%96%E5%85%88%E8%AF%B4%E8%BF%99%E5%87%A0%E4%B8%AA%E7%8A%B6%E6%80%81%E5%A6%82%E4%BD%95%E6%9F%A5%E7%9C%8B%E5%90%A7">首先说这几个状态如何查看吧,</a></li>
+<li><a href="#1-threadsleeptime">1. Thread.sleep(time)</a></li>
+<li><a href="#2-objectwait">2. Object.wait()</a></li>
+<li><a href="#3-unsafepark">3. Unsafe.park()</a></li>
+<li><a href="#4-synchronize">4. synchronize</a></li>
+</ul>
+</li>
+<li><a href="#%E9%98%BB%E5%A1%9E%E4%B8%8E%E7%AD%89%E5%BE%85%E7%9A%84%E5%8C%BA%E5%88%AB">阻塞与等待的区别</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%A6%82%E4%BD%95%E5%85%B3%E9%97%AD%E7%BA%BF%E7%A8%8B">4. 如何关闭线程</a>
+<ul>
+<li><a href="#1-interrupt-%E6%96%B9%E6%B3%95">1. interrupt() 方法</a></li>
+<li><a href="#2-throw-new-exception">2. throw new Exception()</a></li>
+<li><a href="#3-%E8%AE%BE%E7%BD%AE%E6%A0%87%E8%AF%86%E7%AC%A6">3. 设置标识符</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

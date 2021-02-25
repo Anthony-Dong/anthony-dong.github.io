@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>SpringBoot整合Quartz &amp; 发现SpringBoot的一个新大陆 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/5078hZDv2/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>SpringBoot整合Quartz &amp; 发现SpringBoot的一个新大陆</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/5078hZDv2/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/tKL7bR-rqBr/"
+								class="tag">Quartz</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">675字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">4 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-基于api的方式">1. 基于Api的方式</h2>
+<pre><code class="language-java">@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+public class SpringQuartzApplication implements CommandLineRunner{
+
+    public static void main(String[] args) {
+        SpringApplication.run(SpringQuartzApplication.class, args);
+    }
+
+
+    @Override
+    public void run(String... args) throws Exception {
+        Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
+        JobDetail job = JobBuilder.newJob(MyJob.class).build();
+        Trigger trigger = TriggerBuilder.newTrigger().startNow().withSchedule(SimpleScheduleBuilder.repeatHourlyForever().withIntervalInMilliseconds(1000)).build();
+        scheduler.scheduleJob(job, trigger);
+        scheduler.start();
+    }
+}
+</code></pre>
+<p>其实可以实现接口 <code>EnvironmentAware</code> 接口, 拿到Environment对象, 然后注入进去.</p>
+<pre><code class="language-java">StdSchedulerFactory factory = new StdSchedulerFactory(new Properties());
+Scheduler scheduler = factory.getScheduler();
+</code></pre>
+<h2 id="2-springboot处理">2. SpringBoot处理</h2>
+<p><code>org.springframework.boot.autoconfigure.quartz.QuartzAutoConfiguration</code> 这个类实现了自动注入的功能 .</p>
+<p>他会有一个 <code>org.springframework.scheduling.quartz.SchedulerFactoryBean</code> 实例化, 同时 , 在返回之前, 会设置一个拦截器类似于 <code>org.springframework.boot.autoconfigure.quartz.SchedulerFactoryBeanCustomizer</code> , 可以设置一些<code>SchedulerFactoryBean</code> 的一些信息 . ....</p>
+<p>首先就是 application.properties ,前缀是 spring.quartz.properties , 后缀还是原来的写法 ,</p>
+<pre><code class="language-properties">spring.quartz.properties.org.quartz.scheduler.instanceName=MyScheduler
+spring.quartz.properties.org.quartz.threadPool.threadCount=4
+spring.quartz.properties.org.quartz.jobStore.class=org.quartz.simpl.RAMJobStore
+spring.quartz.job-store-type=memory
+</code></pre>
+<h3 id="1-我们用schedulerfactorybeancustomizer实现注入">1. 我们用SchedulerFactoryBeanCustomizer实现注入 .</h3>
+<pre><code class="language-java">@Bean
+public SchedulerFactoryBeanCustomizer schedulerFactoryBeanCustomizer() {
+    return new SchedulerFactoryBeanCustomizer() {
+        @Override
+        public void customize(SchedulerFactoryBean schedulerFactoryBean) {
+
+            Properties properties = new Properties();
+            try {
+                properties.load(Thread.currentThread().getContextClassLoader().getResourceAsStream(&quot;quartz.properties&quot;));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            schedulerFactoryBean.setQuartzProperties(properties);
+
+            JobDetail job = JobBuilder.newJob(MyQuartzJobBean.class).storeDurably().build();
+            Trigger trigger = TriggerBuilder.newTrigger().forJob(job).startNow()
+                    .withSchedule(SimpleScheduleBuilder.repeatHourlyForever().withIntervalInMilliseconds(1000))
+                    .build();
+            // 
+            schedulerFactoryBean.setJobDetails(job);
+            // 
+            schedulerFactoryBean.setTriggers(trigger);
+        }
+    };
+}
+</code></pre>
+<h3 id="2-直接注入">2. 直接注入</h3>
+<pre><code class="language-java">@Bean
+public Trigger schedulerFactoryBean() {
+    return TriggerBuilder.newTrigger().forJob(jobDetail()).startNow()
+            .withSchedule(SimpleScheduleBuilder.repeatHourlyForever().withIntervalInMilliseconds(1000))
+            .build();
+}
+
+@Bean
+public JobDetail jobDetail() {
+    return JobBuilder.newJob(MyQuartzJobBean.class).storeDurably().build();
+}
+</code></pre>
+<p>这里需要注意的是 需要将 <code>JobDetail</code> 设置storeDurably()为true , 不然启动会报错</p>
+<pre><code class="language-java">org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'quartzScheduler' defined in class path resource [org/springframework/boot/autoconfigure/quartz/QuartzAutoConfiguration.class]: Invocation of init method failed; nested exception is org.quartz.SchedulerException: Jobs added with no trigger must be durable.
+</code></pre>
+<h2 id="3-quartzjobbean">3. QuartzJobBean</h2>
+<p><code>org.springframework.scheduling.quartz.QuartzJobBean</code>  注入Bean, 这个很有特点, 所以特别拿出来,</p>
+<p>他实现了 <code>org.quartz.Job</code> 接口, 实现了特定的方法</p>
+<pre><code class="language-java">public abstract class QuartzJobBean implements Job {
+
+	@Override
+	public final void execute(JobExecutionContext context) throws JobExecutionException {
+		try {
+            // 这里比较核心  ... 不好理解, 但是注释可以 , This implementation applies the passed-in job data map as bean property values, and delegates to executeInternal afterwards.
+			BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+			MutablePropertyValues pvs = new MutablePropertyValues();
+			pvs.addPropertyValues(context.getScheduler().getContext());
+			pvs.addPropertyValues(context.getMergedJobDataMap());
+			bw.setPropertyValues(pvs, true);
+		}
+		catch (SchedulerException ex) {
+			throw new JobExecutionException(ex);
+		}
+		executeInternal(context);
+	}
+
+	protected abstract void executeInternal(JobExecutionContext context) throws JobExecutionException;
+
+}
+</code></pre>
+<p><code>assed-in job data map as bean property values</code> -&gt; 将map中的内容设置为Bean的字段属性</p>
+<pre><code class="language-java">@PersistJobDataAfterExecution
+@Component
+public class MyQuartzJobBean extends QuartzJobBean {
+
+    public static final String USER_NAME = &quot;name&quot;;
+
+    private String name;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    protected void executeInternal(JobExecutionContext context) throws JobExecutionException {
+        System.out.println(&quot;Name = &quot; + name);
+        JobDataMap map = context.getJobDetail().getJobDataMap();
+        map.put(USER_NAME, UUID.randomUUID().toString());
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">Name = 29f5aff1-52f0-47eb-be2c-a84bbe638a7a
+Name = 828b594e-f918-42ca-93fe-e2321b2bf312
+Name = cb268907-ba2a-4bc7-8ca0-f0facd64a8e3
+Name = a3553825-2e8b-4f50-b075-0402dfb1ee7a
+Name = d0a95144-50e9-49ca-97c3-5730900180d2
+Name = 7c6ff206-3611-4264-915a-f188f747bdd8
+</code></pre>
+<p>所以还是可以的 ...</p>
+<p>其实这个很好用 :  就这段代码 ....</p>
+<pre><code class="language-java">BeanWrapper bw = PropertyAccessorFactory.forBeanPropertyAccess(this);
+MutablePropertyValues pvs = new MutablePropertyValues();
+pvs.addPropertyValues(context.getScheduler().getContext());
+pvs.addPropertyValues(context.getMergedJobDataMap());
+bw.setPropertyValues(pvs, true);
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%9F%BA%E4%BA%8Eapi%E7%9A%84%E6%96%B9%E5%BC%8F">1. 基于Api的方式</a></li>
+<li><a href="#2-springboot%E5%A4%84%E7%90%86">2. SpringBoot处理</a>
+<ul>
+<li><a href="#1-%E6%88%91%E4%BB%AC%E7%94%A8schedulerfactorybeancustomizer%E5%AE%9E%E7%8E%B0%E6%B3%A8%E5%85%A5">1. 我们用SchedulerFactoryBeanCustomizer实现注入 .</a></li>
+<li><a href="#2-%E7%9B%B4%E6%8E%A5%E6%B3%A8%E5%85%A5">2. 直接注入</a></li>
+</ul>
+</li>
+<li><a href="#3-quartzjobbean">3. QuartzJobBean</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

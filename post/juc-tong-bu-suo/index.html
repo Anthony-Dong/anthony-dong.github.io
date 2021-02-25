@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java - 多线程锁的问题 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/juc-tong-bu-suo/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java - 多线程锁的问题</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/juc-tong-bu-suo/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3038字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">12 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-synchronized关键字-与-lock锁">1. synchronized关键字 与 Lock锁</h2>
+<p>JUC中提供了伟大的Lock锁, 通过Java编程实现的的, 是著名的并发编程的作者 <code>Doug Lea</code> 实现的. 在当时JDK1.5时代之前, Java的synchronized效率太低了. 因此Java公司看不下去了, 当时Doug Lea写了个并发框架, 就是叫做 <code>dj.util.concurrent</code>  , 因此Java为了长久的发展, 和短暂的解决synchronize的问题 , 整合了 juc包. 所以随之而来就是JUC包的大量使用.</p>
+<p>但是Java并不会放弃 synchronized的优化. 他们不断的优化, 其实优化思想也是类似于JUC中Lock的思想. 利用自旋和其他多线程特点, 来减少线程直接进行挂起和等待的操作.</p>
+<p>我们来看看他们的性能对比吧. 在JDK1.5的时候, 现在都1.8了人人使用的是.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/e5742761-acc8-41c5-bd83-611bf7974d84.png" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/7be9b607-3bd4-4396-b834-41096166b13b.png" alt="" loading="lazy"></figure>
+<p>​		通过简单的对比. 发现差距十分的大. 但是 尽管在JDK 5时代ReentrantLock曾经在性能上领先过synchronized，但这已经是十多年之前的胜利了。从长远来看，Java虚拟机更容易针对synchronized来进行优化，因为Java虚拟机可以在线程和对象的元数据中记录synchronized中锁的相关信息，而使用J.U.C中的Lock的话，Java虚拟机是很难得知具体哪些锁对象是由特定线程锁持有的。</p>
+<h2 id="2-reentrantlock-可重入锁">2. ReentrantLock 可重入锁</h2>
+<blockquote>
+<p>​	ReentrantLock 从字面可以看出是一把可重入锁，这点和 synchronized 一样，但实现原理也与 syncronized 有很大差别，它是基于经典的 AQS(AbstractQueueSyncronized) 实现的, AQS 是基于 volitale 和 CAS 实现的，其中 AQS 中维护一个 valitale 类型的变量 state 来做一个可重入锁的重入次数，加锁和释放锁也是围绕这个变量来进行的。 ReentrantLock 也提供了一些 synchronized 没有的特点，因此比 synchronized 好用。</p>
+</blockquote>
+<p>锁的用处 : 当一个资源被多个线程共用时,如果执行修改操作, 那么就存在线程安全的问题. 有可能ab线程同时读取到的都是1,那么修改只能+1,那么两次计算结果就会出现少计算一次. 有兴趣的可以看看线程读取变量到写入变量的各种操作, 其实分为很多步.</p>
+<pre><code class="language-java">public class Reentrant {
+
+    public static void main(String[] args) throws InterruptedException {
+        ExecutorService pool = Executors.newFixedThreadPool(10);
+        IntStream.range(0,10).forEach(e-&gt;{
+            pool.execute(()-&gt;{
+                for (int x = 0; x &lt; 10000; x++) {
+                    increase();
+                }
+            });
+        });
+        // 等到全部线程执行完毕输出
+        pool.shutdown();
+        pool.awaitTermination(Integer.MAX_VALUE, TimeUnit.DAYS);
+        System.out.println(&quot;输出结果 : &quot;+x);
+    }
+
+    private static int x = 0;
+
+    private static void increase() {
+        x += 1;
+    }
+}
+</code></pre>
+<p>每次执行结果,可能有些偏差,但是绝对会小于 100000的</p>
+<pre><code class="language-java">输出结果 : 67398
+</code></pre>
+<p>那如何处理呢, 这时候就需要加一把锁了 .  可以使用sync修饰 <code>increase</code> 方法</p>
+<pre><code class="language-java">private synchronized static void increase() {
+    x += 1;
+}
+</code></pre>
+<p>此时输出结果为</p>
+<pre><code class="language-java">输出结果 : 100000
+</code></pre>
+<p>也可以使用我们说到的Lock , 我们这里使用的是 ReentrantLock , 是一个可重入锁.</p>
+<pre><code class="language-java">private static final Lock LOCK = new ReentrantLock();
+
+private  static void increase() {
+    try {
+        LOCK.lock();
+        x += 1;
+    } finally {
+        LOCK.unlock();
+    }
+}
+</code></pre>
+<p>这样子输出结果也是对的. <code>LOCK.lock();</code> 会使得只有一个线程通过去, 其他的都在等待他前面的线程执行unlock操作.</p>
+<blockquote>
+<p>​	以下是可重入锁的特性.</p>
+</blockquote>
+<h3 id="1-可重入"><strong>1、可重入</strong></h3>
+<pre><code>ReentrantLock 和 syncronized 关键字一样，都是可重入锁，不过两者实现原理稍有差别， RetrantLock 利用 AQS 的的 state 状态来判断资源是否已锁，同一线程重入加锁， state 的状态 +1 ; 同一线程重入解锁, state 状态 -1 (解锁必须为当前独占线程，否则异常); 当 state 为 0 时解锁成功。
+</code></pre>
+<pre><code class="language-java">new Thread(() -&gt; {
+    try {
+        // 加锁
+        LOCK.lock();
+        try {
+            // 加锁
+            LOCK.lock();
+            // 
+        } finally {
+            // 释放锁
+            LOCK.unlock();
+        }
+    } finally {
+        // 释放锁
+        LOCK.unlock();
+    }
+}, &quot;t1&quot;).start();
+</code></pre>
+<p>我强烈不推荐这种火箭代表. 他难看了.</p>
+<h3 id="2需要手动加锁-解锁">2.需要手动加锁、解锁</h3>
+<blockquote>
+<p>​	上诉例子. 已经展示了</p>
+</blockquote>
+<h3 id="3-支持设置锁的超时时间">3. 支持设置锁的超时时间</h3>
+<p>​	 synchronized 关键字无法设置锁的超时时间，如果一个获得锁的线程内部发生死锁，那么其他线程就会一直进入阻塞状态，而 ReentrantLock 提供 tryLock 方法，允许设置线程获取锁的超时时间，如果超时，则跳过，不进行任何操作，避免死锁(DeadLock)的发生。</p>
+<pre><code class="language-java">// 一刻也不等待
+boolean flag = LOCK.tryLock();
+
+
+// 等待1000ms
+boolean flag = LOCK.tryLock(1000, TimeUnit.MILLISECONDS);
+</code></pre>
+<h3 id="4-支持公平非公平锁">4. 支持公平/非公平锁</h3>
+<p>​		synchronized 关键字是一种非公平锁，先抢到锁的线程先执行。而 ReentrantLock 的构造方法中允许设置 true/false 来实现公平、非公平锁，如果设置为 true ，则线程获取锁要遵循&quot;先来后到&quot;的规则，每次都会构造一个线程 Node ，然后到双向链表的&quot;尾巴&quot;后面排队，等待前面的 Node 释放锁资源。</p>
+<pre><code class="language-java">// 参数为true 则是公平, 不加或者写false为非公平
+private static final ReentrantLock FAIR_LOCK = new ReentrantLock(true);
+private static final ReentrantLock UNFAIR_LOCK = new ReentrantLock(false);
+</code></pre>
+<h3 id="5-可中断锁">5. 可中断锁</h3>
+<pre><code>ReentrantLock 中的 lockInterruptibly() 方法使得线程可以在被阻塞时响应中断，比如一个线程 t1 通过 lockInterruptibly() 方法获取到一个可重入锁，并执行一个长时间的任务，另一个线程通过 interrupt() 方法就可以立刻打断 t1 线程的执行，来获取t1持有的那个可重入锁。而通过 ReentrantLock 的 lock() 方法或者 Synchronized 持有锁的线程是不会响应其他线程的 interrupt() 方法的，直到该方法主动释放锁之后才会响应 interrupt() 方法。
+</code></pre>
+<pre><code class="language-java">public class Main {
+    private static final ReentrantLock LOCK = new ReentrantLock(false);
+
+    public static void main(String[] args) throws InterruptedException {
+        // 线程一 绝对先执行
+        Thread thread1 = new Thread(() -&gt; {
+            try {
+                LOCK.lockInterruptibly();
+                TimeUnit.SECONDS.sleep(20000);
+            } catch (InterruptedException e) {
+                System.out.println(String.format(&quot;%s 被打断了&quot;, Thread.currentThread().getName()));
+            } finally {
+                LOCK.unlock();
+            }
+        }, &quot;t1&quot;);
+        thread1.start();
+
+        Thread thread2 = new Thread(() -&gt; {
+            try {
+                // 打断它
+                thread1.interrupt();
+                LOCK.lock();
+                System.out.println(String.format(&quot;%s 打断了 %s&quot;, Thread.currentThread().getName(), thread1.getName()));
+            } finally {
+                // 释放锁
+                LOCK.unlock();
+            }
+        }, &quot;t2&quot;);
+        thread2.start();
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">t1 被打断了
+t2 打断了 t1
+</code></pre>
+<h2 id="3-reentrantreadwritelock-读写锁">3. ReentrantReadWriteLock 读写锁</h2>
+<blockquote>
+<p>​	一个读写锁<strong>只能同时存在一个写锁 , 但是可以存在多个读锁</strong>，<strong>但不能同时存在写锁和读锁</strong>。  这就是读写锁的核心.</p>
+<p>对于<code>ReentrantReadWriteLock</code> 内部其实维护了俩Lock , 一个是 <code>ReadLock</code> 一个是<code>WriteLock</code></p>
+</blockquote>
+<p>​	**ReentrantReadWriteLock (读写锁)其实是两把锁，一把是 WriteLock (写锁)，一把是读锁， ReadLock 。**读写锁的规则是：<code>读读不互斥、读写互斥、写写互斥</code>。在一些实际的场景中，**读操作的频率远远高于写操作，如果直接用一般的锁进行并发控制的话，就会读读互斥、读写互斥、写写互斥，效率低下，读写锁的产生就是为了优化这种场景的操作效率。**一般情况下独占锁的效率低来源于高并发下对临界区的激烈竞争导致线程上下文切换。因此当并发不是很高的情况下，读写锁由于需要额外维护读锁的状态，可能还不如独占锁的效率高，因此需要根据实际情况选择使用。</p>
+<p>​		ReentrantReadWriteLock 的原理也是基于 AQS 进行实现的，与 ReentrantLock 的差别在于 ReentrantReadWriteLock 锁拥有共享锁、排他锁属性。读写锁中的加锁、释放锁也是基于 Sync (继承于 AQS )，并且主要使用 AQS 中的 state 和 node 中的 waitState 变量进行实现的。实现读写锁与实现普通互斥锁的主要区别在于需要分别记录读锁状态及写锁状态，并且等待队列中需要区别处理两种加锁操作。 ReentrantReadWriteLock 中将 AQS 中的 int 类型的 state 分为高 16 位与第 16 位分别记录读锁和写锁的状态，如下图所示：</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/e79ad658-a8b0-4929-9198-d4cc448d0ff5.webp" alt="" loading="lazy"></figure>
+<pre><code class="language-java">private static final ReadWriteLock RW_LOCK = new ReentrantReadWriteLock();
+
+try {
+    RW_LOCK.readLock().lock();
+
+    // do , 基本就这个
+} finally {
+    RW_LOCK.readLock().unlock();
+}
+</code></pre>
+<h2 id="4-volatile-保证数据可见性">4. volatile 保证数据可见性</h2>
+<blockquote>
+<p>​	当一个变量被定义成volatile之后，它将具备两项特性:第一项是保证此变量对所有线程的可见性，<strong>这里的”可见性”是指当一条线程修改了这个变量的值，新值对于其他线程来说是可以立即得知的</strong>。而普通变量并不能做到这一点，普通变量的值在线程间传递时均需要通过主内存来完成。比如，线程A修改一-个普通变量的值，然后向主内存进行回写，另外一条线程B在线程A回写完成了之后再对主内存进行读取操作,新变量值才会对线程B可见。 --- 引用自深入理解Java虚拟机</p>
+</blockquote>
+<p>我们以一个例子为讲解对象.</p>
+<pre><code class="language-java">// 申明一个变量 
+static boolean flag = true;
+public static void main(String[] args) {
+    new Thread(() -&gt; {
+        sleep(1000);
+        flag = false;
+    }).start();
+
+    // 等待他变为false就不执行了.(这里主线程一直空转)
+    while (flag) {
+		// do nothing
+    }
+    System.out.println(&quot;shutdown&quot;);
+}
+</code></pre>
+<p>我们发现1000ms后并不会输出shutdown. 会一直阻塞.</p>
+<p>但是我们将 <code>flag</code> 加入 <code>volatile</code>  ,再次运行.  会发现1000ms后输出结束. 这就是volatile的作用. 保证数据的多线程中可见性.</p>
+<p>如果你有兴趣的话 ,可以看看juc包中的 <code>FutureTask</code>   , 其他他也是这么实现的.</p>
+<p>Volatile还有另外一个特点就是内存屏障 . 他会对于指令重排进行限制. 我们看看下面这个例子.</p>
+<pre><code class="language-java">public class Singleton {
+    // 加了volatile修饰
+    private volatile static Singleton instance;
+
+    public static Singleton getInstance() {
+        // 双重检测
+        if (instance == null) {
+            synchronized (Singleton.class) {
+                if (instance == null) {
+                    instance = new Singleton();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public static void main(String[] args) {
+        Singleton.getInstance();
+    }
+}
+</code></pre>
+<p>他进行JIT编译后的代码是</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/ea7bbc4a-5537-4cbd-b689-9c11a140f4fa.png" alt="" loading="lazy"></figure>
+<p>​	通过对比发现，关键变化在于有volatile修饰的变量， 赋值后(前面mov%eax, 0x 150(%esi)这句便是赋值操作)多执行了-个&quot;lock addl$0x0, (%esp)&quot; 操作，这个操作的作用相当于-一个<strong>内存屏障(Memory Barrier或Memory Fence,指重排序时不能把后面的指令重排序到内存屏障之前的位置)</strong>，只有一个处理器访问内存时，并不需要内存屏障;但如果有两个或更多处理器访问同- -块内存，且其中有一一个在观测另一个，就需要内存屏障来保证一致性了。 但是指令重排是属于处理器采用了允许多条指令不按程序规定的顺序分法给各个相应的电路单元进行处理 . 但不是说指令是任意重排的 , 如果有依赖的就不会重排, 比如 A+2 然后再将 A*2, 显然不能指令重排, 但是 我们引入B变量 . 可能执行在A前面 A后面 中间都可以哇. 因为AB变量无关.</p>
+<p>总结一下 :  volatile第一可以保证数据的可见性, 第二他可以制止指令重排 .  对与volition变量我们要知道他的读取消耗和普通变量一样, 但是写会引起很大的消耗. (这里的涉及到多线程对于volatile变量的执行顺序, 叫做<code>happen-before</code> , 其实就是先行先发生的意思,做啥事不可能没有先后,只是精度不够) ,  还有涉及到volatile变量的大量读写, 因为每次修改都需要立马刷新主存. 那么他会引起其他变量受难 , 这就是 false-sharing , 叫做伪共享 , 可以加入注解,或则引入额外变量进行加快读写.</p>
+<h2 id="5-原子性问题">5. 原子性问题</h2>
+<p>举例 :</p>
+<blockquote>
+<p>Java中执行 x=x+1 操作是,  将读取变量x,然后入栈, 将1入栈, 将栈顶两个数相加, 然后结果入栈, 将结果保存在变量x中'</p>
+<p>所以结果就是分为  读取变量x  , 将x+1 得到的结果再赋值给x  .</p>
+<p>这就是一个原子操作, 他不是一步, 而是几步是一个原子  , 可以说是一个事务.  ​</p>
+</blockquote>
+<p>所以引入了 atomic类. 里面都是原子操作. 基于CAS实现的,同时还有自旋操作.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-synchronized%E5%85%B3%E9%94%AE%E5%AD%97-%E4%B8%8E-lock%E9%94%81">1. synchronized关键字 与 Lock锁</a></li>
+<li><a href="#2-reentrantlock-%E5%8F%AF%E9%87%8D%E5%85%A5%E9%94%81">2. ReentrantLock 可重入锁</a>
+<ul>
+<li><a href="#1-%E5%8F%AF%E9%87%8D%E5%85%A5"><strong>1、可重入</strong></a></li>
+<li><a href="#2%E9%9C%80%E8%A6%81%E6%89%8B%E5%8A%A8%E5%8A%A0%E9%94%81-%E8%A7%A3%E9%94%81">2.需要手动加锁、解锁</a></li>
+<li><a href="#3-%E6%94%AF%E6%8C%81%E8%AE%BE%E7%BD%AE%E9%94%81%E7%9A%84%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4">3. 支持设置锁的超时时间</a></li>
+<li><a href="#4-%E6%94%AF%E6%8C%81%E5%85%AC%E5%B9%B3%E9%9D%9E%E5%85%AC%E5%B9%B3%E9%94%81">4. 支持公平/非公平锁</a></li>
+<li><a href="#5-%E5%8F%AF%E4%B8%AD%E6%96%AD%E9%94%81">5. 可中断锁</a></li>
+</ul>
+</li>
+<li><a href="#3-reentrantreadwritelock-%E8%AF%BB%E5%86%99%E9%94%81">3. ReentrantReadWriteLock 读写锁</a></li>
+<li><a href="#4-volatile-%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E5%8F%AF%E8%A7%81%E6%80%A7">4. volatile 保证数据可见性</a></li>
+<li><a href="#5-%E5%8E%9F%E5%AD%90%E6%80%A7%E9%97%AE%E9%A2%98">5. 原子性问题</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>通过Quartz如何Debug , 如何修复Bug | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/MK0auVKIE/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>通过Quartz如何Debug , 如何修复Bug</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/MK0auVKIE/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/tKL7bR-rqBr/"
+								class="tag">Quartz</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1948字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">10 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	我们以Quartz的用JDBC作为JobStore为例子</p>
+</blockquote>
+<p>开始很简单绝对是 :</p>
+<p><code>org.quartz.spi.JobStore</code> 找他的接口实现类 -&gt;  通过包名字可以发现 -&gt; <code>org.quartz.impl.jdbcjobstore</code> 原来是JDBC , 继续  -&gt; 有三个实现</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/0bda2ed5-9bfb-42e7-9d8d-f5d989c2fad1.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>很简单 我们绝对要使用实现类哇, 因为抽象类是不可能靠反射生成的 .</p>
+<p>这哦俩区别一个支持事务, 一个不支持事务  , TX transaction就是 .  我们选择事务的.</p>
+<pre><code class="language-properties">org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+</code></pre>
+<p>继续, 然后我们这个配置好了, 咋启动哇, 它又不知道JDBC配置是啥. 因此我们看我们上面的实现类  , 然后我们没有点开 <code>JobStore</code> 找哪里使用过, 因为这个是在初始化的时候实现的, 我们就判断在 <code>org.quartz.impl.StdSchedulerFactory</code> 这里 , 进去发现, 他使用了</p>
+<pre><code class="language-java">js = (JobStore) loadHelper.loadClass(jsClass).newInstance();
+</code></pre>
+<p>那么 jsClass是咋获取的 ?  原来如此...</p>
+<pre><code class="language-java">String jsClass = cfg.getStringProperty(PROP_JOB_STORE_CLASS,RAMJobStore.class.getName());
+</code></pre>
+<p>我们继续呆着问题走 /.....</p>
+<p>下面走着就看到一句</p>
+<pre><code class="language-java">// Set up any DataSources
+</code></pre>
+<p>继续看这里  , PROP_DATASOURCE_PREFIX=org.quartz.dataSource</p>
+<pre><code class="language-java">String[] dsNames = cfg.getPropertyGroups(PROP_DATASOURCE_PREFIX);
+</code></pre>
+<p>进去 ...  这个<code>org.quartz.utils.PropertiesParser#getPropertyGroups</code></p>
+<pre><code class="language-java">public String[] getPropertyGroups(String prefix) {
+    Enumeration&lt;?&gt; keys = props.propertyNames();
+    HashSet&lt;String&gt; groups = new HashSet&lt;String&gt;(10);
+
+    if (!prefix.endsWith(&quot;.&quot;)) {
+        prefix += &quot;.&quot;;
+    }
+
+    while (keys.hasMoreElements()) {
+        String key = (String) keys.nextElement();
+        if (key.startsWith(prefix)) {
+            String groupName = key.substring(prefix.length(), key.indexOf(
+                    '.', prefix.length()));
+            groups.add(groupName);
+        }
+    }
+
+    return (String[]) groups.toArray(new String[groups.size()]);
+}
+</code></pre>
+<p>我再这里绕了很久, 咋获取了, 其实很简单, 就是获取前缀 org.quartz.dataSource.quartz.driver的前缀就是quartz他就是获取这个. 然后set去重  , 就获取到 group了 . 其实这里处理也很好 , 第一对于properties文件来说, 他的list是一个arg[1]=? , 对于spring来说 , 我个人比较喜欢properties和xml配置文件.</p>
+<p>其实这个工具类真心不赖, 处理很方便, 这里告诉大家一个技巧, 可以引用别人的代码 , 但是我觉得尊重原创, 就是加个作者名字, 留个链接也行 .</p>
+<p>我们继续往下走  ... <code>StdSchedulerFactory</code> 925行</p>
+<pre><code class="language-java">PropertiesParser pp = new PropertiesParser(cfg.getPropertyGroup(PROP_DATASOURCE_PREFIX + &quot;.&quot; + dsNames[i], true));
+// 很简单就是获取一个去了前缀的properties
+</code></pre>
+<pre><code class="language-java">//  connectionProvider.class -&gt; 这里就比较坑,往下走
+String cpClass = pp.getStringProperty(PROP_CONNECTION_PROVIDER_CLASS, null);
+
+// 默认构造器实例化, 显然是不行的.  ConnectionProvider , 实现类没有这么的
+ cp = (ConnectionProvider) loadHelper.loadClass(cpClass).newInstance();
+</code></pre>
+<p>我们就放弃了  , 此时到了 Jndi ,这个我们也不考虑, 继续</p>
+<pre><code class="language-java">String poolingProvider = pp.getStringProperty(PoolingConnectionProvider.POOLING_PROVIDER); // provider
+String dsDriver = pp.getStringProperty(PoolingConnectionProvider.DB_DRIVER); //  driver
+String dsURL = pp.getStringProperty(PoolingConnectionProvider.DB_URL); // URL
+
+
+// 这里就是我们注意的是使用 hikaricp / c3p0 ,注意不是写全名,
+// we load even these &quot;core&quot; providers by class name in order to avoid a static dependency on
+// the c3p0 and hikaricp libraries
+if(poolingProvider != null &amp;&amp; poolingProvider.equals(PoolingConnectionProvider.POOLING_PROVIDER_HIKARICP)) {
+    cpClass = &quot;org.quartz.utils.HikariCpPoolingConnectionProvider&quot;;
+}
+else {
+    cpClass = &quot;org.quartz.utils.C3p0PoolingConnectionProvider&quot;;
+}
+</code></pre>
+<p>继续</p>
+<pre><code class="language-java">Constructor constructor = loadHelper.loadClass(cpClass).getConstructor(Properties.class);
+cp = (ConnectionProvider) constructor.newInstance(pp.getUnderlyingProperties());
+</code></pre>
+<p>继续走<code>HikariCpPoolingConnectionProvider</code>  ,这个连接池性能高  , 比C3P0强一点 , 这里很显然一堆配置</p>
+<pre><code class="language-java">public HikariCpPoolingConnectionProvider(Properties config) throws SchedulerException, SQLException {
+    PropertiesParser cfg = new PropertiesParser(config);
+    initialize(
+            cfg.getStringProperty(DB_DRIVER),
+            cfg.getStringProperty(DB_URL),
+            cfg.getStringProperty(DB_USER, &quot;&quot;),
+            cfg.getStringProperty(DB_PASSWORD, &quot;&quot;),
+            cfg.getIntProperty(DB_MAX_CONNECTIONS, DEFAULT_DB_MAX_CONNECTIONS),
+            cfg.getStringProperty(DB_VALIDATION_QUERY),
+            cfg.getIntProperty(DB_DISCARD_IDLE_CONNECTIONS_SECONDS, 0));
+}
+</code></pre>
+<p>这里就实例化好了 数据库连接池 ,</p>
+<p>其实他的整体设计很好 , 第一我们作为存储方 , 不用管理连接方 ,所以提供了两个, 一个是 <code>org.quartz.spi.JobStore</code>  ,然后就是负责连接的是 <code>DBConnectionManager</code> , 然后这个管理者管理的是 <code>ConnectionProvider</code>  , 所以很好的解耦, 这个设计很棒 . 拓展点多 ,</p>
+<p>其实问题还没有结束, 如果我们直接通过 ...</p>
+<pre><code class="language-properties">org.quartz.scheduler.instanceName=MyScheduler
+org.quartz.threadPool.threadCount=4
+org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+
+
+org.quartz.dataSource.jpa.provider=hikaricp
+org.quartz.dataSource.jpa.driver=com.mysql.jdbc.Driver
+org.quartz.dataSource.jpa.URL=jdbc:mysql://localhost:3306/quartz?useSSL=false
+org.quartz.dataSource.jpa.user=root
+org.quartz.dataSource.jpa.password=123456
+org.quartz.dataSource.jpa.maxConnections=5
+</code></pre>
+<p>一我们目前的认真案例来说写应该这么写, 足够了 ,因此启动 ///</p>
+<p>结果报错, 说 :</p>
+<pre><code class="language-java">org.quartz.SchedulerConfigException: DataSource name not set.
+</code></pre>
+<p>我们因此去到了 ...</p>
+<pre><code class="language-java">public void initialize(ClassLoadHelper loadHelper,
+        SchedulerSignaler signaler) throws SchedulerConfigException {
+
+    // 为啥么设置 , 继续找
+    if (dsName == null) { 
+        throw new SchedulerConfigException(&quot;DataSource name not set.&quot;); 
+    }
+    //// .... 
+}
+</code></pre>
+<p>我们找到字段的方法  ,  然后通过查找是否被调用, 发现没有被调用过 ? ,怎么办, 我们在这里打断点, 一定有调用,</p>
+<pre><code class="language-java">public void setDataSource(String dsName) {
+    this.dsName = dsName;
+}
+</code></pre>
+<p>发现是在 <code>org.quartz.impl.StdSchedulerFactory#setBeanProps</code> 这里被调用的, 原来是反射哇  ,茅舍顿开, 继续</p>
+<pre><code class="language-java">tProps = cfg.getPropertyGroup(PROP_JOB_STORE_PREFIX, true, new String[] {PROP_JOB_STORE_LOCK_HANDLER_PREFIX});
+// 这里调用, jobstore
+setBeanProps(js, tProps);
+</code></pre>
+<p>很显然是 <code>org.quartz.jobStore</code> 这里设置两个 tablePrefix 和  dsName 其实还有很多可以设置 , 只要是遵循了他的使用原则 .  基本就是 比如说 <code>setDataSource</code> 我们就配置中写 , org.quartz.jobStore.dataSource , 主要第一个字母小写 . 就是这些. ...  所以问题处理了, 有些时候么有直接被调用基本上使用的是反射.</p>
+<p>所以我们配置文件是?</p>
+<pre><code class="language-java">org.quartz.scheduler.instanceName=MyScheduler
+org.quartz.threadPool.threadCount=4
+#org.quartz.jobStore.class = org.quartz.simpl.RAMJobStore
+#org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+
+
+// 这里才算完整了..... 
+org.quartz.jobStore.tablePrefix = QRTZ_
+org.quartz.jobStore.dataSource = quartz
+org.quartz.dataSource.quartz.provider=hikaricp
+org.quartz.dataSource.quartz.driver=com.mysql.jdbc.Driver
+org.quartz.dataSource.quartz.URL=jdbc:mysql://localhost:3306/quartz?useSSL=false
+org.quartz.dataSource.quartz.user=root
+org.quartz.dataSource.quartz.password=123456
+org.quartz.dataSource.quartz.maxConnections=5
+</code></pre>
+<p>表我就直接告诉大家了, 这个可以去官网找, 他不会自动建表, 像JPA那样 ,所以很坑这点,</p>
+<pre><code class="language-java">#
+# Quartz seems to work best with the driver mm.mysql-2.0.7-bin.jar
+#
+# PLEASE consider using mysql with innodb tables to avoid locking issues
+#
+# In your Quartz properties file, you'll need to set 
+# org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+#
+
+DROP TABLE IF EXISTS QRTZ_FIRED_TRIGGERS;
+DROP TABLE IF EXISTS QRTZ_PAUSED_TRIGGER_GRPS;
+DROP TABLE IF EXISTS QRTZ_SCHEDULER_STATE;
+DROP TABLE IF EXISTS QRTZ_LOCKS;
+DROP TABLE IF EXISTS QRTZ_SIMPLE_TRIGGERS;
+DROP TABLE IF EXISTS QRTZ_SIMPROP_TRIGGERS;
+DROP TABLE IF EXISTS QRTZ_CRON_TRIGGERS;
+DROP TABLE IF EXISTS QRTZ_BLOB_TRIGGERS;
+DROP TABLE IF EXISTS QRTZ_TRIGGERS;
+DROP TABLE IF EXISTS QRTZ_JOB_DETAILS;
+DROP TABLE IF EXISTS QRTZ_CALENDARS;
+
+
+CREATE TABLE QRTZ_JOB_DETAILS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    JOB_NAME  VARCHAR(200) NOT NULL,
+    JOB_GROUP VARCHAR(200) NOT NULL,
+    DESCRIPTION VARCHAR(250) NULL,
+    JOB_CLASS_NAME   VARCHAR(250) NOT NULL,
+    IS_DURABLE VARCHAR(1) NOT NULL,
+    IS_NONCONCURRENT VARCHAR(1) NOT NULL,
+    IS_UPDATE_DATA VARCHAR(1) NOT NULL,
+    REQUESTS_RECOVERY VARCHAR(1) NOT NULL,
+    JOB_DATA BLOB NULL,
+    PRIMARY KEY (SCHED_NAME,JOB_NAME,JOB_GROUP)
+);
+
+CREATE TABLE QRTZ_TRIGGERS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    TRIGGER_NAME VARCHAR(200) NOT NULL,
+    TRIGGER_GROUP VARCHAR(200) NOT NULL,
+    JOB_NAME  VARCHAR(200) NOT NULL,
+    JOB_GROUP VARCHAR(200) NOT NULL,
+    DESCRIPTION VARCHAR(250) NULL,
+    NEXT_FIRE_TIME BIGINT(13) NULL,
+    PREV_FIRE_TIME BIGINT(13) NULL,
+    PRIORITY INTEGER NULL,
+    TRIGGER_STATE VARCHAR(16) NOT NULL,
+    TRIGGER_TYPE VARCHAR(8) NOT NULL,
+    START_TIME BIGINT(13) NOT NULL,
+    END_TIME BIGINT(13) NULL,
+    CALENDAR_NAME VARCHAR(200) NULL,
+    MISFIRE_INSTR SMALLINT(2) NULL,
+    JOB_DATA BLOB NULL,
+    PRIMARY KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP),
+    FOREIGN KEY (SCHED_NAME,JOB_NAME,JOB_GROUP)
+        REFERENCES QRTZ_JOB_DETAILS(SCHED_NAME,JOB_NAME,JOB_GROUP)
+);
+
+CREATE TABLE QRTZ_SIMPLE_TRIGGERS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    TRIGGER_NAME VARCHAR(200) NOT NULL,
+    TRIGGER_GROUP VARCHAR(200) NOT NULL,
+    REPEAT_COUNT BIGINT(7) NOT NULL,
+    REPEAT_INTERVAL BIGINT(12) NOT NULL,
+    TIMES_TRIGGERED BIGINT(10) NOT NULL,
+    PRIMARY KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP),
+    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
+        REFERENCES QRTZ_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
+);
+
+CREATE TABLE QRTZ_CRON_TRIGGERS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    TRIGGER_NAME VARCHAR(200) NOT NULL,
+    TRIGGER_GROUP VARCHAR(200) NOT NULL,
+    CRON_EXPRESSION VARCHAR(200) NOT NULL,
+    TIME_ZONE_ID VARCHAR(80),
+    PRIMARY KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP),
+    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
+        REFERENCES QRTZ_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
+);
+
+CREATE TABLE QRTZ_SIMPROP_TRIGGERS
+  (          
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    TRIGGER_NAME VARCHAR(200) NOT NULL,
+    TRIGGER_GROUP VARCHAR(200) NOT NULL,
+    STR_PROP_1 VARCHAR(512) NULL,
+    STR_PROP_2 VARCHAR(512) NULL,
+    STR_PROP_3 VARCHAR(512) NULL,
+    INT_PROP_1 INT NULL,
+    INT_PROP_2 INT NULL,
+    LONG_PROP_1 BIGINT NULL,
+    LONG_PROP_2 BIGINT NULL,
+    DEC_PROP_1 NUMERIC(13,4) NULL,
+    DEC_PROP_2 NUMERIC(13,4) NULL,
+    BOOL_PROP_1 VARCHAR(1) NULL,
+    BOOL_PROP_2 VARCHAR(1) NULL,
+    PRIMARY KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP),
+    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP) 
+    REFERENCES QRTZ_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
+);
+
+CREATE TABLE QRTZ_BLOB_TRIGGERS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    TRIGGER_NAME VARCHAR(200) NOT NULL,
+    TRIGGER_GROUP VARCHAR(200) NOT NULL,
+    BLOB_DATA BLOB NULL,
+    PRIMARY KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP),
+    FOREIGN KEY (SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
+        REFERENCES QRTZ_TRIGGERS(SCHED_NAME,TRIGGER_NAME,TRIGGER_GROUP)
+);
+
+CREATE TABLE QRTZ_CALENDARS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    CALENDAR_NAME  VARCHAR(200) NOT NULL,
+    CALENDAR BLOB NOT NULL,
+    PRIMARY KEY (SCHED_NAME,CALENDAR_NAME)
+);
+
+CREATE TABLE QRTZ_PAUSED_TRIGGER_GRPS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    TRIGGER_GROUP  VARCHAR(200) NOT NULL, 
+    PRIMARY KEY (SCHED_NAME,TRIGGER_GROUP)
+);
+
+CREATE TABLE QRTZ_FIRED_TRIGGERS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    ENTRY_ID VARCHAR(95) NOT NULL,
+    TRIGGER_NAME VARCHAR(200) NOT NULL,
+    TRIGGER_GROUP VARCHAR(200) NOT NULL,
+    INSTANCE_NAME VARCHAR(200) NOT NULL,
+    FIRED_TIME BIGINT(13) NOT NULL,
+    SCHED_TIME BIGINT(13) NOT NULL,
+    PRIORITY INTEGER NOT NULL,
+    STATE VARCHAR(16) NOT NULL,
+    JOB_NAME VARCHAR(200) NULL,
+    JOB_GROUP VARCHAR(200) NULL,
+    IS_NONCONCURRENT VARCHAR(1) NULL,
+    REQUESTS_RECOVERY VARCHAR(1) NULL,
+    PRIMARY KEY (SCHED_NAME,ENTRY_ID)
+);
+
+CREATE TABLE QRTZ_SCHEDULER_STATE
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    INSTANCE_NAME VARCHAR(200) NOT NULL,
+    LAST_CHECKIN_TIME BIGINT(13) NOT NULL,
+    CHECKIN_INTERVAL BIGINT(13) NOT NULL,
+    PRIMARY KEY (SCHED_NAME,INSTANCE_NAME)
+);
+
+CREATE TABLE QRTZ_LOCKS
+  (
+    SCHED_NAME VARCHAR(120) NOT NULL,
+    LOCK_NAME  VARCHAR(40) NOT NULL, 
+    PRIMARY KEY (SCHED_NAME,LOCK_NAME)
+);
+
+
+commit;
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"></div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

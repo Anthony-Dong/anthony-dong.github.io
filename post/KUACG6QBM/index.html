@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>站在JVM角度看Java的锁 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/KUACG6QBM/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>站在JVM角度看Java的锁</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-15</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/KUACG6QBM/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/eZB86V-Dzpp/"
+								class="tag">jvm</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2846字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">10 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	并发是从JDK 5升级到JDK 6后一项重要的改进项，HotSpot虚拟机开发团队在这个版本上花费了大量的资源去实现各种锁优化技术，如适应性自旋（Adaptive Spinning）、锁消除（Lock Elimination）、锁膨胀（Lock Coarsening）、轻量级锁（Lightweight Locking）、偏向锁（Biased Locking）等，这些技术都是为了在线程之间更高效地共享数据及解决竞争问题，从而提高程序的执行效率 .</p>
+</blockquote>
+<h3 id="存在的问题">存在的问题</h3>
+<p>​		对于最开始 (JDK1.5之前), Java的同步只能是一个synchronized修饰, 进行同步, 但是这个由很大的问题. 只会有一个线程可以entermonitor , 然后计数器+1. 称为重量级锁. 其他线程都被挂起, 我们知道对于大多数JVM来说, 线程是和操作系统的线程是一一绑定的, 也就是我操作的线程挂起需要由内核来完成, 这时候就需要用户态转换到内核态 ,然后内核执行此线程挂起, 当要恢复线程的时候再通知内核,  此时会造成很严重的问题 . 我们知道对于CPU来说, 他是靠时间片来实现的多线程并行执行, 如果我一个同步任务只会比如count++ , 他执行很短, 短到几ns级别, 而挂起线程和恢复线程的实现<strong>远远大于几ns</strong> , 可能大几个量级 .</p>
+<p>​		因此聪明的人想到一个事情, 就是我不让你挂起, 这么短我就自己空转一会, 也很短, (空转的意思其实就是while(true) 啥也不做,但是不是让CPU挂起,<code>这个也称之为自旋</code>) , 我们知道空转就是一种浪费CPU的事情 , 但是这个浪费得有个度 , 我们上诉的问题, 每个线程可能空转的时间也就几ns , 但是对于长到几秒的还能空转吗, 不行了. 所以这里就是一个划分点.</p>
+<p>​		还有一个问题就是, 比如某一段时间内, 就一个线程处于运作中, 那么此时还需要加锁操作吗 ? 是否需要优化 .</p>
+<p>​		因此引出了下文的解决方案.</p>
+<h3 id="自旋锁">自旋锁</h3>
+<p>​		自旋锁是JDK1.4.2的时候引入的, 默认为关闭状态, 可以使用<code>-XX:+UseSpinning</code>参数来开启 , 但是这个自旋锁他不是一直的自旋, 他有个度, 这个度可以用<code>-XX:PreBlockSpin</code> 来控制自旋多少次, 默认是10次.</p>
+<h3 id="自适应自旋">自适应自旋</h3>
+<p>​		JDK 6中对自旋锁的优化，引入了自适应的自旋。</p>
+<p>​		**自适应意味着自旋的时间不再是固定的了，而是由前一次在同一个锁上的自旋时间及锁的拥有者的状态来决定的。**如果在同一个锁对象上，自旋等待刚刚成功获得过锁，并且持有锁的线程正在运行中，那么虚拟机就会认为这次自旋也很有可能再次成功，进而允许自旋等待持续相对更长的时间，比如持续100次忙循环。另一方面，如果对于某个锁，自旋很少成功获得过锁，那在以后要获取这个锁时将有可能直接省略掉自旋过程，以避免浪费处理器资源。有了自适应自旋，随着程序运行时间的增长及性能监控信息的不断完善，虚拟机对程序锁的状况预测就会越来越精准，虚拟机就会变得越来越“聪明”了。</p>
+<h3 id="java-对象的内存布局重要">Java 对象的内存布局(重要)</h3>
+<blockquote>
+<p>​	了解轻量级锁和偏向锁 需要了解Java对象的内存布局.</p>
+</blockquote>
+<p>再看下面之前 , 要了了解一个JAVA对象的内存结构 , 也称之为<code>对象的内存布局</code></p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/95976ab5-141e-46ea-b576-8610ab868824.png" alt="" loading="lazy"></figure>
+<h4 id="对象头">对象头 :</h4>
+<p>1、对象自身的运行时数据( MarkWord )</p>
+<p>存储 hashCode、GC 分代年龄、锁类型标记、偏向锁线程 ID 、CAS 锁指向线程 LockRecord 的指针等,synconized 锁的机制与这个部分( markwork )密切相关，用 markword 中最低的三位代表锁的状态，其中一位是偏向锁位，另外两位是普通锁位。</p>
+<p>关于markword ,  这个是32位操作系统的实现,</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/d562e3ca-fe3a-4bda-ae1b-6c6bb46a2b55.png" alt="" loading="lazy"></figure>
+<p>2、对象类型指针( Class Pointer )</p>
+<p>​	对象指向它的类元数据的指针(这个指针类似于C语言的指针, 指针大小是根据操作系统决定的,64位好像是8个字节大小, 因为64位系统的寻址空间很大), JVM 就是通过它来确定是哪个 Class 的实例。</p>
+<blockquote>
+<p>​	如果是数组对象，还会有一个额外的部分用于存储数组长度。因为虚拟机可以通过普通Java对象的元数据信息确定Java对象的大小，但是如果数组的长度是不确定的，将无法通过元数据中的信息推断出数组的大小。也就是arr.len调用很方便.</p>
+</blockquote>
+<h4 id="实例数据区域">实例数据区域</h4>
+<p>​	<strong>此处存储的是对象真正有效的信息，比如对象中所有字段的内容</strong> . ，无论是从父类继承下来的，还是在子类中定义的字段都必须记录起来。</p>
+<blockquote>
+<p>​	这部分的存储顺序会受到虚拟机分配策略参数（-XX：FieldsAllocationStyle参数）和字段在Java源码中定义顺序的影响。HotSpot虚拟机默认的分配顺序为<strong>longs/doubles、ints、shorts/chars、bytes/booleans、oops（Ordinary Object Pointers，OOPs）</strong>(这里基本可以确定Java的类型也就8种)，从以上默认的分配策略中可以看到，相同宽度的字段总是被分配到一起存放，在满足这个前提条件的情况下，在父类中定义的变量会出现在子类之前。如果HotSpot虚拟机的+XX：CompactFields参数值为true（默认就为true），那子类之中较窄的变量也允许插入父类变量的空隙之中，以节省出一点点空间。</p>
+</blockquote>
+<h4 id="对齐填充">对齐填充</h4>
+<p>​		对象的第三部分是对齐填充，这并不是必然存在的，也没有特别的含义，它仅仅起着占位符的作用。由于HotSpot虚拟机的自动内存管理系统要求对象起始地址必须是8字节的整数倍，换句话说就是任何对象的大小都必须是8字节的整数倍。对象头部分已经被精心设计成正好是8字节的倍数（1倍或者2倍），因此，如果对象实例数据部分没有对齐的话，就需要通过对齐填充来补全。</p>
+<p>​		其实也是为了存储方便.</p>
+<blockquote>
+<p>​	如果你还是对上述不理解的话, 你就看看 &lt;深入理解Java虚拟机&gt; , 里面有. 接下来就看看具体内容了 .</p>
+</blockquote>
+<h3 id="synchronized-锁升级流程">synchronized 锁升级流程</h3>
+<blockquote>
+<p>​	synchronized 锁并不是直接进去就是一个重量级锁, 而是有所思考的, 因为很多短的操作,并不需要挂起线程. 所以类似于空转 , 还有就是单线程加锁. 何必挂起线程呢, 所以sync也帮助我们解决了这个问题.</p>
+</blockquote>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/f9e66b9d-f9e0-48a3-a7e9-582f076d81ef.png" alt="" loading="lazy"></figure>
+<h3 id="偏向锁">偏向锁</h3>
+<p>​		在 JDK1.8 中，其实默认是轻量级锁，但如果设定了<code>-XX:BiasedLockingStartupDelay=0</code> ，那在对一个 Object 做 syncronized 的时候，会立即上一把偏向锁。当处于偏向锁状态时， markwork 会记录当前线程 ID。</p>
+<blockquote>
+<p>​	它的意思是这个锁会偏向于第一个获得它的线程，如果在接下来的执行过程中，该锁一直没有被其他的线程获取，则持有偏向锁的线程将永远不需要再进行同步。偏向锁解决的问题是, <strong>有些时候就一个线程在运行, 难道还有多线程问题吗, 所以并不需要. 当出现第二个线程去竞争的情况下才会出现降级</strong> .</p>
+</blockquote>
+<blockquote>
+<p>​	<strong>原理:</strong>  当锁对象第一次被线程获取的时候，虚拟机将会把对象头中的标志位设置为“01”、把偏向模式设置为“1”，表示进入偏向模式。同时使用CAS操作把获取到这个锁的线程的ID记录在对象的Mark Word之中。如果CAS操作成功，持有偏向锁的线程以后每次进入这个锁相关的同步块时，虚拟机都可以不再进行任何同步操作（例如加锁、解锁及对Mark Word的更新操作等）。 一旦出现另外一个线程去尝试获取这个锁的情况，偏向模式就马上宣告结束。</p>
+</blockquote>
+<h3 id="轻量级锁">轻量级锁</h3>
+<p>​		当下一个线程参与到偏向锁竞争时，会先判断 markword 中保存的线程 ID 是否与这个线程 ID 相等，如果不相等，会立即撤销偏向锁，升级为轻量级锁。<strong>每个线程在自己的线程栈中生成一个 LockRecord ( LR )，然后每个线程通过 CAS (自旋 )的操作将锁对象头中的 markwork 设置为指向自己的 LR 的指针，哪个线程设置成功，就意味着获得锁。</strong> 关于 synchronized 中此时执行的 CAS 操作是通过 native 的调用 HotSpot 中 bytecodeInterpreter.cpp 文件 C++ 代码实现的，有兴趣的可以继续深挖。</p>
+<h3 id="重量级锁">重量级锁</h3>
+<p>​		如果锁竞争加剧(如线程自旋次数或者自旋的线程数超过某阈值， JDK1.6 之后，由 JVM 自己控制该规则)，就会升级为重量级锁。此时就会向操作系统申请资源，线程挂起，进入到操作系统内核态的等待队列中，等待操作系统调度，然后映射回用户态。在重量级锁中，由于需要做内核态到用户态的转换，而这个过程中需要消耗较多时间，也就是&quot;重&quot;的原因之一。</p>
+<h3 id="可重入">可重入</h3>
+<p>​		synchronized 拥有强制原子性的内部锁机制，是一把可重入锁。因此，在一个线程使用 synchronized 方法时调用该对象另一个 synchronized 方法，即一个线程得到一个对象锁后再次请求该对象锁，是永远可以拿到锁的。在 Java 中线程获得对象锁的操作是以线程为单位的，而不是以调用为单位的。 <strong>synchronized 锁的对象头的 markwork 中会记录该锁的线程持有者和计数器，当一个线程请求成功后， JVM 会记下持有锁的线程，并将计数器计为1</strong>。此时其他线程请求该锁，则必须等待。而该持有锁的线程如果再次请求这个锁，就可以再次拿到这个锁，同时计数器会递增。当线程退出一个  synchronized 方法/块时，计数器会递减，如果计数器为 0 则释放该锁锁。</p>
+<h3 id="悲观锁互斥锁-排他锁">悲观锁(互斥锁、排他锁)</h3>
+<p>​	 synchronized 是一把悲观锁(独占锁)，当前线程如果获取到锁，会导致其它所有需要锁该的线程等待，一直等待持有锁的线程释放锁才继续进行锁的争抢。</p>
+<blockquote>
+<p>​	可以参考一下 阿里中间件微信公众号的<a href="https://mp.weixin.qq.com/s/h3VIUyH9L0v14MrQJiiDbw">一篇文章</a> : https://mp.weixin.qq.com/s/h3VIUyH9L0v14MrQJiiDbw</p>
+<p>同时以上部分大部分来自于 &lt;&lt;深入理解Java虚拟机&gt;&gt;</p>
+</blockquote>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">存在的问题</a></li>
+<li><a href="#%E8%87%AA%E6%97%8B%E9%94%81">自旋锁</a></li>
+<li><a href="#%E8%87%AA%E9%80%82%E5%BA%94%E8%87%AA%E6%97%8B">自适应自旋</a></li>
+<li><a href="#java-%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%86%85%E5%AD%98%E5%B8%83%E5%B1%80%E9%87%8D%E8%A6%81">Java 对象的内存布局(重要)</a>
+<ul>
+<li><a href="#%E5%AF%B9%E8%B1%A1%E5%A4%B4">对象头 :</a></li>
+<li><a href="#%E5%AE%9E%E4%BE%8B%E6%95%B0%E6%8D%AE%E5%8C%BA%E5%9F%9F">实例数据区域</a></li>
+<li><a href="#%E5%AF%B9%E9%BD%90%E5%A1%AB%E5%85%85">对齐填充</a></li>
+</ul>
+</li>
+<li><a href="#synchronized-%E9%94%81%E5%8D%87%E7%BA%A7%E6%B5%81%E7%A8%8B">synchronized 锁升级流程</a></li>
+<li><a href="#%E5%81%8F%E5%90%91%E9%94%81">偏向锁</a></li>
+<li><a href="#%E8%BD%BB%E9%87%8F%E7%BA%A7%E9%94%81">轻量级锁</a></li>
+<li><a href="#%E9%87%8D%E9%87%8F%E7%BA%A7%E9%94%81">重量级锁</a></li>
+<li><a href="#%E5%8F%AF%E9%87%8D%E5%85%A5">可重入</a></li>
+<li><a href="#%E6%82%B2%E8%A7%82%E9%94%81%E4%BA%92%E6%96%A5%E9%94%81-%E6%8E%92%E4%BB%96%E9%94%81">悲观锁(互斥锁、排他锁)</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Netty存在的问题 &amp; 解决的问题 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/y9LbqHqhJ/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Netty存在的问题 &amp; 解决的问题</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-03-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/y9LbqHqhJ/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/fn4lTiaKxHO/"
+								class="tag">netty</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1418字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-维护bytebuf带来的大量拷贝问题">1. 维护Bytebuf带来的大量拷贝问题.</h2>
+<p>如果细心的童鞋会发现 <code>io.netty.handler.codec.ByteToMessageDecoder</code>  他提供了一个缓冲区.  那么缓冲区就要代表有拷贝.</p>
+<p>Netty提供了两种方式 :</p>
+<pre><code class="language-java">public static final Cumulator MERGE_CUMULATOR = new Cumulator() {
+    @Override
+    public ByteBuf cumulate(ByteBufAllocator alloc, ByteBuf cumulation, ByteBuf in) {
+        try {
+            final ByteBuf buffer;
+            // 1.如果原来的写空间不足了. c.w+in.r&gt;c.capacity
+            if (cumulation.writerIndex() &gt; cumulation.maxCapacity() - in.readableBytes()
+                || cumulation.refCnt() &gt; 1 || cumulation.isReadOnly()) {
+                // 新建一个. // 第一步新建一个新的对象. 第二步拷贝原来的, 第三步释放原来的.
+                buffer = expandCumulation(alloc, cumulation, in.readableBytes());
+            } else {
+                //2.否则空间就满足.不需要扩展
+                buffer = cumulation;
+            }
+            // 3.复制新写入的数据到缓冲区
+            buffer.writeBytes(in);
+            // 返回
+            return buffer;
+        } finally {
+            // 释放对象
+            in.release();
+        }
+    }
+};
+</code></pre>
+<p>我们发现第一种实现给我们带来大量的拷贝. 但是我们可以提供一种 <code>CompositeByteBuf</code> , 也就是组合的Bytebuf. 实际上没有拷贝. 只是将他俩维护起来.</p>
+<p>那么就减少了拷贝.</p>
+<pre><code class="language-java">public static final Cumulator COMPOSITE_CUMULATOR = new Cumulator() {
+    @Override
+    public ByteBuf cumulate(ByteBufAllocator alloc, ByteBuf cumulation, ByteBuf in) {
+        ByteBuf buffer;
+        try {
+            // 如果引用大于1, 则出现问题了.会帮我们新建一个.
+            if (cumulation.refCnt() &gt; 1) {
+                buffer = expandCumulation(alloc, cumulation, in.readableBytes());
+                // 写入.
+                buffer.writeBytes(in);
+            } else {
+                CompositeByteBuf composite;
+                if (cumulation instanceof CompositeByteBuf) {
+                    composite = (CompositeByteBuf) cumulation;
+                } else {
+                    composite = alloc.compositeBuffer(Integer.MAX_VALUE);
+                    composite.addComponent(true, cumulation);
+                }
+                // 直接添加进去
+                composite.addComponent(true, in);
+                // 取消引用,此时虽然为空了. 但是其实没有.只是放入了原来的composite.
+                in = null;
+                buffer = composite;
+            }
+            return buffer;
+        } finally {
+            // 为了防止第一种情况出现.最后统一处理.
+            if (in != null) {
+                in.release();
+            }
+        }
+    }
+};
+</code></pre>
+<p>但是这个存在一个问题 . 很严重, 就是内存泄漏. 为啥呢.</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-30-33/b549ca4e-ee79-445d-af8c-7f42d4466c93.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>上面 这段代码很好地阐述了, 为什么不推荐使用这个. 因为存在大量的问题. 就是无法释放对象, 也可以释放对象. 但是需要用户手动操作. 这个就很无语. 所以基本不推荐使用 . 但是其实也可以的,需要你人工判断了. 哈哈哈 ,其实怎么说不统一很难维护的. 也就是这个 .</p>
+<p>所以这个问题的根本原因目前无法处理掉的.</p>
+<h2 id="netty如何解决-nio空转问题">Netty如何解决 NIO空转问题.</h2>
+<p>目前我们只考虑 NIOEventLoop</p>
+<p>首先看<code>io.netty.channel.nio.NioEventLoop</code> 这个类.的 run方法.</p>
+<pre><code class="language-java">@Override
+protected void run() {
+    for (;;) {
+        try {
+            try {
+                switch (selectStrategy.calculateStrategy(selectNowSupplier, hasTasks())) {
+                case SelectStrategy.CONTINUE:
+                    continue;
+
+                case SelectStrategy.BUSY_WAIT:
+                        // 不支持直接. 切换到下一步.
+                    // fall-through to SELECT since the busy-wait is not supported with NIO
+
+                        // 主要代码在这里. 
+                case SelectStrategy.SELECT:
+                        // 就是这个select方法. 
+                    select(wakenUp.getAndSet(false));
+                    if (wakenUp.get()) {
+                        selector.wakeup();
+                    }
+                default:
+                }
+            } catch (IOException e) {
+                rebuildSelector0();
+                handleLoopException(e);
+                continue;
+            }
+		// 事件处理等等操作. 
+    }
+}
+</code></pre>
+<p>我们再看看 <code>select()</code> 做了啥  这个方法</p>
+<pre><code class="language-java">private void select(boolean oldWakenUp) throws IOException {
+    Selector selector = this.selector;
+    try {
+        int selectCnt = 0;
+        long currentTimeNanos = System.nanoTime();
+        // 这里会计算你轮询的时间, 最长时间, 比如我只让你轮询10次, 也就是+10S.具体实现可以看看.
+        long selectDeadLineNanos = currentTimeNanos + delayNanos(currentTimeNanos);
+
+        for (;;) {
+            long timeoutMillis = (selectDeadLineNanos - currentTimeNanos + 500000L) / 1000000L;
+            // 如果轮询时间超了最长轮询时间. 则直接返回了.不能一直轮询.
+            if (timeoutMillis &lt;= 0) {
+                if (selectCnt == 0) {
+                    selector.selectNow();
+                    selectCnt = 1;
+                }
+                break;
+            }
+
+            if (hasTasks() &amp;&amp; wakenUp.compareAndSet(false, true)) {
+                selector.selectNow();
+                selectCnt = 1;
+                break;
+            }
+
+            // 主要是这里改变了. 这里改成非阻塞的了, 默认不加参数属于无脑阻塞.可能出现bug.所以改成超时阻塞. 这里是1000ms
+            int selectedKeys = selector.select(timeoutMillis);
+            selectCnt ++;
+
+            // 如果selectorkey 不为空. 就break
+            if (selectedKeys != 0 || oldWakenUp || wakenUp.get() || hasTasks() || hasScheduledTasks()) {
+                break;
+            }
+            if (Thread.interrupted()) {
+                // ...
+                selectCnt = 1;
+                break;
+            }
+            long time = System.nanoTime();
+            // 如果确实等待超时了.就重置count, 否则小于的话就是bug,继续轮询,如果继续bug,当bug到512次就重新创建一个selector. 将原来的注册新建的中来. 
+            if (time - TimeUnit.MILLISECONDS.toNanos(timeoutMillis) &gt;= currentTimeNanos) {
+                // 重置.继续轮询
+                selectCnt = 1;
+            } else if (SELECTOR_AUTO_REBUILD_THRESHOLD &gt; 0 &amp;&amp;
+                    selectCnt &gt;= SELECTOR_AUTO_REBUILD_THRESHOLD) {
+                // 这里就是超过阈值的流程. 就rebuild一下.(也就是重新创建一个,代码太长自己看,在openSelector方法中)
+                selector = selectRebuildSelector(selectCnt);
+                selectCnt = 1;
+                break;
+            }
+            // 
+            currentTimeNanos = time;
+        }
+
+        // 循环结束.
+        if (selectCnt &gt; MIN_PREMATURE_SELECTOR_RETURNS) {
+			// 日志
+        }
+    } catch (CancelledKeyException e) {
+		// 日志
+    }
+}
+</code></pre>
+<p>Netty 如何解决空转呢.</p>
+<p>第一步: 确定一个最长的等待时间. 默认是 <code>SCHEDULE_PURGE_INTERVAL=1s</code> , 也就是只能轮询1S. 卡死的.</p>
+<p>第二步 : 我们执行 <code>int selectedKeys = selector.select(timeoutMillis);</code>  这个会在超时时间范围内返回, 具体分为三种情况 :</p>
+<p>1).如果有数据那么我们直接返回得了.</p>
+<p>2).如果没有数据,等待超时了, 则继续轮询,这里想想也不会的, 默认的<code>timeoutMillis</code> 是 <code>(selectDeadLineNanos - currentTimeNanos + 500000L) / 1000000L</code> 我们看看为何是这个. 也就是将1S换成多少毫秒罢了 . 也就是默认就是1000ms.   所以如果真的等待超时了, 这里也就跳出去了 .</p>
+<ol start="3">
+<li>如果发生了BUG , 空转BUG, 那么此时 <code>selectCnt++</code> 不断执行. 会触发一个阈值.  这个阈值可以通过<code>SystemPropertyUtil.getInt(&quot;io.netty.selectorAutoRebuildThreshold&quot;, 512);</code> 这个参数配置, 默认是512阈值, 就来解决BUG. 此时他会重新创建一个selector 对象.  这就解决了,</li>
+</ol>
+<p>这也就是Netty为啥不使用我们传统的编程方式了.</p>
+<pre><code class="language-java">while (true) {
+	// 这里会出现BUG.也就是空转问题了.
+    selector.select();
+    Iterator&lt;SelectionKey&gt; keyIterator = selector.selectedKeys().iterator();
+    while (keyIterator.hasNext()) {
+
+        // 注册事件
+
+        // 最后移除掉
+        keyIterator.remove();
+    }
+}
+</code></pre>
+<blockquote>
+<p>​	以上代码会出现Java的NIO空转问题 , 所以主流的实现都是Netty那套. 其实说到底还是Java的底层API问题, 再其次Java将其责任推给了 不同平台的底层实现上.  这层层委托, 不断的迭代, 完蛋了. 哈哈哈还是我们自己处理吧.</p>
+<p>​	可以看看<a href="https://www.cnblogs.com/JAYIT/p/8241634.html">这篇文章</a>不错 : <a href="https://www.cnblogs.com/JAYIT/p/8241634.html">https://www.cnblogs.com/JAYIT/p/8241634.html</a></p>
+</blockquote>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E7%BB%B4%E6%8A%A4bytebuf%E5%B8%A6%E6%9D%A5%E7%9A%84%E5%A4%A7%E9%87%8F%E6%8B%B7%E8%B4%9D%E9%97%AE%E9%A2%98">1. 维护Bytebuf带来的大量拷贝问题.</a></li>
+<li><a href="#netty%E5%A6%82%E4%BD%95%E8%A7%A3%E5%86%B3-nio%E7%A9%BA%E8%BD%AC%E9%97%AE%E9%A2%98">Netty如何解决 NIO空转问题.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

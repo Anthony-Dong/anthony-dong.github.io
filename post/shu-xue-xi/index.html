@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> 二叉树 - DFS,BFS的递归遍历与非递归遍历 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/shu-xue-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> 二叉树 - DFS,BFS的递归遍历与非递归遍历</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/shu-xue-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/h-oLWzEpzKL/"
+								class="tag">算法</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1186字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h1 id="二叉树-dfs与bfs">二叉树 -  DFS与BFS</h1>
+<blockquote>
+<p>​	深度优先遍历 (DFS <code>Depth First Search</code>)  就是一个节点不到头(叶子节点为空) 不回头</p>
+<p>​	广度有点遍历(BFS <code>Breadth First Search</code>) 就是一层一层输出 , 输出到最下层的叶子节点, 为空的时候结束</p>
+</blockquote>
+<blockquote>
+<p>​	其中深度遍历就是我们所说的 先序遍历 中序遍历 后序遍历  , 先中后指的是根节点输出的时机,先就是根左右</p>
+</blockquote>
+<p>数据结构如下, 全文都是</p>
+<pre><code class="language-java">public class TreeNode {
+    int val;
+    TreeNode left;
+    TreeNode right;
+
+    TreeNode(int x) {
+        val = x;
+    }
+
+</code></pre>
+<p>输出要求</p>
+<pre><code class="language-java">List&lt;Integer&gt; search(TreeNode root) {
+   // do 需要返回一个数组
+}
+</code></pre>
+<p>测试数据</p>
+<pre><code class="language-java">TreeNode root = new TreeNode(1);
+TreeNode left = new TreeNode(2);
+TreeNode right = new TreeNode(3);
+root.left = left;
+root.right = right;
+left.left = new TreeNode(4);
+left.right = new TreeNode(5);
+right.left = new TreeNode(6);
+</code></pre>
+<h2 id="1-dfs">1. DFS</h2>
+<h3 id="1-递归实现">1. 递归实现</h3>
+<blockquote>
+<p>​	递归实现代码相当之简单 , 所以很容易写, 就算不会也能记忆下来</p>
+</blockquote>
+<h4 id="1-先序遍历">1. 先序遍历</h4>
+<pre><code class="language-java">private List&lt;Integer&gt; preOrder(TreeNode root) {
+    if (null == root) return Collections.emptyList();
+    List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+    recursion(list, root);
+    return list;
+}
+
+// 递归
+private void recursion(List&lt;Integer&gt; list, TreeNode root) {
+    if (null == root) return;
+    // 根
+    list.add(root.val);
+    // 左
+    recursion(list, root.left);
+    // 右
+    recursion(list, root.right);
+}
+</code></pre>
+<h4 id="2-中序遍历">2. 中序遍历</h4>
+<pre><code class="language-java">private List&lt;Integer&gt; midOrder(TreeNode root) {
+    if (null == root) return Collections.emptyList();
+    List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+    recursion(list, root);
+    return list;
+}
+
+
+private void recursion(List&lt;Integer&gt; list, TreeNode root) {
+    if (null == root) return;
+    recursion(list, root.left);
+    // 调换到中间
+    list.add(root.val);
+    recursion(list, root.right);
+}
+</code></pre>
+<h4 id="3-后序遍历">3. 后序遍历</h4>
+<pre><code class="language-java">private List&lt;Integer&gt; aftOrder(TreeNode root) {
+    if (null == root) return Collections.emptyList();
+    List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+    recursion(list, root);
+    return list;
+}
+
+
+private void recursion(List&lt;Integer&gt; list, TreeNode root) {
+    if (null == root) return;
+    recursion(list, root.left);
+    recursion(list, root.right);
+    // 调换到最后
+    list.add(root.val);
+}
+</code></pre>
+<h3 id="2-递归执行流程">2. 递归执行流程</h3>
+<p>三种流程基本都差不多</p>
+<blockquote>
+<p>​	好多人对于递归并不了解, 执行流程 , 我们知道方法的出栈需要一个return, 所以递归就是在找这个 , 就拿我们上面说的那个先序遍历为例子吧 .</p>
+</blockquote>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-31/48b21c32-c454-4758-936c-e7a7c544c42d.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="3-非递归实现很重要">3. 非递归实现(很重要)</h3>
+<blockquote>
+<p>​	递归的坏处就是 , 出入栈消耗大量的内存, 每一次方法的调用都会保存大量的变量, 多以对于遍历来说并不好 ,</p>
+<p>​	非递归遍历的实现 , 基于栈的实现, 对于遍历节点保存在栈中, 出入栈 , 主要利用栈的后进先出的特性 , 很好的保证了, 后进的优先遍历 .</p>
+</blockquote>
+<h4 id="1-先序遍历-2">1. 先序遍历</h4>
+<p>非递归实现先序遍历</p>
+<pre><code class="language-java">private List&lt;Integer&gt; preOrderUnRecursion(TreeNode root) {
+    if (null == root) return Collections.emptyList();
+    List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+    // 栈
+    LinkedList&lt;TreeNode&gt; stack = new LinkedList&lt;TreeNode&gt;();
+
+    // 压栈
+    stack.push(root);
+    while (stack.size() &gt; 0) {
+        // 出栈
+        TreeNode node = stack.pop();
+
+        TreeNode right = node.right;
+        if (null != right) {
+            stack.push(right);
+        }
+        
+        TreeNode left = node.left;
+        
+        if (null != left) {
+            stack.push(left);
+        }
+
+        list.add(node.val);
+    }
+    return list;
+}
+</code></pre>
+<h4 id="2-中序遍历-2">2. 中序遍历</h4>
+<blockquote>
+<p>​	这个实现就比较麻烦了 , 因为先序遍历, 根节点有先天的优势可以先出去 ,所以很</p>
+</blockquote>
+<pre><code class="language-java">private List&lt;Integer&gt; midOrderUnRecursion(TreeNode root) {
+    if (null == root) return Collections.emptyList();
+    List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+    // 栈
+    LinkedList&lt;TreeNode&gt; stack = new LinkedList&lt;TreeNode&gt;();
+
+    // 压栈
+    stack.push(root);
+
+    while (stack.size() &gt; 0) {
+        // 出栈
+        TreeNode node = stack.pop();
+
+        TreeNode right = node.right;
+        TreeNode left = node.left;
+
+        if (null != right) {
+            node.right = null;
+            stack.push(right);
+        }
+		
+        // 重复入栈 , 是因为根节点不是最先出来的
+        if (null != right || null != left) {
+            stack.push(node);
+        }
+
+        if (null != left) {
+            node.left = null;
+            stack.push(left);
+        }
+
+        if (null == left &amp;&amp; null == right) {
+            list.add(node.val);
+        }
+    }
+    return list;
+}
+</code></pre>
+<h4 id="3-后序遍历-2">3. 后序遍历</h4>
+<pre><code class="language-java">private List&lt;Integer&gt; aftFirstSearchUnRecursion(TreeNode root) {
+    if (null == root) return Collections.emptyList();
+    List&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+    // 栈
+    LinkedList&lt;TreeNode&gt; stack = new LinkedList&lt;TreeNode&gt;();
+
+    // 压栈
+    stack.push(root);
+
+    while (stack.size() &gt; 0) {
+        // 出栈
+        TreeNode node = stack.pop();
+
+        TreeNode right = node.right;
+        TreeNode left = node.left;
+
+        if (null != right || null != left) {
+            stack.push(node);
+        }
+
+        if (null != right) {
+            node.right = null;
+            stack.push(right);
+        }
+
+        if (null != left) {
+            node.left = null;
+            stack.push(left);
+        }
+
+        if (null == left &amp;&amp; null == right) {
+            list.add(node.val);
+        }
+    }
+    return list;
+}
+</code></pre>
+<h3 id="4非递归实现流程图">4.非递归实现流程图</h3>
+<h4 id="1-先序遍历-3">1. 先序遍历</h4>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-31/6020eb08-777b-4c02-88f6-689aa96ee57e.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h4 id="2-中序遍历和后序遍历一样">2. 中序遍历和后序遍历一样</h4>
+<p>流程从左往右, 从上往下看 .</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-31/e257cb98-c7a8-4f15-b910-f0e14c2488f5.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="2-bfs">2. BFS</h2>
+<blockquote>
+<p>​	广度优先遍历就是一层 一层遍历 , 同一层, 从左到右输出,</p>
+<p>​	基于队列实现的 , FIFO特性 , offer 和 poll , 操作</p>
+</blockquote>
+<h3 id="代码实现">代码实现</h3>
+<pre><code class="language-java">private List&lt;Integer&gt; breadthFirstSearch(TreeNode root) {
+    if (null == root) return Collections.emptyList();
+    ArrayList&lt;Integer&gt; list = new ArrayList&lt;&gt;();
+    LinkedList&lt;TreeNode&gt; queue = new LinkedList&lt;&gt;();
+    
+    queue.offer(root);
+    
+    while (queue.peek() != null) {
+
+        TreeNode poll = queue.poll();
+
+        TreeNode left = poll.left;
+        if (null != left) {
+            queue.offer(left);
+        }
+
+        TreeNode right = poll.right;
+        if (null != right) {
+            queue.offer(right);
+        }
+
+        list.add(poll.val);
+}
+</code></pre>
+<h3 id="基本流程图">基本流程图</h3>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-31/5429382e-fea2-42f5-8f74-e2910b05ae3e.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="3-求树的深度">3. 求树的深度</h2>
+<blockquote>
+<p>​	利用树的先序遍历递归进行求树的深度</p>
+</blockquote>
+<pre><code class="language-java">private int countDepth(TreeNode root) {
+    if (null == root) return 0;
+    int left = countDepth(root.left);
+    int right = countDepth(root.right);
+    return left &gt;= right ? left + 1 : right + 1;
+}
+</code></pre>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-31/ad906e62-6909-4985-9fe6-9a668b887346.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="4-求数的节点个数">4. 求数的节点个数</h2>
+<blockquote>
+<p>​	也是递归遍历</p>
+</blockquote>
+<pre><code class="language-java">private int countNode(TreeNode root) {
+    if (null == root) return 0;
+    return countNode(root.left) + countNode(root.right)+1;
+}
+</code></pre>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-31/a899ea77-7ff8-48c6-8afc-9d0a86410018.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li><a href="#%E4%BA%8C%E5%8F%89%E6%A0%91-dfs%E4%B8%8Ebfs">二叉树 -  DFS与BFS</a>
+<ul>
+<li><a href="#1-dfs">1. DFS</a>
+<ul>
+<li><a href="#1-%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0">1. 递归实现</a>
+<ul>
+<li><a href="#1-%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86">1. 先序遍历</a></li>
+<li><a href="#2-%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86">2. 中序遍历</a></li>
+<li><a href="#3-%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86">3. 后序遍历</a></li>
+</ul>
+</li>
+<li><a href="#2-%E9%80%92%E5%BD%92%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B">2. 递归执行流程</a></li>
+<li><a href="#3-%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E5%BE%88%E9%87%8D%E8%A6%81">3. 非递归实现(很重要)</a>
+<ul>
+<li><a href="#1-%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86-2">1. 先序遍历</a></li>
+<li><a href="#2-%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86-2">2. 中序遍历</a></li>
+<li><a href="#3-%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86-2">3. 后序遍历</a></li>
+</ul>
+</li>
+<li><a href="#4%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B%E5%9B%BE">4.非递归实现流程图</a>
+<ul>
+<li><a href="#1-%E5%85%88%E5%BA%8F%E9%81%8D%E5%8E%86-3">1. 先序遍历</a></li>
+<li><a href="#2-%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E5%92%8C%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E4%B8%80%E6%A0%B7">2. 中序遍历和后序遍历一样</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#2-bfs">2. BFS</a>
+<ul>
+<li><a href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0">代码实现</a></li>
+<li><a href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B%E5%9B%BE">基本流程图</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%B1%82%E6%A0%91%E7%9A%84%E6%B7%B1%E5%BA%A6">3. 求树的深度</a></li>
+<li><a href="#4-%E6%B1%82%E6%95%B0%E7%9A%84%E8%8A%82%E7%82%B9%E4%B8%AA%E6%95%B0">4. 求数的节点个数</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

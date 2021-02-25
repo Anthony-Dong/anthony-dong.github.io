@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>SpringBoot -切入式容器如何启动 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/7uYoLmtOF/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>SpringBoot -切入式容器如何启动</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-16</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/7uYoLmtOF/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1451字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<pre><code class="language-java">&gt; ​	你是否想过, 为什么SpringBoot可以不用外置的Tomcat容器. 那么我下文带你了解为什么 ?  代码有些枯燥. 
+&gt;
+&gt; 虽然SpringBoot的  `org.springframework.boot.autoconfigure.web.embedded.EmbeddedWebServerFactoryCustomizerAutoConfiguration` 可以实现自动注入, 难道你不想知道为什么吗 ? 
+
+</code></pre>
+<p>我们从 tomcat 类往下走 .</p>
+<p><code>org.apache.catalina.startup.Tomcat</code>  这个就是一个tomcat实例 , 需要传入大量参数.</p>
+<blockquote>
+<p>​	Minimal tomcat starter for embedding/unit tests.</p>
+<p>​	用于嵌入/单元测试的最小tomcat启动器。 所以人家说了用于切入式和单元测试使用的 . 对于springboot也是基于这个的.  启动方式很简单,</p>
+</blockquote>
+<pre><code class="language-java">public void start() throws LifecycleException {
+    getServer();
+    getConnector();
+    server.start();
+}
+</code></pre>
+<p>我们往上走  <code>org.springframework.boot.web.embedded.tomcat.TomcatWebServer</code>  实现了<code>org.springframework.boot.web.server.WebServer</code>  接口, 可以看出还有其他切入式容器.</p>
+<p>其  <code>org.springframework.boot.web.embedded.tomcat.TomcatWebServer#initialize</code>  方法会调用start方法.</p>
+<pre><code class="language-java">private void initialize() throws WebServerException {
+	this.tomcat.start();
+   //  .....
+}
+</code></pre>
+<p>在这个对象实例化的时候就会被调用  <code>org.springframework.boot.web.embedded.tomcat.TomcatWebServer#TomcatWebServer(org.apache.catalina.startup.Tomcat, boolean)</code></p>
+<pre><code class="language-java">public TomcatWebServer(Tomcat tomcat, boolean autoStart) {
+    Assert.notNull(tomcat, &quot;Tomcat Server must not be null&quot;);
+    this.tomcat = tomcat;
+    this.autoStart = autoStart;
+    // 初始化tomcat
+    initialize();
+}
+</code></pre>
+<p>继续往上走   <code>org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory#getTomcatWebServer</code></p>
+<pre><code class="language-java">protected TomcatWebServer getTomcatWebServer(Tomcat tomcat) {
+    return new TomcatWebServer(tomcat, getPort() &gt;= 0);
+}
+</code></pre>
+<p>继续往上走 <code>org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory#getWebServer</code></p>
+<pre><code class="language-java">@Override
+public WebServer getWebServer(ServletContextInitializer... initializers) {
+    // 1. 实例化 Tomcat
+    Tomcat tomcat = new Tomcat();
+    File baseDir = (this.baseDirectory != null) ? this.baseDirectory
+            : createTempDir(&quot;tomcat&quot;);
+    // 2. 设置basedir , 文件路径 , 默认在user用户下的.temp目录下. C:\Users\12986\AppData\Local\Temp\tomcat.4249223367467675192.8080
+    tomcat.setBaseDir(baseDir.getAbsolutePath());
+    // 3. 初始化一个connector , 放入协议`org.apache.coyote.http11.Http11NioProtocol`
+    Connector connector = new Connector(this.protocol);
+    tomcat.getService().addConnector(connector);
+    customizeConnector(connector);
+    // 4. 设置connector
+    tomcat.setConnector(connector);
+    // 自动发布为false.其实就是热部署
+    tomcat.getHost().setAutoDeploy(false);
+    configureEngine(tomcat.getEngine());
+    for (Connector additionalConnector : this.additionalTomcatConnectors) {
+        tomcat.getService().addConnector(additionalConnector);
+    }
+    prepareContext(tomcat.getHost(), initializers);
+    return getTomcatWebServer(tomcat);
+}
+</code></pre>
+<p>继续往上走 <code>org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext#createWebServer</code></p>
+<pre><code class="language-java">private void createWebServer() {
+    WebServer webServer = this.webServer;
+    ServletContext servletContext = getServletContext();
+    if (webServer == null &amp;&amp; servletContext == null) {
+        ServletWebServerFactory factory = getWebServerFactory();
+        // 启动
+        this.webServer = factory.getWebServer(getSelfInitializer());
+    }
+    else if (servletContext != null) {
+        try {
+            getSelfInitializer().onStartup(servletContext);
+        }
+        catch (ServletException ex) {
+            throw new ApplicationContextException(&quot;Cannot initialize servlet context&quot;,
+                    ex);
+        }
+    }
+    initPropertySources();
+}
+</code></pre>
+<p>继续往上走 <code>org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext#onRefresh</code></p>
+<pre><code class="language-java">@Override
+protected void onRefresh() {
+    super.onRefresh();
+    try {
+        createWebServer();
+    }
+    catch (Throwable ex) {
+        throw new ApplicationContextException(&quot;Unable to start web server&quot;, ex);
+    }
+}
+</code></pre>
+<p>继续往上走 <code>org.springframework.context.support.AbstractApplicationContext#refresh</code> 方法了 我们就先放到这里, 因为我们知道 spring的context在初始化完成会调用refresh刷新(也就是实例化和事件发布)机制.</p>
+<p>所以我们回到了<code>SpringApplication.run(SpringEmbedServletContainerApplication.class, args);</code> 我们的入口</p>
+<p>这个其实就是到头了 我们分析一下 <code>SpringApplication</code></p>
+<pre><code class="language-java">SpringApplication.run(SpringEmbedServletContainerApplication.class, args);
+</code></pre>
+<pre><code class="language-java">public static ConfigurableApplicationContext run(Class&lt;?&gt;[] primarySources,
+        String[] args) {
+    return new SpringApplication(primarySources).run(args);
+}
+</code></pre>
+<p>继续进入构造方法.</p>
+<pre><code class="language-java">@SuppressWarnings({ &quot;unchecked&quot;, &quot;rawtypes&quot; })
+public SpringApplication(ResourceLoader resourceLoader, Class&lt;?&gt;... primarySources) {
+    this.resourceLoader = resourceLoader;
+    Assert.notNull(primarySources, &quot;PrimarySources must not be null&quot;);
+    this.primarySources = new LinkedHashSet&lt;&gt;(Arrays.asList(primarySources));
+    
+    // 这里获取 webApplicationType
+    this.webApplicationType = deduceWebApplicationType();
+    setInitializers((Collection) getSpringFactoriesInstances(
+            ApplicationContextInitializer.class));
+    setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+    this.mainApplicationClass = deduceMainApplicationClass();
+}
+
+</code></pre>
+<p><code>this.webApplicationType = deduceWebApplicationType();</code>  这里要获取<code>webApplicationType</code> , 所以进入了<code>org.springframework.boot.SpringApplication#deduceWebApplicationType</code> 来判断类型. 在没有任何配置的情况的下默认是 <code>WebApplicationType.SERVLET</code> 类型. 这个玩意是有用,</p>
+<pre><code class="language-java">private WebApplicationType deduceWebApplicationType() {
+    if (ClassUtils.isPresent(REACTIVE_WEB_ENVIRONMENT_CLASS, null)
+            &amp;&amp; !ClassUtils.isPresent(MVC_WEB_ENVIRONMENT_CLASS, null)
+            &amp;&amp; !ClassUtils.isPresent(JERSEY_WEB_ENVIRONMENT_CLASS, null)) {
+        return WebApplicationType.REACTIVE;
+    }
+    for (String className : WEB_ENVIRONMENT_CLASSES) {
+        if (!ClassUtils.isPresent(className, null)) {
+            return WebApplicationType.NONE;
+        }
+    }
+    // 返回SERVLET
+    return WebApplicationType.SERVLET;
+}
+</code></pre>
+<p><code>org.springframework.boot.SpringApplication#run(java.lang.String...)</code> 启动了 . 这个是整个初始化过程.</p>
+<pre><code class="language-java">public ConfigurableApplicationContext run(String... args) {
+    StopWatch stopWatch = new StopWatch();
+    stopWatch.start();
+    ConfigurableApplicationContext context = null;
+    Collection&lt;SpringBootExceptionReporter&gt; exceptionReporters = new ArrayList&lt;&gt;();
+    configureHeadlessProperty();
+    SpringApplicationRunListeners listeners = getRunListeners(args);
+    listeners.starting();
+    try {
+        ApplicationArguments applicationArguments = new DefaultApplicationArguments(
+                args);
+        ConfigurableEnvironment environment = prepareEnvironment(listeners,
+                applicationArguments);
+        configureIgnoreBeanInfo(environment);
+        Banner printedBanner = printBanner(environment);
+        //1. 通过反射创建一个 context . 
+        context = createApplicationContext();
+        exceptionReporters = getSpringFactoriesInstances(
+                SpringBootExceptionReporter.class,
+                new Class[] { ConfigurableApplicationContext.class }, context);
+        prepareContext(context, environment, listeners, applicationArguments,
+                printedBanner);
+        
+        //2. 这里要刷新 context 
+        refreshContext(context);
+        afterRefresh(context, applicationArguments);
+        stopWatch.stop();
+        if (this.logStartupInfo) {
+            new StartupInfoLogger(this.mainApplicationClass)
+                    .logStarted(getApplicationLog(), stopWatch);
+        }
+        listeners.started(context);
+        callRunners(context, applicationArguments);
+    }
+    catch (Throwable ex) {
+        handleRunFailure(context, ex, exceptionReporters, listeners);
+        throw new IllegalStateException(ex);
+    }
+
+    try {
+        listeners.running(context);
+    }
+    catch (Throwable ex) {
+        handleRunFailure(context, ex, exceptionReporters, null);
+        throw new IllegalStateException(ex);
+    }
+    return context;
+}
+</code></pre>
+<p>我们看第一步. <code>context = createApplicationContext();</code>  -&gt;  <code>org.springframework.boot.SpringApplication#createApplicationContext</code>  这里了</p>
+<pre><code class="language-java">protected ConfigurableApplicationContext createApplicationContext() {
+    Class&lt;?&gt; contextClass = this.applicationContextClass;
+    if (contextClass == null) {
+        try {
+            switch (this.webApplicationType) {
+           // 显然我们是 SERVLET类型. 反射生成这个对象. 
+            case SERVLET:
+                contextClass = Class.forName(DEFAULT_WEB_CONTEXT_CLASS);
+                break;
+            case REACTIVE:
+                contextClass = Class.forName(DEFAULT_REACTIVE_WEB_CONTEXT_CLASS);
+                break;
+            default:
+                contextClass = Class.forName(DEFAULT_CONTEXT_CLASS);
+            }
+        }
+        catch (ClassNotFoundException ex) {
+            throw new IllegalStateException(
+                    &quot;Unable create a default ApplicationContext, &quot;
+                            + &quot;please specify an ApplicationContextClass&quot;,
+                    ex);
+        }
+    }
+    return (ConfigurableApplicationContext) BeanUtils.instantiateClass(contextClass);
+}
+</code></pre>
+<p>第二步会调用 <code>refreshContext(context);</code>  -&gt;  <code>org.springframework.boot.SpringApplication#refreshContext</code></p>
+<pre><code class="language-java">private void refreshContext(ConfigurableApplicationContext context) {
+    refresh(context);
+    if (this.registerShutdownHook) {
+        try {
+            context.registerShutdownHook();
+        }
+        catch (AccessControlException ex) {
+            // Not allowed in some environments.
+        }
+    }
+}
+</code></pre>
+<p>继续进入<code>refresh(context);</code>  -&gt; <code>org.springframework.boot.SpringApplication#refresh</code></p>
+<pre><code class="language-java">protected void refresh(ApplicationContext applicationContext) {
+    Assert.isInstanceOf(AbstractApplicationContext.class, applicationContext);
+    ((AbstractApplicationContext) applicationContext).refresh();
+}
+</code></pre>
+<p>这里的这个context是 <code>org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext</code> 类型(在我们初始化的时候我们知道是Servlet类型,所以可以断定) ,  他继承 了 <code>org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext</code></p>
+<p>我们看他的 <code>refresh</code>方法<code>org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext#refresh</code></p>
+<pre><code class="language-java">@Override
+public final void refresh() throws BeansException, IllegalStateException {
+    try {
+        super.refresh();
+    }
+    catch (RuntimeException ex) {
+        stopAndReleaseWebServer();
+        throw ex;
+    }
+}
+</code></pre>
+<p>继续走 调用的是 <code>super.refresh();</code>  父类是 <code>org.springframework.context.support.AbstractApplicationContext#refresh</code> ,就找到了 <code>org.springframework.context.support.AbstractApplicationContext#onRefresh</code> 方法调用了.  就和我们上面接入了, 所以 整个tomcat初始化过程就实现了 .</p>
+<pre><code class="language-java">@Override
+public void refresh() throws BeansException, IllegalStateException {
+    synchronized (this.startupShutdownMonitor) {
+        // Prepare this context for refreshing.
+        prepareRefresh();
+
+        // Tell the subclass to refresh the internal bean factory.
+        ConfigurableListableBeanFactory beanFactory = obtainFreshBeanFactory();
+
+        // Prepare the bean factory for use in this context.
+        prepareBeanFactory(beanFactory);
+
+        try {
+            // Allows post-processing of the bean factory in context subclasses.
+            postProcessBeanFactory(beanFactory);
+
+            // Invoke factory processors registered as beans in the context.
+            invokeBeanFactoryPostProcessors(beanFactory);
+
+            // Register bean processors that intercept bean creation.
+            registerBeanPostProcessors(beanFactory);
+
+            // Initialize message source for this context.
+            initMessageSource();
+
+            // Initialize event multicaster for this context.
+            initApplicationEventMulticaster();
+
+            // 这里就是初始 tomcat容器了 . 
+            // Initialize other special beans in specific context subclasses.
+            onRefresh();
+
+            // Check for listener beans and register them.
+            registerListeners();
+
+            // Instantiate all remaining (non-lazy-init) singletons.
+            finishBeanFactoryInitialization(beanFactory);
+
+            // Last step: publish corresponding event.
+            finishRefresh();
+        }
+
+        catch (BeansException ex) {
+            if (logger.isWarnEnabled()) {
+                logger.warn(&quot;Exception encountered during context initialization - &quot; +
+                        &quot;cancelling refresh attempt: &quot; + ex);
+            }
+
+            // Destroy already created singletons to avoid dangling resources.
+            destroyBeans();
+
+            // Reset 'active' flag.
+            cancelRefresh(ex);
+
+            // Propagate exception to caller.
+            throw ex;
+        }
+
+        finally {
+            // Reset common introspection caches in Spring's core, since we
+            // might not ever need metadata for singleton beans anymore...
+            resetCommonCaches();
+        }
+    }
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"></div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

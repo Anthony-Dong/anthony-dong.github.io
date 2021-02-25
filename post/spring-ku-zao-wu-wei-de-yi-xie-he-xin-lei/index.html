@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring - 枯燥无味的一些核心类 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spring-ku-zao-wu-wei-de-yi-xie-he-xin-lei/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring - 枯燥无味的一些核心类</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-08</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spring-ku-zao-wu-wei-de-yi-xie-he-xin-lei/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1362字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="applicationcontext">ApplicationContext</h2>
+<blockquote>
+<p>​	Central interface to provide configuration for an application. This is read-only while the application is running.</p>
+<p><strong>为应用程序提供配置的中央接口。在应用程序运行时，这是只读的，所以一旦启动我们就不能修改上下文了 .</strong></p>
+</blockquote>
+<pre><code class="language-java">SpringApplication #ConfigurableApplicationContext 方法: 
+
+protected ConfigurableApplicationContext createApplicationContext() {
+		Class&lt;?&gt; contextClass = this.applicationContextClass;
+		....... 省略
+		return (ConfigurableApplicationContext) BeanUtils.instantiateClass(contextClass);
+}
+</code></pre>
+<p>所以Spring-Boot返回的 ApplicationContext 是一个 ConfigurableApplicationContext ,所以后期我们可以强转类型</p>
+<h2 id="beandefinition">BeanDefinition</h2>
+<blockquote>
+<p>​	A BeanDefinition describes a bean instance, which has property values, constructor argument values, and further information supplied by concrete implementations.</p>
+<p>​	<strong>描述了一个bean实例，它具有属性值、构造函数参数值和由具体实现提供的进一步信息。就是一个Bean的元信息.</strong></p>
+</blockquote>
+<h2 id="beandefinitionregistry">BeanDefinitionRegistry</h2>
+<blockquote>
+<p>​	Interface for registries that hold bean definitions, This is the only interface in Spring's bean factory packages that encapsulates registration of bean definitions. The standard BeanFactory interfaces only cover access to a fully configured factory instance.</p>
+<p><strong>这是Spring的bean factory包中惟一封装bean定义注册的接口。包含bean定义的注册中心的接口</strong></p>
+</blockquote>
+<h2 id="beanfactory">BeanFactory</h2>
+<blockquote>
+<p>​	The root interface for accessing a Spring bean container.</p>
+<p>​	<strong>用于访问Spring bean容器的根接口。</strong></p>
+</blockquote>
+<h2 id="factorybean">FactoryBean</h2>
+<blockquote>
+<p>​	Interface to be implemented by objects used within a BeanFactory which are themselves factories for individual objects. If a bean implements this interface, it is used as a factory for an object to expose, not directly as a bean instance that will be exposed itself.</p>
+<p>​	<strong>主要是用户来自定义实例化bean 的 , 可以自定义解析方式之类的</strong></p>
+</blockquote>
+<h2 id="environment">Environment</h2>
+<blockquote>
+<p>​	Interface representing the environment in which the current application is running.</p>
+<p>表示当前应用运行的环境 , 这个环境可以说是一大堆配置信息 , 包括我们的application.properties文件里的,和一堆系统的,和自定义实现的</p>
+</blockquote>
+<pre><code class="language-java">public interface Environment extends PropertyResolver {}
+
+</code></pre>
+<p><strong>它继承了 PropertyResolver ,代表他可以设置 PropertyResolver ,就是一堆的配置信息 (环境信息).</strong></p>
+<h2 id="defaultlistablebeanfactory">DefaultListableBeanFactory</h2>
+<blockquote>
+<p>​	Spring's default implementation of the ConfigurableListableBeanFactory and BeanDefinitionRegistry interfaces: a full-fledged bean factory based on bean definition metadata, extensible through post-processors.</p>
+<p>​	Spring的ConfigurableListableBeanFactory和BeanDefinitionRegistry接口的默认实现 : 一个完全成熟的基于bean定义元数据的bean工厂，可通过后处理器扩展。</p>
+<p>​	<strong>它可以说我我们的 spring工厂 ,里面包含了所有的元信息</strong></p>
+</blockquote>
+<h2 id="environmentpostprocessor">EnvironmentPostProcessor</h2>
+<blockquote>
+<p>​	Allows for customization of the application's Environment prior to the application context being refreshed. EnvironmentPostProcessor implementations have to be registered in META-INF/spring.factories, using the fully qualified name of this class as the key.</p>
+<p>​	<strong>允许在刷新应用程序上下文之前自定义应用程序环境,启动的很早</strong>必须在META-INF/spring中注册EnvironmentPostProcessor实现类，使用该类的完全限定名作为键。</p>
+</blockquote>
+<pre><code class="language-java">void postProcessEnvironment(ConfigurableEnvironment environment,SpringApplication application)
+
+可以获取启动时的 environment 和 application  
+</code></pre>
+<h2 id="environmentaware">EnvironmentAware</h2>
+<blockquote>
+<p>​	Interface to be implemented by any bean that wishes to be notified of the Environment that it runs in.</p>
+<p>这个接口可以被任何bean使用,希望通知env在运行中需要做什么</p>
+</blockquote>
+<pre><code class="language-java">void setEnvironment(Environment environment);
+可以获取 Environment 对象 
+</code></pre>
+<h2 id="applicationcontextinitializer">ApplicationContextInitializer</h2>
+<blockquote>
+<p>​	Callback interface for initializing a Spring ConfigurableApplicationContext prior to being refreshed.</p>
+<p>用于在刷新(refresh())初始化Spring ConfigurableApplicationContext之前,的回调接口.</p>
+</blockquote>
+<p>​	这是一个用来初始化Spring <code>ConfigurableApplicationContext</code>应用上下文的回调接口，设定的调用时机是在<code>ConfigurableApplicationContext#refresh()</code>调用之前。</p>
+<pre><code class="language-java">void initialize(C applicationContext);
+
+可以获取 spring启动时的上下文对象 ,就是 ConfigurableApplicationContext  .
+</code></pre>
+<h2 id="importbeandefinitionregistrar">ImportBeanDefinitionRegistrar</h2>
+<blockquote>
+<p>Interface to be implemented by types that register additional bean definitions when processing @Configuration classes. Useful when operating at the bean definition level (as opposed to @Bean method/instance level) is desired or necessary.</p>
+<p>Along with @Configuration and ImportSelector, classes of this type may be provided to the @Import annotation (or may also be returned from an ImportSelector).</p>
+</blockquote>
+<p>通常与 <code>@Import</code> 注释使用 , 下面举个栗子</p>
+<pre><code class="language-java">@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+@Import(ApolloConfigRegistrar.class)
+public @interface EnableApolloConfig {
+  String[] value() default {ConfigConsts.NAMESPACE_APPLICATION};
+  int order() default Ordered.LOWEST_PRECEDENCE;
+}
+</code></pre>
+<pre><code class="language-java">public class ApolloConfigRegistrar implements ImportBeanDefinitionRegistrar {
+
+  @Override
+  public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+     // 1. importingClassMetadata 可以获取 @EnableApolloConfig 的注解的元信息 , 比如字段属性
+      //  例如 : 
+     importingClassMetadata.getAnnotationAttributes(EnableApolloConfig.class.getName())
+       
+    // 2.registry可以手动注册一个bean ,需要BeanDefinition,和类信息
+     BeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(NoRegisterService.class).getBeanDefinition();
+     registry.registerBeanDefinition(&quot;noRegisterService&quot;, beanDefinition);     
+  }
+}
+</code></pre>
+<p>// 主要方法</p>
+<pre><code class="language-java">public void registerBeanDefinitions(
+			AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry);
+可以获取 注解类的元信息 , 自定义注解可以
+</code></pre>
+<h2 id="beandefinitionregistrypostprocessor">BeanDefinitionRegistryPostProcessor</h2>
+<blockquote>
+<p>​	Extension to the standard BeanFactoryPostProcessor SPI, allowing for the registration of further bean definitions before regular BeanFactoryPostProcessor detection kicks in.</p>
+<p>​	扩展标准的BeanFactoryPostProcessor SPI，允许在常规的BeanFactoryPostProcessor检测开始之前注册更多的bean定义。</p>
+</blockquote>
+<pre><code class="language-java">void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException;
+</code></pre>
+<p>​	在应用程序上下文的标准初始化之后修改它的内部bean定义注册表。所有常规bean定义都已加载，但还没有实例化任何bean。这允许在下一个后处理阶段开始之(BeanFactoryPostProcessor)前添加更多的bean定义.</p>
+<h2 id="beanfactorypostprocessor">BeanFactoryPostProcessor</h2>
+<blockquote>
+<p>​	Allows for custom modification of an application context's bean definitions, adapting the bean property values of the context's underlying bean factory.</p>
+<p><strong>允许自定义修改应用程序上下文的bean定义，调整上下文的底层bean工厂的bean属性值。</strong> 此时已经上下文启动好了.但是bean还没有被实例化 , 可以获取bean的 BeanDefinition ,</p>
+</blockquote>
+<pre><code class="language-java">void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException;
+</code></pre>
+<p>他的实现类 : <code>PropertyResourceConfigurer</code> 可以快速的使用,并且简单的使用</p>
+<h2 id="beanpostprocessor">BeanPostProcessor</h2>
+<blockquote>
+<p>​	Factory hook that allows for custom modification of new bean instances,</p>
+<p>**允许自定义修改新的bean实例， **可以对bean 进行一些动态的修改 , 在程序运行后 ,</p>
+</blockquote>
+<pre><code class="language-java">public interface BeanPostProcessor {
+    
+    default Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
+    
+    	default Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+		return bean;
+	}
+}
+</code></pre>
+<h2 id="import">@Import</h2>
+<blockquote>
+<p>Indicates one or more @Configuration classes to import.</p>
+<p>Provides functionality equivalent to the element in Spring XML. Allows for importing @Configuration classes, ImportSelector and ImportBeanDefinitionRegistrar implementations, as well as regular component classes (as of 4.2; analogous to AnnotationConfigApplicationContext.register).</p>
+</blockquote>
+<p>指示要导入的一个或多个@Configuration类。提供与Spring XML中的<import/>元素相同的功能。允许导入@Configuration类，ImportSelector和ImportBeanDefinitionRegistrar实现，以及常规组件类(从4.2;类似于AnnotationConfigApplicationContext.register)。也就四种 .. .. . . .</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#applicationcontext">ApplicationContext</a></li>
+<li><a href="#beandefinition">BeanDefinition</a></li>
+<li><a href="#beandefinitionregistry">BeanDefinitionRegistry</a></li>
+<li><a href="#beanfactory">BeanFactory</a></li>
+<li><a href="#factorybean">FactoryBean</a></li>
+<li><a href="#environment">Environment</a></li>
+<li><a href="#defaultlistablebeanfactory">DefaultListableBeanFactory</a></li>
+<li><a href="#environmentpostprocessor">EnvironmentPostProcessor</a></li>
+<li><a href="#environmentaware">EnvironmentAware</a></li>
+<li><a href="#applicationcontextinitializer">ApplicationContextInitializer</a></li>
+<li><a href="#importbeandefinitionregistrar">ImportBeanDefinitionRegistrar</a></li>
+<li><a href="#beandefinitionregistrypostprocessor">BeanDefinitionRegistryPostProcessor</a></li>
+<li><a href="#beanfactorypostprocessor">BeanFactoryPostProcessor</a></li>
+<li><a href="#beanpostprocessor">BeanPostProcessor</a></li>
+<li><a href="#import">@Import</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

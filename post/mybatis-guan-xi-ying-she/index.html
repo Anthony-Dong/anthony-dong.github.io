@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> MyBatis - 关系映射 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/mybatis-guan-xi-ying-she/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> MyBatis - 关系映射</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-11</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/mybatis-guan-xi-ying-she/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/3khXF681Z_v/"
+								class="tag">mybatis</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1786字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>官网文档  地址很详细,可以不看我写的  https://mybatis.org/mybatis-3/zh/sqlmap-xml.html</p>
+<p>​	MyBatis 的真正强大在于它的映射语句，这是它的魔力所在。由于它的异常强大，映射器的 XML 文件就显得相对简单。如果拿它跟具有相同功能的 JDBC 代码进行对比，你会立即发现省掉了将近 95% 的代码。MyBatis 为聚焦于 SQL 而构建，以尽可能地为你减少麻烦。</p>
+<p>SQL 映射文件只有很少的几个顶级元素（按照应被定义的顺序列出）：</p>
+<ul>
+<li><code>cache</code> – 对给定命名空间的缓存配置。</li>
+<li><code>cache-ref</code> – 对其他命名空间缓存配置的引用。</li>
+<li><code>resultMap</code> – 是最复杂也是最强大的元素，用来描述如何从数据库结果集中来加载对象。</li>
+<li><code>parameterMap</code> – 已被废弃！老式风格的参数映射。更好的办法是使用内联参数，此元素可能在将来被移除。文档中不会介绍此元素。</li>
+<li><code>sql</code> – 可被其他语句引用的可重用语句块。</li>
+<li><code>insert</code> – 映射插入语句</li>
+<li><code>update</code> – 映射更新语句</li>
+<li><code>delete</code> – 映射删除语句</li>
+<li><code>select</code> – 映射查询语句</li>
+</ul>
+<h2 id="认识一下-映射语句">认识一下 映射语句</h2>
+<p>文件绝对有一个   <mapper namespace="com.mybatis.mapper.DeptMapper"> 标签开始,对应着你的mapper接口</p>
+<h3 id="resultmap">resultMap</h3>
+<p><code>resultMap</code> 元素是 MyBatis 中最重要最强大的元素。它可以让你从 90% 的 JDBC <code>ResultSets</code> 数据提取代码中解放出来，并在一些情形下允许你进行一些 JDBC 不支持的操作。实际上，在为一些比如连接的复杂语句编写映射代码的时候，一份 <code>resultMap</code> 能够代替实现同等功能的长达数千行的代码。ResultMap 的设计思想是，对于简单的语句根本不需要配置显式的结果映射，而对于复杂一点的语句只需要描述它们的关系就行了。</p>
+<pre><code class="language-xml">&lt;resultMap id=&quot;BasePlusResultMap&quot; type=&quot;com.mybatis.pojo.Dept&quot;&gt;    &lt;id column=&quot;DEPTNO&quot; jdbcType=&quot;INTEGER&quot; property=&quot;deptno&quot;/&gt;    &lt;result column=&quot;DNAME&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;dname&quot;/&gt;    &lt;result column=&quot;LOC&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;loc&quot;/&gt;    &lt;!-- oftype  emps 是一个存储 Emp 的 ArrayList 集合 --&gt;    &lt;collection property=&quot;emps&quot; ofType=&quot;com.mybatis.pojo.Emp&quot; javaType=&quot;java.util.ArrayList&quot; resultMap=&quot;EmpResultMap&quot;&gt;    &lt;/collection&gt;&lt;/resultMap&gt;
+</code></pre>
+<p>对应的实体bean 是</p>
+<pre><code class="language-java">@Data
+public class Dept implements Serializable {
+
+    private Integer deptno;
+
+    private String dname;
+
+    private String loc;
+
+}
+</code></pre>
+<p>查询结果是</p>
+<pre><code class="language-java">==&gt;  Preparing: SELECT d.*, e.* FROM dept d JOIN emp e ON d.DEPTNO = e.DEPTNO WHERE d.DEPTNO = ? 
+==&gt; Parameters: 20(Integer)
+&lt;==    Columns: DEPTNO, DNAME, LOC, EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO
+&lt;==        Row: 20, RESEARCH, DALLAS, 7396, SMITH, CLERK, 7902, 1980-12-17, 800.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7566, JONES, MANAGER, 7839, 1981-04-02, 2975.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7782, CLARK, MANAGER, 7839, 1981-06-09, 2450.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7788, SCOTT, ANALYST, 7566, 1987-04-19, 3000.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7876, ADAMS, CLERK, 7788, 1987-05-23, 1100.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7902, FORD, ANALYST, 7566, 1981-12-03, 3000.00, null, 20
+&lt;==      Total: 6
+</code></pre>
+<p>实际获取的结果是</p>
+<pre><code class="language-java">{
+&quot;deptno&quot;: 20,
+&quot;dname&quot;: &quot;RESEARCH&quot;,
+&quot;loc&quot;: &quot;DALLAS&quot;,
+&quot;emps&quot;: [...省略不写了]
+}
+</code></pre>
+<h2 id="association">association</h2>
+<p>上面的<strong>collection</strong> 是集合 , 那么 <strong>association</strong> 就是对象了</p>
+<p>关联（association）元素处理“有一个”类型的关系。 比如，在我们的示例中，一个博客有一个用户。关联结果映射和其它类型的映射工作方式差不多。 你需要指定目标属性名以及属性的<code>javaType</code>（很多时候 MyBatis 可以自己推断出来），在必要的情况下你还可以设置 JDBC 类型，如果你想覆盖获取结果值的过程，还可以设置类型处理器。</p>
+<p>关联的不同之处是，你需要告诉 MyBatis 如何加载关联。MyBatis 有两种不同的方式加载关联：</p>
+<ul>
+<li>嵌套 Select 查询：通过执行另外一个 SQL 映射语句来加载期望的复杂类型。</li>
+<li>嵌套结果映射：使用嵌套的结果映射来处理连接结果的重复子集。</li>
+</ul>
+<p><strong>property</strong>  : bean属性名称</p>
+<p><strong>jdbcType</strong> : JDBC 类型，所支持的 JDBC 类型参见这个表格之前的“支持的 JDBC 类型”。</p>
+<p><strong>javaType</strong> : 一个 Java 类的完全限定名，或一个类型别名（关于内置的类型别名，可以参考上面的表格）。</p>
+<h4 id="关联的嵌套-select-查询">关联的嵌套 Select 查询</h4>
+<p><strong>column</strong>  : 数据库中的列名，或者是列的别名。一般情况下，这和传递给 <code>resultSet.getString(columnName)</code> 方法的参数一样。注意：在使用复合主键的时候，你可以使用 <code>column=&quot;{prop1=col1,prop2=col2}&quot;</code> 这样的语法来指定多个传递给嵌套 Select 查询语句的列名。</p>
+<p><strong>select</strong> : 用于加载复杂类型属性的映射语句的 ID，它会从 column 属性指定的列中检索数据，作为参数传递给目标 select 语句。</p>
+<p><strong>fetchType</strong> :  可选的。有效值为 <code>lazy</code> 和 <code>eager</code>。 指定属性后，将在映射中忽略全局配置参数 <code>lazyLoadingEnabled</code>，使用属性的值。</p>
+<p>使用 :</p>
+<pre><code class="language-java">  &lt;resultMap id=&quot;UserMapJoinRole&quot; type=&quot;User&quot;&gt;
+    &lt;association property=&quot;role&quot; column=&quot;id&quot; javaType=&quot;com.mybatis.pojo.Role&quot; select=&quot;selectRoleById&quot; /&gt;
+  &lt;/resultMap&gt;
+
+  &lt;select id=&quot;selectUserById&quot; resultMap=&quot;UserMapJoinRole&quot;&gt;
+    SELECT * FROM `user` WHERE id=#{id}
+  &lt;/select&gt;
+
+  &lt;select id=&quot;selectRoleById&quot; resultMap=&quot;RoleMap&quot;&gt;
+    SELECT * FROM role WHERE id=#{id}
+  &lt;/select&gt;
+</code></pre>
+<h4 id="关联的多结果集resultset">关联的多结果集（ResultSet）</h4>
+<pre><code class="language-xml"> &lt;resultMap id=&quot;UserMapJoinRole2&quot; type=&quot;User&quot;&gt;
+    &lt;result column=&quot;id&quot; jdbcType=&quot;INTEGER&quot; property=&quot;id&quot; /&gt;
+    &lt;result column=&quot;username&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;username&quot; /&gt;
+    &lt;result column=&quot;hashedPassword&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;hashedpassword&quot; /&gt;
+    &lt;association property=&quot;role&quot; javaType=&quot;com.mybatis.pojo.Role&quot; resultMap=&quot;RoleMap&quot; /&gt;
+  &lt;/resultMap&gt;
+
+
+  &lt;select id=&quot;selectUserByI2&quot; resultMap=&quot;UserMapJoinRole2&quot;&gt;
+          SELECT u.*,r.*
+      FROM `user` u
+      JOIN  role  r
+      ON u.id=r.id
+      WHERE u.id=#{id}
+  &lt;/select&gt;
+</code></pre>
+<h2 id="collection">collection</h2>
+<p>属性</p>
+<p>“ofType” 属性。这个属性非常重要，它用来将 JavaBean（或字段）属性的类型和集合存储的类型区分开来。 所以你可以按照下面这样来阅读映射</p>
+<pre><code class="language-xml">  &lt;resultMap id=&quot;BasePlusResultMap&quot; type=&quot;com.mybatis.pojo.Dept&quot;&gt;
+        &lt;id column=&quot;DEPTNO&quot; jdbcType=&quot;INTEGER&quot; property=&quot;deptno&quot;/&gt;
+        &lt;result column=&quot;DNAME&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;dname&quot;/&gt;
+        &lt;result column=&quot;LOC&quot; jdbcType=&quot;VARCHAR&quot; property=&quot;loc&quot;/&gt;
+        &lt;!-- oftype  emps 是一个存储 Emp 的 ArrayList 集合 --&gt;
+        &lt;collection property=&quot;emps&quot; ofType=&quot;com.mybatis.pojo.Emp&quot; javaType=&quot;java.util.ArrayList&quot; resultMap=&quot;EmpResultMap&quot;&gt;
+        &lt;/collection&gt;
+    &lt;/resultMap&gt;
+</code></pre>
+<p>使用</p>
+<pre><code class="language-java">
+JDBC Connection [HikariProxyConnection@339252666 wrapping com.mysql.jdbc.JDBC4Connection@4ec77824] will not be managed by Spring
+==&gt;  Preparing: SELECT d.*, e.* FROM dept d JOIN emp e ON d.DEPTNO = e.DEPTNO WHERE d.DEPTNO = ? 
+==&gt; Parameters: 20(Integer)
+&lt;==    Columns: DEPTNO, DNAME, LOC, EMPNO, ENAME, JOB, MGR, HIREDATE, SAL, COMM, DEPTNO
+&lt;==        Row: 20, RESEARCH, DALLAS, 7396, SMITH, CLERK, 7902, 1980-12-17, 800.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7566, JONES, MANAGER, 7839, 1981-04-02, 2975.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7782, CLARK, MANAGER, 7839, 1981-06-09, 2450.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7788, SCOTT, ANALYST, 7566, 1987-04-19, 3000.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7876, ADAMS, CLERK, 7788, 1987-05-23, 1100.00, null, 20
+&lt;==        Row: 20, RESEARCH, DALLAS, 7902, FORD, ANALYST, 7566, 1981-12-03, 3000.00, null, 20
+&lt;==      Total: 6
+Closing non transactional SqlSession [org.apache.ibatis.session.defaults.DefaultSqlSession@5b76503f]
+
+</code></pre>
+<p>结果</p>
+<pre><code class="language-json">{
+&quot;deptno&quot;: 20,
+&quot;dname&quot;: &quot;RESEARCH&quot;,
+&quot;loc&quot;: &quot;DALLAS&quot;,
+&quot;emps&quot;: [...............]
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E8%AE%A4%E8%AF%86%E4%B8%80%E4%B8%8B-%E6%98%A0%E5%B0%84%E8%AF%AD%E5%8F%A5">认识一下 映射语句</a>
+<ul>
+<li><a href="#resultmap">resultMap</a></li>
+</ul>
+</li>
+<li><a href="#association">association</a><br>
+*
+<ul>
+<li><a href="#%E5%85%B3%E8%81%94%E7%9A%84%E5%B5%8C%E5%A5%97-select-%E6%9F%A5%E8%AF%A2">关联的嵌套 Select 查询</a></li>
+<li><a href="#%E5%85%B3%E8%81%94%E7%9A%84%E5%A4%9A%E7%BB%93%E6%9E%9C%E9%9B%86resultset">关联的多结果集（ResultSet）</a></li>
+</ul>
+</li>
+<li><a href="#collection">collection</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

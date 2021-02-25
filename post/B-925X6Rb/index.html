@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Golang - 对象 &amp; 接口 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/B-925X6Rb/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Golang - 对象 &amp; 接口</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-06</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/B-925X6Rb/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">987字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-对象-struct">1. 对象 Struct</h2>
+<p>面向对象的三大属性<code>封装、继承和多态</code>  , 继承是类和接口都拥有的. 多态体现在方法的重载和实现 . 封装体现在技巧.</p>
+<blockquote>
+<p>​	Struct其实是面向过程的产物. 所以C有struct , 但是C++却有class. Java也是class. 其实都一样, 对于Golang来说struct拥有两者共有的特点.</p>
+</blockquote>
+<h3 id="1-简单-struct">1. 简单 Struct</h3>
+<p>这里定义了一个user对象 , 他呢大写代表public. 成员变量首字母大写代表代表public. 他没有protected,只有 public和private .</p>
+<pre><code class="language-go">type User struct {
+	Name  string
+	Age   int
+	Skill func(interface{}) interface{}//对于Java可以理解是一个接口函数,这个写法
+}
+</code></pre>
+<p>实例化</p>
+<pre><code class="language-go">func main() {
+	user := &amp;User{Name: &quot;xiaoli&quot;, Age: 100, Skill: func(i interface{}) interface{} {
+		s, ok := i.(string)
+		if ok {
+			return &quot;skill &quot; + s
+		}
+		return i
+	}}
+	fmt.Printf(&quot;%#v\n&quot;, *user)
+
+	res := user.Skill(&quot;football&quot;)//main.User{Name:&quot;xiaoli&quot;, Age:100, Skill:(func(interface {}) interface {})(0x492eb0)}
+
+	fmt.Println(res)// skill football
+}
+</code></pre>
+<p><strong>其中有几个初始化的方法 , 基本就这么几个.</strong></p>
+<blockquote>
+<p>​	跟C++很像的. 不和Java一样. 只有new 关键字或者反射比较高级</p>
+</blockquote>
+<pre><code class="language-go">var user User  // 初始化一个空对象, 成员变量为初始值(基本类型为默认值,指针类型为nil). 对象不能和nil比较的,要知道. 
+
+user:=User{} // 初始化一个空对象, 成员变量为初始值(基本类型为默认值,指针类型为nil).
+
+var user *User  // 初始化一个指向User对象的指针 , 等于nil.
+
+user := new(User) // 初始化一个指向User对象的指针. 不等于nil.
+
+user := &amp;User{}  //  初始化一个指向User对象的指针. 不等于nil.
+</code></pre>
+<h3 id="2-继承">2. 继承</h3>
+<p>首先父类 :</p>
+<pre><code class="language-go">type People struct {
+	Gender string
+}
+</code></pre>
+<p>子类, 还是上面的User.</p>
+<pre><code class="language-go">type User struct {
+	People
+	Name  string
+	Age   int
+	Skill func(interface{}) interface{}
+}
+</code></pre>
+<p>这个就是继承 .  直接将父类对象写进去 , 记住不要申明变量</p>
+<p>测试</p>
+<pre><code class="language-go">func main() {
+
+	user := &amp;User{}
+
+	user.Gender=&quot;female&quot;
+
+	fmt.Printf(&quot;%#v\n&quot;,*user)
+    // main.User{People:main.People{Gender:&quot;female&quot;}, Name:&quot;&quot;, Age:0, Skill:(func(interface {}) interface {})(nil)}
+}
+</code></pre>
+<p>那么如果父类有方法, 子类能调用吗. (向上转型)</p>
+<pre><code class="language-go">func (p *People) echo(s string) {
+	fmt.Println(&quot;people say : &quot;, s)
+}
+</code></pre>
+<p>测试</p>
+<pre><code class="language-go">func main() {
+
+	user := &amp;User{}
+
+	user.echo(&quot;my name is anthony&quot;)
+    // people say :  my name is anthony
+}
+</code></pre>
+<p>所以也满足.  基本对象就这点了 .</p>
+<h3 id="类型定义">类型定义</h3>
+<p>和上面一样.  我们继续使用User.</p>
+<pre><code class="language-go">type FemaleUser User
+
+func (f *FemaleUser) operation() {
+	f.Gender = &quot;female&quot;
+	fmt.Printf(&quot;By an operation that change the people became a %s.\n&quot;, f.Gender)
+}
+</code></pre>
+<p>测试</p>
+<pre><code class="language-go">func main() {
+    // 也可以使用类似于构造器,有些场景需要,比如基本数据类型.
+    u := User{}
+	user := FemaleUser(u)
+    // 可以直接申明.
+	user := &amp;FemaleUser{}
+
+	user.operation()
+    // By an operation that change the people became a female.
+}
+</code></pre>
+<h2 id="2-接口">2. 接口</h2>
+<p>其实函数式接口就是 function type .(一个方法) , 但是有多个方法的时候, 就需要接口 , 实现接口必须实现接口全部的方法 .</p>
+<h3 id="1-实现">1. 实现</h3>
+<p>我们定义了一个基础能力<code>BaseCapacity</code>的接口.</p>
+<pre><code class="language-go">type BaseCapacity interface {
+	Run(int)
+	Say(string)
+}
+</code></pre>
+<p>然后User(还是上面定义的User类)去实现接口 .</p>
+<pre><code class="language-go">func (*User) Run(len int) {
+	fmt.Printf(&quot;你可以跑%d公里.\n&quot;, len)
+}
+
+func (*User) Say(msg string) {
+	fmt.Printf(&quot;你刚刚说了 : %s.\n&quot;, msg)
+}
+</code></pre>
+<p>使用.</p>
+<pre><code class="language-go">func main() {
+	user := &amp;User{}
+	user.Run(1111)
+	user.Say(&quot;my name is dong&quot;)
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">你可以跑1111公里.
+你刚刚说了 : my name is dong.
+</code></pre>
+<h3 id="接口继承">接口继承</h3>
+<blockquote>
+<p>​	跟类继承一样 , 只要申明了就可以. 所以他可以继承多个接口. 我就写了一个 .</p>
+</blockquote>
+<p>我们的能力可能不光 , 基础能力, 所以还有学习能力. 所以我们定义了一个能力接口</p>
+<pre><code class="language-go">type Capcity interface {
+	BaseCapacity
+	Study(string)
+}
+</code></pre>
+<p>然后User. 实现接口 ,只需要再实现一个Study方法即刻</p>
+<pre><code class="language-go">func (*User) Study(msg string) {
+	fmt.Printf(&quot;我正在学习%s.\n&quot;, msg)
+}
+</code></pre>
+<p>测试 :</p>
+<pre><code class="language-go">func main() {
+
+	user := &amp;User{}
+
+	user.Run(1111)
+
+	user.Say(&quot;my name is dong&quot;)
+
+	user.Study(&quot;English&quot;)
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">你可以跑1111公里.
+你刚刚说了 : my name is dong.
+我正在学习English.
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%AF%B9%E8%B1%A1-struct">1. 对象 Struct</a>
+<ul>
+<li><a href="#1-%E7%AE%80%E5%8D%95-struct">1. 简单 Struct</a></li>
+<li><a href="#2-%E7%BB%A7%E6%89%BF">2. 继承</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E5%AE%9A%E4%B9%89">类型定义</a></li>
+</ul>
+</li>
+<li><a href="#2-%E6%8E%A5%E5%8F%A3">2. 接口</a>
+<ul>
+<li><a href="#1-%E5%AE%9E%E7%8E%B0">1. 实现</a></li>
+<li><a href="#%E6%8E%A5%E5%8F%A3%E7%BB%A7%E6%89%BF">接口继承</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

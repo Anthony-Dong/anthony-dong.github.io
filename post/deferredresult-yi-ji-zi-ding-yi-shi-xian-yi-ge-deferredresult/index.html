@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring-MVC - DeferredResult 以及自己实现一个DeferredResult | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/deferredresult-yi-ji-zi-ding-yi-shi-xian-yi-ge-deferredresult/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring-MVC - DeferredResult 以及自己实现一个DeferredResult</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-12</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/deferredresult-yi-ji-zi-ding-yi-shi-xian-yi-ge-deferredresult/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2083字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="purpose">😆Purpose</h2>
+<p>详细介绍请看<a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/web/context/request/async/DeferredResult.html">Spring DeferredResult</a>  如何实现异步化，从而大大增加长连接数量.</p>
+<blockquote>
+<p>​	<code>DeferredResult</code> provides an alternative to using a <a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/Callable.html?is-external=true"><code>Callable</code></a> for asynchronous request processing. While a <code>Callable</code> is executed concurrently on <code>behalf of</code>(代表) the application, with a <code>DeferredResult</code> the application can produce the result from a thread of its choice.</p>
+<p><code>DeferredResult</code>提供了一种使用<code>Callable</code>接口的方式来实现异步请求  . 虽然<code>Callable</code> 是代表应用程序并发执行的，但是使用<code>DeferredResult application</code>可以得到结果从它执行的线程中。</p>
+</blockquote>
+<h2 id="prepare-to-using-the-deferredresult-application">😛Prepare to using the DeferredResult application</h2>
+<h3 id="我目前捕捉不到-他的-onerror事件">// 我目前捕捉不到 他的 <code>onError()</code>事件</h3>
+<pre><code class="language-java">@Slf4j
+@CrossOrigin
+@RestController
+@SpringBootApplication
+public class DeferredresultSpringmvcApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DeferredresultSpringmvcApplication.class, args);
+    }
+
+    private static ExecutorService executors = Executors.newFixedThreadPool(10);
+
+
+    @RequestMapping(&quot;/get0&quot;)
+    public DeferredResult&lt;HashMap&lt;String, Object&gt;&gt; getData() {
+        log.info(&quot;controller  调用的 thread : {}&quot;,Thread.currentThread().getName());
+
+        log.info(&quot;controller 开始执行 &quot;);
+
+
+        // 设置超时时间 ,其实只有异步有效 我测试了 ,同步根本不会执行
+        DeferredResult&lt;HashMap&lt;String, Object&gt;&gt; result = new DeferredResult&lt;&gt;(1000L);
+
+
+        result.setResult(getMap());
+
+        //如果不是线程执行 , 则返回true
+        executors.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                // 结果是处理是否成功  有返回结果直接返回 success , 如果 异步请求已过期(必须是异步处理 才会生效) 返回false
+                boolean isok = false;
+
+                isok = result.setResult(getMap());
+
+                log.info(&quot;DeferredResult  处理是否成功 : {}&quot;, isok);
+
+
+                // 成功以后的处理结果 (必须 放到 调用的 Runnable接口里)
+                result.setResultHandler(new DeferredResult.DeferredResultHandler() {
+                    @Override
+                    public void handleResult(Object result) {
+                        log.info(&quot;DeferredResult  处理结果 : {} &quot;,result.toString());
+                    }
+                });
+
+            }
+        });
+
+
+
+        // 我这里有问题 // 我调用线程异常全部都是在 超时里面
+        // 处理异常 , 我捕捉不到这个 异常 ,不知道 哪个地方的 , 其实可以自定义异常 ,然后 根据异常类型进行判断
+        result.onError((e) -&gt; {
+            log.info(&quot;onError&quot;);
+        });
+
+
+        // 完成执行 , 处理结果不管是啥 都会执行
+        result.onCompletion(new Runnable() {
+            @Override
+            public void run() {
+                log.info(&quot;处理  onCompletion&quot;);
+            }
+        });
+
+
+        // 处理超时的处理 , 只有异步结果才会处理 
+        result.onTimeout(new Runnable() {
+            @Override
+            public void run() {
+                log.info(&quot;处理超时  onTimeout&quot;);
+            }
+        });
+
+        log.info(&quot;controller 执行完毕 &quot;);
+        // 记住 只能返回 result , 不能返回null
+        return result;
+    }
+
+
+    /**
+     * 不用线程池执行
+     * @return
+     */
+    @RequestMapping(&quot;/get1&quot;)
+    public DeferredResult&lt;HashMap&lt;String, Object&gt;&gt; getByNoExecutor(){
+        log.info(&quot;controller  调用的 thread : {}&quot;,Thread.currentThread().getName());
+        log.info(&quot;controller 开始执行 &quot;);
+
+        DeferredResult&lt;HashMap&lt;String, Object&gt;&gt; result = new DeferredResult&lt;&gt;(3000L);
+
+        result.setResult(getMap());
+
+        log.info(&quot;controller 执行完毕 &quot;);
+
+        return result;
+    }
+
+
+    /**
+     * 用线程池执行
+     * @return
+     */
+    @RequestMapping(&quot;/get2&quot;)
+    public DeferredResult&lt;HashMap&lt;String, Object&gt;&gt; getByExecutor(){
+        log.info(&quot;controller  调用的 thread : {}&quot;,Thread.currentThread().getName());
+        log.info(&quot;controller 开始执行 &quot;);
+
+        DeferredResult&lt;HashMap&lt;String, Object&gt;&gt; result = new DeferredResult&lt;&gt;(3000L);
+
+        executors.execute(new Runnable() {
+            @Override
+            public void run() {
+                result.setResult(getMap());
+            }
+        });
+
+        log.info(&quot;controller 执行完毕 &quot;);
+
+        return result;
+    }
+
+
+ 
+
+    /**
+     * 模拟service 服务
+     * @return
+     */
+    public HashMap&lt;String, Object&gt; getMap(){
+        log.info(&quot;service 开始执行 &quot;);
+        // 模拟 service 延迟服务
+        HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+        try {
+            Thread.sleep(2000);
+
+//            int i = 1/0;
+
+            map.put(&quot;key&quot;,Thread.currentThread().getName());
+            log.info(&quot;service 服务调用的线程 : {} &quot;,Thread.currentThread().getName());
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+
+        log.info(&quot;service 执行完毕 &quot;);
+        return map;
+    }
+}
+
+</code></pre>
+<p>我们看打印结果 发现</p>
+<pre><code class="language-java">1. get1 执行结果
+
+2019-10-12 12:44:17.549  INFO 2020 --- [nio-8080-exec-2] c.s.DeferredresultSpringmvcApplication   : controller  调用的 thread : http-nio-8080-exec-2
+2019-10-12 12:44:17.549  INFO 2020 --- [nio-8080-exec-2] c.s.DeferredresultSpringmvcApplication   : controller 开始执行 
+2019-10-12 12:44:17.549  INFO 2020 --- [nio-8080-exec-2] c.s.DeferredresultSpringmvcApplication   : service 开始执行 
+2019-10-12 12:44:19.549  INFO 2020 --- [nio-8080-exec-2] c.s.DeferredresultSpringmvcApplication   : service 服务调用的线程 : http-nio-8080-exec-2 
+2019-10-12 12:44:19.549  INFO 2020 --- [nio-8080-exec-2] c.s.DeferredresultSpringmvcApplication   : service 执行完毕 
+2019-10-12 12:44:19.549  INFO 2020 --- [nio-8080-exec-2] c.s.DeferredresultSpringmvcApplication   : controller 执行完毕 
+
+2. get2执行结果
+2019-10-12 12:44:47.993  INFO 2020 --- [nio-8080-exec-4] c.s.DeferredresultSpringmvcApplication   : controller  调用的 thread : http-nio-8080-exec-4
+2019-10-12 12:44:47.993  INFO 2020 --- [nio-8080-exec-4] c.s.DeferredresultSpringmvcApplication   : controller 开始执行 
+2019-10-12 12:44:47.994  INFO 2020 --- [nio-8080-exec-4] c.s.DeferredresultSpringmvcApplication   : controller 执行完毕 
+2019-10-12 12:44:47.997  INFO 2020 --- [pool-1-thread-1] c.s.DeferredresultSpringmvcApplication   : service 开始执行 
+2019-10-12 12:44:49.999  INFO 2020 --- [pool-1-thread-1] c.s.DeferredresultSpringmvcApplication   : service 服务调用的线程 : pool-1-thread-1 
+2019-10-12 12:44:49.999  INFO 2020 --- [pool-1-thread-1] c.s.DeferredresultSpringmvcApplication   : service 执行完毕 
+</code></pre>
+<h2 id="那我们如何自己实现一个呢">😙那我们如何自己实现一个呢 ?</h2>
+<h3 id="简单实现">简单实现</h3>
+<pre><code class="language-java">  /**
+     * 自定义简单使用
+     * @return
+     */
+    @RequestMapping(&quot;/get3&quot;)
+    public MyCallable&lt;HashMap&lt;String, Object&gt;&gt; get(){
+        log.info(&quot;controller  调用的 thread : {}&quot;,Thread.currentThread().getName());
+        log.info(&quot;controller 开始执行 &quot;);
+
+        MyCallable&lt;HashMap&lt;String, Object&gt;&gt; objectMyCallable = new MyCallable&lt;&gt;();
+
+        log.info(&quot;controller 执行完毕 &quot;);
+
+        return objectMyCallable;
+    }
+
+
+    /**
+     * 简单的执行逻辑
+     * @param &lt;T&gt;
+     */
+    private class MyCallable&lt;T&gt; implements Callable&lt;T&gt; {
+        @Override
+        public T call() throws Exception {
+            return (T)getMap();
+        }
+    }
+
+    /**
+     * 模拟service 服务
+     * @return
+     */
+    public HashMap&lt;String, Object&gt; getMap(){
+        log.info(&quot;service 开始执行 &quot;);
+        // 模拟 service 延迟服务
+        HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+        try {
+            Thread.sleep(2000);
+
+//            int i = 1/0;
+
+            map.put(&quot;key&quot;,Thread.currentThread().getName());
+            log.info(&quot;service 服务调用的线程 : {} &quot;,Thread.currentThread().getName());
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+
+        log.info(&quot;service 执行完毕 &quot;);
+        return map;
+    }
+</code></pre>
+<p>我们看一下我们实现的 执行结果 , 发现执行的是  task 这个线程 ,这个线程池到底属于MyCallable维护的.</p>
+<pre><code class="language-java">2019-10-12 12:42:23.869  INFO 2020 --- [nio-8080-exec-5] c.s.DeferredresultSpringmvcApplication   : controller  调用的 thread : http-nio-8080-exec-5
+2019-10-12 12:42:23.870  INFO 2020 --- [nio-8080-exec-5] c.s.DeferredresultSpringmvcApplication   : controller 开始执行 
+2019-10-12 12:42:23.872  INFO 2020 --- [nio-8080-exec-5] c.s.DeferredresultSpringmvcApplication   : controller 执行完毕 
+2019-10-12 12:42:23.875  INFO 2020 --- [         task-1] c.s.DeferredresultSpringmvcApplication   : service 开始执行 
+2019-10-12 12:42:25.875  INFO 2020 --- [         task-1] c.s.DeferredresultSpringmvcApplication   : service 服务调用的线程 : task-1 
+2019-10-12 12:42:25.875  INFO 2020 --- [         task-1] c.s.DeferredresultSpringmvcApplication   : service 执行完毕 
+</code></pre>
+<h3 id="如果用线程池呢-那么我们可以自定义我们的线程池不让task线程执行复杂的代码让我们的线程池执行">如果用线程池呢, 那么我们可以自定义我们的线程池,不让task线程,执行复杂的代码,让我们的线程池执行,</h3>
+<pre><code class="language-java">    /**
+     * 自定义灵活性 增加代码的可拓展性,加入线程池
+     * @return
+     */
+    @RequestMapping(&quot;/get4&quot;)
+    public MyCallable2&lt;HashMap&lt;String, Object&gt;&gt; get2(){
+
+        log.info(&quot;controller  调用的 thread : {}&quot;,Thread.currentThread().getName());
+        log.info(&quot;controller 开始执行 &quot;);
+
+        MyCallable2&lt;HashMap&lt;String, Object&gt;&gt; objectMyCallable = new MyCallable2&lt;&gt;(new Callable&lt;HashMap&lt;String, Object&gt;&gt;() {
+            @Override
+            public HashMap&lt;String, Object&gt; call() throws Exception {
+                return getMap();
+            }
+        });
+
+        log.info(&quot;controller 执行完毕 &quot;);
+
+        return objectMyCallable;
+    }
+
+
+
+    /**
+     * 这里 其实 就是 一个 deferred result
+     * @param &lt;T&gt;
+     */
+    private class MyCallable2&lt;T&gt; implements Callable&lt;T&gt; {
+
+        private  ExecutorService executors = Executors.newFixedThreadPool(10);
+
+        private Callable&lt;T&gt; callable;
+
+        public MyCallable2(Callable&lt;T&gt; callable) {
+            this.callable = callable;
+        }
+
+        // 让一个新的线程执行 callable中的方法
+        @Override
+        public T call() throws Exception {
+            Future&lt;T&gt; submit = executors.submit(callable);
+            return submit.get();
+        }
+    }
+
+    /**
+     * 模拟service 服务
+     * @return
+     */
+    public HashMap&lt;String, Object&gt; getMap(){
+        log.info(&quot;service 开始执行 &quot;);
+        // 模拟 service 延迟服务
+        HashMap&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+        try {
+            Thread.sleep(2000);
+// 这里异常我没有捕捉到
+//            int i = 1/0;
+
+            map.put(&quot;key&quot;,Thread.currentThread().getName());
+            log.info(&quot;service 服务调用的线程 : {} &quot;,Thread.currentThread().getName());
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
+
+        log.info(&quot;service 执行完毕 &quot;);
+        return map;
+    }
+</code></pre>
+<p>执行结果</p>
+<pre><code class="language-java">2019-10-12 12:42:44.879  INFO 2020 --- [nio-8080-exec-8] c.s.DeferredresultSpringmvcApplication   : controller  调用的 thread : http-nio-8080-exec-8
+2019-10-12 12:42:44.880  INFO 2020 --- [nio-8080-exec-8] c.s.DeferredresultSpringmvcApplication   : controller 开始执行 
+2019-10-12 12:42:44.882  INFO 2020 --- [nio-8080-exec-8] c.s.DeferredresultSpringmvcApplication   : controller 执行完毕 
+2019-10-12 12:42:44.883  INFO 2020 --- [pool-2-thread-1] c.s.DeferredresultSpringmvcApplication   : service 开始执行 
+2019-10-12 12:42:46.884  INFO 2020 --- [pool-2-thread-1] c.s.DeferredresultSpringmvcApplication   : service 服务调用的线程 : pool-2-thread-1 
+2019-10-12 12:42:46.884  INFO 2020 --- [pool-2-thread-1] c.s.DeferredresultSpringmvcApplication   : service 执行完毕 
+</code></pre>
+<h2 id="summary">😜Summary</h2>
+<blockquote>
+<p>​	感觉我写的很详细 , 其他的就不多说了 , 其实他的应用场景就是 当一个处理请求消耗很长的时间时 , 需要去使用这个 , 主要就是采用返回一个处理代码逻辑线程, 不是返回一个结果 , 这点要明白. 因为A线程是不会等待B线程执行完,才能拿到他的结果,如果A必须拿到B所返回的结果,那么A必须阻塞.<br>
+其实 这点跟<code>deferedresult</code> 很相似,他不会将监听80端口socket的线程等待你所要处理线程完成,就直接给你返回了你的处理线程,前提是你自己维护一个线程池.不然还是socket线程去执行.</p>
+</blockquote>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#purpose">😆Purpose</a></li>
+<li><a href="#prepare-to-using-the-deferredresult-application">😛Prepare to using the DeferredResult application</a>
+<ul>
+<li><a href="#%E6%88%91%E7%9B%AE%E5%89%8D%E6%8D%95%E6%8D%89%E4%B8%8D%E5%88%B0-%E4%BB%96%E7%9A%84-onerror%E4%BA%8B%E4%BB%B6">// 我目前捕捉不到 他的 <code>onError()</code>事件</a></li>
+</ul>
+</li>
+<li><a href="#%E9%82%A3%E6%88%91%E4%BB%AC%E5%A6%82%E4%BD%95%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E5%91%A2">😙那我们如何自己实现一个呢 ?</a>
+<ul>
+<li><a href="#%E7%AE%80%E5%8D%95%E5%AE%9E%E7%8E%B0">简单实现</a></li>
+<li><a href="#%E5%A6%82%E6%9E%9C%E7%94%A8%E7%BA%BF%E7%A8%8B%E6%B1%A0%E5%91%A2-%E9%82%A3%E4%B9%88%E6%88%91%E4%BB%AC%E5%8F%AF%E4%BB%A5%E8%87%AA%E5%AE%9A%E4%B9%89%E6%88%91%E4%BB%AC%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%8D%E8%AE%A9task%E7%BA%BF%E7%A8%8B%E6%89%A7%E8%A1%8C%E5%A4%8D%E6%9D%82%E7%9A%84%E4%BB%A3%E7%A0%81%E8%AE%A9%E6%88%91%E4%BB%AC%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%E6%89%A7%E8%A1%8C">如果用线程池呢, 那么我们可以自定义我们的线程池,不让task线程,执行复杂的代码,让我们的线程池执行,</a></li>
+</ul>
+</li>
+<li><a href="#summary">😜Summary</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

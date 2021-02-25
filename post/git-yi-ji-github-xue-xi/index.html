@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Git - 的基本使用 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/git-yi-ji-github-xue-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Git - 的基本使用</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/git-yi-ji-github-xue-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/FDJxOVwJI_i/"
+								class="tag">linux</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3820字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">16 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1介绍">1.介绍</h2>
+<figure data-type="image" tabindex="1"><img src="https://git-scm.com/images/logo@2x.png" alt="" loading="lazy"></figure>
+<blockquote>
+<p><a href="https://git-scm.com/">Git 的网址</a>(https://git-scm.com/); Git 是一个开源的分布式版本控制系统可以有效、高速地处理从很小到非常大的项目版本管理 . 同时国内的 git 仓库是<a href="https://gitee.com/">码云</a>(https://gitee.com/) , 国外的是<a href="https://github.com/Anthony-Dong">github</a>(https://github.com/),同时还有很多,比如阿里云的<code>code.aliyun</code> 还有 腾讯的 <code>coding.net</code> , 都很优秀</p>
+</blockquote>
+<h2 id="2概念">2.概念</h2>
+<blockquote>
+<p>Git 工作区、版本库和暂存区概念</p>
+<p>1.工作区（workspace）是对项目的某个版本独立提取出来的内容。这些从 Git 仓库的压缩数据库中提取出来的文件，放在磁盘上供你使用或修改。</p>
+<p>2.暂存区域（Staging Area）是一个文件，保存了下次将提交的文件列表信息，一般在 Git 仓库目录中。有时候也被称作“索引”，不过一般说法还是叫暂存区域。</p>
+<p>3.版本库也叫本地库（Repository）目录是 Git 用来保存项目的元数据和对象数据库的地方。这是 Git 中最重要的部分，从其它计算机克隆仓库时，拷贝的就是这里的数据.</p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/f725411f-1fbf-4c4c-8baa-5167e15181c5.jpg" alt="image" loading="lazy"></figure>
+<p>注意 : LF(unix 的回车换行符) 与 CRLF(windows 的回车换行符)</p>
+<h2 id="3-git-常用指令">3. git 常用指令</h2>
+<h3 id="1-git-安装linux-版本">1. GIT 安装(linux 版本)</h3>
+<pre><code class="language-java">// 1. 下载安装包
+sudo wget https://github.com/git/git/archive/v2.8.0.tar.gz
+
+// 2. 解压
+sudo tar -zxvf v2.8.0.tar.gz -C /opt/git
+
+// 3. 安装依赖
+sudo yum -y install zlib-devel openssl-devel cpio expat-devel gettext-devel curl-devel perl-ExtUtils-CBuilder perl-ExtUtils-MakeMaker
+
+// 4. 安装在 /usr/local/git
+sudo make prefix=/usr/local/git all
+sudo make prefix=/usr/local/git install
+
+// 5. 修改 /etc/profile 配置环境变量
+export GIT_HOME=/usr/local/git
+export PATH=$PATH:$GIT_HOME/bin
+
+// 6. 介意配置免密登录 --- 看我下面的 ssh 免密登录
+</code></pre>
+<h3 id="2-git-config">2. git config</h3>
+<pre><code class="language-java">// 1. 查看配置信息
+git config --list
+
+// 2. 全局配置(以后每个项目都是)
+git config --global user.name &quot;Anthony-Dong&quot;
+git config --global user.email &quot;574986060@qq.com&quot;
+
+// 3. 项目配置
+git config user.email &quot;574986060@qq.com&quot;
+git config user.name &quot;Anthony-Dong&quot;
+</code></pre>
+<p>注意一点 以下的 <code>&lt;&gt;:&lt;&gt;</code> 这个语句 , 必须不能有空格,例如 <code>&lt;&gt; : &lt;&gt;</code> ,这样子会报错,因为他们是一部分</p>
+<h3 id="3-git-init">3. git init</h3>
+<p>初始化 git 仓库 , 还有就是 github 上有一个文件 叫 <code>README.md</code> 文件,是你的项目介绍文件</p>
+<h3 id="4-git-add-testtxt">4. git add test.txt</h3>
+<p>将工作区文件放入暂存区</p>
+<h3 id="5-git-commit-m-first-commit">5. git commit -m &quot;first commit&quot;</h3>
+<p>将暂存区 提交到 版本库中</p>
+<h3 id="6-git-remote-add-主机名-网址">6. git remote add &lt;主机名&gt; &lt;网址&gt;</h3>
+<pre><code class="language-java">// 1. 远程远程git仓库名为 origin 添加进来
+git remote add server_name ssh://admin@47.94.234.232:/home/admin/git/test.git
+
+// 2. 用于远程主机的改名。
+git remote rename &lt;原主机名&gt; &lt;新主机名&gt;
+
+// 3. 命令用于删除远程主机。
+git remote rm &lt;主机名&gt;
+
+// 4. 可以查看该主机的详细信息
+git remote show &lt;主机名&gt;
+</code></pre>
+<h3 id="7-git-push-远程主机名-本地分支名远程分支名">7. git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt;</h3>
+<pre><code class="language-java">//1. 将本地的newbranch分支推送到origin主机的master分支
+git push origin newbranch:master
+
+//2. 其实一般都是写 将本地的master分支推送到origin的git仓库,如果master不存在则创建
+git push origin master
+</code></pre>
+<h3 id="8-git-remote-v">8. git remote -v</h3>
+<p>查看 remote 的内容</p>
+<pre><code class="language-java">$ git remote -v
+origin  https://github.com/Anthony-Dong/test.git (fetch)    表示这个地址取回
+origin  https://github.com/Anthony-Dong/test.git (push)		表示这个地址推送
+</code></pre>
+<h3 id="9-git-clone-版本库的网址-本地目录名">9. git clone &lt;版本库的网址&gt; &lt;本地目录名&gt;</h3>
+<pre><code class="language-java">// 1. 意思就是克隆 https://github.com/Anthony-Dong/test.git 到我本地的 D:/MyDesktop/git/test 路径下
+git clone https://github.com/Anthony-Dong/test.git D:/MyDesktop/git/test
+
+// 2. 到当前目录
+git clone https://github.com/Anthony-Dong/test.git
+
+
+// 3. 克隆到当前目录 ,远程主机名自定义为originhost, 默认是 origin
+git clone  -o originhost https://github.com/Anthony-Dong/test.git
+</code></pre>
+<h3 id="10-git-fetch-远程主机名-分支名">10. git fetch &lt;远程主机名&gt; &lt;分支名&gt;</h3>
+<p><code>git fetch</code>命令通常用来查看其他人的进程，因为它取回的代码对你本地的开发代码没有影响。</p>
+<pre><code class="language-java">// 1. 将远程分支全部拉到本地
+git fetch origin
+
+// 2. 取回origin主机的master分支。
+git fetch origin master
+
+// 3. 可以通过这个命令查看 更新的信息
+git log -p FETCH_HEAD
+</code></pre>
+<h3 id="11-git-merge-远程主机名分支名">11. git merge &lt;远程主机名&gt;/&lt;分支名&gt;</h3>
+<pre><code class="language-java">// 1. 将远程的origin/master 分支合并到本地
+git merge origin/master
+
+// 2. 和上面这句话含义一样
+git rebase origin/master
+
+// 3. 如果出现拒绝合并
+git merge origin/master --allow-unrelated-histories
+</code></pre>
+<h3 id="12-git-pull-远程主机名-远程分支名本地分支名">12. git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;</h3>
+<pre><code class="language-java">// 1. 将origin主机的next分支，与本地的master分支合并
+git pull origin next:master
+
+// 2. 如果远程分支是与当前分支合并，则冒号后面的部分可以省略。就是将远程的next分支和当前分支合并 , 如果远程没有next分支他会自己创建
+git pull origin next
+
+// 3. 拉去远程分支 , 到本地库(origin本地分支),不会合并分支
+git fetch origin master
+
+// 4. 将origin本地分支和next分支合并
+git merge origin/next
+
+// 5. 如果你第一次拉去项目, 最好这么拉去.不然拉去失败 , 因为不可能你的项目是一个空项目.
+git merge origin master --allow-unrelated-histories
+
+// 6. 可以通过git status 查看当前合并后需要处理的问题.
+</code></pre>
+<h3 id="13-fork-协助开发">13. fork 协助开发</h3>
+<blockquote>
+<ol>
+<li>
+<p>先到 git 上 fork 别人的项目</p>
+</li>
+<li>
+<p>此时你的 github 上仓库就会有这个项目</p>
+</li>
+<li>
+<p>git clone 到本地 ,修改完提交到自己的仓库</p>
+</li>
+<li>
+<p>在 github 项目页上发送 pull request 进行发送 推送请求</p>
+</li>
+<li>
+<p>项目人会在在 github 上会 收到 pullrequest ;此时就有 merger 选项,可以进行合并冲突</p>
+</li>
+</ol>
+</blockquote>
+<h3 id="14-config-文件">14. config 文件</h3>
+<blockquote>
+<p>在 .git 里面</p>
+</blockquote>
+<pre><code class="language-properties">[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	symlinks = false
+	ignorecase = true
+[user]
+	name = Anthony-Dong
+	email = fanhaodong516@qq.com
+[remote &quot;coding&quot;]
+	url = git@e.coding.net:anthony-dong/blog.git
+	fetch = +refs/heads/*:refs/remotes/coding/*
+[remote &quot;github&quot;]
+	url = git@github.com:Anthony-Dong/anthony-dong.github.io.git
+	fetch = +refs/heads/*:refs/remotes/github/*
+[remote &quot;gitee&quot;]
+	url = git@gitee.com:Anthony-Dong/Anthony-Dong.git
+	fetch = +refs/heads/*:refs/remotes/gitee/*
+[branch &quot;master&quot;]
+	remote = coding
+	remote = github
+	remote = gitee
+	merge = refs/heads/master
+</code></pre>
+<p>像我这个配置 , 他就有三个远程地址 ,</p>
+<h2 id="4-git-的版本控制">4. git 的版本控制</h2>
+<blockquote>
+<p>进行版本前进后退操作 head(指向当前分支的一个指针;master 指向当前版本的一个指针) 可以利用 head 对版本进行前进后退 .</p>
+</blockquote>
+<pre><code class="language-java">// 1. 回退到8ba6b3d分支中去
+git reset --hard 8ba6b3d
+HEAD is now at 8ba6b3d third
+
+// 2. 查看其他命令
+git help reset
+--soft  Does not touch the index file(暂存区域) or the working tree(工作区域) at all
+--mixed Resets the index but not the working tree
+--hard Resets the index and working tree
+</code></pre>
+<h2 id="5-git-的分支">5. git 的分支</h2>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/75007332-e8b9-4d0a-ae85-a476f2ed407d.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<p>master 是主分支(各个节点代表版本)<br>
+feature_game 主要是功能分支(模块开发的分支)<br>
+hot_fix 主要是 bug 修复分支<br>
+On branch master 代表是在主分支上</p>
+<h3 id="1-git-branch">1. git branch</h3>
+<p>创建分支</p>
+<pre><code class="language-java">// 1.查看当前的远程分支
+git branch -r
+// 2.查看当前的所有分支
+git branch -a
+
+// 3.创建新的分支,分支名为 hot_fix
+git branch hot_fix
+
+// 4.删除名为hot_fix的分支
+git branch -d hot_fix
+</code></pre>
+<h3 id="2-git-checkout">2. git checkout</h3>
+<p>切换分支</p>
+<pre><code class="language-java">// 1.在原有的 origin/master 分支上创建一个新的分支
+git checkout -b newBrach origin/master
+
+// 2.切换分支到hot_fix
+git checkout hot_fix
+</code></pre>
+<h3 id="3-解决多人开发问题">3. 解决多人开发问题</h3>
+<pre><code class="language-java">// 1. 我们可以创建一个新的分支'other' , 在我们当前master分支上
+git branch other
+
+// 2. 切换到other 分支上
+git checkout  other
+
+// 3. 我们将远程的master分支拉去到本地
+git fetch origin master
+
+// 然后 看看远程分支
+git remote -r
+
+// 4. 将远程origin master分支合并到当前分支中去.
+git merge origin/master
+
+// 5. 将处理完的other推送到远程的master分支中去
+git push origin other:master
+</code></pre>
+<h2 id="6-git-原理">6. git 原理</h2>
+<h4 id="1-hash-算法加密算法">1. hash 算法(加密算法)</h4>
+<blockquote>
+<p>主要主流的有 sha1 md5 crc32 算法;其主要特点就是 文件经过特定的 hash 算法生成的结果长度都是固定的; 而且是不可逆操作; 还有只要修改文件;hash 值就要发生改变</p>
+</blockquote>
+<h4 id="2-分支管理过程">2. 分支管理过程</h4>
+<p>1.git 底层采用的 SHA-1 算法 ;进行文件校验的;保证数据的完整性</p>
+<ol start="2">
+<li>提交对象(版本节点) 包含有 {commit ,tree:{blob,blob} ,parent;author ,committer} ;tree 包含了 所有的文件对象的 hash 值;同时 tree 也指向一个 hash;所以 每次 commit 都会产生一个版本对象</li>
+<li>提交对象与父对象形成链条(版本链条) 就类似于一个区块链;每个节点都保存有父节点的信息;不能修改;</li>
+<li>版本的每一次提交（commit），git 都将它们根据提交的时间点串联成一条线。刚开始是只有一条时间线，即 master 分支，HEAD 指向的是当前分支的当前版本</li>
+</ol>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/6369eee5-e702-49e6-8c3b-3c8438fe371a.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<ol start="5">
+<li>
+<p>分支: master 分支 会指向 我们 每次提交的版本对象 ;</p>
+</li>
+<li>
+<p>当创建了新分支，比如 dev 分支（通过命令 git branch dev 完成），git 新建一个指针 dev，dev=master，dev 指向 master 指向的版本，然后切换到 dev 分支（通过命令 git checkout dev 完成），把 HEAD 指针指向 dev。</p>
+</li>
+</ol>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/e7a7d04d-d3cd-492b-9b96-fb7bf7d70028.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<ol start="7">
+<li>每次切换指针 只是改变了 head 指针 指向的 分支对象</li>
+</ol>
+<p>8.在 dev 分支上编码开发时，都是在 dev 上进行指针移动，比如在 dev 分支上 commit 一次，dev 指针往前移动一步，但是 master 指针没有变</p>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/95202ec9-9762-47f8-a57c-e106cc1cb86b.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<p>9.当我们完成了 dev 分支上的工作，要进行分支合并，把 dev 分支的内容合并到 master 分支上（通过首先切换到 master 分支，git branch master，然后合并 git merge dev 命令完成）。其内部的原理，其实就是先把 HEAD 指针指向 master，再把 master 指针指向现在的 dev 指针指向的内容</p>
+<figure data-type="image" tabindex="7"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/57f63f82-5cde-47e7-a5fc-f3075a8ffa47.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<p>10.当 merge 分支时 ;如果产生版本不对应的问题; 产生 div 分支不在主分支上; 这时 git 会 合并俩分支;交给人来处理冲突;然后 add commit 完成合并</p>
+<p><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/f162c8ed-c0e9-4643-9ba2-0bc52888a82b.jpg?x-oss-process=style/template01" alt="image" loading="lazy"><br>
+<img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/0785b90c-2846-4988-8770-b836f5eeb935.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></p>
+<p>11.合并完成后，就可以删除掉 dev 分支（通过 git branch -d dev 命令完成）</p>
+<figure data-type="image" tabindex="8"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/50f2244b-72dc-485a-a062-06aab6f6ca46.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<h2 id="7-git-和-svn-的区别">7. git 和 svn 的区别</h2>
+<ul>
+<li>
+<p>svn 的集中式的文件管理机制 基于 增量式版本控制 :每次只保存 修改了的内容;需要的时候需要把前面全部加起来</p>
+</li>
+<li>
+<p>git 的文件管理机制 基于快照的方式 ;如果数据没有修改只是保存一个链接指向之前存储的文件</p>
+</li>
+<li>
+<p>Subversion 原理上只关心文件内容的具体差异。每次记录有哪些文件作了更新，以及都更新了哪些行的什么内容.Git 记录版本历史只关心文件数据的整体是否发生变化。Git 不保存文件内容前后变化的差异数据。</p>
+</li>
+<li>
+<p>Subversion 的工作区和版本库是截然分开的，而 Git 的工作区和版本库是如影随形的。</p>
+</li>
+</ul>
+<h3 id="1-svn-优缺点">1. SVN 优缺点</h3>
+<p><strong>优点：</strong><br>
+1、 管理方便，逻辑明确，符合一般人思维习惯。<br>
+2、 易于管理，集中式服务器更能保证安全性。<br>
+3、 代码一致性非常高。<br>
+4、 适合开发人数不多的项目开发。</p>
+<p><strong>缺点：</strong><br>
+1、 服务器压力太大，数据库容量暴增。<br>
+2、 如果不能连接到服务器上，基本上不可以工作，看上面第二步，如果服务器不能连接上，就不能提交，还原，对比等等。<br>
+3、 不适合开源开发（开发人数非常非常多，但是 Google app engine 就是用 svn 的）。但是一般集中式管理的有非常明确的权限管理机制（例如分支访问限制），可以实现分层管理，从而很好的解决开发人数众多的问题。</p>
+<h3 id="2-git-优缺点">2. git 优缺点</h3>
+<p><strong>优点：</strong><br>
+1、适合分布式开发，强调个体。<br>
+2、公共服务器压力和数据量都不会太大。<br>
+3、速度快、灵活。<br>
+4、任意两个开发者之间可以很容易的解决冲突。<br>
+5、离线工作。</p>
+<p><strong>缺点：</strong><br>
+1、学习周期相对而言比较长。<br>
+2、不符合常规思维。<br>
+3、代码保密性差，一旦开发者把整个库克隆下来就可以完全公开所有代码和版本信息。</p>
+<h2 id="8-git-的工作流">8. git 的工作流</h2>
+<ol>
+<li>
+<p>集中式工作流 和 svn 类似(以中央仓库作为项目所要修改的单点实体,所有修改都要提交到 master 分支上)</p>
+</li>
+<li>
+<p>gitflow 工作流 ,充分利用了 git 的分布式(分支,协作开发)特性</p>
+</li>
+</ol>
+<p>主干分支 master<br>
+开发分支 develop<br>
+bug 修复分支 hot_fix<br>
+测试分支(提交到主分支前的测试) release<br>
+功能分支 feature</p>
+<figure data-type="image" tabindex="9"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/f56932a4-a86a-438c-9ddb-3355b7352e3f.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+<h2 id="9-ssh-免密登录">9. ssh 免密登录</h2>
+<p>秘钥进行连接 方式 进行 本地仓库 提交到 远程仓库</p>
+<h3 id="1-进行免密登录">1. 进行免密登录</h3>
+<pre><code class="language-java">// 1. 一路回车到底,其实就是生成一个密钥对
+ssh-keygen -t rsa
+</code></pre>
+<p>linux 目录在你<code>当前用户的空间下的 .shh目录</code>下 , 配置免密登录应该都会这个 , windows 目录在你的<code>C:\Users\12986\.ssh</code>, 如果你不修改默认配置的话就是这里 ,然后 去到 github 上 ,把公钥输入进去</p>
+<h3 id="2-进行-调用远程仓库">2. 进行 调用远程仓库</h3>
+<pre><code class="language-java">// 1. github 的
+git remote add origin git@github.com:Anthony-Dong/tyut-ssm.git
+
+// 2. 自己的git仓库 .....
+git remote add origin ssh://git@192.168.58.129:/home/user/git
+</code></pre>
+<h2 id="10-git-常见命令的区别">10. git 常见命令的区别</h2>
+<p>git commit：是将本地修改过的文件提交到本地库中；<br>
+git push：是将本地库中的最新信息发送给远程库；<br>
+git pull：是从远程获取最新版本到本地，并自动 merge；<br>
+git fetch：是从远程获取最新版本到本地，不会自动 merge；<br>
+git merge：是用于从指定的分支合并到当前分支，用来合并两个分支；<br>
+git pull 相当于 git fetch + git merge。</p>
+<figure data-type="image" tabindex="10"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-10-31/e87b4c1e-15b9-4b67-b503-bdbcd7711b4e.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>repository 是本地版本库</p>
+<p>workspace 是本地工作区,就是我们工作的目录</p>
+<p>Remoto 就是远程的仓库</p>
+<h2 id="11-创建-git-服务器">11. 创建 git 服务器</h2>
+<p>第一步 , 当然是服务器安装 git 了 , 很简单</p>
+<pre><code class="language-java">sudo yum install -y git
+</code></pre>
+<p>第二步就是 , 要么你使用 root 用户 要么自己用户也行. 都可以 .</p>
+<p>我就是 admin 目录</p>
+<pre><code class="language-java">[admin@iz2zegua78a74kqn8clokfz test2.git]$ pwd
+/home/admin/git/test.git
+</code></pre>
+<p>创建一个文件夹 , 我是都放在 git 里面了 , 所以后面这个才是 test.git 才是我们的 git 项目文件</p>
+<p>初始化</p>
+<pre><code class="language-java">git init --bare test.git
+</code></pre>
+<p>此时你的 test.git 仓库就创建好了 , 然后就是拉去和提交了 , ssh 地址是下面这个</p>
+<pre><code class="language-java">ssh://admin@47.94.234.232:/home/admin/git/test.git
+</code></pre>
+<p>很简单反正 . 空项目就是正常流程 . 我不写了.</p>
+<p>配置免密登录就是将你的公钥, 方到你服务器用户的公钥中. 就这个. 也不展示了 .</p>
+<p>在 admin 用户的 .ssh 下的</p>
+<pre><code class="language-java">[admin@iz2zegua78a74kqn8clokfz .ssh]$ pwd
+/home/admin/.ssh
+</code></pre>
+<p>修改或者创建一个 <code>authorized_keys</code> 这个文件 , 里面放入你的 windows 电脑或者 mac 电脑上的 公钥</p>
+<pre><code class="language-java">[admin@iz2zegua78a74kqn8clokfz .ssh]$ cat authorized_keys
+ssh-rsa AAVAB3CzaC1yc2EABBBADAQABAAABAQDBQ68eK8/cc0GV8h4+gy4s2bMfoyU/8cIl3rfsFBj0pLiFTxiqT75yH9JSj/OUPNWhIKGlBynC/0w24dTV3baaFmNeGP9aSAbBihb2JoTS+0JGLIp4hfuUx3VUgxagrLU2I5K8w9GMP5P9zT7dpk9LyfbXje7+HkYY/CnrwsJkiR4zRhUazwoJi7GZJJIvMu1AvRtSBTO61WrO0syPBXrgxcDOowwhiNAnA2OsSMrJHJI4vImJnFuZQO1un19U+B/+M6i7RWZ43ZkZNpW2k+eu3d3JrNHCnZ5O6glwR94JZw7xA61Q1MuxzQJBW/rDhdSEdizM8pFLolDBo6PYB1ep 12986@DESKTOP-7H84K93
+</code></pre>
+<p>windows 的公钥在 目录里面. 如何生成 , 百度有. 一个命令<code>ssh-keygen</code>就行了. 回车到底 , 或者自己随意输入.</p>
+<pre><code class="language-java">C:\Users\12986\.ssh
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1%E4%BB%8B%E7%BB%8D">1.介绍</a></li>
+<li><a href="#2%E6%A6%82%E5%BF%B5">2.概念</a></li>
+<li><a href="#3-git-%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4">3. git 常用指令</a>
+<ul>
+<li><a href="#1-git-%E5%AE%89%E8%A3%85linux-%E7%89%88%E6%9C%AC">1. GIT 安装(linux 版本)</a></li>
+<li><a href="#2-git-config">2. git config</a></li>
+<li><a href="#3-git-init">3. git init</a></li>
+<li><a href="#4-git-add-testtxt">4. git add test.txt</a></li>
+<li><a href="#5-git-commit-m-first-commit">5. git commit -m &quot;first commit&quot;</a></li>
+<li><a href="#6-git-remote-add-%E4%B8%BB%E6%9C%BA%E5%90%8D-%E7%BD%91%E5%9D%80">6. git remote add &lt;主机名&gt; &lt;网址&gt;</a></li>
+<li><a href="#7-git-push-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E5%90%8D-%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E5%90%8D%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%90%8D">7. git push &lt;远程主机名&gt; &lt;本地分支名&gt;:&lt;远程分支名&gt;</a></li>
+<li><a href="#8-git-remote-v">8. git remote -v</a></li>
+<li><a href="#9-git-clone-%E7%89%88%E6%9C%AC%E5%BA%93%E7%9A%84%E7%BD%91%E5%9D%80-%E6%9C%AC%E5%9C%B0%E7%9B%AE%E5%BD%95%E5%90%8D">9. git clone &lt;版本库的网址&gt; &lt;本地目录名&gt;</a></li>
+<li><a href="#10-git-fetch-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E5%90%8D-%E5%88%86%E6%94%AF%E5%90%8D">10. git fetch &lt;远程主机名&gt; &lt;分支名&gt;</a></li>
+<li><a href="#11-git-merge-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E5%90%8D%E5%88%86%E6%94%AF%E5%90%8D">11. git merge &lt;远程主机名&gt;/&lt;分支名&gt;</a></li>
+<li><a href="#12-git-pull-%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E5%90%8D-%E8%BF%9C%E7%A8%8B%E5%88%86%E6%94%AF%E5%90%8D%E6%9C%AC%E5%9C%B0%E5%88%86%E6%94%AF%E5%90%8D">12. git pull &lt;远程主机名&gt; &lt;远程分支名&gt;:&lt;本地分支名&gt;</a></li>
+<li><a href="#13-fork-%E5%8D%8F%E5%8A%A9%E5%BC%80%E5%8F%91">13. fork 协助开发</a></li>
+<li><a href="#14-config-%E6%96%87%E4%BB%B6">14. config 文件</a></li>
+</ul>
+</li>
+<li><a href="#4-git-%E7%9A%84%E7%89%88%E6%9C%AC%E6%8E%A7%E5%88%B6">4. git 的版本控制</a></li>
+<li><a href="#5-git-%E7%9A%84%E5%88%86%E6%94%AF">5. git 的分支</a>
+<ul>
+<li><a href="#1-git-branch">1. git branch</a></li>
+<li><a href="#2-git-checkout">2. git checkout</a></li>
+<li><a href="#3-%E8%A7%A3%E5%86%B3%E5%A4%9A%E4%BA%BA%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98">3. 解决多人开发问题</a></li>
+</ul>
+</li>
+<li><a href="#6-git-%E5%8E%9F%E7%90%86">6. git 原理</a><br>
+*
+<ul>
+<li><a href="#1-hash-%E7%AE%97%E6%B3%95%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95">1. hash 算法(加密算法)</a></li>
+<li><a href="#2-%E5%88%86%E6%94%AF%E7%AE%A1%E7%90%86%E8%BF%87%E7%A8%8B">2. 分支管理过程</a></li>
+</ul>
+</li>
+<li><a href="#7-git-%E5%92%8C-svn-%E7%9A%84%E5%8C%BA%E5%88%AB">7. git 和 svn 的区别</a>
+<ul>
+<li><a href="#1-svn-%E4%BC%98%E7%BC%BA%E7%82%B9">1. SVN 优缺点</a></li>
+<li><a href="#2-git-%E4%BC%98%E7%BC%BA%E7%82%B9">2. git 优缺点</a></li>
+</ul>
+</li>
+<li><a href="#8-git-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81">8. git 的工作流</a></li>
+<li><a href="#9-ssh-%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95">9. ssh 免密登录</a>
+<ul>
+<li><a href="#1-%E8%BF%9B%E8%A1%8C%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95">1. 进行免密登录</a></li>
+<li><a href="#2-%E8%BF%9B%E8%A1%8C-%E8%B0%83%E7%94%A8%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93">2. 进行 调用远程仓库</a></li>
+</ul>
+</li>
+<li><a href="#10-git-%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4%E7%9A%84%E5%8C%BA%E5%88%AB">10. git 常见命令的区别</a></li>
+<li><a href="#11-%E5%88%9B%E5%BB%BA-git-%E6%9C%8D%E5%8A%A1%E5%99%A8">11. 创建 git 服务器</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

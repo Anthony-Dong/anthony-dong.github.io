@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>HTTP 一些概念和操作简单学习(误区) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/http-xue-xi-yu-wen-ti/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>HTTP 一些概念和操作简单学习(误区)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-05</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/http-xue-xi-yu-wen-ti/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/ex9BQezqJVZ/"
+								class="tag">计算机网络</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1130字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	HTTP是五层协议中最顶层 ,属于应用层协议 ,基于TCP编写的</p>
+</blockquote>
+<blockquote>
+<p>​	我下面测试的工具是 <code>Spring-MVC</code>+ <code>insomnia</code> 进行测试的</p>
+</blockquote>
+<h2 id="1-http无状态协议">1. HTTP无状态协议</h2>
+<blockquote>
+<p>​		HTTP无状态协议，是指协议对于事务处理没有记忆能力。缺少状态意味着如果后续处理需要前面的信息，则它必须重传，这样可能导致每次连接传送的数据量增大。另一方面，在服务器不需要先前信息时它的应答就较快。</p>
+<p>​		Cookie是通过客户端保持状态的解决方案。从定义上来说，Cookie就是由服务器发给客户端的特殊信息，而这些信息以文本文件的方式存放在客户端，然后客户端每次向服务器发送请求的时候都会带上这些特殊的信息。服务器在向客户端回传相应的超文本的同时也会发回这些个人信息,存放于HTTP响应头（Response Header）,当客户端浏览器接收到来自服务器的响应之后，浏览器会将这些信息存放在一个统一的位置;自此，客户端再向服务器发送请求的时候，都会把相应的Cookie再次发回至服务器。而这次，Cookie信息则存放在HTTP请求头（Request Header）了</p>
+</blockquote>
+<h2 id="2-get-和-post-区别">2. Get 和 Post 区别</h2>
+<h3 id="1-看看规范">1. 看看规范</h3>
+<p>规范规定 : get 请求是将参数以key=value 的形式拼接在url的?后面 , post请求是将参数放在请求体里 , 难道只能认识这些 , 难道get不能放入请求体 ? post不能url传参?</p>
+<h3 id="2-带着疑惑">2. 带着疑惑</h3>
+<pre><code class="language-java">@PostMapping(&quot;/post&quot;)
+public String post(@RequestParam(&quot;name&quot;) String name) {
+    System.out.println(name);
+    return &quot;post 请求&quot;;
+}
+
+
+@GetMapping(&quot;/get&quot;)
+public String get(@RequestBody Map&lt;String, String&gt; map) {
+
+    Set&lt;String&gt; strings = map.keySet();
+    strings.forEach(s -&gt; {
+        System.out.println(s + &quot; : &quot; + map.get(s));
+    });
+    return &quot;get请求&quot;;
+}
+</code></pre>
+<p>这是两个方法 ,一个get 请求 , 一个 post , 我们使用一下 , 输出结果</p>
+<ul>
+<li>post请求 , 请求行携带参数</li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-05/662ebd9e-2ddb-49d5-a4e3-5bd33f1bca77.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ul>
+<li>get请求 , 请求体携带参数</li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-05/7e11a64d-7ef7-40ce-bd84-72c16e30c00b.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="3-总结">3. 总结</h3>
+<p>说明7种请求方式 ,只是规范的规定 , 其实每一种都可以做很多事情 , 所以我们不要被所谓的规范而不敢去尝试 ,</p>
+<h2 id="2-put和post的区别">2. PUT和POST的区别</h2>
+<p>官方的定义是PUT他是一个幂等性操作,而post不是,</p>
+<p><code>幂等性</code> 的意思是 不管1次或者N次变化结果是相同的 .</p>
+<p>而PUT和POST区别就在这里 ,比如我们去更新或者添加一个东西 ,  连续发送多次 , 比如说我要 update/article , 连续发送了两次 ,put只是覆盖第一次的结果  , 而post代表每次都会产生新的结果 ,所以对于这个文章更新 , post结果是产生了两篇文章 ,而 put是一篇 .</p>
+<h2 id="3-表单传值格式">3. 表单传值格式</h2>
+<h4 id="1-applicationx-www-form-urlencoded">1. application/x-www-form-urlencoded</h4>
+<h4 id="2-multipartform-data">2. multipart/form-data</h4>
+<h4 id="3-applicationjson">3. application/json</h4>
+<p>这三者的区别是什么 ?</p>
+<h3 id="1-applicationx-www-form-urlencoded-使用">1. application/x-www-form-urlencoded 使用</h3>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-05/cbe38fbe-b94b-4e2c-a2e7-74231eeceb96.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="2-multipartform-data-2">2. multipart/form-data</h3>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-05/a2a877c3-7a21-44d6-a93d-52757561dce1.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="3-applicationjson-2">3. application/json</h3>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-05/b9ea5099-72bd-4945-a95d-7e7e43c80e5d.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="4-总结">4. 总结</h3>
+<p>其实 <code>application/___</code>, 其实有很多形式的 , 比如XML , Yaml , Json等等 , 他们对于springmvc 中都需要一个 body去接收, 因为他们在传递的时候确实是在请求体中,</p>
+<p>然后就是常见的 <code>application/x-www-form-urlencoded</code> , 这个有点不同, 他不能使用请求体去接收, 因为他的传递的请求体,其实个get的很像 , 只是放在了请求体里 , 也是用 <code>&amp;</code>来连接 , 参数的格式为<code>key=value&amp;key=value</code> ,  是浏览器默认的编码格式 .</p>
+<p>然后就是 <code>multipart/form-data</code> , 这种一般是来做文件上传的 ,他就有点特殊了 , 你可以看看他就请求体分割了, 然后通过特定个格式编码获取的.</p>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-05/64978f44-e855-4b36-83e2-d467ac3ebbaf.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="重定向">重定向</h2>
+<p>我们只知道 重定向是跳转页面.  前端跳转很简单. 直接一个a标签就行了.</p>
+<p>那么后端呢 , 后端如何跳转. 你请求了一个api接口.</p>
+<p>这里就告诉大家 , 这就是重定向.</p>
+<pre><code class="language-java">@GetMapping(&quot;/go/baidu&quot;)
+public void redirect(HttpServletResponse response) {
+    response.setStatus(301);
+    response.setHeader(&quot;Location&quot;, &quot;http://www.baidu.com&quot;);
+}
+</code></pre>
+<p>我们发现响应是 .</p>
+<pre><code class="language-java">HTTP/1.1 301
+Location: http://www.baidu.com
+Content-Length: 0
+Date: Sun, 01 Mar 2020 09:05:43 GM
+</code></pre>
+<p>这都是浏览器一种根据协议处理的一种行为表现</p>
+<p>比如我们访问 <code>http://www.baidu.com</code>  , 此时会被跳转到</p>
+<pre><code class="language-java">HTTP/1.1 307 Internal Redirect
+Location: https://www.baidu.com/
+Non-Authoritative-Reason: HSTS
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-http%E6%97%A0%E7%8A%B6%E6%80%81%E5%8D%8F%E8%AE%AE">1. HTTP无状态协议</a></li>
+<li><a href="#2-get-%E5%92%8C-post-%E5%8C%BA%E5%88%AB">2. Get 和 Post 区别</a>
+<ul>
+<li><a href="#1-%E7%9C%8B%E7%9C%8B%E8%A7%84%E8%8C%83">1. 看看规范</a></li>
+<li><a href="#2-%E5%B8%A6%E7%9D%80%E7%96%91%E6%83%91">2. 带着疑惑</a></li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+</li>
+<li><a href="#2-put%E5%92%8Cpost%E7%9A%84%E5%8C%BA%E5%88%AB">2. PUT和POST的区别</a></li>
+<li><a href="#3-%E8%A1%A8%E5%8D%95%E4%BC%A0%E5%80%BC%E6%A0%BC%E5%BC%8F">3. 表单传值格式</a><br>
+*
+<ul>
+<li><a href="#1-applicationx-www-form-urlencoded">1. application/x-www-form-urlencoded</a></li>
+<li><a href="#2-multipartform-data">2. multipart/form-data</a></li>
+<li><a href="#3-applicationjson">3. application/json</a></li>
+<li><a href="#1-applicationx-www-form-urlencoded-%E4%BD%BF%E7%94%A8">1. application/x-www-form-urlencoded 使用</a></li>
+<li><a href="#2-multipartform-data-2">2. multipart/form-data</a></li>
+<li><a href="#3-applicationjson-2">3. application/json</a></li>
+<li><a href="#4-%E6%80%BB%E7%BB%93">4. 总结</a></li>
+</ul>
+</li>
+<li><a href="#%E9%87%8D%E5%AE%9A%E5%90%91">重定向</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

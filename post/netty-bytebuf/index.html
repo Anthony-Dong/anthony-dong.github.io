@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Netty - ByteBuf | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/netty-bytebuf/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Netty - ByteBuf</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/netty-bytebuf/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/fn4lTiaKxHO/"
+								class="tag">netty</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1793字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Netty的数据包对象, 很重要 ,他不是使用的Java中Nio中的ByteBuff对象, 是一种特殊的结构体</p>
+</blockquote>
+<h2 id="1-基本概念">1. 基本概念</h2>
+<blockquote>
+<p>​	ByteBuf提供了两个指针变量 去支持有序的读写操作 (readerIndex) 和 (writerIndex)  .</p>
+<p>​	其实现的ReferenceCounted是一个引用计数接口,实现垃圾回收的,他不是由GC控制的,所以使用时注意不然会出现内存溢出的现象 , 所以用Netty需要注意ByteBuf的释放问题</p>
+<p>​	当一个对象初始化完成后，它的reference count 是1, 调用retain()加1，调用release()减1并且如果reference count是0的话就释放。使用被释放掉的对象将会报错。</p>
+<p>数据结构 :   R+W指针 ,  分为 三块区域 { discardable bytes (已读,可废弃区), readable bytes (可读区), writable bytes (可写)}</p>
+</blockquote>
+<p>基本示意图 , 提供的</p>
+<pre><code>+-------------------+------------------+------------------+
+| discardable bytes |  readable bytes  |  writable bytes  |
+|                   |     (CONTENT)    |                  |
++-------------------+------------------+------------------+
+|                   |                  |                  |
+0      &lt;=      readerIndex   &lt;=   writerIndex    &lt;=    capacity
+</code></pre>
+<h2 id="2-基本使用">2. 基本使用</h2>
+<blockquote>
+<p>​	他有一个工具类, 可以去了解一下 ByteBufUtil ,</p>
+</blockquote>
+<h3 id="1-实例化">1. 实例化</h3>
+<pre><code class="language-java">@Test
+public void testInstance() {
+    System.out.println(&quot;===============堆内存======================&quot;);
+    ByteBuf buf = Unpooled.copiedBuffer(&quot;HELLO WORLD !&quot;, CharsetUtil.UTF_8);
+    System.out.println(&quot;是否是直接内存 : &quot; + buf.isDirect());
+    String data = buf.toString(CharsetUtil.UTF_8);
+    System.out.println(&quot;数据 : &quot; + data);
+
+
+    System.out.println(&quot;================直接内存====================&quot;);
+    ByteBuf buffer = Unpooled.directBuffer(4);
+    buffer.writeInt(10);
+    System.out.println(&quot;是否是直接内存 : &quot; + buffer.isDirect());
+    System.out.println(&quot;数据 : &quot; + buffer.readInt());
+
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">===============堆内存======================
+是否是直接内存 : false
+数据 : HELLO WORLD !
+================直接内存====================
+是否是直接内存 : true
+数据 : 10
+</code></pre>
+<h3 id="2-基本参数">2. 基本参数</h3>
+<h4 id="1-写指针">1. 写指针</h4>
+<blockquote>
+<p>​	<code>write...()</code> 写只能顺写, 不能指定位置写, 如果需要指定位置写,需要修改写指针位置 , 会改变写指针位置</p>
+<p>​	使用<code>set...</code>方法,这样子不改变写指针位置</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testWriterIndex(){
+    ByteBuf buffer = Unpooled.buffer(10);
+    buffer.writeInt(10);
+    buffer.writeInt(9);
+    buffer.writeShort(8);
+
+    System.out.println(&quot;写指针位置 : &quot;+buffer.writerIndex());
+
+    // 初始化 , 并不会清空数据
+    buffer.writerIndex(0);
+    System.out.println(&quot;写指针位置 : &quot;+buffer.writerIndex());
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">写指针位置 : 10
+写指针位置 : 0
+</code></pre>
+<h4 id="2-读指针">2. 读指针</h4>
+<blockquote>
+<p>​	<code>read...()</code>读也是顺读, 需要的注意的是, 改变读指针位置可以改变读额位置  , 会改变写指针位置</p>
+<p>​	或者使用 <code>get...()</code> 方法, 这个不会改变读指针位置</p>
+</blockquote>
+<pre><code class="language-java">@Test
+public void testReadIndex(){
+    ByteBuf buffer = Unpooled.buffer(10);
+    buffer.writeCharSequence(&quot;helloworld&quot;, CharsetUtil.UTF_8);
+
+    byte b = buffer.readByte();
+    System.out.println(&quot;第一位 : &quot;+(char) b);
+    System.out.println(&quot;读指针位置 : &quot; + buffer.readerIndex());
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">第一位 : h
+读指针位置 : 1
+</code></pre>
+<h4 id="3-计数引用">3. 计数引用</h4>
+<pre><code class="language-java">@Test
+public void testReferenceCounted(){
+    ByteBuf buffer = Unpooled.buffer(10);
+    buffer.writeCharSequence(&quot;helloworld&quot;, CharsetUtil.UTF_8);
+
+    buffer.retain(); // 计数引用加一
+    System.out.println(buffer.refCnt()); // 2
+
+    buffer.release(); // 计数引用减一
+    System.out.println(buffer.refCnt());  // 1
+    
+    // 当等于零时 ,这个数据会自动被彻底清空 再调用会抛出IllegalReferenceCountException异常
+}
+</code></pre>
+<h2 id="3-深浅拷贝">3. 深浅拷贝</h2>
+<blockquote>
+<p>​	深拷贝的意思就是我修改我拷贝的数据不改变原来的数据 , 浅拷贝就是我修改数据会改变原来的数据</p>
+</blockquote>
+<p>快速举个例子</p>
+<pre><code class="language-java">@Test
+public void testCopy(){
+    ByteBuf buffer = Unpooled.buffer(10);
+    buffer.writeCharSequence(&quot;helloworld&quot;, CharsetUtil.UTF_8);
+
+    System.out.println(&quot;=========深拷贝===========&quot;);
+
+    ByteBuf copy = buffer.copy(0, 1);
+    copy.setByte(0, 1);
+    System.out.println(copy.getByte(0)); // 1
+    System.out.println(buffer.getByte(0)); // 104
+
+
+    System.out.println(&quot;=========浅拷贝===========&quot;);
+    ByteBuf slice = buffer.slice(0, 1);
+    slice.setByte(0, 1);
+    System.out.println(slice.getByte(0)); // 1
+    System.out.println(buffer.getByte(0)); // 1 
+}
+</code></pre>
+<p>这就是区别</p>
+<h3 id="1-视图-副本-浅拷贝方法">1. 视图 / 副本 - 浅拷贝方法</h3>
+<blockquote>
+<p>You can create a view of an existing buffer by calling one of the following methods:</p>
+<ul>
+<li>duplicate()</li>
+<li>slice()</li>
+<li>slice(int, int)</li>
+<li>readSlice(int)</li>
+<li>retainedDuplicate()</li>
+<li>retainedSlice()</li>
+<li>retainedSlice(int, int)</li>
+<li>readRetainedSlice(int)</li>
+</ul>
+</blockquote>
+<h3 id="2-视图-浅拷贝">2. 视图 - 浅拷贝</h3>
+<h4 id="1-slice-duplicate-只展示一种">1. slice() = duplicate()  只展示一种</h4>
+<pre><code class="language-java">// Unpooled 是非池化的意思 ,官方推荐自己定义使用非池化 , 可以看看文档去
+ByteBuf buf = Unpooled.buffer(10);
+buf.writeShort(100);
+buf.writeInt(1000);
+buf.writeInt(10000);
+// 读取一个 r -&gt; 2
+System.out.println(&quot;buf.readShort() = &quot; + buf.readShort());
+
+System.out.println(&quot;buf.slice() = &quot; + buf.slice());
+
+// 再读取一个 r- &gt; 4
+System.out.println(&quot;buf.readInt() = &quot; + buf.readInt());
+</code></pre>
+<p>输出结果 :  我们发现就是截取了从 r -&gt; capacity 的长度</p>
+<pre><code class="language-java">buf.readShort() = 100
+buf.slice() = UnpooledSlicedByteBuf(ridx: 0, widx: 8, cap: 8/8, unwrapped: UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeHeapByteBuf(ridx: 2, widx: 10, cap: 10))
+buf.readInt() = 1000
+</code></pre>
+<h4 id="2-sliceint-index-int-len-与-readsliceint-length">2. slice(int index, int len)  与 readSlice(int length)</h4>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(10);
+buf.writeShort(100);
+buf.writeInt(1000);
+buf.writeInt(10000);
+// 读取一个 r -&gt; 2
+System.out.println(&quot;buf.readShort() = &quot; + buf.readShort());
+
+// 2开始 截取 4个长度
+ByteBuf slice = buf.slice(2, 4);
+
+// 这个buf上 从0开始设置一个 数值为66666占四个字节的数字
+slice.setInt(0, 66666);
+
+// 在原来的上面从 r指针开始 4个字节长度 , 他相当于 slice() 方法第一个参数是 buf.readerIndex() , 
+ByteBuf buf1 = buf.readSlice(4);
+
+//输出读到的
+System.out.println(&quot;slice.readInt() = &quot; + buf1.readInt());
+</code></pre>
+<p>输出结果 :  我们发现副本值是相互影响的 ,所以不会产生额外对象</p>
+<pre><code class="language-java">buf.readShort() = 100
+slice.readInt() = 66666
+</code></pre>
+<h4 id="3-加了retained-前缀的方法">3.  加了retained 前缀的方法</h4>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(10);
+buf.writeShort(100);
+buf.writeInt(1000);
+buf.writeInt(10000);
+
+System.out.println(&quot;buf.refCnt() = &quot; + buf.refCnt());
+
+buf.retainedSlice(2, 4);
+
+System.out.println(&quot;buf.refCnt() = &quot; + buf.refCnt());
+
+buf.slice(2, 4);
+
+System.out.println(&quot;buf.refCnt() = &quot; + buf.refCnt());
+</code></pre>
+<p>输出结果 :  retain 使得计数引用加一</p>
+<pre><code class="language-java">buf.refCnt() = 1
+buf.refCnt() = 2
+buf.refCnt() = 2
+</code></pre>
+<h3 id="3-深拷贝-copy">3. 深拷贝 - copy()</h3>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(10);
+
+buf.writeShort(100);
+buf.writeInt(1000);
+buf.writeInt(10000);
+
+// 复制
+ByteBuf copy = buf.copy();
+copy.setShort(0, 1000);
+System.out.println(&quot;buf.readShort() = &quot; + buf.readShort() + &quot; : &quot; + buf.readerIndex()+&quot; : &quot;+buf.refCnt());
+
+//重置r指针 , 不能使用buf.clear();会使得 w指针也重置为0
+buf.readerIndex(0);
+// 视图
+ByteBuf duplicate = buf.duplicate();
+duplicate.setShort(0, 1000);
+System.out.println(&quot;buf.readShort() = &quot; + buf.readShort() + &quot; : &quot; + buf.readerIndex()+&quot; : &quot;+buf.refCnt());
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">buf.readShort() = 100 : 2 : 1
+buf.readShort() = 1000 : 2 : 1
+</code></pre>
+<p>所以copy()方法是在原来的基础上直接拷贝了一份 , 所以修改对原来不影响 ,但此时容易造成内存泄漏,而视图确实不一样 他修改会改变原来的, 看情况选择两者的使用</p>
+<h3 id="4-深拷贝-bufreadbytesint-len">4. 深拷贝 - buf.readBytes(int len);</h3>
+<pre><code class="language-java">ByteBuf buf = Unpooled.buffer(2);
+
+//设置一个值
+buf.writeShort(100);
+
+// 读取两个字节返回一个 buf1
+ByteBuf buf1 = buf.readBytes(2);
+
+System.out.println(&quot;buf1 = &quot; + buf1);
+
+// buf1 中设置值为2000
+buf1.setShort(0, 2000);
+
+//输出设置的值
+System.out.println(&quot;buf1.readShort() = &quot; + buf1.readShort());
+
+// 调整reader指针位置
+buf.readerIndex(0);
+
+//输出buf的值
+System.out.println(&quot;buf.readShort() = &quot; + buf.readShort());
+</code></pre>
+<p>结果 : 所以此时获取到的是  :</p>
+<pre><code class="language-java">buf1 = UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeNoCleanerDirectByteBuf(ridx: 0, widx: 2, cap: 2)
+buf1.readShort() = 2000
+buf.readShort() = 100
+</code></pre>
+<h2 id="4-大端小端">4. 大端小端</h2>
+<p><a href="https://blog.csdn.net/jason_cuijiahui/article/details/79010257">参考文章</a> : https://blog.csdn.net/jason_cuijiahui/article/details/79010257 对于概念讲的比较细</p>
+<blockquote>
+<ol>
+<li>大端模式是指<strong>数据的低位保存在内存的高地址中，而数据的高位保存在内存的低地址中</strong>.</li>
+<li>小端模式是指<strong>数据的低位保存在内存的低地址中，而数据的高位保存在内存的高地址中</strong>。</li>
+</ol>
+</blockquote>
+<pre><code class="language-java">System.out.println(ByteOrder.nativeOrder());
+
+
+ByteBuf buf = Unpooled.buffer(10);
+
+// 这个必须用返回的视图操作 ,netty中文档说了 , 
+ByteBuf order = buf.order(ByteOrder.LITTLE_ENDIAN);
+
+order.writeShort(100);
+order.writeInt(1000);
+order.writeInt(10000);
+
+
+System.out.println(&quot;buf.readerIndex() = &quot; + buf.readerIndex());
+
+
+System.out.println(&quot;buf.readerIndex(2) = &quot; + buf.readerIndex(2));
+
+// 小端读取 的意思 LITTLE_ENDIAN的缩写
+System.out.println(&quot;buf.readIntLE() = &quot; + buf.readIntLE());
+// 大端读取 
+System.out.println(&quot;buf.readInt() = &quot; + buf.readInt());
+</code></pre>
+<p>输出 : X86目前都是小端模式 ,netty默认是大端模式</p>
+<pre><code class="language-java">LITTLE_ENDIAN
+buf.readerIndex() = 0
+buf.readerIndex(2) = UnpooledByteBufAllocator$InstrumentedUnpooledUnsafeHeapByteBuf(ridx: 2, widx: 10, cap: 10)
+buf.readIntLE() = 1000
+buf.readInt() = 270991360
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5">1. 基本概念</a></li>
+<li><a href="#2-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">2. 基本使用</a>
+<ul>
+<li><a href="#1-%E5%AE%9E%E4%BE%8B%E5%8C%96">1. 实例化</a></li>
+<li><a href="#2-%E5%9F%BA%E6%9C%AC%E5%8F%82%E6%95%B0">2. 基本参数</a>
+<ul>
+<li><a href="#1-%E5%86%99%E6%8C%87%E9%92%88">1. 写指针</a></li>
+<li><a href="#2-%E8%AF%BB%E6%8C%87%E9%92%88">2. 读指针</a></li>
+<li><a href="#3-%E8%AE%A1%E6%95%B0%E5%BC%95%E7%94%A8">3. 计数引用</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#3-%E6%B7%B1%E6%B5%85%E6%8B%B7%E8%B4%9D">3. 深浅拷贝</a>
+<ul>
+<li><a href="#1-%E8%A7%86%E5%9B%BE-%E5%89%AF%E6%9C%AC-%E6%B5%85%E6%8B%B7%E8%B4%9D%E6%96%B9%E6%B3%95">1. 视图 / 副本 - 浅拷贝方法</a></li>
+<li><a href="#2-%E8%A7%86%E5%9B%BE-%E6%B5%85%E6%8B%B7%E8%B4%9D">2. 视图 - 浅拷贝</a>
+<ul>
+<li><a href="#1-slice-duplicate-%E5%8F%AA%E5%B1%95%E7%A4%BA%E4%B8%80%E7%A7%8D">1. slice() = duplicate()  只展示一种</a></li>
+<li><a href="#2-sliceint-index-int-len-%E4%B8%8E-readsliceint-length">2. slice(int index, int len)  与 readSlice(int length)</a></li>
+<li><a href="#3-%E5%8A%A0%E4%BA%86retained-%E5%89%8D%E7%BC%80%E7%9A%84%E6%96%B9%E6%B3%95">3.  加了retained 前缀的方法</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%B7%B1%E6%8B%B7%E8%B4%9D-copy">3. 深拷贝 - copy()</a></li>
+<li><a href="#4-%E6%B7%B1%E6%8B%B7%E8%B4%9D-bufreadbytesint-len">4. 深拷贝 - buf.readBytes(int len);</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%A4%A7%E7%AB%AF%E5%B0%8F%E7%AB%AF">4. 大端小端</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Golang - IO 操作 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/golang-io-cao-zuo/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Golang - IO 操作</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-13</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/golang-io-cao-zuo/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2678字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">14 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<p>Go 官方提供了一些 API，支持对<strong>内存结构</strong>，<strong>文件</strong>，<strong>网络连接</strong>等资源进行操作 ,</p>
+<p>​	其中IO是一个编程语言的核心, 希望掌握这些核心操作 . 相对于Java他真的很丰富. Java的话推荐使用 . Guava包或者RandomAccessFile. 这些先进的API.  而Golang更是接近系统操作. 更加灵活,</p>
+<blockquote>
+<p>​	这些IO操作涉及到一些权限问题. 所以最好linux 上写代码 . 怎么说呢. 反正最好吧. 我用的cloudstudio</p>
+</blockquote>
+<h2 id="io流">IO流</h2>
+<blockquote>
+<p>​	golang的 IO流  , 讲解. 其实就是俩接口  , write. read ,还有一个close . 其他都是封装 . 所以对应着三个接口.</p>
+</blockquote>
+<p><a href="https://segmentfault.com/a/1190000015591319">IO基本概念可以参考这篇文章了</a>   https://segmentfault.com/a/1190000015591319</p>
+<h2 id="os包">os包</h2>
+<blockquote>
+<p>​	操作文件的基本包 , 所以是 操作系统(Operating System，简称OS)  , 懂了吗  .</p>
+</blockquote>
+<h4 id="osopenname"><code>os.Open(name)</code></h4>
+<p>这个是打开文件 , 只有读取权限 . 是 os.O_RDONLY , 查看源码 发现就一个readonly</p>
+<pre><code class="language-go">func Open(name string) (*File, error) {
+	return OpenFile(name, O_RDONLY, 0)
+}
+</code></pre>
+<h4 id="oscreatename"><code>os.Create(name)</code></h4>
+<p>答案就是确实矿建了 , 权限呢 读写. 没有时就创建. 有就清空文件内容</p>
+<pre><code class="language-go">func Create(name string) (*File, error) {
+	return OpenFile(name, O_RDWR|O_CREATE|O_TRUNC, 0666)
+}
+</code></pre>
+<h4 id="func-openfilename-string-flag-int-perm-filemode"><code>func OpenFile(name string, flag int, perm FileMode)</code></h4>
+<p>第二个参数 <code>flag</code>是下面的这几个 , 多个用 <code>|</code> 分开</p>
+<pre><code class="language-go">const (
+	// Exactly one of O_RDONLY, O_WRONLY, or O_RDWR must be specified.
+	O_RDONLY int = syscall.O_RDONLY // open the file read-only.
+	O_WRONLY int = syscall.O_WRONLY // open the file write-only.
+	O_RDWR   int = syscall.O_RDWR   // open the file read-write.
+	// The remaining values may be or'ed in to control behavior.
+    O_APPEND int = syscall.O_APPEND // append data to the file when writing.(继续写)
+	O_CREATE int = syscall.O_CREAT  // create a new file if none exists.
+	O_EXCL   int = syscall.O_EXCL   // used with O_CREATE, file must not exist.
+	O_SYNC   int = syscall.O_SYNC   // open for synchronous I/O.
+    O_TRUNC  int = syscall.O_TRUNC  // truncate regular writable file when opened.(清空文件)
+)
+</code></pre>
+<p>第三个参数 <code>FileMode</code>  , 我也不知道做啥</p>
+<pre><code class="language-go">const (
+	// The single letters are the abbreviations
+	// used by the String method's formatting.
+	ModeDir        FileMode = 1 &lt;&lt; (32 - 1 - iota) // d: is a directory
+	ModeAppend                                     // a: append-only
+	ModeExclusive                                  // l: exclusive use
+	ModeTemporary                                  // T: temporary file; Plan 9 only
+	ModeSymlink                                    // L: symbolic link
+	ModeDevice                                     // D: device file
+	ModeNamedPipe                                  // p: named pipe (FIFO)
+	ModeSocket                                     // S: Unix domain socket
+	ModeSetuid                                     // u: setuid
+	ModeSetgid                                     // g: setgid
+	ModeCharDevice                                 // c: Unix character device, when ModeDevice is set
+	ModeSticky                                     // t: sticky
+	ModeIrregular                                  // ?: non-regular file; nothing else is known about this file
+
+	// Mask for the type bits. For regular files, none will be set.
+	ModeType = ModeDir | ModeSymlink | ModeNamedPipe | ModeSocket | ModeDevice | ModeCharDevice | ModeIrregular
+
+	ModePerm FileMode = 0777 // Unix permission bits
+)
+</code></pre>
+<p>我们看看这个玩意是啥</p>
+<pre><code class="language-go">func main() {
+	fmt.Println(os.FileMode(777), 777)
+	fmt.Println(os.FileMode(0777), 0777)
+}
+</code></pre>
+<p>输出一下</p>
+<pre><code class="language-go">-r----x--x 777
+-rwxrwxrwx 511
+</code></pre>
+<p>发现为啥  777 不对 .</p>
+<p>linux中的权限r w x分别对应4 2 1，相加的值为7，习惯了linux中权限命令使用，会将os.FileMode(777) 误解等价于777权限，但是将777传入os.FileMode，你会发现打印出来的不是 -rwxrwxrwx , 这个是为啥呢 ?</p>
+<p>因为他是八进制, 当你输入777 , 实际上是把他看成了8进制. 懂了吧.</p>
+<pre><code class="language-go">i, _ := strconv.ParseInt(&quot;777&quot;, 8, 0)
+
+fmt.Println(i) //511
+</code></pre>
+<p>所以就是 rx-x-x 的权限.</p>
+<p>文件权限在linux如下显示.</p>
+<pre><code class="language-go">[root@iz2zegua78a74kqn8clokfz user]# ll
+total 28388
+drwxr-xr-x 9 user user     4096 Aug 27 15:26 elasticsearch
+-rw-r--r-- 1 user root 29056810 Aug 27 15:00 elasticsearch-6.2.4.tar.gz
+-rw-r--r-- 1 user root      291 Sep  1 17:57 null
+drwxr-xr-x 2 user root     4096 Sep  1 19:07 script
+
+–       rw-     r–    r–    9          user                user      4096   
+// - : 文件,  d : 目录  , l : 软连接 ,所以表示
+普通文件 用户权限 组权限 其他用户 表示文件个数 该文件或目录的拥有者  表示所属的组   文件大小 
+</code></pre>
+<p>其实日常使用的就是  <code>0777</code>  , <code>0644</code>  , <code>0664</code>  基本足够了 .</p>
+<h4 id="oschmodtestlog0644"><code>os.Chmod(&quot;test.log&quot;,0644)</code></h4>
+<p>修改文件权限</p>
+<h4 id="osmkdird代码库golangsrccomiotesta0644"><code>os.Mkdir(&quot;D:/代码库/golang/src/com.io.test/a&quot;,0644)</code></h4>
+<p>创建文件夹其实就是  mkdir a</p>
+<h4 id="osmkdiralld代码库golangsrccomiotestab0644"><code>os.MkdirAll(&quot;D:/代码库/golang/src/com.io.test/a/b&quot;,0644)</code></h4>
+<p>创建文件夹其实就是  mkdir -p a/b  , 如果没有改目录会递归创建</p>
+<h4 id="osremoveallpath"><code>os.RemoveAll(path)</code></h4>
+<p>递归删除</p>
+<h4 id="osremovefiledirname"><code>os.Remove(file/dirname)</code></h4>
+<p>非递归</p>
+<h4 id="ioutil包"><code>ioutil包</code></h4>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/72b640d2-65be-450b-b946-89eaac682503.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="filepath-包">filepath 包</h2>
+<h4 id="filepathwalkpath-fun"><code>filepath.Walk(path , fun)</code></h4>
+<p>最有用的递归遍历文件夹</p>
+<pre><code class="language-go">filepath.Walk(&quot;D:/代码库/golang/src/com.io.test&quot;, func(path string, info os.FileInfo, err error) error {
+    fmt.Println(&quot;path : &quot;, path)
+    fmt.Println(&quot;is dir : &quot;, info.IsDir())
+    return nil
+})
+</code></pre>
+<p>输出 :  , 这个方法可以递归的遍历</p>
+<pre><code class="language-go">path : D:/代码库/golang/src/com.io.test , is dir : true .
+path : D:\代码库\golang\src\com.io.test\.idea , is dir : true .
+path : D:\代码库\golang\src\com.io.test\.idea\com.io.test.iml , is dir : false .
+path : D:\代码库\golang\src\com.io.test\.idea\inspectionProfiles , is dir : true .
+path : D:\代码库\golang\src\com.io.test\.idea\misc.xml , is dir : false .
+path : D:\代码库\golang\src\com.io.test\.idea\modules.xml , is dir : false .
+path : D:\代码库\golang\src\com.io.test\.idea\workspace.xml , is dir : false .
+</code></pre>
+<h4 id="filepathabspath"><code>filepath.Abs(path)</code></h4>
+<p>输出文件全路径</p>
+<pre><code class="language-go">s, _ := filepath.Abs(&quot;1.jpg&quot;)
+fmt.Println(s)  // D:\代码库\golang\src\com.io.test
+</code></pre>
+<h4 id="filepathcleanpath"><code>filepath.Clean(path)</code></h4>
+<p>清洗路径 . 很好地处理 / 或者 \  之类的.</p>
+<pre><code class="language-go">clean := filepath.Clean(&quot;D:\\代码库/golang//src\\com.io.test/&quot;)
+
+fmt.Println(clean) 
+</code></pre>
+<h4 id="filepathsplitpath"><code>filepath.Split(path)</code></h4>
+<pre><code class="language-java">dir, file := filepath.Split(&quot;D:/代码库/golang/src/com.io.test/1.jpg&quot;)
+
+fmt.Printf(&quot;dir : %s , file : %s \n&quot;, dir, file)
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">dir : D:/代码库/golang/src/com.io.test/ , file : 1.jpg 
+</code></pre>
+<h4 id="filepathjoin"><code>filepath.Join(...)</code></h4>
+<pre><code class="language-go">path := filepath.Join(&quot;D:/代码库/golang/src/com.io.test&quot;, &quot;1.jpg&quot;)
+fmt.Println(path)
+//   D:\代码库\golang\src\com.io.test\1.jpg
+</code></pre>
+<h4 id="很多">很多</h4>
+<pre><code class="language-go">i := filepath.Dir(&quot;D:/代码库/golang/src/com.io.test&quot;)
+fmt.Println(i)  D:\代码库\golang\src
+</code></pre>
+<pre><code class="language-go">Code:
+paths := []string{
+    &quot;/a/b/c&quot;,
+    &quot;/b/c&quot;,
+    &quot;./b/c&quot;,
+}
+base := &quot;/a&quot;
+
+fmt.Println(&quot;On Unix:&quot;)
+for _, p := range paths {
+    // base(文件路径)  ,path(当前路径)  输出当前路径到文件路径的相对路径
+    rel, err := filepath.Rel(base, p)
+    fmt.Printf(&quot;%q: %q %v\n&quot;, p, rel, err)
+}
+Output:
+On Unix:
+&quot;/a/b/c&quot;: &quot;b/c&quot;  
+&quot;/b/c&quot;: &quot;../b/c&quot;  
+&quot;./b/c&quot;: &quot;&quot; Rel: can't make ./b/c relative to /a
+</code></pre>
+<h2 id="log-包">log 包</h2>
+<blockquote>
+<p>​	log , 可以创建日志文件 .  很方便.</p>
+</blockquote>
+<pre><code class="language-go">f, err := os.OpenFile(fileName, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+if err != nil {
+    log.Fatal(err)
+}
+defer f.Close()
+// 设置日志输出路径
+log.SetOutput(f)
+log.Println(&quot;hello log)
+</code></pre>
+<h2 id="fmt-包">fmt 包</h2>
+<blockquote>
+<p>​	这个包操作文件可舒服了. 超级舒服</p>
+</blockquote>
+<p>打印信息就不说了 . 对应着三个  <code>fmt.Println()</code> , <code>fmt.Print()</code> , <code>fmt.Printf()</code></p>
+<p>其实读写也对应着三个,</p>
+<p>首先看写吧</p>
+<pre><code class="language-go">func main() {
+	file, _ := os.Create(&quot;txt.log&quot;)
+	defer file.Close()
+	fmt.Fprintf(file,&quot;Now %s\n&quot;,time.Now().Format(&quot;2020-01-01 12.00.00&quot;))
+}
+</code></pre>
+<p>然后文件就按照格式写进去了, 还有俩方法也是 <code>fmt.Fprint()</code>  和 <code>fmt.Fprintln()</code>  估计人都懂.</p>
+<p>然后就是读取文件了.  很简单</p>
+<pre><code class="language-go">func main() {
+	file, _ := os.Open(&quot;txt.log&quot;)
+	defer file.Close()
+	var content string
+    fmt.Fscan(file, &amp;content)//遇到空格就停住了. // 输出 :  Now
+}
+</code></pre>
+<p>我们要打印全部就 .</p>
+<pre><code class="language-go">func main() {
+	file, _ := os.Open(&quot;txt.log&quot;)
+	defer file.Close()
+	var content string
+	for {
+		n, _ := fmt.Fscan(file, &amp;content)
+		if n == 0 {
+			break
+		}
+		fmt.Printf(&quot;%s\n&quot;, content)
+	}
+}
+</code></pre>
+<pre><code class="language-go">Now
+2020-2-2
+22.84.84
+</code></pre>
+<h2 id="bufio-包">bufio 包</h2>
+<blockquote>
+<p>​	这个是将文件读到一个缓冲区中, 基于缓冲区操作. 所以很方便.</p>
+</blockquote>
+<h4 id="输入-模拟控制栏输入">输入 . 模拟控制栏输入</h4>
+<pre><code class="language-go">func main() {
+	input := bufio.NewScanner(os.Stdin)
+
+	for input.Scan() {
+		fmt.Println(input.Text())
+	}
+}
+</code></pre>
+<h4 id="按行读取文件">按行读取文件.</h4>
+<pre><code class="language-go">func main() {
+	file, _ := os.Open(&quot;txt.log&quot;)
+
+	defer file.Close()
+
+	input := bufio.NewReader(file)
+
+	line, _, _ := input.ReadLine()
+
+	fmt.Printf(&quot;%s\n&quot;,line)
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-go">Now :  2020-02-02 22.15.15
+</code></pre>
+<p>注意这个读取完整文件需要如何做  , 这个方法是不会报错的, 我测试是. 唯一判断结束的就是判断. line这个切片的长度. 如果是0. 就直接break.</p>
+<pre><code class="language-go">func main() {
+
+	file, _ := os.Open(&quot;txt.log&quot;)
+
+	defer file.Close()
+
+	input := bufio.NewReader(file)
+
+	for {
+		line, isPrefix, err := input.ReadLine()
+		if len(line) == 0 {
+			break
+		}
+		fmt.Printf(&quot;%s , %v , %v\n&quot;, line, isPrefix, err)
+	}
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">Now :  2020-02-02 22.15.15 , false 
+Now :  2020-02-02 22.15.15 , false 
+Now :  2020-02-02 22.15.15 , false 
+</code></pre>
+<h4 id="readslicebyte"><code>ReadSlice(byte)</code></h4>
+<p>这个操作其实很nice .  可以切分</p>
+<pre><code class="language-go">func main() {
+
+	file, _ := os.Open(&quot;txt.log&quot;)
+
+	fmt.Println(&quot;\\n : &quot;,byte('\n'))
+	defer file.Close()
+
+	input := bufio.NewReader(file)
+
+	for  {
+		line, err := input.ReadSlice(byte('\n'))
+
+		if err!=nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Println(line)
+	}
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">\n :  10
+[78 111 119 32 58 32 32 50 48 50 48 45 48 50 45 48 50 32 50 50 46 49 53 46 49 53 10]
+[78 111 119 32 58 32 32 50 48 50 48 45 48 50 45 48 50 32 50 50 46 49 53 46 49 53 10]
+[78 111 119 32 58 32 32 50 48 50 48 45 48 50 45 48 50 32 50 50 46 49 53 46 49 53 10]
+[10]
+EOF
+</code></pre>
+<p>很有用的, 他可以按照给定的换行符进行切分 .  这里如果是windows换行符就恶心了 .  其实也无所谓结尾都是 <code>\n</code></p>
+<p>, 对于 windows平台 <code>\r\n</code>是换行符. UNIX是 <code>\n</code>   , 所以么办法.  其中 <code>\n</code>=10 . <code>\r</code>=13</p>
+<p>后面还有很多操作 <code>ReadString</code> 和 <code>ReadBytes</code>  , 都很有用</p>
+<h2 id="ioutil-包">ioutil  包</h2>
+<blockquote>
+<p>​	这个包是个工具包. 包含方便的文件读写.  方便的新建临时目录 ,其实很简单. 我们看主要方法</p>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/5d835a4b-10c1-40c1-b162-13f10065e186.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>其中 write 和 read 就不解释. 相信都懂.</p>
+<p>我们就看看 <code>TempFile</code>   和 <code>TempDir</code>  ,其实你理解了 <code>Temp</code>指的是临时(Template)的意思就明白了  .</p>
+<pre><code class="language-go">dirName, _ := ioutil.TempDir(&quot;&quot;, &quot;example&quot;)
+fmt.Println(dirName)
+
+
+file, _ := ioutil.TempFile(&quot;D:/代码库/golang/src/com.io.test&quot;, &quot;example&quot;)
+defer file.Close()
+fileName := file.Name()
+fmt.Println(fileName)
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">C:\Users\12986\AppData\Local\Temp\example029719187
+D:\代码库\golang\src\com.io.test\example522218718
+</code></pre>
+<p>其实默认路径是在用户的tmp目录下的.  指定的话就是你指定的了.</p>
+<p><code>writer := ioutil.Discard</code>  则是一个空的writer 接口 ,就是只写了接口方法,实际上啥也没做, 所以么啥用,明白了吧 .</p>
+<pre><code class="language-go">var _ io.ReaderFrom = devNull(0)
+
+func (devNull) Write(p []byte) (int, error) {
+	return len(p), nil
+}
+
+func (devNull) WriteString(s string) (int, error) {
+	return len(s), nil
+}
+</code></pre>
+<h2 id="文件信息-stat">文件信息 Stat</h2>
+<p>其实就是 <code>Stat</code> 信息, 知道这个其他随意</p>
+<h3 id="1文件修改时间">1.文件修改时间</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+//修改时间
+modTime := fileInfo.ModTime()
+fmt.Println(modTime)
+</code></pre>
+<h3 id="2文件是否存在">2.文件是否存在</h3>
+<pre><code class="language-go">_, err := os.Stat(&quot;test.log&quot;)
+if(os.IsNotExist(err)) {
+    fmt.Println(&quot;file not exist!&quot;)
+}
+</code></pre>
+<h3 id="3文件是否是目录">3.文件是否是目录</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+//是否是目录
+isDir := fileInfo.IsDir()
+fmt.Println(isDir)
+</code></pre>
+<h3 id="4文件权限">4.文件权限</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+//权限
+mode := fileInfo.Mode()
+fmt.Println(mode)
+</code></pre>
+<h3 id="5文件名">5.文件名</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+//文件名
+filename:= fileInfo.Name()
+fmt.Println(filename)
+</code></pre>
+<h3 id="6文件大小">6.文件大小</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+//文件大小
+filesize:= fileInfo.Size()
+fmt.Println(filesize)//返回的是字节
+</code></pre>
+<h3 id="7文件创建时间">7.文件创建时间</h3>
+<p>文件的创建时间并没有直接的方法返回，翻看源代码才知道如何获取</p>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+fileSys := fileInfo.Sys().(*syscall.Win32FileAttributeData)
+nanoseconds := fileSys.CreationTime.Nanoseconds() // 返回的是纳秒
+createTime := nanoseconds/1e9 //秒
+fmt.Println(createTime)
+</code></pre>
+<h3 id="8文件最后写入时间">8.文件最后写入时间</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+fileSys := fileInfo.Sys().(*syscall.Win32FileAttributeData)
+nanoseconds := fileSys.LastWriteTime.Nanoseconds() // 返回的是纳秒
+lastWriteTime := nanoseconds/1e9 //秒
+fmt.Println(lastWriteTime)
+</code></pre>
+<h3 id="9文件最后访问时间">9.文件最后访问时间</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+fileSys := fileInfo.Sys().(*syscall.Win32FileAttributeData)
+nanoseconds := fileSys.LastAccessTime.Nanoseconds() // 返回的是纳秒
+lastAccessTime:= nanoseconds/1e9 //秒
+fmt.Println(lastAccessTime)
+</code></pre>
+<h3 id="10文件属性">10.文件属性</h3>
+<pre><code class="language-go">fileInfo, _ := os.Stat(&quot;test.log&quot;)
+fileSys := fileInfo.Sys().(*syscall.Win32FileAttributeData)
+fileAttributes:= fileSys.FileAttributes
+fmt.Println(fileAttributes)
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#io%E6%B5%81">IO流</a></li>
+<li><a href="#os%E5%8C%85">os包</a><br>
+*
+<ul>
+<li><a href="#osopenname"><code>os.Open(name)</code></a></li>
+<li><a href="#oscreatename"><code>os.Create(name)</code></a></li>
+<li><a href="#func-openfilename-string-flag-int-perm-filemode"><code>func OpenFile(name string, flag int, perm FileMode)</code></a></li>
+<li><a href="#oschmodtestlog0644"><code>os.Chmod(&quot;test.log&quot;,0644)</code></a></li>
+<li><a href="#osmkdird%E4%BB%A3%E7%A0%81%E5%BA%93golangsrccomiotesta0644"><code>os.Mkdir(&quot;D:/代码库/golang/src/com.io.test/a&quot;,0644)</code></a></li>
+<li><a href="#osmkdiralld%E4%BB%A3%E7%A0%81%E5%BA%93golangsrccomiotestab0644"><code>os.MkdirAll(&quot;D:/代码库/golang/src/com.io.test/a/b&quot;,0644)</code></a></li>
+<li><a href="#osremoveallpath"><code>os.RemoveAll(path)</code></a></li>
+<li><a href="#osremovefiledirname"><code>os.Remove(file/dirname)</code></a></li>
+<li><a href="#ioutil%E5%8C%85"><code>ioutil包</code></a></li>
+</ul>
+</li>
+<li><a href="#filepath-%E5%8C%85">filepath 包</a><br>
+*
+<ul>
+<li><a href="#filepathwalkpath-fun"><code>filepath.Walk(path , fun)</code></a></li>
+<li><a href="#filepathabspath"><code>filepath.Abs(path)</code></a></li>
+<li><a href="#filepathcleanpath"><code>filepath.Clean(path)</code></a></li>
+<li><a href="#filepathsplitpath"><code>filepath.Split(path)</code></a></li>
+<li><a href="#filepathjoin"><code>filepath.Join(...)</code></a></li>
+<li><a href="#%E5%BE%88%E5%A4%9A">很多</a></li>
+</ul>
+</li>
+<li><a href="#log-%E5%8C%85">log 包</a></li>
+<li><a href="#fmt-%E5%8C%85">fmt 包</a></li>
+<li><a href="#bufio-%E5%8C%85">bufio 包</a><br>
+*
+<ul>
+<li><a href="#%E8%BE%93%E5%85%A5-%E6%A8%A1%E6%8B%9F%E6%8E%A7%E5%88%B6%E6%A0%8F%E8%BE%93%E5%85%A5">输入 . 模拟控制栏输入</a></li>
+<li><a href="#%E6%8C%89%E8%A1%8C%E8%AF%BB%E5%8F%96%E6%96%87%E4%BB%B6">按行读取文件.</a></li>
+<li><a href="#readslicebyte"><code>ReadSlice(byte)</code></a></li>
+</ul>
+</li>
+<li><a href="#ioutil-%E5%8C%85">ioutil  包</a></li>
+<li><a href="#%E6%96%87%E4%BB%B6%E4%BF%A1%E6%81%AF-stat">文件信息 Stat</a>
+<ul>
+<li><a href="#1%E6%96%87%E4%BB%B6%E4%BF%AE%E6%94%B9%E6%97%B6%E9%97%B4">1.文件修改时间</a></li>
+<li><a href="#2%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8">2.文件是否存在</a></li>
+<li><a href="#3%E6%96%87%E4%BB%B6%E6%98%AF%E5%90%A6%E6%98%AF%E7%9B%AE%E5%BD%95">3.文件是否是目录</a></li>
+<li><a href="#4%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90">4.文件权限</a></li>
+<li><a href="#5%E6%96%87%E4%BB%B6%E5%90%8D">5.文件名</a></li>
+<li><a href="#6%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F">6.文件大小</a></li>
+<li><a href="#7%E6%96%87%E4%BB%B6%E5%88%9B%E5%BB%BA%E6%97%B6%E9%97%B4">7.文件创建时间</a></li>
+<li><a href="#8%E6%96%87%E4%BB%B6%E6%9C%80%E5%90%8E%E5%86%99%E5%85%A5%E6%97%B6%E9%97%B4">8.文件最后写入时间</a></li>
+<li><a href="#9%E6%96%87%E4%BB%B6%E6%9C%80%E5%90%8E%E8%AE%BF%E9%97%AE%E6%97%B6%E9%97%B4">9.文件最后访问时间</a></li>
+<li><a href="#10%E6%96%87%E4%BB%B6%E5%B1%9E%E6%80%A7">10.文件属性</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

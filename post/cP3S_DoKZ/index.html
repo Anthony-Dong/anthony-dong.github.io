@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring的AOP实现 - 源码分析和深入理解 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/cP3S_DoKZ/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring的AOP实现 - 源码分析和深入理解</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-03-21</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/cP3S_DoKZ/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1702字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Spring的AOP确实大家都会使用, 那么它是如何实现的呢, 那么是不是需要我们深入的研究一下. 本文从开始简单的使用. 到源码分析 . 最后依靠Spring提供的AOP框架的接口, 我们自己实现一套AOP逻辑.  深入了解一下他的设计模式和业务流程.</p>
+</blockquote>
+<h2 id="1-快速使用spring的aop">1. 快速使用Spring的AOP</h2>
+<p>这个是注解 , 让记录调用的日志信息.</p>
+<pre><code class="language-java">@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface LogAop {
+}
+</code></pre>
+<p>这个是AOP配置类 , 环绕通知.</p>
+<pre><code class="language-java">@Component
+@Aspect
+public class Logger {
+    static final org.slf4j.Logger logger = LoggerFactory.getLogger(Logger.class);
+    
+    @Around(&quot;@annotation(com.example.springbeanconfig.springboot_bean.LogAop)&quot;)
+    public Object around(ProceedingJoinPoint point) throws Throwable {
+        logger.info(&quot;thread:{}, method:{}, args:{}.&quot;, Thread.currentThread().getName(), point.getSignature().getName(), point.getArgs());
+        return point.proceed(point.getArgs());
+    }
+}
+</code></pre>
+<p>我们的启动类</p>
+<pre><code class="language-java">@EnableAspectJAutoProxy
+@Configuration
+@ComponentScan
+public class SringApp {
+
+    public static void main(String[] args) {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(SringApp.class);
+        UserService bean = context.getBean(UserService.class);
+        System.out.println(bean);
+        // 调用
+        bean.say();
+    }
+
+    @Component
+    public class UserService {
+        @LogAop
+        void say() {
+            System.out.println(&quot;ok&quot;);
+        }
+    }
+}
+</code></pre>
+<p>输出:</p>
+<pre><code class="language-java">18:28:55.411 [main] INFO com.example.springbeanconfig.springboot_bean.Logger - thread:main, method:say, args:[].
+ok
+</code></pre>
+<h2 id="2-查看aop的实现原理-注入过程">2. 查看AOP的实现原理, 注入过程.</h2>
+<p>前面主要的注入流程.</p>
+<pre><code class="language-java">flush()方法
+-&gt;
+finishBeanFactoryInitialization(beanFactory);
+-&gt; 
+beanFactory.preInstantiateSingletons();
+-&gt; 
+org.springframework.beans.factory.support.DefaultListableBeanFactory#preInstantiateSingletons
+-&gt;
+getBean(beanName);方法去生成Bean.
+-&gt;
+org.springframework.beans.factory.support.AbstractBeanFactory#doGetBean
+-&gt;
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#createBean
+-&gt;    
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#doCreateBean
+-&gt;
+org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory#applyMergedBeanDefinitionPostProcessors
+-&gt;BeanPostProcessor-&gt;postProcessMergedBeanDefinition
+-&gt;org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#wrapIfNecessary
+-&gt;org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#createProxy   
+</code></pre>
+<p>基本就是这个情况, 实现原理是. 根据<code>BeanPostProcess</code>实现. 也就是当对象生成的时候, 依靠after事件触发的时候,代理生成一个对象.</p>
+<p>其中<code>org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator#createProxy</code> 的逻辑.</p>
+<pre><code class="language-java">protected Object createProxy(Class&lt;?&gt; beanClass, @Nullable String beanName,
+        @Nullable Object[] specificInterceptors, TargetSource targetSource) {
+
+    // ProxyFactory 继承了AdvisedSupport , 其实就是元信息/
+    ProxyFactory proxyFactory = new ProxyFactory();
+    proxyFactory.copyFrom(this);
+    Advisor[] advisors = buildAdvisors(beanName, specificInterceptors);
+    // 添加拦截器
+    proxyFactory.addAdvisors(advisors);
+    // 这是被增强的对象
+    proxyFactory.setTargetSource(targetSource);
+    // 
+		... 
+    //最后就直接拿到代理对象了.
+    return proxyFactory.getProxy(getProxyClassLoader());
+}
+</code></pre>
+<p>这个 <code>proxyFactory.getProxy(getProxyClassLoader());</code>  执行一下方法. 主要就是两步, 拿到<code>AopProxy</code> , 第二步然后调用<code>getProxy</code>方法</p>
+<pre><code class="language-java">public Object getProxy(@Nullable ClassLoader classLoader) {
+    return createAopProxy().getProxy(classLoader);
+}
+</code></pre>
+<p>其中<code>AopProxy</code>具体代理实现有两种 :</p>
+<p><code>org.springframework.aop.framework.CglibAopProxy</code> 和 <code>org.springframework.aop.framework.JdkDynamicAopProxy</code>   这两个</p>
+<p>同时我们可以依靠 <code>AopProxyFactory</code>  拿到一个 <code>AopProxy</code> 对象.</p>
+<pre><code class="language-java">public interface AopProxyFactory {
+	AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException;
+}
+</code></pre>
+<p><code>createAopProxy</code> 的 具体实现如下 :</p>
+<pre><code class="language-java">public class DefaultAopProxyFactory implements AopProxyFactory, Serializable {
+	@Override
+	public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException {
+        // 是否需要优化.  是否直接需要代理 , 还有就是是不是这个是一个普通类.
+		if (config.isOptimize() || config.isProxyTargetClass() || hasNoUserSuppliedProxyInterfaces(config)) {
+            // config中获取代理接口.
+			Class&lt;?&gt; targetClass = config.getTargetClass();
+            // 空抛出异常
+			if (targetClass == null) {
+				// 
+			}
+             // targetClass.isInterface()它是一个接口. 就走JDK代理
+			if (targetClass.isInterface() || Proxy.isProxyClass(targetClass)) {
+				return new JdkDynamicAopProxy(config);
+			}
+            // 否则走CGLIB.
+			return new ObjenesisCglibAopProxy(config);
+		}
+		else {
+			return new JdkDynamicAopProxy(config);
+		}
+	}
+}
+</code></pre>
+<p>具体就是上诉讲解的.   其实<code>AdvisedSupport</code>就是一个配置类. 没了 .</p>
+<p>我们分析一下CGLIB的代理</p>
+<pre><code class="language-java">@Override
+public Object getProxy(@Nullable ClassLoader classLoader) {
+
+    try {
+        // 拿到被代理的类信息
+        Class&lt;?&gt; rootClass = this.advised.getTargetClass();
+        Class&lt;?&gt; proxySuperClass = rootClass;
+        // 额外判断.是不是一个CGLIB已经代理的类. 也就是类名中带有$$.
+        if (ClassUtils.isCglibProxyClass(rootClass)) {
+            // 
+        }
+        // Configure CGLIB Enhancer...
+        Enhancer enhancer = createEnhancer();
+        if (classLoader != null) {
+            // 空监测
+        }
+        // 设置代理类的父类
+        enhancer.setSuperclass(proxySuperClass);
+        // 设置我们额代理类需要实现的接口. 
+        enhancer.setInterfaces(AopProxyUtils.completeProxiedInterfaces(this.advised));
+        // 设置命名规则.
+        enhancer.setNamingPolicy(SpringNamingPolicy.INSTANCE);
+        // 设置字节码生成策略. 其中它多实现了两个接口,所以需要自定义实现一些代码. 这个不好操作. 
+        enhancer.setStrategy(new ClassLoaderAwareUndeclaredThrowableStrategy(classLoader));
+	    // 设置Callback , 也就是业务逻辑
+        Callback[] callbacks = getCallbacks(rootClass);
+        Class&lt;?&gt;[] types = new Class&lt;?&gt;[callbacks.length];
+        for (int x = 0; x &lt; types.length; x++) {
+            types[x] = callbacks[x].getClass();
+        }
+        // 设置CallbackFilter , 因为有多个设置Callback.
+        enhancer.setCallbackFilter(new ProxyCallbackFilter(
+                this.advised.getConfigurationOnlyCopy(), this.fixedInterceptorMap, this.fixedInterceptorOffset));
+        enhancer.setCallbackTypes(types);
+
+        // 最后生成代理对象.
+        return createProxyClassAndInstance(enhancer, callbacks);
+    }
+    catch (CodeGenerationException | IllegalArgumentException ex) {
+        throw .. 
+    }
+    catch (Throwable ex) {
+        throw new AopConfigException(&quot;Unexpected AOP exception&quot;, ex);
+    }
+}
+</code></pre>
+<h2 id="3-如何不借助spring-使用它的aop框架呢">3. 如何不借助Spring, 使用它的AOP框架呢.</h2>
+<p>我大致写了个Demo. 大家可以来看看Spring的主要AOP的代理逻辑吧. 其实它的设计蛮好的.</p>
+<p>我们先定义一个接口 <code>EchoService</code></p>
+<pre><code class="language-java">public interface EchoService {
+    String echo();
+}
+</code></pre>
+<p><code>EchoServiceImpl</code> 实现了 <code>EchoService</code> 接口 .</p>
+<pre><code class="language-java">public class EchoServiceImpl implements EchoService {
+    @Override
+    public String echo() {
+        return &quot;hello world&quot;;
+    }
+}
+</code></pre>
+<p>我们的<code>Main</code> 主方法的业务逻辑, 注释很详细. 可以看看主要流程.</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        // 1.CGLIB的话, 可以将字节码保存在指定目录, 方便我们查看字节码
+        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, &quot;D:/test&quot;);
+
+        // 2.创建 AopProxyFactory
+        AopProxyFactory factory = new DefaultAopProxyFactory();
+
+        // 3.AopProxyFactory 需要传入一个 AdvisedSupport 的config类.
+        AdvisedSupport support = new AdvisedSupport();
+
+        // 4.配置source. 也就是定义一些元信息,其实Spring这里注入的其实是Context对象.
+        support.setTargetSource(new TargetSource() {
+            // 单例对象.
+            final EchoService echoService = new EchoServiceImpl();
+
+            // 这个就是设置代理的类信息
+            @Override
+            public Class&lt;?&gt; getTargetClass() {
+                return EchoService.class;
+            }
+
+            // true的话, 他不会去调用releaseTarget方法.
+            // false的话, 这个会去调用releaseTarget方法.
+            @Override
+            public boolean isStatic() {
+                return false;
+            }
+
+            // 设置代理的对象. 也就是需要一个原对象, 调用方法的时候走这个.
+            @Override
+            public Object getTarget() throws Exception {
+                // 这个每次方法调用都回去执行 getTarget , 所以最好单例.
+                return echoService;
+            }
+
+            @Override
+            public void releaseTarget(Object target) throws Exception {
+                System.out.println(&quot;调用释放方法&quot;);
+            }
+        });
+
+        // 4.如果你学过 aop aliens . 那么一定会发现这个是啥. 这个就是一个拦截器
+        support.setAdvisorChainFactory((config, method, targetClass) -&gt; {
+            MethodInterceptor interceptor = invocation -&gt; {
+                System.out.println(&quot;调用代理方法&quot;);
+                return invocation.proceed();
+            };
+            return Collections.singletonList(interceptor);
+        });
+
+        // 5.拿工厂创建一个 AopProxy对象.
+        AopProxy proxy = factory.createAopProxy(support);
+        System.out.println(&quot;代理模式 : &quot;+proxy);
+
+        // 6.直接调用getProxy方法. 会获取一个实例化对象. 改对象实现了 SpringProxy, Advised, Factory 和继承了EchoServiceImpl类.
+        EchoService service = (EchoService) proxy.getProxy();
+
+        System.out.println(service.echo());
+    }
+}
+</code></pre>
+<p>以上会输出 :</p>
+<pre><code class="language-java">代理模式 : org.springframework.aop.framework.JdkDynamicAopProxy@484990cc
+调用代理方法
+调用释放方法
+hello world   
+</code></pre>
+<p>所以上面这个写法走得是JDK的代理逻辑.</p>
+<p>那么如何转成CGLIB呢   , 其实我们将代码做一下改动就行了 .也就是<code>EchoServiceImpl</code> 不实现<code>EchoService</code>  就会自动走CGLIB代理了, 所以还是很方便的.</p>
+<pre><code class="language-java">public class EchoServiceImpl {
+    public String echo() {
+        return &quot;hello world&quot;;
+    }
+}
+</code></pre>
+<p>主方法 :</p>
+<pre><code class="language-java">public class Main {
+    public static void main(String[] args) {
+        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, &quot;D:/test&quot;);
+        AopProxyFactory factory = new DefaultAopProxyFactory();
+        AdvisedSupport support = new AdvisedSupport();
+        support.setTargetSource(new TargetSource() {
+            final EchoServiceImpl echoService = new EchoServiceImpl();
+            @Override
+            public Class&lt;?&gt; getTargetClass() {
+                return EchoServiceImpl.class;
+            }
+            @Override
+            public boolean isStatic() {
+                return false;
+            }
+
+            @Override
+            public Object getTarget() throws Exception {
+                return echoService;
+            }
+            @Override
+            public void releaseTarget(Object target) throws Exception {
+                System.out.println(&quot;调用释放方法&quot;);
+            }
+        });
+        support.setAdvisorChainFactory((config, method, targetClass) -&gt; {
+            MethodInterceptor interceptor = invocation -&gt; {
+                System.out.println(&quot;调用代理方法&quot;);
+                return invocation.proceed();
+            };
+            return Collections.singletonList(interceptor);
+        });
+        AopProxy proxy = factory.createAopProxy(support);
+        System.out.println(&quot;代理模式 : &quot;+proxy);
+        EchoServiceImpl service = (EchoServiceImpl) proxy.getProxy();
+        System.out.println(service.echo());
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">代理模式 : org.springframework.aop.framework.ObjenesisCglibAopProxy@127a6246
+调用代理方法
+调用释放方法
+hello world    
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%BF%AB%E9%80%9F%E4%BD%BF%E7%94%A8spring%E7%9A%84aop">1. 快速使用Spring的AOP</a></li>
+<li><a href="#2-%E6%9F%A5%E7%9C%8Baop%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-%E6%B3%A8%E5%85%A5%E8%BF%87%E7%A8%8B">2. 查看AOP的实现原理, 注入过程.</a></li>
+<li><a href="#3-%E5%A6%82%E4%BD%95%E4%B8%8D%E5%80%9F%E5%8A%A9spring-%E4%BD%BF%E7%94%A8%E5%AE%83%E7%9A%84aop%E6%A1%86%E6%9E%B6%E5%91%A2">3. 如何不借助Spring, 使用它的AOP框架呢.</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

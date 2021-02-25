@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Dubbo 使用中发现的三个问题 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/aIjzHSRSy/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Dubbo 使用中发现的三个问题</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-04-07</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/aIjzHSRSy/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Wo2jNti0O/"
+								class="tag">Dubbo</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1892字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">10 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	本文中使用的dubbo的版本是2.7.3 , springboot分支也是2.7.3 , springboot版本是2.0.4.release , 所以先确定环境是否一样.</p>
+</blockquote>
+<h2 id="1-dubbo-mock-的使用注意点">1. Dubbo - Mock  的使用注意点</h2>
+<blockquote>
+<p>​	mock如果有效,必须使用注册中心,不能使用N/A模式,不然mock无效的.  文章链接 : <a href="http://dubbo.apache.org/zh-cn/docs/user/demos/local-mock.html">http://dubbo.apache.org/zh-cn/docs/user/demos/local-mock.html</a>    , mock的颗粒度最低只能停留在接口上,不能细化到具体方法上. 还有mock一般用在测试方向.</p>
+</blockquote>
+<p>由于dubbo的RPC使用的是动态代理么 ， 所以默认会走到这里 .</p>
+<pre><code class="language-java">public class InvokerInvocationHandler implements InvocationHandler {
+    private static final Logger logger = LoggerFactory.getLogger(InvokerInvocationHandler.class);
+    private final Invoker&lt;?&gt; invoker;
+
+    public InvokerInvocationHandler(Invoker&lt;?&gt; handler) {
+        this.invoker = handler;
+    }
+
+    @Override
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        String methodName = method.getName();
+        Class&lt;?&gt;[] parameterTypes = method.getParameterTypes();
+        // 看这里
+        return invoker.invoke(new RpcInvocation(method, args)).recreate();
+    }
+}
+</code></pre>
+<p>继续</p>
+<pre><code class="language-java">@Override
+public Result invoke(Invocation invocation) throws RpcException {
+    Result result = null;
+
+    String value = directory.getUrl().getMethodParameter(invocation.getMethodName(), MOCK_KEY, Boolean.FALSE.toString()).trim();
+    // 默认,或者false.
+    if (value.length() == 0 || value.equalsIgnoreCase(&quot;false&quot;)) {
+        //no mock
+        result = this.invoker.invoke(invocation);
+        // 强制.直接调用本地服务
+    } else if (value.startsWith(&quot;force&quot;)) {
+        if (logger.isWarnEnabled()) {
+            logger.warn(&quot;force-mock: &quot; + invocation.getMethodName() + &quot; force-mock enabled , url : &quot; + directory.getUrl());
+        }
+        //force:direct mock
+        result = doMockInvoke(invocation, null);
+    } else {
+        //fail-mock
+        try {
+            // 如果是异步,这里显然没有错误,除非连不上
+            // 如果同步,那么失败一定会走mock的.
+            result = this.invoker.invoke(invocation);
+        } catch (RpcException e) {
+            if (e.isBiz()) {
+                throw e;
+            }
+
+            if (logger.isWarnEnabled()) {
+                logger.warn(&quot;fail-mock: &quot; + invocation.getMethodName() + &quot; fail-mock enabled , url : &quot; + directory.getUrl(), e);
+            }
+            // 返回mock结果.
+            result = doMockInvoke(invocation, e);
+        }
+    }
+    return result;
+}
+</code></pre>
+<p>那是为什么不能使用直连呢.  关键代码在 <code>ReferenceConfig</code> 里</p>
+<pre><code class="language-java">private T createProxy(Map&lt;String, String&gt; map) {
+    if (shouldJvmRefer(map)) {
+        URL url = new URL(LOCAL_PROTOCOL, LOCALHOST_VALUE, 0, interfaceClass.getName()).addParameters(map);
+        invoker = REF_PROTOCOL.refer(interfaceClass, url);
+        if (logger.isInfoEnabled()) {
+            logger.info(&quot;Using injvm service &quot; + interfaceClass.getName());
+        }
+    } else {
+        urls.clear(); // reference retry init will add url to urls, lead to OOM
+        // 如果我们的@Reference没有设置url,这里走不通,那代表去注册中心拿
+        if (url != null &amp;&amp; url.length() &gt; 0) { // user specified URL, could be peer-to-peer address, or register center's address.
+            String[] us = SEMICOLON_SPLIT_PATTERN.split(url);
+            if (us != null &amp;&amp; us.length &gt; 0) {
+                for (String u : us) {
+                    URL url = URL.valueOf(u);
+                    if (StringUtils.isEmpty(url.getPath())) {
+                        url = url.setPath(interfaceName);
+                    }
+                    if (REGISTRY_PROTOCOL.equals(url.getProtocol())) {
+                        urls.add(url.addParameterAndEncoded(REFER_KEY, StringUtils.toQueryString(map)));
+                    } else {
+                        urls.add(ClusterUtils.mergeUrl(url, map));
+                    }
+                }
+            }
+        } else { // assemble URL from register center's configuration
+            // if protocols not injvm checkRegistry
+            // 否则,没有写URL,注册中心去拿url.
+            if (!LOCAL_PROTOCOL.equalsIgnoreCase(getProtocol())){
+                // 监测注册中心
+                checkRegistry();
+                List&lt;URL&gt; us = loadRegistries(false);
+                if (CollectionUtils.isNotEmpty(us)) {
+                    for (URL u : us) {
+                        URL monitorUrl = loadMonitor(u);
+                        if (monitorUrl != null) {
+                            map.put(MONITOR_KEY, URL.encode(monitorUrl.toFullString()));
+                        }
+                        urls.add(u.addParameterAndEncoded(REFER_KEY, StringUtils.toQueryString(map)));
+                    }
+                }
+                if (urls.isEmpty()) {
+                    throw new IllegalStateException(&quot;No such any registry to reference &quot; + interfaceName + &quot; on the consumer &quot; + NetUtils.getLocalHost() + &quot; use dubbo version &quot; + Version.getVersion() + &quot;, please config &lt;dubbo:registry address=\&quot;...\&quot; /&gt; to your spring config.&quot;);
+                }
+            }
+        }
+
+        // 调用这里是关键.
+        if (urls.size() == 1) {
+            invoker = REF_PROTOCOL.refer(interfaceClass, urls.get(0));
+        } else {
+            List&lt;Invoker&lt;?&gt;&gt; invokers = new ArrayList&lt;Invoker&lt;?&gt;&gt;();
+            URL registryURL = null;
+            for (URL url : urls) {
+                invokers.add(REF_PROTOCOL.refer(interfaceClass, url));
+                if (REGISTRY_PROTOCOL.equals(url.getProtocol())) {
+                    registryURL = url; // use last registry url
+                }
+            }
+            if (registryURL != null) { // registry url is available
+                // use RegistryAwareCluster only when register's CLUSTER is available
+                URL u = registryURL.addParameter(CLUSTER_KEY, RegistryAwareCluster.NAME);
+                // The invoker wrap relation would be: RegistryAwareClusterInvoker(StaticDirectory) -&gt; FailoverClusterInvoker(RegistryDirectory, will execute route) -&gt; Invoker
+                invoker = CLUSTER.join(new StaticDirectory(u, invokers));
+            } else { // not a registry url, must be direct invoke.
+                invoker = CLUSTER.join(new StaticDirectory(invokers));
+            }
+        }
+    }
+
+    if (shouldCheck() &amp;&amp; !invoker.isAvailable()) {
+        throw new IllegalStateException(&quot;Failed to check the status of the service &quot; + interfaceName + &quot;. No provider available for the service &quot; + (group == null ? &quot;&quot; : group + &quot;/&quot;) + interfaceName + (version == null ? &quot;&quot; : &quot;:&quot; + version) + &quot; from the url &quot; + invoker.getUrl() + &quot; to the consumer &quot; + NetUtils.getLocalHost() + &quot; use dubbo version &quot; + Version.getVersion());
+    }
+    if (logger.isInfoEnabled()) {
+        logger.info(&quot;Refer dubbo service &quot; + interfaceClass.getName() + &quot; from url &quot; + invoker.getUrl());
+    }
+    /**
+     * @since 2.7.0
+     * ServiceData Store
+     */
+    MetadataReportService metadataReportService = null;
+    if ((metadataReportService = getMetadataReportService()) != null) {
+        URL consumerURL = new URL(CONSUMER_PROTOCOL, map.remove(REGISTER_IP_KEY), 0, map.get(INTERFACE_KEY), map);
+        metadataReportService.publishConsumer(consumerURL);
+    }
+    // create service proxy
+    return (T) PROXY_FACTORY.getProxy(invoker);
+}
+</code></pre>
+<p>我们看看这个实现</p>
+<pre><code class="language-java">@Override
+public &lt;T&gt; Invoker&lt;T&gt; refer(Class&lt;T&gt; type, URL url) throws RpcException {
+    // 如果走注册中心会走这一步.
+    if (REGISTRY_PROTOCOL.equals(url.getProtocol())) {
+        return protocol.refer(type, url);
+    }
+    // 直接连接会走这.
+    return new ListenerInvokerWrapper&lt;T&gt;(protocol.refer(type, url),
+            Collections.unmodifiableList(
+                    ExtensionLoader.getExtensionLoader(InvokerListener.class)
+                            .getActivateExtension(url, INVOKER_LISTENER_KEY)));
+}
+
+</code></pre>
+<p>所以就是这个问题.   如果玩mock 千万要记住不能直连 , 其实真实环境也不存在直接连接的问题.</p>
+<h2 id="2-reference-无法配置methods项">2. <code>@Reference</code> 无法配置<code>methods</code>项</h2>
+<blockquote>
+<p>​	这个是为什么呢, 如果认真敲过的小虎斑, 一定发现这个问题了.</p>
+</blockquote>
+<pre><code class="language-java">@Reference(timeout = 100
+    , methods = {
+    @Method(name = &quot;echo&quot;, timeout = 1000, retries = 0)
+})
+private IEchoService service;
+</code></pre>
+<p>此时timeout = 100 , retries为3 , 为什么呢,  <code>Method</code>的重写没啥用,还有我不知道为啥这个重试为啥无效. 哈哈哈哈. BUG ? , 方法级别控制无效的 .  其实原因是<code>methods</code>在2.7.1忽略掉了 .  根本配置了也不起效果.</p>
+<p>其实我们直接核心在 <code>ReferenceConfig</code> 这个类上, 那么他一定有它的问题, 我们先着手解决一下, 第一在<code>ReferenceAnnotationBeanPostProcessor#doGetInjectedBean</code> 这里调用了 <code>buildReferenceBeanIfAbsent</code> , 这里实例化的. 那么传入的参数<code>attributes</code> 就是我们想要的</p>
+<pre><code class="language-java">@Override
+protected Object doGetInjectedBean(AnnotationAttributes attributes, Object bean, String beanName, Class&lt;?&gt; injectedType,
+                                   InjectionMetadata.InjectedElement injectedElement) throws Exception {
+
+    String referencedBeanName = buildReferencedBeanName(attributes, injectedType);
+
+    // 这里去构建一个对象,也就是
+    ReferenceBean referenceBean = buildReferenceBeanIfAbsent(referencedBeanName, attributes, injectedType);
+
+    registerReferenceBean(referencedBeanName, referenceBean, attributes, injectedType);
+
+    cacheInjectedReferenceBean(referenceBean, injectedElement);
+
+    return buildProxy(referencedBeanName, referenceBean, injectedType);
+}
+</code></pre>
+<p>我们现在往上走 , 其实标注的很清晰, 忽略了注解.  上面写了在2.7.1版本做的. 在 <code>AnnotationUtils</code>这个类里,这个方法调用.</p>
+<pre><code class="language-java">public static Map&lt;String, Object&gt; getAttributes(Annotation annotation, PropertyResolver propertyResolver,
+                                                boolean ignoreDefaultValue, String... ignoreAttributeNames) {
+
+    if (annotation == null) {
+        return emptyMap();
+    }
+
+    Map&lt;String, Object&gt; attributes = getAnnotationAttributes(annotation);
+
+    Map&lt;String, Object&gt; actualAttributes = new LinkedHashMap&lt;&gt;();
+
+    for (Map.Entry&lt;String, Object&gt; entry : attributes.entrySet()) {
+
+        String attributeName = entry.getKey();
+        Object attributeValue = entry.getValue();
+
+        // ignore default attribute value
+        if (ignoreDefaultValue &amp;&amp; nullSafeEquals(attributeValue, getDefaultValue(annotation, attributeName))) {
+            continue;
+        }
+
+        /**
+         * @since 2.7.1
+         * ignore annotation member
+         */
+        if (attributeValue.getClass().isAnnotation()) {
+            continue;
+        }
+        if (attributeValue.getClass().isArray() &amp;&amp; attributeValue.getClass().getComponentType().isAnnotation()) {
+            continue;
+        }
+        actualAttributes.put(attributeName, attributeValue);
+    }
+
+
+    return resolvePlaceholders(actualAttributes, propertyResolver, ignoreAttributeNames);
+}
+</code></pre>
+<p>那这就是为什么 我们的methods对象注入不进去的原因; .</p>
+<p>但是当你下载了 2.7.0版本去看的时候, 会发现 , 奥 , 竟然没有<code>methods</code> 标签,  其实dubbo原来的版本也没有实现该标签.</p>
+<h3 id="解决方案一">解决方案一 :</h3>
+<blockquote>
+<p>​	我提交在 <a href="https://github.com/apache/dubbo-spring-boot-project/issues/694">https://github.com/apache/dubbo-spring-boot-project/issues/694</a>  这个问题里.</p>
+</blockquote>
+<p>目前的做法可能为了向下兼容,  其实可以这么设置就可以触发了</p>
+<pre><code class="language-java">@Reference(
+        timeout = 5000,
+        retries = 1,
+        parameters = {&quot;echo.retries&quot;, &quot;0&quot;, &quot;echo.timeout&quot;, &quot;1000&quot;}
+)
+private IEchoService service;
+</code></pre>
+<p>这个可以设置echo方法的调用, 可以保证方法级别配置.  这样子就是方法级别优先.</p>
+<h3 id="解决方案二">解决方案二 :</h3>
+<p>把出问题的地方注释掉就行了. <code>org.apache.dubbo.config.spring.util.AnnotationUtils#getAttributes</code></p>
+<pre><code class="language-java">public static Map&lt;String, Object&gt; getAttributes(Annotation annotation, PropertyResolver propertyResolver,
+                                                boolean ignoreDefaultValue, String... ignoreAttributeNames) {
+
+    if (annotation == null) {
+        return emptyMap();
+    }
+
+    Map&lt;String, Object&gt; attributes = getAnnotationAttributes(annotation);
+
+    Map&lt;String, Object&gt; actualAttributes = new LinkedHashMap&lt;&gt;();
+
+    for (Map.Entry&lt;String, Object&gt; entry : attributes.entrySet()) {
+
+        String attributeName = entry.getKey();
+        Object attributeValue = entry.getValue();
+
+        // ignore default attribute value
+        if (ignoreDefaultValue &amp;&amp; nullSafeEquals(attributeValue, getDefaultValue(annotation, attributeName))) {
+            continue;
+        }
+
+//            /**
+//             * @since 2.7.1
+//             * ignore annotation member
+//             */
+//            if (attributeValue.getClass().isAnnotation()) {
+//                continue;
+//            }
+//            if (attributeValue.getClass().isArray() &amp;&amp; attributeValue.getClass().getComponentType().isAnnotation()) {
+//                continue;
+//            }
+        actualAttributes.put(attributeName, attributeValue);
+    }
+
+
+    return resolvePlaceholders(actualAttributes, propertyResolver, ignoreAttributeNames);
+}
+</code></pre>
+<h2 id="springboot项目进行dubbo的mock测试">SpringBoot项目进行Dubbo的Mock测试</h2>
+<p>第一存在的问题,  进行Dubbo测试, Dubbo环境在我们配置中加入 <code>@DubboComponentScan</code> 会自动启动 , 如果我们注册中心都没有配置呢.  是不是很坑</p>
+<p>显然, 第一步就要取消 <code>@DubboComponentScan</code> 注解</p>
+<p>第二步就是如何隔离接口,   <code>@MockBean</code> 可以自动注入 <code>@Autowired</code>的未实例化对象, 那么他是不能实现<code>@Reference</code> 所加入的对象.  所以我们需要,在原先的地方加一个<code>@Reference</code> 加上<code>@Autowired</code> 配置.</p>
+<pre><code class="language-java">@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = {DubboConsumerConfig.class}
+)
+public class ConsumerServiceTest {
+    @MockBean
+    private IEchoService service;
+
+    @Autowired
+    private ConsumerService consumerService;
+
+    @Test
+    public void echo() {
+        when(service.echo(anyString())).thenReturn(&quot;hello mock&quot;);
+        consumerService.echo(&quot;xiaoli&quot;);
+    }
+}
+</code></pre>
+<p>此时就可以跑了. 完全隔离dubbo的环境.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-dubbo-mock-%E7%9A%84%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E7%82%B9">1. Dubbo - Mock  的使用注意点</a></li>
+<li><a href="#2-reference-%E6%97%A0%E6%B3%95%E9%85%8D%E7%BD%AEmethods%E9%A1%B9">2. <code>@Reference</code> 无法配置<code>methods</code>项</a>
+<ul>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%B8%80">解决方案一 :</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%E4%BA%8C">解决方案二 :</a></li>
+</ul>
+</li>
+<li><a href="#springboot%E9%A1%B9%E7%9B%AE%E8%BF%9B%E8%A1%8Cdubbo%E7%9A%84mock%E6%B5%8B%E8%AF%95">SpringBoot项目进行Dubbo的Mock测试</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

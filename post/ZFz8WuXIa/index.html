@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java - 处理空指针的三种方式 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/ZFz8WuXIa/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java - 处理空指针的三种方式</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-04</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/ZFz8WuXIa/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1403字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	对于程序经常遇见NnullPointException , 其实对于其他语言也是 , 比如Java , C++ ,都会存在空指针的问题 . 那么怎么处理更优雅,</p>
+<p>​	首先有两种方式. 第一种书写代码. 程序员自己将代码写好 , 第二种 AOP ,可以动态代理, 也可以借助插件生成代码.</p>
+</blockquote>
+<h2 id="1-lombox">1. Lombox</h2>
+<p>这个工具类, 相信大家很熟悉 , 那么就看看他如何处理空指针的.</p>
+<p>简单的Do类 , 根据阿里开发规范说过, 对于do类, 基本类型全部用包装类型.</p>
+<pre><code class="language-java">@Data
+public class PeopleDo {
+    private String name;
+    private Integer age;
+}
+</code></pre>
+<p>我们的处理过程 .</p>
+<pre><code class="language-java">public class Demo {
+    public static void handlerPeople(@NonNull PeopleDo people) {
+        System.out.println(String.format(&quot;That people name is %s.&quot;, people.getName()));
+    }
+
+    public static void main(String[] args) {
+        handlerPeople(null);
+    }
+}
+</code></pre>
+<p>然后输出</p>
+<pre><code class="language-java">Exception in thread &quot;main&quot; java.lang.NullPointerException: peopleDo is marked non-null but is null
+</code></pre>
+<p>我们看看他生成的代码, 其实借助于IDEA , 可以直接看反编译的  .</p>
+<pre><code class="language-java">public class Demo {
+    public Demo() {
+    }
+
+    public static void handlerPeople(@NonNull PeopleDo peopleDo) {
+        // 这里他自动插入了判断. 并且抛出异常. 
+        if (peopleDo == null) {
+            throw new NullPointerException(&quot;peopleDo is marked non-null but is null&quot;);
+        } else {
+            System.out.println(peopleDo.getName());
+        }
+    }
+
+    public static void main(String[] args) {
+        handlerPeople((PeopleDo)null);
+    }
+}
+</code></pre>
+<p>这个是在JVM启动前插件给你动态生成的判断 , 所以这种效率最高. 但是灵活性差点.</p>
+<p>其实就是如何切面处理 , 利用AOP技术.</p>
+<h2 id="2-java的动态代理">2. Java的动态代理</h2>
+<blockquote>
+<p>​	一下例子我简单的写了写. 大家可以参考</p>
+</blockquote>
+<p>我们的标记注解. 作用就是告诉程序 ,这个方法的参数需要进行空检测.</p>
+<pre><code class="language-java">@Target({ElementType.TYPE_USE})
+@Retention(RetentionPolicy.RUNTIME)
+public @interface NotNull {
+}
+</code></pre>
+<p>我们的代理类.</p>
+<pre><code class="language-java">public class NullProxy&lt;T&gt; {
+    
+    // 代理bean
+    private final T proxyBean;
+
+    public NullProxy(T proxy) {
+        this.proxyBean = proxy;
+    }
+
+    public T getProxy() throws Exception {
+        // 判断前置逻辑
+        if (proxyBean == null) {
+            throw new RuntimeException(&quot;代理对象不能为 NULL&quot;);
+        }
+        if (proxyBean.getClass().getInterfaces() == null) {
+            throw new RuntimeException(&quot;代理对象必须是接口实现类&quot;);
+        }
+        // 通过底层获取一个代理的字节码
+        Class&lt;?&gt; proxyClass = Proxy.getProxyClass(proxyBean.getClass().getClassLoader(), proxyBean.getClass().getInterfaces());
+        // 构造器,需要传入一个InvocationHandler,最后调用用户实现就可以了.
+        return (T) proxyClass.getConstructor(InvocationHandler.class).newInstance((InvocationHandler) (proxy, method, args) -&gt; {
+            // 超级简单的判断逻辑
+            Parameter[] parameters = method.getParameters();
+            if (parameters != null) {
+                for (int i = 0; i &lt; parameters.length; i++) {
+                    Parameter parameter = parameters[i];
+                    Annotation annotation = parameter.getAnnotatedType().getAnnotation(NotNull.class);
+                    if (annotation != null) {
+                        if (args[i] == null) {
+                            String name = parameter.getName();
+                            throw new NullPointerException(name + &quot; 不能为空&quot;);
+                        }
+                    }
+                }
+            }
+            return method.invoke(NullProxy.this.proxyBean, args);
+        });
+    }
+}
+</code></pre>
+<p>我们的业务逻辑 .</p>
+<pre><code class="language-java">public interface PeopleService {
+
+    void handlerPeople(@NotNull PeopleDo people);
+}
+</code></pre>
+<p>我们的实现类.</p>
+<pre><code class="language-java">public class PeopleServiceImpl implements PeopleService {
+
+    @Override
+    public void handlerPeople(@NotNull PeopleDo people) {
+        System.out.println(String.format(&quot;That people name is %s.&quot;, people.getName()));
+    }
+}
+</code></pre>
+<p>测试类 :</p>
+<pre><code class="language-java">public class PeopleServiceImplTest {
+
+    @Test
+    public void testNull() throws Exception {
+        PeopleService service = new PeopleServiceImpl();
+        PeopleService proxy = new NullProxy&lt;&gt;(service).getProxy();
+
+        // 测试非空
+        PeopleDo people = new PeopleDo();
+        proxy.handlerPeople(people);
+        
+        // 测试空
+        proxy.handlerPeople(null);
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">That people name is null.
+
+java.lang.NullPointerException: arg0 不能为空
+</code></pre>
+<p>所以很简单的方式去判断 , 业务逻辑, 有效的防止空指针代理的后续的一系列问题.</p>
+<p>但是这样做的坏处就是, 方法调用比较慢, 其次就是没有降级 , 没有fallback , 也就是空, 我可以默认指定一个参数. 其实也可以添加进去. 大家自行拓展 , 我就简单讲一下逻辑</p>
+<h2 id="3-java8-opthion">3. Java8 - Opthion</h2>
+<p>对于上诉的问题我们可以直接利用Lambda的链式处理, 写成</p>
+<pre><code class="language-java">public void echoPeople(PeopleDo people){
+    String name = Optional.ofNullable(people).map(p-&gt;p.getName()).orElse(&quot;NULL&quot;);
+    System.out.println(String.format(&quot;That people name is %s.&quot;, name));
+}
+</code></pre>
+<p>我们再试试</p>
+<pre><code class="language-java">That people name is NULL.
+</code></pre>
+<p>所以他很好的处理空.</p>
+<h3 id="构造方法">构造方法</h3>
+<h4 id="ofv"><code>of(V)</code></h4>
+<p>这个就是一个最简单的静态方法 , 他不能做任何处理.  直接实例化</p>
+<h4 id="optionalempty"><code>Optional.empty()</code></h4>
+<p>这个返回一个空的实例对象 Option.</p>
+<h4 id="optionalofnullablev"><code>Optional.ofNullable(V)</code></h4>
+<p>前两者的结合体, 当null , 则返回empty , 如果不为空则调用 of.</p>
+<h3 id="常用方法">常用方法</h3>
+<p>一下这前几个是 类似于Builder 一样, 流式处理, 每次都返回一个新的Option. 类似于Stream.</p>
+<h4 id="mapfunc"><code>map(func)</code></h4>
+<p>最简单, 一直映射关系,  原来是 <code>Optional&lt;PeopleDo&gt;</code> -&gt; 可以通过 people.getName()映射成 -&gt; <code>Optional&lt;String&gt;</code></p>
+<pre><code class="language-java">Integer len = Optional.of(&quot;hello world&quot;).map(a -&gt; a.length()).get();
+</code></pre>
+<h4 id="flatmap"><code>flatMap()</code></h4>
+<p>map的升级版, 需要手动生成 映射结果.</p>
+<pre><code class="language-java">Integer len = Optional.ofNullable(&quot;hello world&quot;).flatMap(s1 -&gt; Optional.of(s1.length())).get();
+</code></pre>
+<p>这俩各有优缺点. 看自己需求 .</p>
+<h4 id="filterpred"><code>filter(pred)</code></h4>
+<pre><code class="language-java">String s = Optional.of(&quot;HELLO WORLD&quot;).filter(new Predicate&lt;String&gt;() {
+            @Override
+            public boolean test(String s) {
+                return s.length() == 5;
+            }
+        }).orElseThrow(new Supplier&lt;Throwable&gt;() {
+            @Override
+            public Throwable get() {
+                return new RuntimeException(&quot;len should equal 10&quot;);
+            }
+        });
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">java.lang.RuntimeException: len should equal 10
+</code></pre>
+<p>简写成lambda .</p>
+<pre><code class="language-java">Optional.of(str).filter(s1 -&gt; s1.length() == 5).orElseThrow(() -&gt; new RuntimeException(&quot;len should equal 10&quot;));
+</code></pre>
+<p>是不是简单.</p>
+<p>以下几个是结尾符 .</p>
+<h4 id="get"><code>get()</code></h4>
+<p>如果value = null , 直接抛出异常</p>
+<pre><code class="language-java">public T get() {
+    if (value == null) {
+        throw new NoSuchElementException(&quot;No value present&quot;);
+    }
+    return value;
+}
+</code></pre>
+<h4 id="orelsev"><code>orElse(v)</code></h4>
+<p>如果value 为空, 则返回这个代替值</p>
+<pre><code class="language-java">public T orElse(T other) {
+    return value != null ? value : other;
+}
+</code></pre>
+<h4 id="orelsegetfun"><code>orElseGet(fun)</code></h4>
+<p>如果为空则加入回调函数. 直接回调函数.</p>
+<pre><code class="language-java">public T orElseGet(Supplier&lt;? extends T&gt; other) {
+    return value != null ? value : other.get();
+}
+</code></pre>
+<h4 id="orelsethrow"><code>orElseThrow()</code></h4>
+<p>如果为空, 则抛出<code>Supplier</code> 提供的异常, 其实他应该再多一个方法</p>
+<pre><code class="language-java">public &lt;X extends Throwable&gt; T orElseThrow(Supplier&lt;? extends X&gt; exceptionSupplier) throws X {
+    if (value != null) {
+        return value;
+    } else {
+        throw exceptionSupplier.get();
+    }
+}
+</code></pre>
+<p>比如 :  这个也不错.</p>
+<pre><code class="language-java">public &lt;X extends Throwable&gt; T orElseThrow(X exception) throws X {
+    if (value == null) {
+        throw exception;
+    } else {
+        return value;
+    }
+}
+</code></pre>
+<h4 id="ispresent"><code>isPresent()</code></h4>
+<p>判断是否存在, 这种写法,  比较low , 用 or 比较好.  但是他提供了value是否存在.</p>
+<h4 id="ifpresentcons"><code>ifPresent(cons)</code></h4>
+<p>这个就是存在即处理.</p>
+<h4 id="equaleobj"><code>equale(obj)</code></h4>
+<pre><code class="language-jav">boolean equals = Optional.ofNullable(&quot;A&quot;).equals(Optional.of(&quot;A&quot;));
+System.out.println(equals); // true
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-lombox">1. Lombox</a></li>
+<li><a href="#2-java%E7%9A%84%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86">2. Java的动态代理</a></li>
+<li><a href="#3-java8-opthion">3. Java8 - Opthion</a>
+<ul>
+<li><a href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">构造方法</a>
+<ul>
+<li><a href="#ofv"><code>of(V)</code></a></li>
+<li><a href="#optionalempty"><code>Optional.empty()</code></a></li>
+<li><a href="#optionalofnullablev"><code>Optional.ofNullable(V)</code></a></li>
+</ul>
+</li>
+<li><a href="#%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95">常用方法</a>
+<ul>
+<li><a href="#mapfunc"><code>map(func)</code></a></li>
+<li><a href="#flatmap"><code>flatMap()</code></a></li>
+<li><a href="#filterpred"><code>filter(pred)</code></a></li>
+<li><a href="#get"><code>get()</code></a></li>
+<li><a href="#orelsev"><code>orElse(v)</code></a></li>
+<li><a href="#orelsegetfun"><code>orElseGet(fun)</code></a></li>
+<li><a href="#orelsethrow"><code>orElseThrow()</code></a></li>
+<li><a href="#ispresent"><code>isPresent()</code></a></li>
+<li><a href="#ifpresentcons"><code>ifPresent(cons)</code></a></li>
+<li><a href="#equaleobj"><code>equale(obj)</code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

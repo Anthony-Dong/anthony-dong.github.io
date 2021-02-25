@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Netty - 如何提高RT  | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/DIeHRW_YT/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Netty - 如何提高RT </a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-02-06</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/DIeHRW_YT/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/fn4lTiaKxHO/"
+								class="tag">netty</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2081字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-netty的线程">1. Netty的线程</h2>
+<p>我们知道 Netty服务端的写法 .</p>
+<pre><code class="language-java">NioEventLoopGroup boss = new NioEventLoopGroup();
+NioEventLoopGroup work = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors()*2);
+</code></pre>
+<p>**根据线程一般都是设置为CPU核数的两倍. **</p>
+<p>实例化俩线程,然后交给ServerBootstrap . 那么为啥叫work线程了. 其实他是NIO模型. <strong>boot线程就是一直在轮询事件,当连接来了, 交给work处理.  work线程是真正来用来处理当前连接的客户端的所以操作.</strong></p>
+<p>那么如果 10W个连接. 每个连接又有好多个请求. 那么这16个线程能处理吗, 万一遇见那种也别久的请求呢 ,难以处理呢.</p>
+<p>首先我们先来试试这些操作行不行.   我相信下面这段代码大家并不陌生.  这个是我们的服务器端 .</p>
+<pre><code class="language-java">public class DemoServer {
+
+    public static void main(String[] args) {
+
+        NioEventLoopGroup boss = new NioEventLoopGroup(1,new NamedThreadFactory(&quot;boss&quot;));
+        NioEventLoopGroup work = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2, new NamedThreadFactory(&quot;worker&quot;));
+
+        ServerBootstrap bootstrap = new ServerBootstrap();
+        bootstrap.group(boss, work).channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer&lt;NioSocketChannel&gt;() {
+                    @Override
+                    protected void initChannel(NioSocketChannel ch) throws Exception {
+                        ChannelPipeline pipeline = ch.pipeline();
+                        // 字符串编码器.
+                        pipeline.addLast(new StringEncoder());
+                        // 每行行解码器.
+                        pipeline.addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE));
+                        // 字符串解码器.
+                        pipeline.addLast(new StringDecoder());
+                        // 自己的Handler
+                        pipeline.addLast(MyChannelDuplexHandler.INSTANCE);
+                    }
+                });
+        ChannelFuture future = null;
+        try {
+            future = bootstrap.bind(10086).sync();
+            System.out.println(&quot;bind success : localhost:10086&quot;);
+            future.channel().closeFuture().sync();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            boss.shutdownGracefully();
+            work.shutdownGracefully();
+        }
+    }
+
+    @ChannelHandler.Sharable
+    private static class MyChannelDuplexHandler extends ChannelDuplexHandler {
+        // 写日志信息的. 
+        final CharSink sink;
+        MyChannelDuplexHandler() {
+            sink = Files.asCharSink(new File(&quot;D:\\MyDesktop\\template\\log.txt&quot;), Charset.forName(&quot;utf-8&quot;), FileWriteMode.APPEND);
+        }
+        static ChannelDuplexHandler INSTANCE = new MyChannelDuplexHandler();
+
+        @Override
+
+        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+               func(ctx, msg);
+        }
+
+        // 主要处理逻辑. 
+        private void func(ChannelHandlerContext ctx, Object msg) throws IOException {
+            String message = (String) msg;
+            long start = Long.parseLong(message.trim());
+            System.out.printf(&quot;thread : %s ,addr : %s , spend : %dms\n&quot;, Thread.currentThread().getName(), ctx.channel().remoteAddress().toString(), System.currentTimeMillis() - start);
+            String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern(&quot;YYYY-MM-dd hh:mm:ss SSS\n&quot;));
+            ctx.writeAndFlush(format);
+            sink.write((System.currentTimeMillis() - start) + &quot;\n&quot;);
+        }
+
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            ctx.close();
+        }
+
+        @Override
+        public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+            //no ting
+        }
+    }
+}
+</code></pre>
+<p>压测代码.  Golang写的</p>
+<pre><code class="language-go">// @date : 2020/2/2 21:16
+// @author : &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+
+/**
+	todo
+ */
+package main
+
+import (
+	&quot;fmt&quot;
+	&quot;log&quot;
+	&quot;net&quot;
+	&quot;sync&quot;
+	&quot;time&quot;
+)
+
+func main() {
+	var wg sync.WaitGroup
+
+	var start = time.Now().UnixNano() / 1e6
+
+	for x := 0; x &lt; 50; x++ {
+		wg.Add(1)
+		go func() {
+			conn(&amp;wg)
+		}()
+	}
+	wg.Wait()
+	var end = time.Now().UnixNano() / 1e6
+	fmt.Printf(&quot;耗时 : %d\n&quot;, end-start)
+}
+
+func conn(wg *sync.WaitGroup) {
+	conn, e := net.Dial(&quot;tcp&quot;, &quot;localhost:10086&quot;)
+	if e != nil {
+		log.Fatal(e)
+	}
+	var start = time.Now().UnixNano() / 1e6
+	defer func() {
+		wg.Done()
+		conn.Close()
+		var end = time.Now().UnixNano() / 1e6
+		fmt.Printf(&quot;耗时 : %d\n&quot;, end-start)
+	}()
+
+
+	for x := 0; x &lt; 500; x++ {
+		fmt.Fprintf(conn, &quot;%s \n&quot;, &quot;hello world&quot;)
+	}
+}
+</code></pre>
+<p>scala 计算均值 .</p>
+<pre><code class="language-scala">object Count {
+	def main(args: Array[String]): Unit = {
+
+		val count: Int =Source.fromFile(&quot;D:\\MyDesktop\\template\\log.txt&quot;).getLines().count((_: String) =&gt; true)
+
+		val sum: Int = Source.fromFile(&quot;D:\\MyDesktop\\template\\log.txt&quot;).getLines().map(_.toInt).sum
+
+		printf(&quot;总请求数 : %d  , 总耗时 :  %dms , 平均响应时间 : %dms\n&quot;, count, sum, sum / count)
+	}
+}
+</code></pre>
+<p>测试  50个客户端, 没人发送500次请求.  也就是处理 2.5w个请求响应和 50个客户端</p>
+<p>输出  <code>15875</code> , 说明处理很严重, 存在严重的处理不了的现象.  说明 1W请求存在 无法处理的问题.</p>
+<pre><code class="language-java">总请求数 : 15875  , 总耗时 :  9610317ms , 平均响应时间 : 605ms
+</code></pre>
+<p>为什么呢. 我们先模拟一下. 5个客户端发送请求的问题. 看输出</p>
+<pre><code class="language-java">thread : worker-thread-1 ,addr : /127.0.0.1:6235 , spend : 2ms
+thread : worker-thread-2 ,addr : /127.0.0.1:6236 , spend : 3ms
+thread : worker-thread-8 ,addr : /127.0.0.1:6233 , spend : 3ms
+thread : worker-thread-1 ,addr : /127.0.0.1:6235 , spend : 4ms
+thread : worker-thread-2 ,addr : /127.0.0.1:6236 , spend : 4ms
+thread : worker-thread-3 ,addr : /127.0.0.1:6237 , spend : 4ms
+thread : worker-thread-3 ,addr : /127.0.0.1:6237 , spend : 5ms
+thread : worker-thread-7 ,addr : /127.0.0.1:6234 , spend : 6ms
+thread : worker-thread-8 ,addr : /127.0.0.1:6233 , spend : 6ms
+thread : worker-thread-7 ,addr : /127.0.0.1:6234 , spend : 6ms
+</code></pre>
+<p>我们发现所有的客户端与线程都是一一对应的关系 , 也就是说一个客户端会分配死了, 就是那个线程. 那就是worker线程.  那这个就是为啥慢的原因了. 他的每一个 客户端只绑定一个线程 ,这个线程还是死的.</p>
+<h2 id="解决方式-一">解决方式 一</h2>
+<p>根据 , Netty 分配请求的原则. 我们可以知道.</p>
+<pre><code class="language-java">ChannelPipeline addLast(EventExecutorGroup group, ChannelHandler... handlers);
+</code></pre>
+<p>我们可以在 pipeline中添加. 一个 <code>EventExecutorGroup</code> . 来处理改Handler的请求.  所以我们就创建一个全局的<code>NioEventLoopGroup</code>  , 来放入进去. 我们继续测试.</p>
+<pre><code class="language-java">public static void main(String[] args) {
+
+    NioEventLoopGroup boss = new NioEventLoopGroup(1,new NamedThreadFactory(&quot;boss&quot;));
+    NioEventLoopGroup work = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors() * 2, new NamedThreadFactory(&quot;worker&quot;));
+
+    // 专门用来处理Handler处理器的. 
+    NioEventLoopGroup handler = new NioEventLoopGroup(50, new NamedThreadFactory(&quot;handler&quot;));
+    ServerBootstrap bootstrap = new ServerBootstrap();
+    bootstrap.group(boss, work).channel(NioServerSocketChannel.class)
+            .childHandler(new ChannelInitializer&lt;NioSocketChannel&gt;() {
+                @Override
+                protected void initChannel(NioSocketChannel ch) throws Exception {
+                    ChannelPipeline pipeline = ch.pipeline();
+                    // 字符串编码器.
+                    pipeline.addLast(new StringEncoder());
+                    // 每行行解码器.
+                    pipeline.addLast(new LineBasedFrameDecoder(Integer.MAX_VALUE));
+                    // 字符串解码器.
+                    pipeline.addLast(new StringDecoder());
+                    // 自己的Handler
+                    pipeline.addLast(handler,MyChannelDuplexHandler.INSTANCE);
+                }
+            });
+    ChannelFuture future = null;
+    try {
+        future = bootstrap.bind(10086).sync();
+	    System.out.println(&quot;bind success : localhost:10086&quot;);
+        future.channel().closeFuture().sync();
+    } catch (Exception e) {
+        System.out.println(e.getMessage());
+    } finally {
+        boss.shutdownGracefully();
+        work.shutdownGracefully();
+    }
+}
+</code></pre>
+<p>我们先模拟一下.   50客户端 2.5请求.  我们的handler 有 50个线程处理.</p>
+<p>再次请求 .  总请求数为 <code>2.5w</code> , 接收响应并且都处理了, 但是平均响应时间也很长. 处理很不恰当.</p>
+<p>我们统计三组数据.</p>
+<pre><code class="language-java">总请求数 : 25000  , 总耗时 :  45855712ms , 平均响应时间 : 1834ms
+</code></pre>
+<pre><code class="language-java">总请求数 : 25000  , 总耗时 :  48299098ms , 平均响应时间 : 1931ms
+</code></pre>
+<pre><code class="language-java">总请求数 : 25000  , 总耗时 :  45203872ms , 平均响应时间 : 1808ms
+</code></pre>
+<p>大约响应处理时间大约在 2s左右. 所以很不理想.</p>
+<p>通常来说对于客户端连接多 . 请求少的情况下 . 可以选择这种. 但是当客户端少. 连接多这就容易出问题.</p>
+<p>所以我们采用线程池.</p>
+<h2 id="解决方式2">解决方式2</h2>
+<p>我们在 <code>MyChannelDuplexHandler</code> 中添加 一个线程池来处理 .</p>
+<pre><code class="language-java">@ChannelHandler.Sharable
+private static class MyChannelDuplexHandler extends ChannelDuplexHandler {
+    final CharSink sink;
+    MyChannelDuplexHandler() {
+        sink = Files.asCharSink(new File(&quot;D:\\MyDesktop\\template\\log.txt&quot;), Charset.forName(&quot;utf-8&quot;), FileWriteMode.APPEND);
+    }
+    // 添加一个线程池 . 来处理全部的处理逻辑.  
+    static final ExecutorService service = Executors.newFixedThreadPool(50);
+
+    static ChannelDuplexHandler INSTANCE = new MyChannelDuplexHandler();
+
+    @Override
+
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        service.execute(() -&gt; {
+            try {
+                this.func(ctx, msg);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void func(ChannelHandlerContext ctx, Object msg) throws IOException {
+        String message = (String) msg;
+        long start = Long.parseLong(message.trim());
+        // System.out.printf(&quot;thread : %s ,addr : %s , spend : %dms\n&quot;, Thread.currentThread().getName(), ctx.channel().remoteAddress().toString(), System.currentTimeMillis() - start);
+        String format = LocalDateTime.now().format(DateTimeFormatter.ofPattern(&quot;YYYY-MM-dd hh:mm:ss SSS\n&quot;));
+        ctx.writeAndFlush(format);
+        sink.write((System.currentTimeMillis() - start) + &quot;\n&quot;);
+    }
+
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        ctx.close();
+    }
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+        //no ting
+    }
+}
+</code></pre>
+<p>我们再次压测.</p>
+<pre><code class="language-java">总请求数 : 25000  , 总耗时 :  40851493ms , 平均响应时间 : 1634ms
+</code></pre>
+<p>再次修改 , 修改线程数. 为 100</p>
+<pre><code class="language-go">总请求数 : 25000  , 总耗时 :  41833614ms , 平均响应时间 : 1673ms
+</code></pre>
+<p>其实不管你多少个线程数. 首先就是线程需要初始化. 大量的线程切换. 会消耗很长的时间, 所以看如何做处理.</p>
+<h2 id="dubbo-的做法">Dubbo 的做法</h2>
+<p>他的 ThreadPoll 是一个SPI 接口</p>
+<p><code>org.apache.dubbo.remoting.transport.dispatcher.WrappedChannelHandler#WrappedChannelHandler</code></p>
+<pre><code class="language-java">executor = (ExecutorService) ExtensionLoader.getExtensionLoader(ThreadPool.class).getAdaptiveExtension().getExecutor(url);
+</code></pre>
+<p>一共有这几种  , 默认使用的是 <code>fixed</code> 也就是<code>org.apache.dubbo.common.threadpool.support.fixed.FixedThreadPool</code></p>
+<pre><code class="language-go">fixed=org.apache.dubbo.common.threadpool.support.fixed.FixedThreadPool
+cached=org.apache.dubbo.common.threadpool.support.cached.CachedThreadPool
+limited=org.apache.dubbo.common.threadpool.support.limited.LimitedThreadPool
+eager=org.apache.dubbo.common.threadpool.support.eager.EagerThreadPool
+</code></pre>
+<p>然后看看fix的实现</p>
+<pre><code class="language-java">@Override
+public Executor getExecutor(URL url) {
+    String name = url.getParameter(THREAD_NAME_KEY, DEFAULT_THREAD_NAME);
+    int threads = url.getParameter(THREADS_KEY, DEFAULT_THREADS);
+    int queues = url.getParameter(QUEUES_KEY, DEFAULT_QUEUES);
+    return new ThreadPoolExecutor(threads, threads, 0, TimeUnit.MILLISECONDS,
+            queues == 0 ? new SynchronousQueue&lt;Runnable&gt;() :
+                    (queues &lt; 0 ? new LinkedBlockingQueue&lt;Runnable&gt;()
+                            : new LinkedBlockingQueue&lt;Runnable&gt;(queues)),
+            new NamedInternalThreadFactory(name, true), new AbortPolicyWithReport(name, url));
+}
+</code></pre>
+<p>如果队列大小为 0 , 那么就是一个 <code>SynchronousQueue</code>  , 否则为<code>LinkedBlockingQueue</code>  , 对于超出的策略, 他使用的是自定义策略. 自定义策略需要继承 <code>ThreadPoolExecutor.AbortPolicy</code> 类.</p>
+<p>说到底 都是 <code>ThreadPoolExecutor</code>  , 只是他的细节做得好罢了.</p>
+<p>默认是 thread 大小为 10个. 他会在你启动 <code>ServiceConfig</code> 的时候创建好那个url, 默认是 10个. 如果threads为空的话就是 200个.  queues为 0 ,  需要配置可以加 queues=1000 , 如果queues=-1 ,则是无界的.</p>
+<p>反正基本就是这么一个情况 , 一般是在业务方法中添加线程池 , 来处理的, 因为这个线程池可以很好的处理 . 不要使用Netty的.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-netty%E7%9A%84%E7%BA%BF%E7%A8%8B">1. Netty的线程</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F-%E4%B8%80">解决方式 一</a></li>
+<li><a href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E5%BC%8F2">解决方式2</a></li>
+<li><a href="#dubbo-%E7%9A%84%E5%81%9A%E6%B3%95">Dubbo 的做法</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

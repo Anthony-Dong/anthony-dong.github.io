@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> SpringBoot - Conditional条件注解 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spring-conditional-tiao-jian-zhu-jie/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> SpringBoot - Conditional条件注解</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-15</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spring-conditional-tiao-jian-zhu-jie/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1134字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-conditional注解-和-condition接口">1. Conditional注解 和 Condition接口</h2>
+<p>Conditional注解</p>
+<blockquote>
+<p>​	Indicates that a component is only eligible for registration when all specified conditions match.</p>
+<p>​	当所有指定的Condition接口类都匹配的时候才会将Bean注入</p>
+</blockquote>
+<p>Condition 接口</p>
+<blockquote>
+<p>​	A single condition that must be matched in order for a component to be registered.</p>
+<p>​	一个component 要注册所必须匹配的单个条件。</p>
+</blockquote>
+<pre><code class="language-java">boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata);
+// metadata是标记类的元信息,包含该注解标记类的注解信息还有类信息等等
+</code></pre>
+<p>返回false 不允许注册</p>
+<h3 id="3-基本使用">3. 基本使用</h3>
+<p>比如说我们要注册一下这个类 , 此时</p>
+<pre><code class="language-java">@Component
+@Conditional(value = {MyCondition.class})
+public class MyConditionalOnMissingBean {
+    @Override
+    public String toString() {
+        return &quot;MyConditionalOnMissingBean&quot;;
+    }
+}
+</code></pre>
+<p>Condition实现类</p>
+<pre><code class="language-java">public class MyCondition implements Condition {
+
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        return false;
+    }
+}
+</code></pre>
+<p>启动类启动会发现此对象未注册 .</p>
+<h3 id="4-高级用法">4. 高级用法</h3>
+<blockquote>
+<p>​	下面的几个内置的ConditionOnxxxx 其实都是基于这个实现的 ....</p>
+</blockquote>
+<p>我们有一个<code>MyConditional</code> , 需要版本匹配才能使用</p>
+<pre><code class="language-java">@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Conditional(value = {MyCondition.class})
+public @interface MyConditional {
+
+    String version() default &quot;&quot;;
+}
+</code></pre>
+<p>此时我们用注解标记一下类 <code>@MyConditional(version = &quot;2.0.0&quot;)</code></p>
+<pre><code class="language-java">@Component
+@MyConditional(version = &quot;2.0.0&quot;)
+public class MyConditionalOnMissingBean {
+    @Override
+    public String toString() {
+        return &quot;MyConditionalOnMissingBean&quot;;
+    }
+}
+</code></pre>
+<p>我们的<code>MyCondition</code>类</p>
+<pre><code class="language-java">public class MyCondition implements Condition {
+
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        Map&lt;String, Object&gt; annotationAttributes = metadata.getAnnotationAttributes(MyConditional.class.getName());
+        // 版本如果不为1.0.0 ,则抛出异常
+        String version = (String) annotationAttributes.get(&quot;version&quot;);
+        Assert.isTrue(version.equals(&quot;1.0.0&quot;), &quot;版本号不匹配&quot;);
+        return true;
+    }
+}
+</code></pre>
+<p>启动 ... 发现出现异常</p>
+<pre><code class="language-java">org.springframework.beans.factory.BeanDefinitionStoreException: Failed to read candidate component class: file [D:\代码库\spring教程\Spring-Boot教程\springboot-enable\target\classes\com\example\springbootenable\bean\MyConditionalOnMissingBean.class]; nested exception is java.lang.IllegalArgumentException: 版本号不匹配
+</code></pre>
+<h2 id="2-conditionalonbean">2. ConditionalOnBean</h2>
+<blockquote>
+<p>​	Conditional that only matches when the specified bean classes and/or names are already contained in the BeanFactory.</p>
+<p>​	在BeanFactory中<strong>匹配到</strong>指定的Bean的类或者名字时</p>
+</blockquote>
+<h3 id="1-使用">1. 使用</h3>
+<pre><code class="language-java">@Configuration
+public class MyAutoConfiguration {
+
+    @ConditionalOnBean
+    @Bean
+    @Primary
+    public MyConditionalOnMissingBean myService() {
+        System.out.println(&quot;BeanFactory已经有MyConditionalOnMissingBean,我来注入一个&quot;);
+        MyConditionalOnMissingBean bean = new MyConditionalOnMissingBean();
+        bean.name = &quot;hello  ConditionalOnBean&quot;;
+        return bean;
+    }
+}
+</code></pre>
+<pre><code class="language-java">@Component
+public class MyConditionalOnMissingBean {
+    @Override
+    public String toString() {
+        return &quot;MyConditionalOnMissingBean&quot;;
+    }
+
+    public String name = &quot;default&quot;;
+}
+</code></pre>
+<p>此时输出 ;</p>
+<pre><code class="language-java">hello  ConditionalOnBean
+</code></pre>
+<h3 id="2-注意">2. 注意</h3>
+<p>当你注入的Bean中,比我我上面是 <code>MyConditionalOnMissingBean</code> , 如果我没有标记<code>@Component</code> 注解,此时会启动失败 ,</p>
+<p>如果我方法中, 未修饰 <code>@Primary</code>注解,此时 启动失败, 因为有俩类 , 所以我不知道这个条件注解究竟要做啥</p>
+<h2 id="2-conditionalonmissingbean">2. ConditionalOnMissingBean</h2>
+<blockquote>
+<p>Conditional that only matches when the specified bean classes and/or names are not already contained in the BeanFactory.</p>
+<p>在BeanFactory中<strong>尚未匹配到</strong>指定的Bean的类或者名字 ,  所以这个有可能出现阶段问题, 加载早与迟,所以一般推荐自动装配的时候使用 , 与上诉<code>ConditionalOnBean</code>的正好相反 ,</p>
+</blockquote>
+<p>用法, 文档推荐用法</p>
+<p>配置类</p>
+<pre><code class="language-java">@Configuration
+public class MyAutoConfiguration {
+
+    @ConditionalOnMissingBean
+    @Bean
+    public MyConditionalOnMissingBean myService() {
+        System.out.println(&quot;BeanFactory中没有MyConditionalOnMissingBean,我来注入一个&quot;);
+        return new MyConditionalOnMissingBean();
+    }
+}
+</code></pre>
+<pre><code class="language-java">public class MyConditionalOnMissingBean {
+    @Override
+    public String toString() {
+        return &quot;MyConditionalOnMissingBean&quot;;
+    }
+}
+</code></pre>
+<p>启动类</p>
+<pre><code class="language-java">@SpringBootApplication
+public class SpringbootEnableApplication implements ApplicationContextAware, CommandLineRunner {
+    public static void main(String[] args) {
+        SpringApplication.run(SpringbootEnableApplication.class, args);
+    }
+    private ApplicationContext context;
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.context = applicationContext;
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        Object bean = context.getBean(MyConditionalOnMissingBean.class);
+        System.out.println(bean);
+    }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">BeanFactory中没有MyConditionalOnMissingBean,我来注入一个
+MyConditionalOnMissingBean
+</code></pre>
+<p>当我们将 <code>MyConditionalOnMissingBean</code> 使用 <code>@Component</code>注入的时候会发现, 不出出现我们配置类中的话.</p>
+<h2 id="4-conditionalonclass">4. ConditionalOnClass</h2>
+<blockquote>
+<p>​	{@link Conditional} that only matches when the specified classes are on the classpath.</p>
+<p>​	就是这个类必须在classpath下面 , 才会成功</p>
+</blockquote>
+<h2 id="5-conditionalonexpression">5. ConditionalOnExpression</h2>
+<blockquote>
+<p>​	Configuration annotation for a conditional element that depends on the value of a SpEL expression.</p>
+<p>取决于这个SPEL表达式</p>
+</blockquote>
+<p>我们的使用方式,注入条件</p>
+<pre><code class="language-java">@ConditionalOnExpression(&quot;${enable:false}&quot;)
+@Bean
+public MyConditionalOnExpression myConditionalOnExpression() {
+    return new MyConditionalOnExpression();
+}
+</code></pre>
+<p>类</p>
+<pre><code class="language-java">public class MyConditionalOnExpression {
+
+    @Override
+    public String toString() {
+        return &quot;MyConditionalOnExpression&quot;;
+    }
+}
+</code></pre>
+<p>启动的时候VM参数加入 <code>-Denable=true</code> 就可以启动成功了 ,获取其他环境配置注入也行</p>
+<h2 id="6-conditionalonproperty">6. ConditionalOnProperty</h2>
+<blockquote>
+<p>Conditional that checks if the specified properties have a specific value.</p>
+<p>​	检查指定属性是否具有特定值的条件</p>
+</blockquote>
+<blockquote>
+<p>​	类似于上面的ConditionalOnExpression , 他只不过不要求属性值</p>
+</blockquote>
+<pre><code class="language-java">@ConditionalOnProperty(prefix = &quot;spring&quot;,name = &quot;example.values&quot;)
+@Bean
+public MyConditionalOnProperty myConditionalOnProperty(){
+    return new MyConditionalOnProperty();
+}
+</code></pre>
+<pre><code class="language-java">public class MyConditionalOnProperty {
+
+    @Override
+    public String toString() {
+        return &quot;MyConditionalOnProperty&quot;;
+    }
+}
+</code></pre>
+<p>application.properties中加入</p>
+<pre><code class="language-properties">spring.example.values=name
+</code></pre>
+<p>就可以正确注入了,其实默认写一个value值 <code>spring.example.values</code> ,就行了</p>
+<h2 id="7总结">7.总结</h2>
+<p>剩下的就不介绍了 ........................... 还有一种特殊的是Profile</p>
+<h2 id="8-profile-注解">8. Profile 注解</h2>
+<p>他需要制定一个描述,必须有描述信息才能注入Bean成功,</p>
+<pre><code class="language-java">@Profile(&quot;springboot&quot;)
+@Bean
+public MyConditionalOnProperty myConditionalOnProperty(){
+    return new MyConditionalOnProperty();
+}
+</code></pre>
+<p>我们需要如何加入profiles , 需要这么配置....</p>
+<pre><code class="language-java">public static void main(String[] args) {
+    new SpringApplicationBuilder()
+            .sources(SpringbootEnableApplication.class)
+            .web(WebApplicationType.NONE)
+            .profiles(&quot;springboot&quot;)
+            .run(args);
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-conditional%E6%B3%A8%E8%A7%A3-%E5%92%8C-condition%E6%8E%A5%E5%8F%A3">1. Conditional注解 和 Condition接口</a>
+<ul>
+<li><a href="#3-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">3. 基本使用</a></li>
+<li><a href="#4-%E9%AB%98%E7%BA%A7%E7%94%A8%E6%B3%95">4. 高级用法</a></li>
+</ul>
+</li>
+<li><a href="#2-conditionalonbean">2. ConditionalOnBean</a>
+<ul>
+<li><a href="#1-%E4%BD%BF%E7%94%A8">1. 使用</a></li>
+<li><a href="#2-%E6%B3%A8%E6%84%8F">2. 注意</a></li>
+</ul>
+</li>
+<li><a href="#2-conditionalonmissingbean">2. ConditionalOnMissingBean</a></li>
+<li><a href="#4-conditionalonclass">4. ConditionalOnClass</a></li>
+<li><a href="#5-conditionalonexpression">5. ConditionalOnExpression</a></li>
+<li><a href="#6-conditionalonproperty">6. ConditionalOnProperty</a></li>
+<li><a href="#7%E6%80%BB%E7%BB%93">7.总结</a></li>
+<li><a href="#8-profile-%E6%B3%A8%E8%A7%A3">8. Profile 注解</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

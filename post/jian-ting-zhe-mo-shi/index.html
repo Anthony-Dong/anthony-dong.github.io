@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>设计模式 - 事件监听者模式 - JDK &amp; Spring &amp; Guava 各有千秋 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/jian-ting-zhe-mo-shi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>设计模式 - 事件监听者模式 - JDK &amp; Spring &amp; Guava 各有千秋</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-09</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/jian-ting-zhe-mo-shi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/hWcBwQyHp2o/"
+								class="tag">设计模式</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3750字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">17 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	何为事件监听者模式 ?</p>
+<p>​	第一就是为啥我强调事件二字 ,因为他是目标 . 在我们开发中绝对见到过一堆后缀是 <code>Listener</code>的类, 这个就是监听者模式, 监听者模式是一种<code>CS开发架构</code>,很好的做了一种设计的解耦,监听者注册到一个邮局中,订阅某种事件(提前说好了), 邮局会按需求发布消息, 监听者会及时收到消息来处理 . 其中整个Java开发环境中 , JDK已经帮我们定义好了接口 , Spring就是基于JDK接口下实现的, Guava则是另一种实现方式, 各有千秋 , 大家看看吧 , 到底是回调好还是阻塞, 还是Guava这种方式呢,<br>
+他和观察者模式有何区别呢 ? 我们有机会在讲</p>
+</blockquote>
+<h2 id="1-java原生规范">1. Java原生规范</h2>
+<h3 id="1-eventobject">1. EventObject</h3>
+<blockquote>
+<p>​	<strong>事件对象 , 他需要一个事件源 , 用构造函数传递的</strong></p>
+</blockquote>
+<pre><code class="language-java">public class EventObject implements java.io.Serializable {
+    protected transient Object  source;
+
+    public EventObject(Object source) {
+        if (source == null)
+            throw new IllegalArgumentException(&quot;null source&quot;);
+
+        this.source = source;
+    }
+    ........... 其他省略 
+}
+</code></pre>
+<h3 id="2-eventlistener">2. EventListener</h3>
+<blockquote>
+<p>​	<strong>事件监听者,他是负责监听事件的 , JAVA提供的是一个空接口, 让我们根绝需求写</strong></p>
+</blockquote>
+<pre><code class="language-java">public interface EventListener {
+}
+</code></pre>
+<h3 id="3-总结">3. 总结</h3>
+<p>我们发现 java 提供的只提供了一个事件对象 ,和一个事件监听器  ,所以需要我们遵守这个规范去开发</p>
+<h2 id="2-java规范设计一个监听者模式-基于回调模式">2. Java规范设计一个监听者模式 - 基于回调模式</h2>
+<h3 id="1-事件源-eventsource">1. 事件源 - EventSource</h3>
+<p>一般情况下 都会设置成一个 Object 类型的 , 不需要我们去设计一个,为了体现设计模式的角色,我们就设计了一个</p>
+<pre><code class="language-java">@ToString
+@Setter
+@Getter
+public class EventSource {
+    private String name;
+    private String info;
+}
+</code></pre>
+<h3 id="2-事件对象-eventobject">2. 事件对象 - EventObject</h3>
+<p>这里我们继承了 EventObject , 只是简单的实现了一下 , 并没有做过多的包装</p>
+<pre><code class="language-java">public class CoreEventObject extends EventObject {
+    public CoreEventObject(EventSource source) {
+        super(source);
+    }
+}
+</code></pre>
+<h3 id="3-事件监听者-eventlistener">3. 事件监听者 - EventListener</h3>
+<p>这里我们真正的监听者 , 一般情况下都需要设计成一个 函数式接口 , 我这个是和Spring框架学习的 , 因为函数式接口才能体现回调 ,</p>
+<pre><code class="language-java">@FunctionalInterface
+public interface CoreEventListener&lt;E extends CoreEventObject&gt; extends EventListener {
+
+    void onEventObject(E event);
+}
+</code></pre>
+<h3 id="4-事件发布者-eventpublisher">4. 事件发布者 -  EventPublisher</h3>
+<p>事件发布者 ,因为没有发布的事件对象, 哪来的监听</p>
+<pre><code class="language-java">public class EventPublisher&lt;E extends CoreEventObject&gt; {
+
+    private CoreEventListener&lt;E&gt; listener;
+
+
+    public EventPublisher(CoreEventListener&lt;E&gt; listener) {
+        this.listener = listener;
+    }
+
+    
+    public void publish(E object){
+        System.out.println(&quot;发布事件 : &quot; + object);
+        // 传给 CoreEventListener
+        listener.onEventObject(object);
+    }
+}
+</code></pre>
+<h3 id="5-测试demo">5. 测试Demo</h3>
+<pre><code class="language-java">public class TestDemo {
+    public static void main(String[] args) {
+        // 1. 创建一个事件发布者
+        EventPublisher&lt;CoreEventObject&gt; publisher = new EventPublisher&lt;&gt;(new CoreEventListener&lt;CoreEventObject&gt;() {
+            @Override
+            public void onEventObject(CoreEventObject event) {
+                System.out.println(&quot;接收到事件源 : &quot; + event.getSource() + &quot; , 当前线程 : &quot; + Thread.currentThread().getName()); 
+            }
+        });
+
+        // 2. 发布一个事件对象 
+        publisher.publish(getCoreEventObject());
+    }
+
+    private static CoreEventObject getCoreEventObject(){
+        ..... 此处省略 
+        return eventObject;
+    }
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">发布事件 : com.example.listener_design_pattern.CoreEventObject[source=EventSource(name=事件源, info=Sat Nov 09 14:34:50 CST 2019)]
+接收到事件源 : EventSource(name=事件源, info=Sat Nov 09 14:34:50 CST 2019) , 当前线程 : main
+</code></pre>
+<p>我们发现我们成功的接收到了事件对象 和 事件源 , 这个就是钩子函数的魅力 . 其实你只是做了一个事件发布你无心观察其他的东西 , 只需要一个监听者就可以做到监听了 , 这样你的事件发布 和 监听 完全就解耦了 .其实底层就是一个地址引用 .</p>
+<h2 id="3-回调函数存在的问题">3. 回调函数存在的问题 ?</h2>
+<h3 id="1-我们的问题">1. 我们的问题 ?</h3>
+<p>很多场景下,我们的发布事件和监听事件完全在两个线程中,那么我们如何拿到事件对象呢 ?</p>
+<p>如果我们简单使用一下 , 会这么写 ?</p>
+<pre><code class="language-java">public class TestEventListener implements CoreEventListener&lt;CoreEventObject&gt; {
+
+    private CoreEventObject object;
+
+    @Override
+    public void onEventObject(CoreEventObject object) {
+ 		// 赋值给成员变量 
+        this.object = object;
+    }
+
+    // 获取成员变量 
+    public CoreEventObject getObject() {
+        return object;
+    }
+}
+</code></pre>
+<p>测试一下 :</p>
+<pre><code class="language-java">public class TestDemo {
+
+    public static void main(String[] args) {
+
+        TestEventListener listener = new TestEventListener();
+        CoreEventObject object = listener.getObject();
+        // 先去拿 ,后去发布
+        System.out.println(object.getSource());
+
+        EventPublisher&lt;CoreEventObject&gt; publisher = new EventPublisher&lt;&gt;(listener);
+        publisher.publish(getCoreEventObject());
+    }
+
+
+    private static CoreEventObject getCoreEventObject(){
+			.... 
+        return eventObject;
+    }
+
+}
+
+</code></pre>
+<p>输出结果</p>
+<pre><code class="language-java">Exception in thread &quot;main&quot; java.lang.NullPointerException
+	at com.example.listener_design_pattern.TestDemo.main(TestDemo.java:28)
+</code></pre>
+<p>有些人就会说 , 你这不对哇 ,你当然拿不到了 ,因为人家还没发布了 ,但是在多线程 ,在解耦的情况下 ,你哪知道对面何时发布结束了 , 你再去拿呢 ? 那就需要java的多线程知识了 ,Future 给我们带来了提醒 , 就是阻塞的思想 , 只有监听者真正的收到对象 , 我们才能去拿 .</p>
+<h3 id="2-解决问题">2. 解决问题</h3>
+<p>了解过我前面提到的那一节 <code>FutureTask</code>是如何实现的 ,我觉得问题就迎刃而解了 .</p>
+<pre><code class="language-java">public class TestEventListener implements CoreEventListener&lt;CoreEventObject&gt; {
+    private CoreEventObject object;
+
+    /**
+     * 当 X = 0 ,代表 obj还没有初始化了
+     * 当 x = 1 , 代表 obj 以及初始化了 , 已经接收到了
+     */
+    private static volatile int x = 0;
+
+    @Override
+    public void onEventObject(CoreEventObject object) {
+        this.object = object;
+        // 收到改成 1
+        x = 1;
+    }
+
+    public CoreEventObject getObject() {
+        while (true) {
+            if (x == 1) {
+                break;
+            }
+        }
+        // 拿到对象,再设置为1
+        x = 0;
+        return object;
+    }
+}
+</code></pre>
+<p>由于这个解决方案,会使得执行<code>getObject()</code> 的线程一直的阻塞下去,就是死循环下去,我们必须一个线程去执行这个方法 ,</p>
+<pre><code class="language-java">public class TestDemo {
+    public static void main(String[] args) {
+        TestEventListener listener = new TestEventListener();
+        // 新建一个线程去接收
+        Thread thread = new Thread(() -&gt; {
+            System.out.println(&quot;我开始接收对象 : &quot; + System.currentTimeMillis());
+            CoreEventObject object = listener.getObject();
+            System.out.println(&quot;成功接收对象 : &quot;+object.getSource());
+        });
+        thread.start();
+		// 新建一个线程去发布
+        EventPublisher&lt;CoreEventObject&gt; publisher = new EventPublisher&lt;&gt;(listener);
+        new Thread(()-&gt;{
+            publisher.publish(getCoreEventObject());
+        }).start();
+    }
+
+    private static CoreEventObject getCoreEventObject(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        EventSource source = new EventSource();
+        source.setName(&quot;事件源&quot;);
+        source.setInfo(&quot;&quot; + System.currentTimeMillis());
+        return new CoreEventObject(source);
+    }
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">我开始接收对象 : 1573282924555
+发布事件 : com.example.listener_design_pattern.CoreEventObject[source=EventSource(name=事件源, info=1573282925590)]
+成功接收对象 : EventSource(name=事件源, info=1573282925590)
+</code></pre>
+<p>我们我们接收的时候是在1573282924555的时间搓 , 而真正拿到的对象确实在1573282925590发布的 , 这个就完全在俩时间轴上,所以我们成功的解决了问题 .</p>
+<h2 id="4-spring-中的-applicationlistener">4. Spring 中的 ApplicationListener</h2>
+<h3 id="1-applicationevent">1. ApplicationEvent</h3>
+<blockquote>
+<p>​	Class to be extended by all application events. Abstract as it doesn't make sense for generic events to be published directly.</p>
+<p>​	此类被所有的 <code>application events</code> 所继承 。抽象的原因是因为直接发布这个<code>ApplicationEvent</code>是没有意义的。</p>
+</blockquote>
+<h3 id="2-applicationlistener">2. ApplicationListener</h3>
+<blockquote>
+<p>​	Interface to be implemented by application event listeners. Based on the standard java.util.EventListener interface for the Observer design pattern.</p>
+<p>​	这个接口被所有的 <code>application event listeners.</code>所实现 , 基于Java的 <code>java.util.EventListener</code>接口规范</p>
+</blockquote>
+<h3 id="3-开始使用">3. 开始使用</h3>
+<p>我们有一个需求就是 ,我们有一个服务会从远程不断的去拉去配置信息 ,一旦有改变就会发布配置信息 .</p>
+<h4 id="1-config-事件源">1. Config - 事件源</h4>
+<pre><code class="language-java">@ToString
+@Setter
+@Getter
+public class Config {
+    private String namespace;
+    private Map&lt;String, Object&gt; info;
+}
+</code></pre>
+<h4 id="2-configevent-事件对象">2. ConfigEvent - 事件对象</h4>
+<pre><code class="language-java">// 这个注解,我们是根据Spring源码看到的 , 所以一致性,我就加了
+@SuppressWarnings(&quot;serial&quot;)
+public class ConfigEvent extends ApplicationEvent {
+
+    public ConfigEvent(Config source) {
+        super(source);
+    }
+}
+</code></pre>
+<h4 id="3-configeventlistener-事件监听者">3. ConfigEventListener - 事件监听者</h4>
+<pre><code class="language-java">@Component
+public class ConfigEventListener implements ApplicationListener&lt;ConfigEvent&gt; , Ordered, InitializingBean {
+
+    @Override
+    public void onApplicationEvent(ConfigEvent event) {
+        System.out.println(&quot;接收到更新信息 : &quot; + event.getSource()+&quot; , 当前线程 : &quot;+Thread.currentThread().getName());
+    }
+	// 保证执行顺序 , 多个 ConfigEventListener就需要实现这个接口
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
+    }
+	
+    // 初始化以后要做什么 ? 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(&quot;初始化当前ConfigEventListener&quot;);
+    }
+}
+</code></pre>
+<h4 id="5-configserver-配置中心服务">5 . ConfigServer - 配置中心服务</h4>
+<pre><code class="language-java">@Service
+public class ConfigServer {
+	
+    // 注入applicationContext,因为只有他才可以执行发布事件
+    @Autowired
+    private ApplicationContext applicationContext;
+
+	// 这个是开启异步 ,后面会说到
+    // @Async
+    public void publishConfig(){
+        // 需要发布 --- &gt; 改变的事件
+         System.out.println(&quot;发布事件成功 , 当前线程 : &quot;+Thread.currentThread().getName());
+        applicationContext.publishEvent(getChange());
+    }
+    
+    
+    public ConfigEvent getChange(){
+        Config config = new Config();
+        config.setNamespace(&quot;application&quot;);
+        HashMap&lt;String, Object&gt; conf = new HashMap&lt;&gt;();
+        conf.put(&quot;server.port&quot;, 8088);
+        config.setInfo(conf);
+        return  new ConfigEvent(config);
+    }
+}
+</code></pre>
+<h4 id="6-启动测试">6. 启动测试</h4>
+<pre><code class="language-java">@SpringBootApplication
+public class SpringListenerApplication implements CommandLineRunner {
+
+	public static void main(String[] args) {
+		SpringApplication.run(SpringListenerApplication.class, args);
+	}
+
+	@Autowired
+	private ConfigServer server;
+
+	@Override
+	public void run(String... args) throws Exception {
+		server.publishConfig();
+	}
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">.....
+初始化当前ConfigEventListener
+.... 
+发布事件成功 , 当前线程 : main
+接收到更新信息 : Config(namespace=application, info={server.port=8088}) , 当前线程 : main
+</code></pre>
+<p>所以一个<code>Spring-Boot</code>的事件监听还是很简单的  ,类比到 <code>Spring</code>一个道理,相信懂得人都知道 . 但是又一个问题是我们的 发布和监听都是 main线程 ,不好吧 ,玩意有很多事件了 ?</p>
+<h3 id="4-开启异步发布">4. 开启异步发布</h3>
+<p>需要两个注解 <code>@EnableAsync</code>启动Async功能 , 和 <code>@Async</code>某个方法使用异步执行</p>
+<pre><code class="language-java">发布事件成功 , 当前线程 : SimpleAsyncTaskExecutor-1
+接收到更新信息 : Config(namespace=application, info={server.port=8088}) , 当前线程 : SimpleAsyncTaskExecutor-1
+</code></pre>
+<p>我们发现就出现了线程池执行 , 这个理的线程池 ,是可以进行配置的 , 只需要我们显式的注入下面这个<code>SimpleAsyncTaskExecutor</code> Bean 就可以了</p>
+<pre><code class="language-java">@Bean
+public SimpleAsyncTaskExecutor simpleAsyncTaskExecutor() {
+    SimpleAsyncTaskExecutor executor = new SimpleAsyncTaskExecutor();
+    // 需要传入一个 ThreadFactory实现类 , 所以看过我前面写的文章应该会写这个,比如 JUC- Executor那节
+    executor.setThreadFactory(new MyThreadFactory(&quot;anthony&quot;));
+    return executor;
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">发布事件成功 , 当前线程 : anthony-1
+接收到更新信息 : Config(namespace=application, info={server.port=8088}) , 当前线程 : anthony-1
+</code></pre>
+<h3 id="5-多个监听器顺序执行">5 . 多个监听器顺序执行</h3>
+<p>你可以跟我一样选择实现 <code>ApplicationListener</code>和<code>Ordered</code> ,或者你可以直接实现 <code>SmartApplicationListener</code>都一样的哈,没有哪个好哪个不好</p>
+<p>监听器 一 :</p>
+<pre><code class="language-java">@Component
+public class ConfigEventListenerStart implements ApplicationListener&lt;ConfigEvent&gt; , Ordered, InitializingBean {
+
+    @Override
+    public void onApplicationEvent(ConfigEvent event) {
+        System.out.println(&quot;ConfigEventListenerStart 接收到更新信息 : &quot; + event.getSource()+&quot; , 当前线程 : &quot;+Thread.currentThread().getName());
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE;
+    }
+
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(&quot;初始化当前监听器 : &quot; + this.toString());
+    }
+}
+</code></pre>
+<p>监听器 二 :</p>
+<pre><code class="language-java">@Component
+public class ConfigEventListenerEnd implements ApplicationListener&lt;ConfigEvent&gt; , Ordered, InitializingBean {
+
+    @Override
+    public void onApplicationEvent(ConfigEvent event) {
+        System.out.println(&quot;ConfigEventListenerEnd  接收到更新信息 : &quot; + event.getSource()+&quot; , 当前线程 : &quot;+Thread.currentThread().getName());
+    }
+
+    @Override
+    public int getOrder() {
+        return Ordered.HIGHEST_PRECEDENCE-1;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        System.out.println(&quot;初始化当前监听器 : &quot; + this.toString());
+    }
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">初始化当前监听器 : com.example.springlistener.listener.ConfigEventListenerEnd@6b54655f
+初始化当前监听器 : com.example.springlistener.listener.ConfigEventListenerStart@665e9289
+..... 
+发布事件成功 , 当前线程 : anthony-1
+ConfigEventListenerStart 接收到更新信息 : Config(namespace=application, info={server.port=8088}) , 当前线程 : anthony-1
+ConfigEventListenerEnd  接收到更新信息 : Config(namespace=application, info={server.port=8088}) , 当前线程 : anthony-1    
+</code></pre>
+<h2 id="5-guava-中的-eventbus">5. Guava 中的 EventBus</h2>
+<blockquote>
+<p>​	Guava的EventBus 就是一个很好的事件注册发布的管理工具 , 他属于一种推送的模式 , 跟spring的很相似,</p>
+</blockquote>
+<h3 id="1-依赖">1. 依赖</h3>
+<pre><code class="language-java">&lt;dependency&gt;
+    &lt;groupId&gt;com.google.guava&lt;/groupId&gt;
+    &lt;artifactId&gt;guava&lt;/artifactId&gt;
+    &lt;version&gt;28.0-jre&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<h3 id="2-快速开始">2. 快速开始</h3>
+<blockquote>
+<p>​	主要的对象就是 , <code>EventBus</code> 事件总线, 他是管理所有监听者(或者叫做订阅者) ,通过<code>EventBus#register</code> 或者 <code>EventBus#unRegister</code> 来管理的 ,  同时监听者要有监听的事件 , 这里是基于方法级别的 (注意方法只能有一个参数,就是监听的事件), 需要在方法上加上 <code>@Subscribe</code> 注解来表示监听 , <code>EventBus</code>可以通过 <code>EventBus#post</code> 方法来发布事件 , 对应类型的监听者就会收到 . 同时<code>EventBus</code>可以处理异常</p>
+</blockquote>
+<pre><code class="language-java">public class QuicklyStart {
+
+    public static void main(String[] args) {
+        // 创建一个 事件总线
+        EventBus bus = new EventBus(new SubscriberExceptionHandler() {
+            @Override
+            public void handleException(Throwable exception, SubscriberExceptionContext context) {
+                // 处理订阅者异常信息
+                System.out.println(&quot;异常信息 : &quot;+exception.getMessage() + &quot;, 异常事件 : &quot; + context.getEvent());
+            }
+        });
+
+        // 注册你的监听器 , 其实更加准确来说是订阅者 , 他属于一种发布订阅模式
+        bus.register(new EventListener());
+
+        // 事件总线发布事件
+        bus.post(&quot;sb&quot;);
+
+        // 事件总线发布事件
+        bus.post(new Event(&quot;hello Guava&quot;));
+
+    }
+
+
+}
+
+/**
+ * 事件源
+ */
+class Event {
+
+    String msg;
+
+    public Event(String msg) {
+        this.msg = msg;
+    }
+
+    @Override
+    public String toString() {
+        return &quot;Event{&quot; + &quot;msg='&quot; + msg + '\'' + '}';
+    }
+}
+
+/**
+ * 监听器
+ */
+class EventListener {
+
+    /**
+     * {@link Subscribe} 一个这个代表一个订阅者,EventBus会将符合的事件发布到对应的订阅者上 , 但是不支持java的基本数据类型, int 之类的
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onEvent(Event event) {
+        System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;, 接收到事件 : &quot; + event);
+    }
+
+
+    @Subscribe
+    public void onStringEvent(String event) {
+        error(); // 模拟异常
+        System.out.println(&quot;当前线程 : &quot; + Thread.currentThread().getName() + &quot;, 接收到事件 : &quot; + event);
+    }
+
+    private void error() {
+        int i = 1 / 0;
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">异常信息 : / by zero, 异常事件 : sb
+当前线程 : main, 接收到事件 : Event{msg='hello Guava'}
+</code></pre>
+<h3 id="3-基本原理">3. 基本原理</h3>
+<p>其实很简单 , 第一注册的时候  :</p>
+<pre><code class="language-java">/** Registers all subscriber methods on the given listener object. */
+void register(Object listener) {
+  // 其实就是注解扫描 , 然后把元信息都给整出来
+Multimap&lt;Class&lt;?&gt;, Subscriber&gt; listenerMethods = findAllSubscribers(listener);
+
+for (Entry&lt;Class&lt;?&gt;, Collection&lt;Subscriber&gt;&gt; entry : listenerMethods.asMap().entrySet()) {
+  Class&lt;?&gt; eventType = entry.getKey();
+  Collection&lt;Subscriber&gt; eventMethodsInListener = entry.getValue();
+    // 查找有没有 
+  CopyOnWriteArraySet&lt;Subscriber&gt; eventSubscribers = subscribers.get(eventType);
+
+    // 没有创建一个对象
+  if (eventSubscribers == null) {
+    CopyOnWriteArraySet&lt;Subscriber&gt; newSet = new CopyOnWriteArraySet&lt;&gt;();
+    eventSubscribers =
+        MoreObjects.firstNonNull(subscribers.putIfAbsent(eventType, newSet), newSet);
+  }
+
+    // 添加进去 ,其实是 Subscriber对象 , 把method信息, 对象信息全部封装进去了
+  eventSubscribers.addAll(eventMethodsInListener);
+}
+}
+</code></pre>
+<p>第二就是 发布</p>
+<pre><code class="language-java">  public void post(Object event) {
+      // 根据事件获取对应的 Subscriber
+    Iterator&lt;Subscriber&gt; eventSubscribers = subscribers.getSubscribers(event);
+    if (eventSubscribers.hasNext()) {
+        // 发布出去
+      dispatcher.dispatch(event, eventSubscribers);
+    } else if (!(event instanceof DeadEvent)) {
+      // the event had no subscribers and was not itself a DeadEvent
+      post(new DeadEvent(this, event));
+    }
+  }
+
+
+
+@Override
+void dispatch(Object event, Iterator&lt;Subscriber&gt; subscribers) {
+  checkNotNull(event);
+  checkNotNull(subscribers);
+    // 获取当前线程的队列 ,用ThreadLocal维护的线程安全, 其实是为了安全
+  Queue&lt;Event&gt; queueForThread = queue.get();
+    // 创建一个事件对象
+  queueForThread.offer(new Event(event, subscribers));
+
+  if (!dispatching.get()) {
+    dispatching.set(true);
+    try {
+      Event nextEvent;
+      while ((nextEvent = queueForThread.poll()) != null) {
+        while (nextEvent.subscribers.hasNext()) {
+            // 处理
+          nextEvent.subscribers.next().dispatchEvent(nextEvent.event);
+        }
+      }
+    } finally {
+      dispatching.remove();
+      queue.remove();
+    }
+  }
+}
+
+
+ /** Dispatches {@code event} to this subscriber using the proper executor. */
+  final void dispatchEvent(final Object event) {
+    executor.execute(
+        new Runnable() {
+          @Override
+          public void run() {
+            try {
+                // 关键点 ,就是这 
+              invokeSubscriberMethod(event);
+            } catch (InvocationTargetException e) {
+                // 出现异常直接就 ... 调用异常回调方法了
+              bus.handleSubscriberException(e.getCause(), context(event));
+            }
+          }
+        });
+  }
+
+
+
+  @VisibleForTesting
+  void invokeSubscriberMethod(Object event) throws InvocationTargetException {
+    try {
+        // 原来如此 , .........method.invok 真.... 所以可以抓取异常
+      method.invoke(target, checkNotNull(event));
+    } catch (IllegalArgumentException e) {
+      throw new Error(&quot;Method rejected target/argument: &quot; + event, e);
+    } catch (IllegalAccessException e) {
+      throw new Error(&quot;Method became inaccessible: &quot; + event, e);
+    } catch (InvocationTargetException e) {
+      if (e.getCause() instanceof Error) {
+        throw (Error) e.getCause();
+      }
+      throw e;
+    }
+  }
+</code></pre>
+<p>所以这个玩意很简单 , 原理一看就分析出来了</p>
+<h2 id="6-总结">6. 总结</h2>
+<p>​	我们发现我们的自己实现的监听者和 <code>Spring</code>和<code>Guava</code> 这俩种实现有啥区别 , 无非就是我们自己实现的监听者模式, 对于 listener 的管理,没有做 , 我们只是一个 Publisher 一个 Listener,一对一的关系 , 这样子就很不好, 100个监听者就需要100个发布者 , 不符合设计模式的原则 , 所以参考<code>Guava</code>,我们发现他无非做的就是一个对于Listener 的管理 ,  但是有一个细节希望大家知道, 对于监听者模式 , 万一事件发布失败了 , 我们如何知道,  所以<code>Guava</code> 至少帮我们做了 , 他不是基于回调机制的, 而是使用了<code>Java</code>的 <code>Method#invoke</code> ,看需求而定吧 , 只不过回调更加轻量级,</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-java%E5%8E%9F%E7%94%9F%E8%A7%84%E8%8C%83">1. Java原生规范</a>
+<ul>
+<li><a href="#1-eventobject">1. EventObject</a></li>
+<li><a href="#2-eventlistener">2. EventListener</a></li>
+<li><a href="#3-%E6%80%BB%E7%BB%93">3. 总结</a></li>
+</ul>
+</li>
+<li><a href="#2-java%E8%A7%84%E8%8C%83%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E7%9B%91%E5%90%AC%E8%80%85%E6%A8%A1%E5%BC%8F-%E5%9F%BA%E4%BA%8E%E5%9B%9E%E8%B0%83%E6%A8%A1%E5%BC%8F">2. Java规范设计一个监听者模式 - 基于回调模式</a>
+<ul>
+<li><a href="#1-%E4%BA%8B%E4%BB%B6%E6%BA%90-eventsource">1. 事件源 - EventSource</a></li>
+<li><a href="#2-%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1-eventobject">2. 事件对象 - EventObject</a></li>
+<li><a href="#3-%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E8%80%85-eventlistener">3. 事件监听者 - EventListener</a></li>
+<li><a href="#4-%E4%BA%8B%E4%BB%B6%E5%8F%91%E5%B8%83%E8%80%85-eventpublisher">4. 事件发布者 -  EventPublisher</a></li>
+<li><a href="#5-%E6%B5%8B%E8%AF%95demo">5. 测试Demo</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%AD%98%E5%9C%A8%E7%9A%84%E9%97%AE%E9%A2%98">3. 回调函数存在的问题 ?</a>
+<ul>
+<li><a href="#1-%E6%88%91%E4%BB%AC%E7%9A%84%E9%97%AE%E9%A2%98">1. 我们的问题 ?</a></li>
+<li><a href="#2-%E8%A7%A3%E5%86%B3%E9%97%AE%E9%A2%98">2. 解决问题</a></li>
+</ul>
+</li>
+<li><a href="#4-spring-%E4%B8%AD%E7%9A%84-applicationlistener">4. Spring 中的 ApplicationListener</a>
+<ul>
+<li><a href="#1-applicationevent">1. ApplicationEvent</a></li>
+<li><a href="#2-applicationlistener">2. ApplicationListener</a></li>
+<li><a href="#3-%E5%BC%80%E5%A7%8B%E4%BD%BF%E7%94%A8">3. 开始使用</a>
+<ul>
+<li><a href="#1-config-%E4%BA%8B%E4%BB%B6%E6%BA%90">1. Config - 事件源</a></li>
+<li><a href="#2-configevent-%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1">2. ConfigEvent - 事件对象</a></li>
+<li><a href="#3-configeventlistener-%E4%BA%8B%E4%BB%B6%E7%9B%91%E5%90%AC%E8%80%85">3. ConfigEventListener - 事件监听者</a></li>
+<li><a href="#5-configserver-%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E6%9C%8D%E5%8A%A1">5 . ConfigServer - 配置中心服务</a></li>
+<li><a href="#6-%E5%90%AF%E5%8A%A8%E6%B5%8B%E8%AF%95">6. 启动测试</a></li>
+</ul>
+</li>
+<li><a href="#4-%E5%BC%80%E5%90%AF%E5%BC%82%E6%AD%A5%E5%8F%91%E5%B8%83">4. 开启异步发布</a></li>
+<li><a href="#5-%E5%A4%9A%E4%B8%AA%E7%9B%91%E5%90%AC%E5%99%A8%E9%A1%BA%E5%BA%8F%E6%89%A7%E8%A1%8C">5 . 多个监听器顺序执行</a></li>
+</ul>
+</li>
+<li><a href="#5-guava-%E4%B8%AD%E7%9A%84-eventbus">5. Guava 中的 EventBus</a>
+<ul>
+<li><a href="#1-%E4%BE%9D%E8%B5%96">1. 依赖</a></li>
+<li><a href="#2-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">2. 快速开始</a></li>
+<li><a href="#3-%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86">3. 基本原理</a></li>
+</ul>
+</li>
+<li><a href="#6-%E6%80%BB%E7%BB%93">6. 总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

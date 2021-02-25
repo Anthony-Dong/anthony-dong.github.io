@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Java 类加载机制 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/java-lei-jia-zai-ji-zhi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Java 类加载机制</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/java-lei-jia-zai-ji-zhi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1703字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="java程序初始化顺序">Java程序初始化顺序</h2>
+<p>遵循三个原则(优先级 逐级递减) :</p>
+<ul>
+<li>静态对象优于非静态对象</li>
+<li>父类优于子类</li>
+<li>成员变量定义顺序</li>
+</ul>
+<p>父类静态变量 - 父类静态代码块 - 子类静态变量 -子类静态代码块 - 父类非静态变量 - 父类非静态代码块 - 子类非静态变量 -  子类非静态代码块 - 子类构造函数</p>
+<h2 id="示例一">示例一</h2>
+<p>试着想一下 这段代码的输出情况</p>
+<pre><code class="language-java">public class JavaExecuteOrder {
+    static JavaExecuteOrder order = new JavaExecuteOrder();
+    public JavaExecuteOrder() {
+        System.out.println(&quot;构造方法&quot;);
+        System.out.println(&quot;x : &quot;+x++);
+        System.out.println(&quot;y : &quot;+y++);
+    }
+
+    static {
+        System.out.println(&quot;静态代码块&quot;);
+    }
+
+    {
+        System.out.println(&quot;非静态代码块&quot;);
+    }
+
+    static int x = 1;
+    int y = 2;
+    public static void main(String[] args) {
+        System.out.println(&quot;main 方法&quot;);
+    }
+}
+</code></pre>
+<p><strong>结果</strong></p>
+<pre><code class="language-java">非静态代码块
+构造方法
+x : 0
+y : 2
+静态代码块
+main 方法
+</code></pre>
+<p>所以 我们可以执行流程 , 就是静态代码块先执行</p>
+<ol>
+<li>执行第一段静态代码<code>static JavaExecuteOrder order = new JavaExecuteOrder();</code> 这段代码实例化了一个对象 ,那么我们要知道什么是属于是对象,什么是属于类的. 所以 非静态的东西全部属于实例化对象的,那么就执行 非静态代码块,然后输出<code>非静态代码块</code> ,其次是构造方法,所以输出<code>构造方法</code> ,那么为什么 <code>&quot;x : &quot;+x++</code> 输出是 <code>x : 0</code>这个呢,因为就是我们说的谁属于谁,此时只执行了第一句静态块,那么 x 还没有实例化了, 因为int对于null值的默认值是0, 那么 x=0,内存中, 又因为<code>x++</code> (这个不解释了和<code>++x</code>的区别)此时输出结果就是 <code>0</code>  ,然后就顺气自然了.</li>
+<li>执行第二段静态代码 就是输出<code>静态代码块</code></li>
+<li>执行 main 方法的输出 <code>main 方法</code></li>
+</ol>
+<p>那么我将上面内容稍微改改</p>
+<pre><code class="language-java">public class JavaExecuteOrder {
+
+    static JavaExecuteOrder order = new JavaExecuteOrder();
+
+
+    public JavaExecuteOrder() {
+        System.out.println(&quot;构造方法&quot;);
+        System.out.println(&quot;x : &quot;+x++);
+        System.out.println(&quot;y : &quot;+y++);
+    }
+
+    static {
+        System.out.println(&quot;静态代码块&quot;);
+    }
+
+    {
+        System.out.println(&quot;非静态代码块1&quot;);
+    }
+    {
+        System.out.println(&quot;非静态代码块2&quot;);
+    }
+
+    static int x = 1;
+
+    int y = 2;
+    
+    public static void main(String[] args) {
+        System.out.println(&quot;main 方法&quot;);
+        new JavaExecuteOrder();
+    }
+
+}
+
+</code></pre>
+<p><strong>这个结果大家应该很清楚了吧</strong></p>
+<pre><code class="language-java">非静态代码块1
+非静态代码块2
+构造方法
+x : 0
+y : 2
+静态代码块
+main 方法
+非静态代码块1
+非静态代码块2
+构造方法
+x : 1
+y : 2
+</code></pre>
+<p>所以 还是我上面说的那么句话 <code>谁属于谁</code>  就是类加载顺序的关键 . 这类问题就自然而然解答了</p>
+<h2 id="示例二">示例二</h2>
+<p>首先我们有两个类 :</p>
+<pre><code class="language-java">public class TestStatic {
+
+    public static  int x = 1;
+
+    static {
+        System.out.println(&quot;TestStatic : 执行静态代码块&quot;);
+    }
+}
+
+
+public class TestStaticFinal {
+
+    public static final int x = 1;
+
+    static {
+        System.out.println(&quot;TestStaticFinal : 执行静态代码块&quot;);
+    }
+}
+
+</code></pre>
+<p>我们要执行 :</p>
+<pre><code class="language-java">public class JavaStaticVsFinal {
+    
+    public static void main(String[] args) {
+        System.out.println(&quot;TestStatic.x = &quot; + TestStatic.x);
+        
+        System.out.println(&quot;===========================&quot;);
+        
+        System.out.println(&quot;TestStatic.x = &quot; + TestStaticFinal.x);
+    }
+}
+
+</code></pre>
+<p>执行结果如下 ;</p>
+<pre><code class="language-java">TestStatic : 执行静态代码块
+TestStatic.x = 1
+===========================
+TestStatic.x = 1
+</code></pre>
+<p>​		我们发现 <code>TestStaticFinal</code>并没有执行 静态代码块 . 原因是什么?</p>
+<p>我们用<code>javap</code>看一下  <code>TestStatic</code> 的class反编译文件</p>
+<pre><code class="language-java">  public static int x;
+    descriptor: I
+    flags: ACC_PUBLIC, ACC_STATIC
+    ....
+  
+  static {};
+    descriptor: ()V
+    flags: ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: iconst_1
+         1: putstatic     #2                  // Field x:I  
+         ....
+</code></pre>
+<p><code>TestStaticFinal</code> 反编译文件</p>
+<pre><code class="language-java">{
+  public static final int x;
+    descriptor: I
+    flags: ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    ConstantValue: int 1
+    .....    
+</code></pre>
+<p>我们发现 final  在类初始化的时候就已经执行了 初始化,所以根本不会调用静态代码块, 所以类的加载机制里面会将final在初始化的时候就会赋值 .</p>
+<p>而没有被final修饰的则会在static静态块里初始化</p>
+<h2 id="示例三">示例三</h2>
+<p>为什么 只有一块静态代码块呢 ?</p>
+<pre><code class="language-java">public class TestStaticFinal {
+
+      public int x = 1;
+
+    public static int x1 = 1;
+
+
+    {
+        System.out.println(&quot;TestStatic : 执行非静态代码块&quot;);
+    }
+
+    static {
+        System.out.println(&quot;TestStatic : 执行静态代码块1&quot;);
+    }
+
+
+    public static int x2 = 1;
+
+    static {
+        System.out.println(&quot;TestStatic : 执行静态代码块2&quot;);
+    }
+
+    public static final int x3 = 1;
+
+
+    public static void staticMethod(){
+        System.out.println(&quot;staticMethod&quot;);
+    }
+
+
+    public  void ordinaryMethod(){
+        System.out.println(&quot;ordinaryMethod&quot;);
+    }
+}
+</code></pre>
+<p>反编译的源码 <code>javap -v</code></p>
+<pre><code class="language-java">{
+     // 变量赋值  :  变量名 , 限定词 , 是否静态 , 是否 final  
+  public int x;
+    descriptor: I
+    flags: ACC_PUBLIC
+
+  public static int x1;
+    descriptor: I
+    flags: ACC_PUBLIC, ACC_STATIC
+
+  public static int x2;
+    descriptor: I
+    flags: ACC_PUBLIC, ACC_STATIC
+
+  public static final int x3;
+    descriptor: I
+    flags: ACC_PUBLIC, ACC_STATIC, ACC_FINAL
+    ConstantValue: int 1
+	
+        
+  // 构造方法 1 
+  public com.javase.the_order_of_java_execute.TestStatic();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V
+         4: aload_0
+         5: iconst_1
+         6: putfield      #2                  // Field x:I
+         9: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        12: ldc           #4                  // String TestStatic : 执行非静态代码块
+        14: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        17: return
+      LineNumberTable:
+        line 25: 0
+        line 12: 4
+        line 18: 9
+        line 26: 17
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      18     0  this   Lcom/javase/the_order_of_java_execute/TestStatic;
+
+    
+   // 构造方法 2
+  public com.javase.the_order_of_java_execute.TestStatic(int);
+    descriptor: (I)V
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=2, args_size=2
+         0: aload_0
+         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V
+         4: aload_0
+         5: iconst_1
+         6: putfield      #2                  // Field x:I
+         9: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        12: ldc           #4                  // String TestStatic : 执行非静态代码块
+        14: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        17: aload_0
+        18: iload_1
+        19: putfield      #2                  // Field x:I
+        22: return
+      LineNumberTable:
+        line 28: 0
+        line 12: 4
+        line 18: 9
+        line 29: 17
+        line 30: 22
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0      23     0  this   Lcom/javase/the_order_of_java_execute/TestStatic;
+            0      23     1     x   I
+    MethodParameters:
+      Name                           Flags
+      x
+
+          
+  // 普通静态方法
+  public static void staticMethod();
+    descriptor: ()V
+    flags: ACC_PUBLIC, ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: ldc           #6                  // String staticMethod
+         5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+         8: return
+      LineNumberTable:
+        line 42: 0
+        line 43: 8
+
+   // 普通方法         
+  public void ordinaryMethod();
+    descriptor: ()V
+    flags: ACC_PUBLIC
+    Code:
+      stack=2, locals=1, args_size=1
+         0: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         3: ldc           #7                  // String ordinaryMethod
+         5: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+         8: return
+      LineNumberTable:
+        line 47: 0
+        line 48: 8
+      LocalVariableTable:
+        Start  Length  Slot  Name   Signature
+            0       9     0  this   Lcom/javase/the_order_of_java_execute/TestStatic;
+
+    // 静态代码块
+  static {};
+    descriptor: ()V
+    flags: ACC_STATIC
+    Code:
+      stack=2, locals=0, args_size=0
+         0: iconst_1
+         1: putstatic     #8                  // Field x1:I
+         4: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+         7: ldc           #9                  // String TestStatic : 执行静态代码块1
+         9: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        12: iconst_1
+        13: putstatic     #10                 // Field x2:I
+        16: getstatic     #3                  // Field java/lang/System.out:Ljava/io/PrintStream;
+        19: ldc           #11                 // String TestStatic : 执行静态代码块2
+        21: invokevirtual #5                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+        24: return
+      LineNumberTable:
+        line 14: 0
+        line 22: 4
+        line 32: 12
+        line 35: 16
+        line 36: 24
+}
+</code></pre>
+<p>我们发现在上面  确实只有一个静态代码块 ,在里面 ,所有被static修饰的 全部包括在里面  而且非静态代码块也是包含在对象里 . 当你看到我反编译的源码的时候你瞬间理解了上面的为什么了<code>谁属于谁</code></p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#java%E7%A8%8B%E5%BA%8F%E5%88%9D%E5%A7%8B%E5%8C%96%E9%A1%BA%E5%BA%8F">Java程序初始化顺序</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%B8%80">示例一</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%BA%8C">示例二</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B%E4%B8%89">示例三</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

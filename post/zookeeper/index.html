@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Zookeeper - 分布式系统的心脏 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/zookeeper/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Zookeeper - 分布式系统的心脏</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-29</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/zookeeper/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/VGFs7LxPgW/"
+								class="tag">中间件</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/YZlAYWOZz21/"
+								class="tag">大数据</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2556字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">12 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="介绍">介绍</h2>
+<figure data-type="image" tabindex="1"><img src="http://zookeeper.apache.org/images/zookeeper_small.gif" alt="" loading="lazy"></figure>
+<p>官网地址 : http://zookeeper.apache.org/</p>
+<p>什么是zookeeper</p>
+<blockquote>
+<p>​	ZooKeeper is a centralized service for maintaining configuration information, naming, providing distributed synchronization, and providing group services. All of these kinds of services are used in some form or another by distributed applications. Each time they are implemented there is a lot of work that goes into fixing the bugs and race conditions that are inevitable. Because of the difficulty of implementing these kinds of services, applications initially usually skimp on them, which make them brittle in the presence of change and difficult to manage. Even when done correctly, different implementations of these services lead to management complexity when the applications are deployed.</p>
+<p>zookeeper是一个集中式的服务 , 用于维护配置信息、命名、提供分布式同步和提供组服务。</p>
+<p>​		我对与 zookeeper 的理解 就是他是一个分布式服务的一个高可用的注册中心,他自带对节点检测,不用用户去做心跳检测.保证了服务的可用性.  同时他可以保存一些配置信息,去做分布式配置中心 .</p>
+</blockquote>
+<h2 id="快速开始">快速开始</h2>
+<ul>
+<li>单机搭建</li>
+</ul>
+<pre><code class="language-shell">网址  :  http://archive.apache.org/dist/zookeeper/ 自己下载或者用我这个
+wget http://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz
+
+tar -zxvf zookeeper-3.4.10.tar.gz -C /opt/software
+
+记得修改权限
+chown -R admin:admin zookeeper-3.4.10
+
+然后修改配置文件,conf目录下
+cp zoo_sample.cfg zoo.cfg
+vim zoo.cfg  修改下面这段 
+# the directory where the snapshot is stored.
+# do not use /tmp for storage, /tmp here is just 
+# example sakes.
+dataDir=/opt/software/zookeeper-3.4.10/zkData
+
+然后进入bin目录 直接执行 
+./zkServer.sh  start 
+查看状态
+./zkServer.sh  status
+关闭
+./zkServer.sh  stop
+
+也可以建立 软连接  ls -s /opt/software/zookeeper-3.4.10/bin/zkServer.sh  /usr/bin/zkServer
+</code></pre>
+<ul>
+<li>集群搭建</li>
+</ul>
+<pre><code class="language-shell">修改配置文件,在配置文件最下面添加 
+server.id  =   ip  : 通信端口号: 选举端口
+server.1=hadoop1:2888:3888
+server.2=hadoop2:2888:3888
+server.3=hadoop3:2888:3888
+
+然后进入你的 /opt/software/zookeeper-3.4.10/zkData 
+执行下面这行(意思就是告诉zk , 你的id 是 2) 记得跟集群对应起来
+echo 2 &gt; myid
+
+修改zk的bin 目录下的 zkENV.sh , 将ZOO_LOG_DIR的日志目录改成自己新建的 ,只有远程启动才需要配置JAVA_HOME
+if [ &quot;x${ZOO_LOG_DIR}&quot; = &quot;x&quot; ]
+then
+    ZOO_LOG_DIR=&quot;/opt/software/zookeeper-3.4.10/logs&quot;
+fi
+
+
+然后你执行 zkServer.sh  start  就行了, 三台机器启动就行.
+
+
+客户端连接 就是 zkCli.sh
+</code></pre>
+<ul>
+<li>客户端命令</li>
+</ul>
+<pre><code class="language-shell">ls 查看文件(zk里文件就是节点)
+
+ls / watch 监控根节点下的变化state (create操作)
+
+create /app content
+	-s 创建一个带序号的节点 会给你节点名字添加	一个序号
+	-e 创建一个临时节点,执行退出(quit)就删除了,生命周期一个session
+所以一共四种节点
+
+get /app   获取节点信息
+get /app watch  可以监控节点信息变化(set操作)
+set /app contents  修改
+stat /app  查看状态  stat结构体
+history  查看操作	的记录
+delete  删除文件,无法删除有子节点的
+rmr 递归删除
+</code></pre>
+<h2 id="zk选举leader流程">ZK选举leader流程</h2>
+<blockquote>
+<p>每一个集群节点的status :  looking  leader  follower  observer</p>
+<p>Looking：系统刚启动时或者Leader崩溃后正处于选举状态</p>
+<p>follower  :  小弟</p>
+<p>leader   : 领导</p>
+<p>刚开始启动都为 looking 状态 ,  每台机器启动会投自己一票 , 互相选举的时候选(myid和czid(版本最新的)大的)机器 , 1  2 3  4  5 顺序启动  当到3的时候已经半数以上了,所以 4 5 会跟随 1 2 3 投 3 ,所以 leader是3</p>
+<p>（1）服务器1启动，发起一次选举。服务器1投自己一票。此时服务器1票数一票，不够半数以上（3票），选举无法完成，服务器1状态保持为LOOKING；</p>
+<p>（2）服务器2启动，再发起一次选举。服务器1和2分别投自己一票并交换选票信息：此时服务器1发现服务器2的ID比自己目前投票推举的（服务器1）大，更改选票为推举服务器2。此时服务器1票数0票，服务器2票数2票，没有半数以上结果，选举无法完成，服务器1，2状态保持LOOKING</p>
+<p>（3）服务器3启动，发起一次选举。此时服务器1和2都会更改选票为服务器3。此次投票结果：服务器1为0票，服务器2为0票，服务器3为3票。此时服务器3的票数已经超过半数，服务器3当选Leader。服务器1，2更改状态为FOLLOWING，服务器3更改状态为LEADING；</p>
+<p>（4）服务器4启动，发起一次选举。此时服务器1，2，3已经不是LOOKING状态，不会更改选票信息。交换选票信息结果：服务器3为3票，服务器4为1票。此时服务器4服从多数，更改选票信息为服务器3，并更改状态为FOLLOWING；</p>
+<p>（5）服务器5启动，同4一样当小弟。</p>
+</blockquote>
+<h2 id="zk的写数据流程">ZK的写数据流程</h2>
+<blockquote>
+<ol>
+<li>当client发送了一条写请求, server接收到写请求,会将请求给leader,leader会同意,此时广播给其他的server,当有半数以上server同意时,将数据写入,然后发送给clinet通知,</li>
+<li>细节: server同意与不同意 是看数据的版本是否和写入数据的版本一致性,不一致则重启去leader拉去,</li>
+</ol>
+</blockquote>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-10-29/c77b6bb5-4c9a-4571-8eb7-f5d1bf600539.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="zab协议zookeeper-atomic-broadcast">zab协议(zookeeper atomic broadcast)</h2>
+<p><a href="https://blog.csdn.net/jin5203344/article/details/53142027">文章链接</a>   https://blog.csdn.net/jin5203344/article/details/53142027</p>
+<p>其实就是  zk选举流程 和 写数据流程</p>
+<h2 id="zookeeper-api-使用">Zookeeper  API 使用</h2>
+<h3 id="创建节点">创建节点</h3>
+<p>记住 Ephemerals cannot have children 临时节点不准有子节点 , 但是持久节点可以有临时节点</p>
+<pre><code>public String create(final String path, byte data[], List&lt;ACL&gt; acl,        CreateMode createMode)
+
+// 使用 就是如下 ,这个代表的含义是 完全开放的权限 ,且是一个永久节点
+String path = zkCli.create(&quot;/idea&quot;, &quot;HELLO WORLD&quot;.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE,CreateMode.PERSISTENT);
+</code></pre>
+<ol>
+<li>path  是 节点路径</li>
+<li>data  是 节点数据</li>
+<li>acl  : Access Control List 访问控制列表 ,  可以通过 <code>zkCli.setACL(path,list, 1);</code>设置我也不了解.</li>
+<li>CreateMode  :
+<ol>
+<li><code>PERSISTENT</code>   : The znode will not be automatically deleted upon client's disconnect.</li>
+<li><code>PERSISTENT_SEQUENTIAL</code>   its name will be appended with a <strong>monotonically increasing number</strong>.(单调递增)</li>
+<li><code>EPHEMERAL</code>  : The znode will be deleted upon the client's disconnect.</li>
+<li><code>EPHEMERAL_SEQUENTIAL</code> :  its name will be appended with a monotonically increasing number.</li>
+</ol>
+</li>
+</ol>
+<h3 id="节点类型">节点类型</h3>
+<p>ephemeral 节点 ? 他的生命周期就是一个session  ,就是客户端和服务器端的一次会话</p>
+<p>persistent 节点 ? 他的生命周期是永久存储</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-10-29/31b60435-ad6c-4d50-9797-a914d4ddad4d.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>最后给一些权限组合的测试结果：</p>
+<p>要修改某个节点的ACL属性，必须具有read、admin二种权限</p>
+<p>要删除某个节点下的子节点，必须具有对父节点的read权限，以及父节点的delete权限</p>
+<h3 id="节点状态">节点状态</h3>
+<pre><code class="language-shell">[zk: localhost:2181(CONNECTED) 175] get /test/test1
+test
+cZxid = 0x800000261
+ctime = Wed Oct 30 04:32:59 CST 2019
+mZxid = 0x800000261
+mtime = Wed Oct 30 04:32:59 CST 2019
+pZxid = 0x800000261
+cversion = 0
+dataVersion = 0
+aclVersion = 0
+ephemeralOwner = 0x36e1828d3230000
+dataLength = 4
+numChildren = 0
+</code></pre>
+<ol>
+<li>czxid  : 创建节点的事务zxid</li>
+</ol>
+<p>每次修改ZooKeeper状态都会收到一个zxid形式的时间戳，也就是ZooKeeper事务ID。</p>
+<p>事务ID是ZooKeeper中所有修改总的次序。每个修改都有唯一的zxid，如果zxid1小于zxid2，那么zxid1在zxid2之前发生。</p>
+<p>2）ctime - znode被创建的毫秒数(从1970年开始)</p>
+<p>3）mzxid - znode最后更新的事务zxid</p>
+<p>4）mtime - znode最后修改的毫秒数(从1970年开始)</p>
+<p>5）pZxid-znode最后更新的子节点zxid</p>
+<p>6）cversion - znode子节点变化号，znode子节点修改次数</p>
+<p>7）dataversion - znode数据变化号</p>
+<p>8）aclVersion - znode访问控制列表的变化号</p>
+<p>9）ephemeralOwner- 如果是临时节点，这个是znode拥有者的session id。如果不是临时节点则是0。</p>
+<p>10）dataLength- znode的数据长度</p>
+<p>11）numChildren - znode子节点数量</p>
+<h3 id="删除节点">删除节点</h3>
+<pre><code class="language-java">// 也是必须知道 version 版本 
+zkCli.delete(&quot;/idea&quot;, stat.getVersion());
+</code></pre>
+<h3 id="修改节点">修改节点</h3>
+<pre><code>// 后面有个stat , 因为我们不知道默认 null ,返回值为 zNode数据,
+byte[] data = zkCli.getData(&quot;/server&quot;, true,null);
+
+// 修改 节点 , 没一次修改会使得 version+1 ,所以需要首先获取version ,需要调用
+// Stat stat = zkCli.exists(&quot;/server&quot;, false); 这个函数 , 来获取stat,
+Stat Nstat = zkCli.setData(&quot;/server&quot;, &quot;contents2&quot;.getBytes(), stat.getVersion());
+</code></pre>
+<h3 id="查找节点">查找节点</h3>
+<pre><code class="language-java">// 1. 注册到客户端监听器上(true),同时返回一个list 集合, 放着 子节点
+List&lt;String&gt; children = zkCli.getChildren(&quot;/idea&quot;, true);
+// 2. 获取节点数据 , 需要穿一个 watcher , 也可以注册到客户端的监听器上(true),或者自己创建监听器
+byte[] data = zkCli.getData(&quot;/idea&quot;,true, stat);
+</code></pre>
+<h3 id="客户端代码流程">客户端代码流程</h3>
+<pre><code class="language-java">public class DistributeClient {
+
+    private static String connectString = &quot;hadoop1:2181,hadoop2:2181,hadoop3:2181&quot;;
+    private static int sessionTimeout = 2000;
+    private ZooKeeper zk = null;
+    private String parentNode = &quot;/server&quot;;
+
+    // 创建到zk的客户端连接
+    public void getConnect() throws IOException {
+        zk = new ZooKeeper(connectString, sessionTimeout, new Watcher() {
+            @Override
+            public void process(WatchedEvent event) {
+                System.out.println(&quot;监听到&quot;);
+                try {
+                    getServerLists();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+  
+    public void getServerLists() throws Exception {
+        List&lt;String&gt; children = zk.getChildren(parentNode,true);
+        System.out.println(children);
+    }
+
+
+    public void business() throws Exception {
+        Thread.sleep(Long.MAX_VALUE);
+    }
+
+    // 无脑获取节点信息
+    public static void main(String[] args) throws Exception {
+
+        // 1 获取zk连接
+        DistributeClient client = new DistributeClient();
+        client.getConnect();
+
+        // 2 获取servers的子节点信息 , 此时 watcher 监听到 , 然后watcher又执行了个 getServerLists ,无穷无尽 哈哈哈哈
+        client.getServerLists();
+
+        // 3 业务进程启动
+        client.business();
+    }
+}
+
+</code></pre>
+<h3 id="spring-boot-整合-zookeeper">Spring-Boot 整合 zookeeper</h3>
+<p>zk 的基本信息</p>
+<pre><code class="language-java">public class ZookeeperInfo {
+
+    static String CONNECT_STRING = &quot;hadoop1:2181,hadoop2:2181,hadoop3:2181&quot;;
+
+    static int SESSION_TIMEOUT = 2000;
+
+    static String SERVER_PATH = &quot;/test-server&quot;;
+}
+
+</code></pre>
+<p>zkCli 创建</p>
+<pre><code class="language-java">@Slf4j
+@Configuration
+public class ZookeeperConfig {
+
+    private ZooKeeper zooKeeper;
+
+    @Bean
+    public ZooKeeper zooKeeper() {
+        try {
+            zooKeeper = new ZooKeeper(ZookeeperInfo.CONNECT_STRING, ZookeeperInfo.SESSION_TIMEOUT, new Watcher() {
+                @Override
+                public void process(WatchedEvent event) {
+                    // 循环监听 , 类似于递归
+                    getChild();
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return zooKeeper;
+    }
+
+
+    private void getChild() {
+        try {
+            List&lt;String&gt; children = zooKeeper.getChildren(ZookeeperInfo.SERVER_PATH, true);
+            System.out.println(children);
+        } catch (KeeperException e) {
+            //
+        } catch (InterruptedException e) {
+            //
+        }
+    }
+}
+
+</code></pre>
+<p>spring 容器初始化完成时, 注册 父节点信息</p>
+<pre><code class="language-java">@Slf4j
+@Component
+public class ZookeeperApplicationListener implements ApplicationListener&lt;ContextRefreshedEvent&gt; {
+
+    @Autowired
+    private ZooKeeper zooKeeper;
+    
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+
+        Stat stat=null;
+        try {
+            stat = zooKeeper.exists(ZookeeperInfo.SERVER_PATH, false);
+        } catch (KeeperException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        // 服务器启动删除节点
+        if (null != stat) {
+            try {
+                zooKeeper.delete(ZookeeperInfo.SERVER_PATH, stat.getVersion());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (KeeperException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // 创建节点
+        try {
+            zooKeeper.create(ZookeeperInfo.SERVER_PATH,&quot;hello world&quot;.getBytes(), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+        } catch (KeeperException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+
+        // 获取节点 children
+        try {
+            zooKeeper.getChildren(ZookeeperInfo.SERVER_PATH, true);
+        } catch (KeeperException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<h2 id="zk客户端的监听流程">ZK客户端的监听流程</h2>
+<p>​	我们上面代码那个简单客户端代码就是执行的这个流程</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-10-29/e770ea97-e960-4787-b62e-95c998009f05.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BB%8B%E7%BB%8D">介绍</a></li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">快速开始</a></li>
+<li><a href="#zk%E9%80%89%E4%B8%BEleader%E6%B5%81%E7%A8%8B">ZK选举leader流程</a></li>
+<li><a href="#zk%E7%9A%84%E5%86%99%E6%95%B0%E6%8D%AE%E6%B5%81%E7%A8%8B">ZK的写数据流程</a></li>
+<li><a href="#zab%E5%8D%8F%E8%AE%AEzookeeper-atomic-broadcast">zab协议(zookeeper atomic broadcast)</a></li>
+<li><a href="#zookeeper-api-%E4%BD%BF%E7%94%A8">Zookeeper  API 使用</a>
+<ul>
+<li><a href="#%E5%88%9B%E5%BB%BA%E8%8A%82%E7%82%B9">创建节点</a></li>
+<li><a href="#%E8%8A%82%E7%82%B9%E7%B1%BB%E5%9E%8B">节点类型</a></li>
+<li><a href="#%E8%8A%82%E7%82%B9%E7%8A%B6%E6%80%81">节点状态</a></li>
+<li><a href="#%E5%88%A0%E9%99%A4%E8%8A%82%E7%82%B9">删除节点</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9%E8%8A%82%E7%82%B9">修改节点</a></li>
+<li><a href="#%E6%9F%A5%E6%89%BE%E8%8A%82%E7%82%B9">查找节点</a></li>
+<li><a href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E4%BB%A3%E7%A0%81%E6%B5%81%E7%A8%8B">客户端代码流程</a></li>
+<li><a href="#spring-boot-%E6%95%B4%E5%90%88-zookeeper">Spring-Boot 整合 zookeeper</a></li>
+</ul>
+</li>
+<li><a href="#zk%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%9A%84%E7%9B%91%E5%90%AC%E6%B5%81%E7%A8%8B">ZK客户端的监听流程</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

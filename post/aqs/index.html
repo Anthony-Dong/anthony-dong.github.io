@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>AQS - 用ReentrantLock来说说AQS的实现和原理 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/aqs/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>AQS - 用ReentrantLock来说说AQS的实现和原理</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-12</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/aqs/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1832字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	这个是著名的的Java并发包中同步阻塞队列</p>
+</blockquote>
+<p>CLH锁也是一种基于链表的可扩展、高性能、公平的自旋锁，申请线程只在本地变量上自旋，它不断轮询前驱的状态，如果发现前驱释放了锁就结束自旋。网上有很多相关资料, 可以查阅一下.</p>
+<p>**AQS基本模型图 : **</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/23f3c904-948e-4926-86d8-3a72e39508e5.webp" alt="" loading="lazy"></figure>
+<blockquote>
+<p>​	下面我们就以大名鼎鼎的ReentrantLock为例子讲解AQS的实现.</p>
+</blockquote>
+<h2 id="reentrantlock">ReentrantLock</h2>
+<blockquote>
+<p>​	<code>ReentrantLock</code>  厉害是因为他有一下特点 : <code>可重入</code> , <code>需要手动加锁、解锁(所以容易出现死锁)</code>   , <code>支持设置锁的超时时间(tryLock)</code>  , <code>支持公平/非公平锁</code>  , <code>可中断锁(可以interrupt)</code> .</p>
+</blockquote>
+<blockquote>
+<p>​	简单的使用一下可重入锁例子. 使用以一般如下.</p>
+</blockquote>
+<pre><code class="language-java">public class Main {
+
+    private static final ReentrantLock LOCK = new ReentrantLock();
+
+    public static void main(String[] args) throws InterruptedException {
+        // 线程一 绝对先执行
+        new Thread(() -&gt; {
+            try {
+                // 加锁
+                LOCK.lock();
+            } catch (Exception e) {
+                // no
+            } finally {
+                // 释放锁
+                LOCK.unlock();
+            }
+        },&quot;t1&quot;).start();
+    }
+}
+</code></pre>
+<h2 id="lock">lock</h2>
+<p>这里的 sync 继承与 <code>AbstractQueuedSynchronizer</code> 类 ,我们是非公平锁</p>
+<p><code>java.util.concurrent.locks.ReentrantLock#lock</code></p>
+<pre><code class="language-java">public void lock() {
+    sync.lock();
+}
+</code></pre>
+<p>下一步到了 <code>java.util.concurrent.locks.ReentrantLock.NonfairSync#lock</code> 这里</p>
+<pre><code class="language-java">final void lock() {
+    // CAS设置状态变量成功,就设置当前线程为持有线程
+    if (compareAndSetState(0, 1))
+        setExclusiveOwnerThread(Thread.currentThread());
+    else
+        // 否者,尝试获取/可重入/其他线程
+        acquire(1);
+}
+</code></pre>
+<pre><code class="language-java">compareAndSetState(0, 1)
+
+protected final boolean compareAndSetState(int expect, int update) {
+    // See below for intrinsics setup to support this
+    return unsafe.compareAndSwapInt(this, stateOffset, expect, update);
+}
+
+stateOffset = unsafe.objectFieldOffset
+                (AbstractQueuedSynchronizer.class.getDeclaredField(&quot;state&quot;));
+
+/**
+ * The synchronization state.
+*/
+private volatile int state;                
+</code></pre>
+<p>就是将 state 以CAS的方式设置为1  , 然后将排它锁的拥有者设置为当前线程.    这里让大家知道的是 CAS操作本身就是线程安全的 . 关于CAS如何实现,不同的CPU架构实现方式不同, 对于开发者来说他只是一个接口, 我们直接使用就行了.</p>
+<p>然后就是第二个线程来加锁的问题</p>
+<p>很显然需要执行 <code>acquire(1)</code>    , 到 <code>java.util.concurrent.locks.AbstractQueuedSynchronizer#acquire</code></p>
+<pre><code class="language-java">public final void acquire(int arg) {
+    // tryAcquire(arg) 成功, 则加锁成功, 否则继续执行下一步
+    if (!tryAcquire(arg) &amp;&amp;
+        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        selfInterrupt();
+}
+</code></pre>
+<p><code>tryAcquire</code> -&gt;  <code>java.util.concurrent.locks.ReentrantLock.Sync#nonfairTryAcquire</code></p>
+<pre><code class="language-java">final boolean nonfairTryAcquire(int acquires) {
+    // 当前线程
+    final Thread current = Thread.currentThread();
+    // 当前值
+    int c = getState();
+    if (c == 0) {
+        if (compareAndSetState(0, acquires)) {
+            setExclusiveOwnerThread(current);
+            return true;
+        }
+    }
+    // 如果是当前线程是当前的排他锁, 那么就+1 , 这就是可重入锁的原理 , 然后返回true.
+    else if (current == getExclusiveOwnerThread()) {
+        int nextc = c + acquires;
+        if (nextc &lt; 0) // overflow
+            throw new Error(&quot;Maximum lock count exceeded&quot;);
+        setState(nextc);
+        return true;
+    }
+    return false;
+}
+</code></pre>
+<p>很显然第二把锁加锁是失败的,</p>
+<p><code>acquireQueued(addWaiter(Node.EXCLUSIVE), arg)</code> -&gt;  <code>addWaiter(Node.EXCLUSIVE)</code>  -<code>java.util.concurrent.locks.AbstractQueuedSynchronizer#addWaiter</code>  加一个排它锁(互斥锁),   很简单其实就是将 , 头节点的下一个节点设置为当前等待线程,</p>
+<pre><code class="language-java">private Node addWaiter(Node mode) {
+    // 新建一个节点,做入队操作
+    Node node = new Node(Thread.currentThread(), mode);
+    Node pred = tail;
+    if (pred != null) {
+        node.prev = pred;
+        // 放入队尾, 这里是CAS线程安全,只会有一个尾true
+        if (compareAndSetTail(pred, node)) {
+            pred.next = node;
+            return node;
+        }
+    }
+    // 队列的初始化过程,或者如果入队失败了就使用自旋锁
+    enq(node);
+    // 返回节点, 此时绝对已经入队成功了.
+    return node;
+}
+</code></pre>
+<p><code>enq(node)</code>-&gt;<code>java.util.concurrent.locks.AbstractQueuedSynchronizer#enq</code>这里主要是 一个自旋锁的过程, 基于CAS实现. 入队操作线程安全的.</p>
+<pre><code class="language-java">private Node enq(final Node node) {
+    // 自旋, 直到入队成功,其实就是放入队尾
+    for (;;) {
+        Node t = tail;
+        if (t == null) { // Must initialize , 初始化, 因为单个线程获取锁是不会初始化的.
+            if (compareAndSetHead(new Node()))
+                tail = head;
+        } else {
+            node.prev = t;
+            // CAS操作
+            if (compareAndSetTail(t, node)) {
+                t.next = node;
+                return t;
+            }
+        }
+    }
+}
+</code></pre>
+<p>入队操作也很简单, 就是先让节点指向尾节点, 再让尾节点指向当前节点 , 然后将原来的尾节点指向当前节点, (双向链表,所以又pre和next)</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-01-13/4a7078e3-e6fb-4246-a858-b4699625e42b.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p><code>acquireQueued(addWaiter(Node.EXCLUSIVE), arg)</code>   -&gt; <code>java.util.concurrent.locks.AbstractQueuedSynchronizer#acquireQueued</code></p>
+<pre><code class="language-java">final boolean acquireQueued(final Node node, int arg) {
+    boolean failed = true;
+    try {
+        boolean interrupted = false;
+        for (;;) {
+            // 获取此节点的前置节点,
+            final Node p = node.predecessor();
+            // 其实目的是为了防止在这个执行过程中,A线程拿到了锁,但是他执行了unlock,此时B恰好到这里.
+            if (p == head &amp;&amp; tryAcquire(arg)) {
+                setHead(node);
+                p.next = null; // help GC
+                failed = false;
+                return interrupted;
+            }
+            // AfterFailedAcquire之后会执行这个.设置等待状态waitStatus.这里状态量可以看文档说明
+            // 设置成功状态量就执行 park操作
+            if (shouldParkAfterFailedAcquire(p, node) &amp;&amp;
+                parkAndCheckInterrupt())
+                interrupted = true;
+        }
+    } finally {
+        if (failed)
+            cancelAcquire(node);
+    }
+}
+</code></pre>
+<p><code>java.util.concurrent.locks.AbstractQueuedSynchronizer#parkAndCheckInterrupt</code></p>
+<pre><code class="language-java">private final boolean parkAndCheckInterrupt() {
+    // 这个就是核心地方,被阻塞的线程都会在这里等待.
+    LockSupport.park(this);
+    return Thread.interrupted();
+}
+</code></pre>
+<h2 id="unlock">unlock</h2>
+<p>其实这里的操作时线程安全, 解锁过程,为什么呢,第一是因为持有锁的线程都在等待中,只有一个解锁的人才能执行此操作, 所以不需要考虑多线程问题</p>
+<p><code>java.util.concurrent.locks.ReentrantLock#unlock</code></p>
+<pre><code class="language-java">public void unlock() {
+    sync.release(1);
+}
+</code></pre>
+<p><code>java.util.concurrent.locks.AbstractQueuedSynchronizer#release</code></p>
+<pre><code class="language-java">public final boolean release(int arg) {
+    // 先去释放自己
+    if (tryRelease(arg)) {
+        // 头节点
+        Node h = head;
+        // 判断空
+        if (h != null &amp;&amp; h.waitStatus != 0)
+            // 如果过头节不为空就unpark , 其实是下一个节点
+            unparkSuccessor(h);
+        return true;
+    }
+    return false;
+}
+</code></pre>
+<p><code>java.util.concurrent.locks.ReentrantLock.Sync#tryRelease</code>  -&gt; 如果加锁多次就要解锁多次</p>
+<pre><code class="language-java">protected final boolean tryRelease(int releases) {
+    // state减一
+    int c = getState() - releases;
+    // 是否是持有锁的线程
+    if (Thread.currentThread() != getExclusiveOwnerThread())
+        throw new IllegalMonitorStateException();
+    boolean free = false;
+    // 到0就代表释放成功,代表解锁成功
+    if (c == 0) {
+        free = true;
+        setExclusiveOwnerThread(null);
+    }
+    //这是状态量
+    setState(c);
+    return free;
+}
+</code></pre>
+<p>如果解锁成功  <code>java.util.concurrent.locks.AbstractQueuedSynchronizer#unparkSuccessor</code></p>
+<pre><code class="language-java">private void unparkSuccessor(Node node) {
+    // 这些都是一些状态量.所以无关紧要
+    int ws = node.waitStatus;
+    if (ws &lt; 0)
+        compareAndSetWaitStatus(node, ws, 0);
+    // 下一个节点才是等待的线程,我也不清楚waitstatus的值是如何算的, 
+    Node s = node.next;
+    if (s == null || s.waitStatus &gt; 0) {
+        s = null;
+        for (Node t = tail; t != null &amp;&amp; t != node; t = t.prev)
+            if (t.waitStatus &lt;= 0)
+                s = t;
+    }
+    if (s != null)
+        // 这里就是真正的unpark操作,  到这里头部的park线程会unpark
+        LockSupport.unpark(s.thread);
+}
+</code></pre>
+<h2 id="总结">总结</h2>
+<p>总结一下, 他维护了一个线程队列 , 当前持有锁的线程为 排他状态或者</p>
+<p>需要使用的API就那么几个</p>
+<pre><code class="language-java">public final void acquire(int arg) {
+    if (!tryAcquire(arg) &amp;&amp;
+        acquireQueued(addWaiter(Node.EXCLUSIVE), arg))
+        selfInterrupt();
+}
+</code></pre>
+<pre><code class="language-java">public final boolean release(int arg) {
+    if (tryRelease(arg)) {
+        Node h = head;
+        if (h != null &amp;&amp; h.waitStatus != 0)
+            unparkSuccessor(h);
+        return true;
+    }
+    return false;
+}
+</code></pre>
+<p>对于开发者需要实现这俩未实现的方法,</p>
+<pre><code class="language-java">protected boolean tryRelease(int arg) {
+    throw new UnsupportedOperationException();
+}
+</code></pre>
+<pre><code class="language-java">protected boolean tryRelease(int arg) {
+    throw new UnsupportedOperationException();
+}
+</code></pre>
+<p>这里简单实现了一个非公平的实现  -- &gt; 抄的 reentranlock的</p>
+<pre><code class="language-java">public class AsyncQ extends AbstractQueuedSynchronizer {
+
+    @Override
+    protected boolean tryAcquire(int arg) {
+        // 当前线程
+        final Thread current = Thread.currentThread();
+        // 状态量
+        int c = getState();
+        if (c == 0) {
+            // 0 就设置为 1 ,成功就设置当前线程为ExclusiveOwnerThread,这里是线程安全的
+            if (compareAndSetState(0, 1)) {
+                setExclusiveOwnerThread(current);
+                return true;
+            }
+            // 可重入
+        } else if (current == getExclusiveOwnerThread()) {
+            int nextc = c + 1;
+            if (nextc &lt; 0) // overflow
+                throw new Error(&quot;Maximum lock count exceeded&quot;);
+            setState(nextc);
+            return true;
+        }
+        // 失败返回false
+        return false;
+    }
+
+
+    @Override
+    protected boolean tryRelease(int arg) {
+        // 状态量
+        int c = getState() - 1;
+        // 不是持有线程, 绝对有问题, 所以直接异常
+        if (Thread.currentThread() != getExclusiveOwnerThread())
+            throw new IllegalMonitorStateException();
+        // 如果状态是0就释放
+        boolean free = false;
+        if (c == 0) {
+            free = true;
+            setExclusiveOwnerThread(null);
+        }
+        setState(c);
+        return free;
+    }
+
+
+    public static void main(String[] args) throws InterruptedException {
+        AsyncQ asyncQ = new AsyncQ();
+        Thread t1 = new Thread(() -&gt; {
+            // 加锁
+            asyncQ.acquire(1);
+ 			
+            // 解锁
+            asyncQ.release(1);
+        }, &quot;t1&quot;);
+        t1.start();
+    }
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#reentrantlock">ReentrantLock</a></li>
+<li><a href="#lock">lock</a></li>
+<li><a href="#unlock">unlock</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

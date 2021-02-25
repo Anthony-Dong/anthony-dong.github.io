@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>spring-boot-maven-plugin 多模块打包实战 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spring-boot-maven-plugin-duo-mo-kuai-da-bao-shi-zhan/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>spring-boot-maven-plugin 多模块打包实战</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spring-boot-maven-plugin-duo-mo-kuai-da-bao-shi-zhan/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3198字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">16 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h4 id="1-父工程类型的-父子关系型">1. 父工程类型的   父子关系型</h4>
+<ol>
+<li>
+<p>我们需要创建 父工程</p>
+</li>
+<li>
+<p>创建三个子模块(web , commons , interface)</p>
+</li>
+<li>
+<p>写 三个测试方法</p>
+</li>
+<li>
+<p>最终结构</p>
+<ul>
+<li>
+<p>目录结构</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/8c76bb9b-41c1-4fab-90d0-617052f3f392.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+</li>
+<li>
+<p>文件结构</p>
+<p>​	<img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/4b64a754-4f8a-44d6-82cf-3ee41c27dec1.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></p>
+</li>
+</ul>
+</li>
+<li>
+<p>需要在 web模块中导入 interface 和 comments依赖 ,代码不展示了</p>
+</li>
+<li>
+<p>然后 我们需要对其 进去 打包时,需要注意,</p>
+<ol>
+<li>
+<p>父工程  father的pom文件</p>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+    &lt;modules&gt;
+        &lt;module&gt;commons&lt;/module&gt;
+        &lt;module&gt;web&lt;/module&gt;
+        &lt;module&gt;interface&lt;/module&gt;
+    &lt;/modules&gt;
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.1.7.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;father&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;father&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+        &lt;spring-cloud.version&gt;Greenwich.SR2&lt;/spring-cloud.version&gt;
+    &lt;/properties&gt;
+
+
+
+    &lt;dependencyManagement&gt;
+        &lt;dependencies&gt;
+            &lt;dependency&gt;
+                &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+                &lt;version&gt;${spring-cloud.version}&lt;/version&gt;
+                &lt;type&gt;pom&lt;/type&gt;
+                &lt;scope&gt;import&lt;/scope&gt;
+            &lt;/dependency&gt;
+        &lt;/dependencies&gt;
+    &lt;/dependencyManagement&gt;
+
+
+    &lt;!-- 父 工程  --&gt;
+    &lt;!-- compiler  编译器  当我们不写这个时,子模块 web,模块必须 packing =jar  ;不然没jar包生成 --&gt;
+    &lt;!--除了 web模块 以外其他两个都不需要 build--&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;${java.version}&lt;/source&gt;
+                    &lt;target&gt;${java.version}&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;skipTests&gt;true&lt;/skipTests&gt;    &lt;!--默认关掉单元测试 --&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+
+</code></pre>
+</li>
+<li>
+<p>子模块</p>
+<ol>
+<li>
+<p>web模块</p>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+         xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;parent&gt;
+        &lt;artifactId&gt;father&lt;/artifactId&gt;
+        &lt;groupId&gt;com.example&lt;/groupId&gt;
+        &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;artifactId&gt;web&lt;/artifactId&gt;
+     		&lt;-- 父模块 无编译插件时;选择 jar包 ,必须加 ,所以 平时我们web项目还是加吧 --&gt;  
+      	  &lt;packaging&gt;jar&lt;/packaging&gt;
+          &lt;dependencies&gt;
+              &lt;dependency&gt;
+                  &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                  &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+              &lt;/dependency&gt;
+              &lt;dependency&gt;
+                  &lt;groupId&gt;com.example&lt;/groupId&gt;
+                  &lt;artifactId&gt;interface&lt;/artifactId&gt;
+                  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+              &lt;/dependency&gt;
+              &lt;dependency&gt;
+                  &lt;groupId&gt;com.example&lt;/groupId&gt;
+                  &lt;artifactId&gt;commons&lt;/artifactId&gt;
+                  &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+              &lt;/dependency&gt;
+          &lt;/dependencies&gt;
+      	&lt;build&gt;
+   		 &lt;plugins&gt;
+  			&lt;plugin&gt;
+           &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+   &lt;!-- 当我们只有一个模块时 ,可以 不用加这个 main入口函数 他会自己去找 --&gt;         
+            &lt;configuration&gt;
+                &lt;!-- 指定该Main Class为全局的唯一入口 --&gt;
+                &lt;mainClass&gt;com.PackingApplication&lt;/mainClass&gt;
+                
+            &lt;/configuration&gt;
+            &lt;executions&gt;
+                &lt;execution&gt;
+                    &lt;goals&gt;
+                        &lt;goal&gt;repackage&lt;/goal&gt;
+                        &lt;!--可以把依赖的包都打包到生成的Jar包中,当我们选择取消使用时;会发现;其他两个依赖的项目里是不会生成jar包的--&gt;
+                    &lt;/goals&gt;
+                &lt;/execution&gt;
+            &lt;/executions&gt;
+        &lt;/plugin&gt;
+	 &lt;/plugins&gt;
+&lt;/build&gt;
+&lt;/project&gt;
+</code></pre>
+<ol start="2">
+<li>commons和 interface模块</li>
+</ol>
+</li>
+</ol>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+   &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+            xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+            xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+       &lt;parent&gt;
+           &lt;artifactId&gt;father&lt;/artifactId&gt;
+           &lt;groupId&gt;com.example&lt;/groupId&gt;
+           &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+       &lt;/parent&gt;
+       &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+   
+       &lt;artifactId&gt;commons&lt;/artifactId&gt;
+   
+       &lt;dependencies&gt;
+           &lt;dependency&gt;
+               &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+               &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+           &lt;/dependency&gt;
+       &lt;/dependencies&gt;
+   
+   &lt;/project&gt;
+   
+   
+   &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+   &lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot;
+            xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+            xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+       &lt;parent&gt;
+           &lt;artifactId&gt;father&lt;/artifactId&gt;
+           &lt;groupId&gt;com.example&lt;/groupId&gt;
+           &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+       &lt;/parent&gt;
+       &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+   
+       &lt;artifactId&gt;interface&lt;/artifactId&gt;
+   
+       &lt;dependencies&gt;
+           &lt;dependency&gt;
+               &lt;groupId&gt;org.projectlombok&lt;/groupId&gt;
+               &lt;artifactId&gt;lombok&lt;/artifactId&gt;
+           &lt;/dependency&gt;
+       &lt;/dependencies&gt;
+   &lt;/project&gt;
+ 
+</code></pre>
+</li>
+</ol>
+</li>
+<li>
+<p>当我们 再选择一个web新项目时 ,如果 我们不写入口函数会怎么样子呢</p>
+<p><strong>[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:2.1.7.RELEASE:repackage (repackage) on project web02: Execution repackage of goal org.springframework.boot:spring-boot-maven-plugin:2.1.7.RELEASE:repackage failed: Unable to find main class -&gt; [Help 1]</strong></p>
+<p>会发现找不到类,此时 当大于一个web 模块时,必须加上 ;就算是 子模块的启动类重名,依旧可以正常运行</p>
+<pre><code class="language-java">  &lt;configuration&gt;
+              &lt;!-- 指定该Main Class为全局的唯一入口 --&gt;
+             &lt;mainClass&gt;com.PackingApplication&lt;/mainClass&gt;
+ &lt;/configuration&gt;
+</code></pre>
+<p>所以为了有个好的习惯 我们平时还要写这个</p>
+</li>
+<li>
+<p>当我们选择不写</p>
+</li>
+</ol>
+<pre><code class="language-java"> &lt;executions&gt;
+                    &lt;execution&gt;
+                        &lt;goals&gt;
+                            &lt;goal&gt;repackage&lt;/goal&gt;
+                            &lt;!--可以把依赖的包都打包到生成的Jar包中,
+                            当我们选择取消使用时;会发现;其他两个依赖的项目里是不会生成jar包的--&gt;
+                        &lt;/goals&gt;
+                    &lt;/execution&gt;
+    &lt;/executions&gt;
+</code></pre>
+<p>这个时,当我们再一次打包 会发现 ,依旧在项目中生成了 jar包</p>
+<ol start="9">
+<li>
+<p>最后我们运行 :</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/530b7b98-0984-47eb-a542-58a62b30b616.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>最后我们可以去看看  生成的web 工程的jar包是什么</p>
+</li>
+<li>
+<p>目录位置  :  就是web工程的 编译后的文件内</p>
+</li>
+<li>
+<p>目录结构</p>
+<ol>
+<li><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/3f353045-8162-4606-bfde-07b487234a04.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></li>
+</ol>
+</li>
+</ol>
+<h4 id="2模块化管理无父类只引入pom文件子父继承关系">2.模块化管理,无父类,只引入pom文件,子父继承关系</h4>
+<ol>
+<li>
+<p>让我们看看传统的 parent关系 (是先创建一个父类工程,子类在父类里面)</p>
+<pre><code class="language-java">    &lt;parent&gt;
+        &lt;artifactId&gt;father&lt;/artifactId&gt;
+        &lt;groupId&gt;com.example&lt;/groupId&gt;
+        &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;/parent&gt;
+</code></pre>
+</li>
+<li>
+<p>让我们看看这个类型的模块关系(父类,子类是平行关系,子类和父类在一个文件夹下的平行目录下,只是依靠下面这个依赖保持关系)</p>
+<pre><code class="language-java">    &lt;parent&gt;
+        &lt;artifactId&gt;demo&lt;/artifactId&gt;
+        &lt;groupId&gt;com.example&lt;/groupId&gt;
+        &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+        &lt;relativePath&gt;../demo/pom.xml&lt;/relativePath&gt;
+    &lt;/parent&gt;
+</code></pre>
+<ol>
+<li>
+<p>我们会发现 多了个 relativePath</p>
+<p>当我们 选择去掉这个时候 ,会报错</p>
+<p><strong>[ERROR]     Non-resolvable parent POM for com.example:commons:0.0.1-SNAPSHOT: Could not find artifact com.example:demo:pom:0.0.1-SNAPSHOT and 'parent.relativePath' points at wrong local POM @ line 5, column 13 -&gt; [Help 2]</strong></p>
+</li>
+</ol>
+</li>
+<li>
+<p>当我们使用这种方式时,需要注意的是什么</p>
+</li>
+<li>
+<p>流程 创建项目流程</p>
+<ol>
+<li>
+<p>,先新建一个空文件夹,然后选择 idea打开这个文件夹,此时 这个文件夹就是你的工作空间,</p>
+</li>
+<li>
+<p>然后选择一个 framework项目,是你的核心包,其中默认选择作为pom文件,packing方式为pom,作为项目的版本控制</p>
+</li>
+<li>
+<p>创建子类,选择创建项目时 选择</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/5ec150b5-ba5f-49a3-8dad-c908a4e2e202.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+</li>
+<li>
+<p>然后创建三个项目,</p>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/1723f9f6-2ef0-49c4-b0f6-b7acc618af35.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></figure>
+</li>
+<li>
+<p>如果我们选择 父类的方式 ,就是需要改动 一下 module添加到 demo 模块下 ,就是 我们的第一种模式</p>
+<p>​	<img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/3ef05d71-1220-45bb-94bb-1753ed4cf40c.jpg?x-oss-process=style/template01" alt="image" loading="lazy"></p>
+</li>
+<li>
+<p>然后 目录结构</p>
+</li>
+</ol>
+</li>
+<li>
+<p>打包流程</p>
+<ol>
+<li>
+<p>我们选择 非 web项目,就是么有 main方法 启动类的项目,选择 打包,可以直接生成一个war包</p>
+</li>
+<li>
+<p>其中我们不需要在framework工程中进行 编译那个插件</p>
+<pre><code class="language-java">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+         xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+    &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+    &lt;parent&gt;
+        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+        &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;
+        &lt;version&gt;2.1.7.RELEASE&lt;/version&gt;
+        &lt;relativePath/&gt; &lt;!-- lookup parent from repository --&gt;
+    &lt;/parent&gt;
+    &lt;groupId&gt;com.example&lt;/groupId&gt;
+    &lt;artifactId&gt;demo&lt;/artifactId&gt;
+    &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+    &lt;name&gt;demo&lt;/name&gt;
+    &lt;description&gt;Demo project for Spring Boot&lt;/description&gt;
+    &lt;packaging&gt;pom&lt;/packaging&gt;
+    &lt;properties&gt;
+        &lt;java.version&gt;1.8&lt;/java.version&gt;
+    &lt;/properties&gt;
+
+&lt;--这个就是个版本 控制工具,可以选择 对于的 编码方式,jdk版本 , 可以不选择 添加,--&gt;
+    &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;source&gt;${java.version}&lt;/source&gt;
+                    &lt;target&gt;${java.version}&lt;/target&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+                &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;skipTests&gt;true&lt;/skipTests&gt;    &lt;!--默认关掉单元测试 --&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+&lt;/project&gt;
+
+</code></pre>
+</li>
+<li>
+<p>我们 直接 把commons和interface工程可以直接打包成功 ,但是 关键来了,我们的web模块才是关键,</p>
+<pre><code class="language-java"></code></pre>
+</li>
+</ol>
+<p>interface和common 包 我就不全写了  其中 并无差异</p>
+   <?xml version="1.0" encoding="UTF-8"?>
+<p><project xmlns="http://maven.apache.org/POM/4.0.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"><br>
+<parent><br>
+<artifactId>demo</artifactId><br>
+<groupId>com.example</groupId><br>
+<version>0.0.1-SNAPSHOT</version><br>
+<relativePath>../demo/pom.xml</relativePath><br>
+</parent><br>
+<modelVersion>4.0.0</modelVersion></p>
+<pre><code>   &lt;artifactId&gt;commons&lt;/artifactId&gt;
+</code></pre>
+   </project>
+   ```
+<p>我们看看 common打包后的 文件目录</p>
+<p>​</p>
+<ol start="4">
+<li>
+<p>此时我们需要怎么办的???????</p>
+</li>
+<li>
+<p>当我们尝试去打包时 会发现 报错 ,</p>
+<pre><code class="language-java"></code></pre>
+</li>
+</ol>
+<?xml version="1.0" encoding="UTF-8"?>
+<p><project xmlns="http://maven.apache.org/POM/4.0.0"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"><br>
+<parent><br>
+<artifactId>demo</artifactId><br>
+<groupId>com.example</groupId><br>
+<version>0.0.1-SNAPSHOT</version><br>
+<relativePath>../demo/pom.xml</relativePath><br>
+</parent><br>
+<modelVersion>4.0.0</modelVersion></p>
+<pre><code>   &lt;packaging&gt;jar&lt;/packaging&gt;
+   &lt;artifactId&gt;web&lt;/artifactId&gt;
+
+   &lt;dependencies&gt;
+       &lt;dependency&gt;
+           &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+           &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;
+       &lt;/dependency&gt;
+       &lt;dependency&gt;
+           &lt;groupId&gt;com.example&lt;/groupId&gt;
+           &lt;artifactId&gt;commons&lt;/artifactId&gt;
+           &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+       &lt;/dependency&gt;
+       &lt;dependency&gt;
+           &lt;groupId&gt;com.example&lt;/groupId&gt;
+           &lt;artifactId&gt;interface&lt;/artifactId&gt;
+           &lt;version&gt;0.0.1-SNAPSHOT&lt;/version&gt;
+       &lt;/dependency&gt;
+   &lt;/dependencies&gt;
+
+   &lt;build&gt;
+       &lt;plugins&gt;
+           &lt;plugin&gt;
+               &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+               &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+               &lt;configuration&gt;
+                   &lt;mainClass&gt;com.PackingApplication&lt;/mainClass&gt;
+               &lt;/configuration&gt;
+           &lt;/plugin&gt;
+       &lt;/plugins&gt;
+   &lt;/build&gt;
+</code></pre>
+   </project>
+   ```
+<ol start="6">
+<li>
+<p>会报什么错误呢 会发现找不着 jar包 ,此时 尴尬了  ,找不到 是因为啥 ,是的 使我们的  maven仓库没有,</p>
+</li>
+<li>
+<p>此时 我选择了  把我刚刚的  那两个jar包 commons 和 interface 两个包都丢到maven仓库中去</p>
+<p><strong>mvn install:install-file -Dfile=D:\软件\正则表达式\yinxiang\model\commons\target\commons-0.0.1-SNAPSHOT.jar  -DgroupId=com.example -DartifactId=commons  -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar</strong></p>
+<p>语法 很简单就是   将jar包 放到我们的maven仓库中 ,</p>
+</li>
+<li>
+<p>然后 我们在 packing 我们发现 打包成功 ,nice</p>
+<ol>
+<li>
+<p>然后 我选择了  既然 我已经选择了 jar包打包的方式,我用啥 plugin呢 ,我直接 衣蛾 packing不就好了</p>
+</li>
+<li>
+<p>于是我依旧在尝试中</p>
+<pre><code class="language-java"> &lt;build&gt;
+        &lt;plugins&gt;
+            &lt;plugin&gt;
+                &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+                &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;
+                &lt;configuration&gt;
+                    &lt;mainClass&gt;com.PackingApplication&lt;/mainClass&gt;
+                &lt;/configuration&gt;
+            &lt;/plugin&gt;
+        &lt;/plugins&gt;
+    &lt;/build&gt;
+    
+        
+</code></pre>
+</li>
+<li>
+<p>结果 确实可以打包成功但是不是一个web项目 ,里面和普通目录 一样</p>
+<p><strong>web-0.0.1-SNAPSHOT.jar中没有主清单属性</strong></p>
+<p>还报了个这错误</p>
+</li>
+<li>
+<p>不搞了,默认是jar包打包,哈哈哈哈,上面common和interface都可以看出来(当我在 common包填上这个时;依旧可以打包成功)</p>
+</li>
+</ol>
+<pre><code class="language-java"> &lt;packaging&gt;jar&lt;/packaging&gt;
+</code></pre>
+</li>
+<li>
+<p>但是 这么做的问题是什么 , 我们需要一个maven仓库 (自己的私服,可以直接提交到那里,每次就不用 我们去 手动提交了,感觉好麻烦,然而 其他解决这种模式的 方式我没有想到,)</p>
+</li>
+<li>
+<p>打包插件  maven-plugin 只是对 web工程有效 ,只需要在 我们需要的web模块上加上 这个  plugin就可以了 ;第二种 方式我没有想到解决方法 哎,求大佬带带 更简单的.</p>
+</li>
+</ol>
+</li>
+</ol>
+<p>​	QA 还有一个是  看俩截图</p>
+<ul>
+<li>​	这个是common包下的</li>
+</ul>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/c31cccc3-3806-4f9d-9669-44d11a9b1dcb.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ul>
+<li>
+<p>web 模块呢 是这个</p>
+<figure data-type="image" tabindex="7"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-01/df21f68e-9fb1-4d79-98c8-edf142098419.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+</ul>
+<p>可以看到 打包成功 ,结果是实现了 但是挺麻烦的;哎 ;我看看怎么修改一哈</p>
+<h4 id="总结">总结</h4>
+<p>两种模式都是 只用在 web工程下 有main入口函数的文件下, 放入 maven-pluging就可以了;只是第二种需要把放入maven仓库</p>
+<p>maven 也是一门学问 ,如果你写框架 必须学,哎,我也不会玩</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#1-%E7%88%B6%E5%B7%A5%E7%A8%8B%E7%B1%BB%E5%9E%8B%E7%9A%84-%E7%88%B6%E5%AD%90%E5%85%B3%E7%B3%BB%E5%9E%8B">1. 父工程类型的   父子关系型</a></li>
+<li><a href="#2%E6%A8%A1%E5%9D%97%E5%8C%96%E7%AE%A1%E7%90%86%E6%97%A0%E7%88%B6%E7%B1%BB%E5%8F%AA%E5%BC%95%E5%85%A5pom%E6%96%87%E4%BB%B6%E5%AD%90%E7%88%B6%E7%BB%A7%E6%89%BF%E5%85%B3%E7%B3%BB">2.模块化管理,无父类,只引入pom文件,子父继承关系</a></li>
+<li><a href="#%E6%80%BB%E7%BB%93">总结</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

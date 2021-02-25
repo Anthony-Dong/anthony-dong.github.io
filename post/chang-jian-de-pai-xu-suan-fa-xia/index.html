@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>常见的排序算法 (下) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/chang-jian-de-pai-xu-suan-fa-xia/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>常见的排序算法 (下)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-06</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/chang-jian-de-pai-xu-suan-fa-xia/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/h-oLWzEpzKL/"
+								class="tag">算法</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1890字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">9 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="5-归并排序">5. 归并排序</h2>
+<blockquote>
+<p>​	两个有序数组合并并不难, 但是归并的思想确实是这个, 但是如何分, 分到何时呢 ?</p>
+</blockquote>
+<p>这个名字含义就是分为<code>归 和 并</code> 两个阶段执行</p>
+<p>先说并吧,  并要求是两个已经排序好了的数组(两个连续数组是位置上也连续) , 比如<code>1,2,3,4</code> , 连续数组<code>1,2</code>和<code>3,4</code> , 不能是 <code>1,2</code>,<code>4</code>进行排序 ,</p>
+<p>对于两个已经排序好了的数据, 好处是一次遍历便可以两个数组合并成一个有序的数组</p>
+<p>然后再说 归吧, 归的思想就是 , <code>4,3,2,1</code> , 先分 <code>4,3</code>和<code>2,1</code> , 将<code>4,3</code>继续分 <code>4</code>,<code>3</code>,此时这就是俩位置有序的数组, 将他俩数组进行并 , 就成了 <code>3,4</code> , 然后<code>2,1</code>分为<code>2</code>,<code>1</code> , 此时再将这俩数组排序,此时是<code>1,2</code> , 然后将<code>3,4</code>和<code>1,2</code>进行并排序, 此时就是<code>1,2,3,4</code> , OK了</p>
+<pre><code class="language-java">/**
+ * 归并排序
+ *
+ * 
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+public class MergeSort {
+
+    public static void main(String[] args) {
+        int[] arr_1000 = Common.generate_Arr_1000();
+        splitAndMergerSort(arr_1000, 0, arr_1000.length - 1);
+        Common.showArr(arr_1000);
+    }
+
+
+    /**
+     * 将[1,2,3]数组分割成直到 [1][2][3]这种 ,递归实现
+     *
+     * @param arr   数组
+     * @param start 开始位置 ,索引从0开始
+     * @param end   结束位置 , 索引0开始
+     */
+    private static void splitAndMergerSort(int[] arr, int start, int end) {
+        if (start == end) return;
+
+        int middle = (end + start) &gt;&gt; 1;
+
+        splitAndMergerSort(arr, start, middle);
+
+        splitAndMergerSort(arr, middle + 1, end);
+
+        merge(arr, start, end, middle + 1);
+    }
+
+
+    /**
+     * @param arr       数据
+     * @param start     索引从0开始 , 数组开始位置
+     * @param end       索引从0开始 , 数组结束位置
+     * @param delimiter 切割位置 : [1,2,4,5]   参数(arr,0 , 3 , 2) , 分隔符是 (star+end)/2+1
+     */
+    private static void merge(int[] arr, int start, int end, int delimiter) {
+        if (start == end) return;
+
+        // 1. 初始化数组
+        int llen = delimiter - start;
+        int rlen = (end - delimiter) + 1;
+
+        int[] left = new int[llen];
+        int[] right = new int[rlen];
+
+        //2. 将分割数组 , 填充数据
+        System.arraycopy(arr, start, left, 0, llen);
+        System.arraycopy(arr, delimiter, right, 0, rlen);
+
+        // 3.归并步骤
+        int l = 0;
+        int r = 0;
+        int len = end + 1;
+        for (int i = start; i &lt; len; ++i) {
+            if (l &lt; llen &amp;&amp; r &lt; rlen) {
+                if (left[l] &lt; right[r]) {
+                    arr[i] = left[l];
+                    l++;
+                } else {
+                    arr[i] = right[r];
+                    r++;
+                }
+            } else {
+                if (l &lt; llen) {
+                    arr[i] = left[l];
+                    l++;
+                }
+                if (r &lt; rlen) {
+                    arr[i] = right[r];
+                    r++;
+                }
+            }
+        }
+    }
+	
+    // 第二种合并方式
+    private static void merge(int[] left_arr, int[] right_arr) {
+        int lL = left_arr.length;
+        int rL = right_arr.length;
+        int resultL = lL + rL;
+        int[] result = new int[resultL];
+
+        int l = 0;
+        int r = 0;
+        int w = 0;
+        while (w &lt; resultL) {
+            if (l &lt; lL &amp;&amp; r &lt; rL) {
+                if (left_arr[l] &lt; right_arr[r]) {
+                    result[w] = left_arr[l];
+                    l++;
+                    w++;
+                } else {
+                    result[w] = right_arr[r];
+                    r++;
+                    w++;
+                }
+            } else {
+                if (l &lt; lL) {
+                    System.arraycopy(left_arr, l, result, w, lL - l);
+                    break;
+                }
+                if (r &lt; rL) {
+                    System.arraycopy(right_arr, r, result, w, rL - r);
+                    break;
+                }
+            }
+        }
+
+        Common.showArr(result);
+    }
+}
+</code></pre>
+<h2 id="6-堆排序">6. 堆排序</h2>
+<p>数组他可以利用索引关系构建出一个完全二叉树 , 所以利用这个特性很好的组成堆,</p>
+<p>堆排序 分为两个阶段</p>
+<p>一阶段 : 堆化  - &gt; 将数据转换成 大顶堆或者小顶堆 , 就是根节点数据大于子叶数据 , 就是大顶堆.</p>
+<p>二阶段 : 利用大顶堆或者小顶堆进行排序 , 就是将堆顶和最后一个数据进行交换, 因为堆顶是最大值或者最小值, 然后堆化, 重复操作 ,</p>
+<pre><code class="language-java">/**
+ * 堆排序
+ * 
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+public class HeapSort {
+
+    public static void main(String[] args) {
+        int[] arr_1000 = Common.generate_Arr_1000();
+        heap_sort(arr_1000, arr_1000.length);
+
+        Common.showArr(arr_1000);
+    }
+
+    /**
+     * 堆排序
+     *
+     * @param tree
+     * @param n
+     */
+    static void heap_sort(int[] tree, int n) {
+
+        // 1. 构建一个堆
+        build_heap(tree, n);
+
+        // 2.
+        // 堆顶和最后一个节点做交换 , 但是我们需要在数组上截取 , 所以就是每次
+        for (int i = n - 1; i &gt;= 0; i--) {
+            // 交换节点
+            swap(tree, i, 0);
+
+            // 第0个位置 开始堆重新排序
+            heapify(tree, i, 0);
+        }
+    }
+
+    /**
+     * 构建一个 大顶堆
+     *
+     * @param tree
+     * @param n
+     */
+    static void build_heap(int[] tree, int n) {
+
+        // 最后一个节点
+        int last_node = n - 1;
+
+        // 开始遍历的位置是 : 最后一个堆的堆顶 , 意思就是 , 整个树中最小的一个堆 , 其实就是最后一个节点的父节点
+        int parent = (last_node - 1) / 2;
+
+        // 递减向上遍历
+        for (int i = parent; i &gt;= 0; i--) {
+            heapify(tree, n, i);
+        }
+    }
+
+
+
+
+    /**
+     * @param tree 代表一棵树
+     * @param n    代表多少个节点
+     * @param i    对哪个节点进行 heapify
+     */
+    static void heapify(int[] tree, int n, int i) {
+
+        // 如果当前值 大于 n 直接返回了 ,一般不会出现这种问题 .....
+        if (i &gt;= n) {
+            return;
+        }
+
+        // 子节点
+        int c1 = 2 * i + 1;
+        int c2 = 2 * i + 2;
+
+        // 假设最大的节点 为 i (父节点)
+        int max = i;
+
+        // 如果大于  赋值给 max
+        if (c1 &lt; n &amp;&amp; tree[c1] &gt; tree[max]) {
+            max = c1;
+        }
+
+        // 如果大于  赋值给 max
+        if (c2 &lt; n &amp;&amp; tree[c2] &gt; tree[max]) {
+            max = c2;
+        }
+
+        // 如果i所在的就是最大值我们没必要去做交换
+        if (max != i) {
+
+            // 交换最大值 和 父节点 的位置
+            swap(tree, max, i);
+
+            // 交换完以后 , 此时的max其实就是 i原来的数 ,就是最小的数字 ,所以需要递归遍历
+            heapify(tree, n, max);
+        }
+
+    }
+
+
+    static void swap(int[] tree, int max, int i) {
+        int temp = tree[max];
+        tree[max] = tree[i];
+        tree[i] = temp;
+    }
+
+}
+</code></pre>
+<h2 id="7-桶排序">7. 桶排序</h2>
+<p>其实我认为他是 区间排序,  举个例子 <code>[1,2,3,4,5,6]</code> , 将他放入6个区间内 , (0,1] ,(1,2] , 依次到最后 , 那么这个放置过程完全是可以通过计算得到的. 所以一次遍历便可以完成排序 , 如果区间内部排序, 可以选择其他排序方式.</p>
+<pre><code class="language-java">package com.sort;
+
+import java.util.Arrays;
+
+/**
+ * 桶排序  ,其实就是区间排序  1,2,3,4,5,6  ,我们分成 0-3, 3-6的区间(首先区间是有顺序的)
+ * , 1,2,3 进去区间一, 4,5,6进去区间二 , 然后区间内排序, 此时就构建了新的数组
+ *
+ *
+ * @author: &lt;a href='mailto:fanhaodong516@qq.com'&gt;Anthony&lt;/a&gt;
+ */
+public class BucketSort {
+
+    public static void main(String[] args) {
+
+        int[] arr_1000 = Common.generate_Arr_1000();
+
+        bucketSort(arr_1000, 10);
+
+        Common.showArr(arr_1000);
+    }
+
+    /**
+     * @param arr         数组
+     * @param bucketCount 桶的个数
+     */
+    public static void bucketSort(int[] arr, int bucketCount) {
+        int len = arr.length;
+        if (len &lt;= 1 || bucketCount &lt;= 0) {
+            return;
+        }
+
+        // 遍历一次找到最大值 最小值
+        int max = arr[0], min = arr[0];
+        for (int i : arr) {
+            if (i &gt; max) {
+                max = i;
+            }
+            if (i &lt; min) {
+                min = i;
+            }
+        }
+
+        /**
+         * 划分区间 , 比如  5 - 11 ,此时我们需要 / 桶数量 (假如 是 2), 如果我们不+1 , 6 / 2 = 3 ,那么 (11-5)/3=2 , 此时坐标2这个桶
+         *
+         * 所以区间需要+1 操作 , 所以上面就是 7/2=3.5=4 , (11-5)/4=1
+         */
+        int range = ((max - min + 1) % bucketCount) == 0 ? (max - min + 1) / bucketCount : (max - min + 1) / bucketCount + 1;
+
+
+        // 创建桶 ,是一个二维数组
+        int[][] bucket = new int[bucketCount][];
+
+        for (int i : arr) {
+            bucket[(i - min) / range] = arrAppend(bucket[(i - min) / range], i);
+        }
+
+
+        for (int[] ints : bucket) {
+            sort(ints);
+        }
+
+        int count = 0;
+        for (int[] ints : bucket) {
+            if (ints != null) {
+                for (int anInt : ints) {
+                    arr[count++] = anInt;
+                }
+            }
+        }
+
+
+    }
+
+    /**
+     * 数组拷贝
+     *
+     * @param arr
+     * @param value
+     * @return
+     */
+    private static int[] arrAppend(int[] arr, int value) {
+        //数组如果为空, 新建一个数组,
+        if (arr == null) {
+            arr = new int[0];
+        }
+        // 数组拷贝 , 其实就是长度+1
+        arr = Arrays.copyOf(arr, arr.length + 1);
+        // 将值复制
+        arr[arr.length - 1] = value;
+
+        //返回
+        return arr;
+    }
+
+
+    private static void sort(int[] arr) {
+
+        /**
+         * 空 或者  0 / 1 都直接返回
+         */
+        if (null == arr || arr.length &lt;= 1) {
+            return;
+        }
+
+        // 2 3 1
+        for (int index = 1; index &lt; arr.length; index++) {
+
+            // 当前位置 , 开始必须从第二个开始
+            int temp = arr[index];
+
+            // 左边位置
+            int left = index - 1;
+
+            // 移动坐标其实就是 ...
+            while (left &gt;= 0 &amp;&amp; arr[left] &gt; temp) {
+
+                // 互换位置
+                arr[left + 1] = arr[left];
+
+                // 向前移动
+                left--;
+            }
+
+            // 最后保存数据
+            arr[left + 1] = temp;
+        }
+    }
+
+}
+</code></pre>
+<h2 id="8-基数排序">8. 基数排序</h2>
+<p>我没有写, 他和桶排序类似 , 一次比较个位数 , 十位数 , 百位数数据, 分成10个桶 , 对号入座, 第一遍比较个位数, 第二遍比较十位数, 第三遍比较百位数 .</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#5-%E5%BD%92%E5%B9%B6%E6%8E%92%E5%BA%8F">5. 归并排序</a></li>
+<li><a href="#6-%E5%A0%86%E6%8E%92%E5%BA%8F">6. 堆排序</a></li>
+<li><a href="#7-%E6%A1%B6%E6%8E%92%E5%BA%8F">7. 桶排序</a></li>
+<li><a href="#8-%E5%9F%BA%E6%95%B0%E6%8E%92%E5%BA%8F">8. 基数排序</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

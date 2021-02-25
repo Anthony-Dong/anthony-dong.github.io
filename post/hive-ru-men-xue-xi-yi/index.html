@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>HIVE - 入门学习一 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/hive-ru-men-xue-xi-yi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>HIVE - 入门学习一</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-22</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/hive-ru-men-xue-xi-yi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/YZlAYWOZz21/"
+								class="tag">大数据</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2240字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-介绍">1. 介绍</h2>
+<figure data-type="image" tabindex="1"><img src="https://hive.apache.org/images/hive_logo_medium.jpg" alt="" loading="lazy"></figure>
+<p><a href="https://hive.apache.org/">官方地址</a>  :  https://hive.apache.org/ , <code>HIVE</code> 汉语意思是 <code>蜂巢</code></p>
+<blockquote>
+<p>​	The Apache Hive  data warehouse software facilitates reading, writing, and managing large datasets residing in distributed storage using SQL. Structure can be projected onto data already in storage. A command line tool and JDBC driver are provided to connect users to Hive.</p>
+<p>HIVE数据仓库软件可以使用SQL语句方便的读取,写入和管理分布存储中的大型数据集。(<code>reside in</code>  属于 , 居住于) ; <strong>数据和结构(SQL)可以相互映射起来(类似于mybatis的mapper)</strong> , 提供了一个命令行工具和JDBC驱动程序来将用户连接到Hive。</p>
+</blockquote>
+<h2 id="2-快速学习">2. 快速学习</h2>
+<blockquote>
+<p>​	如果建表语句不会的话可以往后翻去稍微学习一下............</p>
+</blockquote>
+<h3 id="1-安装">1. 安装</h3>
+<pre><code class="language-shell">1. 这里不推荐用 2.x 的版本 一堆坑
+tar -zxvf apache-hive-1.2.1-bin.tar.gz -C /opt/software/
+
+mv hive-env.sh.template hive-env.sh
+
+vim hive-env.sh
+export HADOOP_HOME=/opt/software/hadoop-2.7.2
+export HIVE_CONF_DIR=/opt/software/apache-hive-1.2.1-bin/conf
+
+
+2. 在conf/目录下面创建一个 hive-site.xml 这个文件 ,里面添加 
+
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;?xml-stylesheet type=&quot;text/xsl&quot; href=&quot;configuration.xsl&quot;?&gt;
+&lt;configuration&gt;
+	&lt;property&gt;
+	  &lt;name&gt;javax.jdo.option.ConnectionURL&lt;/name&gt;
+	  &lt;value&gt;jdbc:mysql://hadoop1:3306/metastore?createDatabaseIfNotExist=true&lt;/value&gt;
+	  &lt;!--  
+     如果你是 mysql  5.5.45+, 5.6.26+ and 5.7.6+ , 需要改成 `&amp;amp;` 意思就是 `&amp;` 的意思不过xml
+     需要写成这样子 .....
+     jdbc:mysql://hadoop1:3306/metastore?createDatabaseIfNotExist=true&amp;amp;useSSL=false
+      --&gt;
+	  &lt;description&gt;JDBC connect string for a JDBC metastore&lt;/description&gt;
+	&lt;/property&gt;
+
+	&lt;property&gt;
+	  &lt;name&gt;javax.jdo.option.ConnectionDriverName&lt;/name&gt;
+	  &lt;value&gt;com.mysql.jdbc.Driver&lt;/value&gt;
+	  &lt;description&gt;Driver class name for a JDBC metastore&lt;/description&gt;
+	&lt;/property&gt;
+
+	&lt;property&gt;
+	  &lt;name&gt;javax.jdo.option.ConnectionUserName&lt;/name&gt;
+	  &lt;value&gt;root&lt;/value&gt;
+	  &lt;description&gt;username to use against metastore database&lt;/description&gt;
+	&lt;/property&gt;
+
+	&lt;property&gt;
+	  &lt;name&gt;javax.jdo.option.ConnectionPassword&lt;/name&gt;
+	  &lt;value&gt;123456&lt;/value&gt;
+	  &lt;description&gt;password to use against metastore database&lt;/description&gt;
+	&lt;/property&gt;
+&lt;/configuration&gt;
+
+
+在/lib 目录, 放入jdbc 驱动包 , 然后mysql 创建 metastore 数据库 , 注意版本必须一致
+我的是 mysql5.7 用的jar包是 mysql-connector-java-5.1.47.jar  这里不对后期很坑
+
+3. 配置日志文件
+在 conf 目录下 : 
+mv hive-log4j.properties.template hive-log4j.properties
+vim hive-log4j.properties 
+hive.log.dir=/opt/software/apache-hive-1.2.1-bin/logs
+
+最后记得创建文件夹 .... 默认是在 /tmp/${user}/hive.log
+
+
+4. 然后 bin/hive 启动
+
+5. 查看配置信息 : 
+hive&gt;set;
+太多了 ....
+</code></pre>
+<p>默认配置文件：hive-default.xml</p>
+<p>用户自定义配置文件：hive-site.xml</p>
+<p>注意：用户自定义配置会覆盖默认配置。另外，Hive也会读入Hadoop的配置，因为Hive是作为Hadoop的客户端启动的，Hive的配置会覆盖Hadoop的配置。配置文件的设定对本机启动的所有Hive进程都有效。</p>
+<h3 id="2-binhive-本地交互">2. bin/hive - 本地交互</h3>
+<blockquote>
+<p>​	最简单的命令行交互</p>
+</blockquote>
+<h3 id="3-binhiveserver2-支持第三方连接">3. bin/hiveserver2 - 支持第三方连接</h3>
+<blockquote>
+<p>​	hiveserver2  其实就是一个服务器端, 可以连接多个远程第三方客户端</p>
+</blockquote>
+<h3 id="4-binbeeline-作为第三方连接">4. bin/beeline 作为第三方连接</h3>
+<blockquote>
+<p>​	他可以作为第三方进行连接 hive</p>
+</blockquote>
+<pre><code class="language-java">[admin@hadoop1 apache-hive-1.2.1-bin]$ bin/beeline 
+Beeline version 1.2.1 by Apache Hive
+// 连接命令 `!connect jdbc:hive2://hadoop1:10000` , 后面输入数据库用户名 密码
+beeline&gt; !connect jdbc:hive2://hadoop1:10000
+Connecting to jdbc:hive2://hadoop1:10000
+Enter username for jdbc:hive2://hadoop1:10000: root
+Enter password for jdbc:hive2://hadoop1:10000: ***********
+Connected to: Apache Hive (version 1.2.1)
+Driver: Hive JDBC (version 1.2.1)
+Transaction isolation: TRANSACTION_REPEATABLE_READ , 就好了
+0: jdbc:hive2://hadoop1:10000&gt; show databases;
++----------------+--+
+| database_name  |
++----------------+--+
+| default        |
++----------------+--+
+1 row selected (0.777 seconds)
+0: jdbc:hive2://hadoop1:10000&gt; 
+</code></pre>
+<h3 id="5-命令行交互">5. 命令行交互</h3>
+<blockquote>
+<p>​	有的时候我们不需要客户端, 希望写一个脚本去执行 , 这时候就可以用下面说得了</p>
+</blockquote>
+<pre><code class="language-java">1. 查看命令介绍  ,常用 -e  -f
+[admin@hadoop1 apache-hive-1.2.1-bin]$ bin/hive -help
+usage: hive
+ -d,--define &lt;key=value&gt;          Variable subsitution to apply to hive
+                                  commands. e.g. -d A=B or --define A=B
+    --database &lt;databasename&gt;     Specify the database to use
+ -e &lt;quoted-query-string&gt;         SQL from command line
+ -f &lt;filename&gt;                    SQL from files
+ -H,--help                        Print help information
+    --hiveconf &lt;property=value&gt;   Use value for given property
+    --hivevar &lt;key=value&gt;         Variable subsitution to apply to hive
+                                  commands. e.g. --hivevar A=B
+ -i &lt;filename&gt;                    Initialization SQL file
+ -S,--silent                      Silent mode in interactive shell
+ -v,--verbose                     Verbose mode (echo executed SQL to the
+                                  console)
+
+2. 命令行运行
+[admin@hadoop1 apache-hive-1.2.1-bin]$ bin/hive -e  &quot;select * from stu3;&quot;
+Logging initialized using configuration in jar:file:/opt/software/apache-hive-1.2.1-bin/lib/hive-common-1.2.1.jar!/hive-log4j.properties        
+OK
+1	xiaoli
+2	xiaowang
+3	xiaoming
+4	anthony
+5	flex
+6	xiaofan
+Time taken: 2.804 seconds, Fetched: 6 row(s)    
+    
+3. 执行sql脚本 
+[admin@hadoop1 data]$ cat sql.sff 
+use default;
+select * from stu3;
+
+[admin@hadoop1 data]$ hive -f ./sql.sff 
+Logging initialized using configuration in jar:file:/opt/software/apache-hive-1.2.1-bin/lib/hive-common-1.2.1.jar!/hive-log4j.properties
+OK
+Time taken: 1.113 seconds
+OK
+1	xiaoli
+2	xiaowang
+3	xiaoming
+4	anthony
+5	flex
+6	xiaofan
+Time taken: 1.023 seconds, Fetched: 6 row(s)   
+</code></pre>
+<h2 id="3-hive的数据类型">3. HIVE的数据类型</h2>
+<h3 id="1-基本数据类型">1. 基本数据类型</h3>
+<table>
+<thead>
+<tr>
+<th>Hive数据类型</th>
+<th>Java数据类型</th>
+<th>长度</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TINYINT</td>
+<td>byte</td>
+<td>1byte有符号整数   8位</td>
+<td>20</td>
+</tr>
+<tr>
+<td>SMALINT</td>
+<td>short</td>
+<td>2byte有符号整数   16位</td>
+<td>20</td>
+</tr>
+<tr>
+<td>INT</td>
+<td>int</td>
+<td>4byte有符号整数    32位</td>
+<td>20</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>long</td>
+<td>8byte有符号整数    64位</td>
+<td>20</td>
+</tr>
+<tr>
+<td>BOOLEAN</td>
+<td>boolean</td>
+<td>布尔类型，true或者false</td>
+<td>TRUE  FALSE</td>
+</tr>
+<tr>
+<td>FLOAT</td>
+<td>float</td>
+<td>单精度浮点数    4byte  32位  8个有效数字</td>
+<td>11.323444</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>double</td>
+<td>双精度浮点数    8byte  64位  17个有效数字</td>
+<td>11.323444366455078</td>
+</tr>
+<tr>
+<td>STRING</td>
+<td>string</td>
+<td>字符系列</td>
+<td>“You look great”</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td></td>
+<td>时间类型</td>
+<td></td>
+</tr>
+<tr>
+<td>BINARY</td>
+<td></td>
+<td>字节数组</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>对于Hive的String类型相当于数据库的varchar类型，该类型是一个可变的字符串，不过它不能声明其中最多能存储多少个字符，理论上它可以存储2GB的字符数。</p>
+<h3 id="2-集合类型">2. 集合类型</h3>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>描述</th>
+<th>语法示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>STRUCT</td>
+<td>和c语言中的struct类似，都可以通过“点”符号访问元素内容。例如，如果某个列的数据类型是STRUCT{first STRING, last   STRING},那么第1个元素可以通过字段.first来引用。</td>
+<td>struct()   例如struct&lt;street:string, city:string&gt;</td>
+</tr>
+<tr>
+<td>MAP</td>
+<td>MAP是一组键-值对元组集合，使用数组表示法可以访问数据。例如，如果某个列的数据类型是MAP，其中键-&gt;值对是’first’-&gt;’John’和’last’-&gt;’Doe’，那么可以通过字段名[‘last’]获取最后一个元素</td>
+<td>map()   例如map&lt;string, int&gt;</td>
+</tr>
+<tr>
+<td>ARRAY</td>
+<td>数组是一组具有相同类型和名称的变量的集合。这些变量称为数组的元素，每个数组元素都有一个编号，编号从零开始。例如，数组值为[‘John’, ‘Doe’]，那么第2个元素可以通过数组名[1]进行引用。</td>
+<td>Array()   例如array<string></td>
+</tr>
+</tbody>
+</table>
+<p>Hive有三种复杂数据类型<strong>ARRAY、MAP 和 STRUCT</strong>。ARRAY和MAP与Java中的Array和Map类似，而STRUCT与C语言中的Struct类似，它封装了一个命名字段集合，复杂数据类型允许任意层次的嵌套。</p>
+<h4 id="练习一下">练习一下</h4>
+<p>这是我们的数据 , 需要上传到hive中</p>
+<pre><code class="language-json">{
+    &quot;name&quot;: &quot;songsong&quot;,
+    &quot;friends&quot;: [&quot;bingbing&quot; , &quot;lili&quot;] ,       //列表Array, 
+    &quot;children&quot;: {                      //键值Map,
+        &quot;xiao song&quot;: 18 ,
+        &quot;xiaoxiao song&quot;: 19
+    }
+    &quot;address&quot;: {                      //结构Struct,
+        &quot;street&quot;: &quot;hui long guan&quot; ,
+        &quot;city&quot;: &quot;beijing&quot; 
+    }
+}
+
+其实 struct 和 map其实很相似 , 只是一个需要key值
+</code></pre>
+<p>我们将表改成可以分割的格式</p>
+<pre><code class="language-text">songsong,bingbing_lili,xiao song:18_xiaoxiao song:19,hui long guan_beijing
+yangyang,caicai_susu,xiao yang:18_xiaoxiao yang:19,chao yang_beijing
+</code></pre>
+<p>建表语句 , 如果不会后期会讲解 ,我感觉应该可以看得懂</p>
+<pre><code class="language-sql">create table test(
+name string,
+friends array&lt;string&gt;,
+children map&lt;string, int&gt;,
+address struct&lt;street:string, city:string&gt;
+)
+row format delimited fields terminated by ',' //列分隔符
+collection items terminated by '_' //map,array和struct分隔符(几个内部列分隔符其实是)
+map keys terminated by ':' // map kv分隔符
+lines terminated by '\n';  // 行分隔符
+</code></pre>
+<p>插入这个文档并且查询 :</p>
+<pre><code class="language-java">hive&gt; load data local inpath '/opt/software/apache-hive-1.2.1-bin/data/test.txt' into table test;
+Loading data to table default.test
+Table default.test stats: [numFiles=1, totalSize=144]
+OK
+Time taken: 1.584 seconds
+hive&gt; select * from test;
+OK
+songsong	[&quot;bingbing&quot;,&quot;lili&quot;]	{&quot;xiao song&quot;:18,&quot;xiaoxiao song&quot;:19}	{&quot;street&quot;:&quot;hui long guan&quot;,&quot;city&quot;:&quot;beijing&quot;}
+yangyang	[&quot;caicai&quot;,&quot;susu&quot;]	{&quot;xiao yang&quot;:18,&quot;xiaoxiao yang&quot;:19}	{&quot;street&quot;:&quot;chao yang&quot;,&quot;city&quot;:&quot;beijing&quot;}
+Time taken: 0.578 seconds, Fetched: 2 row(s)
+</code></pre>
+<p>发现没有啥问题 ........... 数据展示格式如上 .</p>
+<h3 id="3-数据类型转换">3. 数据类型转换</h3>
+<p>（1）任何整数类型都可以隐式地转换为一个范围更广的类型，如TINYINT可以转换成INT，INT可以转换成BIGINT。<strong>可以向上转换</strong></p>
+<p>（2）所有整数类型、FLOAT和STRING类型都可以隐式地转换成DOUBLE。</p>
+<p>（3）TINYINT、SMALLINT、INT都可以转换为FLOAT。</p>
+<p>（4）BOOLEAN类型不可以转换为任何其它的类型。</p>
+<h4 id="测试">测试</h4>
+<pre><code class="language-sql">hive&gt; select '1'+2, cast('1'as int) + 2;
+OK
+3.0	3
+Time taken: 0.286 seconds, Fetched: 1 row(s)
+</code></pre>
+<p>如果一个 string 类型和一个数字相互加减 , 自动转换为double类型 ,(前提是string可以转换成功,别'aa'去做转换)</p>
+<p>可以通过cast('1' as int) 显示的进行数据类型转换</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E4%BB%8B%E7%BB%8D">1. 介绍</a></li>
+<li><a href="#2-%E5%BF%AB%E9%80%9F%E5%AD%A6%E4%B9%A0">2. 快速学习</a>
+<ul>
+<li><a href="#1-%E5%AE%89%E8%A3%85">1. 安装</a></li>
+<li><a href="#2-binhive-%E6%9C%AC%E5%9C%B0%E4%BA%A4%E4%BA%92">2. bin/hive - 本地交互</a></li>
+<li><a href="#3-binhiveserver2-%E6%94%AF%E6%8C%81%E7%AC%AC%E4%B8%89%E6%96%B9%E8%BF%9E%E6%8E%A5">3. bin/hiveserver2 - 支持第三方连接</a></li>
+<li><a href="#4-binbeeline-%E4%BD%9C%E4%B8%BA%E7%AC%AC%E4%B8%89%E6%96%B9%E8%BF%9E%E6%8E%A5">4. bin/beeline 作为第三方连接</a></li>
+<li><a href="#5-%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%BA%A4%E4%BA%92">5. 命令行交互</a></li>
+</ul>
+</li>
+<li><a href="#3-hive%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">3. HIVE的数据类型</a>
+<ul>
+<li><a href="#1-%E5%9F%BA%E6%9C%AC%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B">1. 基本数据类型</a></li>
+<li><a href="#2-%E9%9B%86%E5%90%88%E7%B1%BB%E5%9E%8B">2. 集合类型</a>
+<ul>
+<li><a href="#%E7%BB%83%E4%B9%A0%E4%B8%80%E4%B8%8B">练习一下</a></li>
+</ul>
+</li>
+<li><a href="#3-%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2">3. 数据类型转换</a>
+<ul>
+<li><a href="#%E6%B5%8B%E8%AF%95">测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

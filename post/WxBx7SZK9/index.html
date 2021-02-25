@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Maven使用的一些技巧 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/WxBx7SZK9/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Maven使用的一些技巧</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-04-03</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/WxBx7SZK9/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/PPnsjIaZPi/"
+								class="tag">Maven</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1596字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-依赖">1. 依赖</h2>
+<h3 id="1-properties">1. properties</h3>
+<blockquote>
+<p>​	其实就是全局的属性,  其他地方引用可以通过 <code>${java.version}</code> 引入 , 比如下面的标签.</p>
+</blockquote>
+<pre><code class="language-xml">&lt;properties&gt;
+    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;
+    &lt;java.version&gt;1.8&lt;/java.version&gt;
+&lt;/properties&gt;
+</code></pre>
+<h3 id="2-dependencies">2. dependencies</h3>
+<blockquote>
+<p>​	用的最多的, 就是项目直接导入的依赖.</p>
+</blockquote>
+<pre><code class="language-xml">&lt;dependencies&gt;
+    &lt;dependency&gt;
+        &lt;groupId&gt;org.apache.commons&lt;/groupId&gt;
+        &lt;artifactId&gt;commons-lang3&lt;/artifactId&gt;
+    &lt;/dependency&gt;
+&lt;/dependencies&gt;
+</code></pre>
+<p>这里还有个 scope .</p>
+<blockquote>
+<ul>
+<li>compile，缺省值，适用于所有阶段，会随着项目一起发布。  <strong>(这个是强依赖)</strong></li>
+</ul>
+<ul>
+<li>provided，类似compile，期望JDK、容器或使用者会提供这个依赖。如servlet.jar。</li>
+<li>runtime，只在运行时使用，如JDBC驱动，适用运行和测试阶段。  **(这个是运行时依赖) **</li>
+<li>test，只在测试时使用，用于编译和运行测试代码。不会随项目发布。</li>
+<li>system，需要显式提供包含依赖的jar，Maven不会在Repository中查找它。,需要指定<code>&lt;systempath&gt;${basedir}/WebContent/WEB-INF/lib/hamcrest-core-1.3.jar&lt;/systempath&gt;</code></li>
+<li>import , 这个是maven2.0.9版本后出的属性，import只能在dependencyManagement的中使用，能解决maven单继承问题，import依赖关系实际上并不参与限制依赖关系的传递性。</li>
+</ul>
+</blockquote>
+<h3 id="dependencymanagement">dependencyManagement</h3>
+<blockquote>
+<p>​	帮助我们管理 dependencies  ,这个的作用就是全局的一个包管理. 比如直接依赖中没有找到, 则会来这里找 .</p>
+</blockquote>
+<pre><code class="language-xml">&lt;dependencyManagement&gt;
+    &lt;dependencies&gt;
+        &lt;dependency&gt;
+            &lt;groupId&gt;org.springframework.cloud&lt;/groupId&gt;
+            &lt;artifactId&gt;spring-cloud-dependencies&lt;/artifactId&gt;
+            &lt;version&gt;Finchley.RELEASE&lt;/version&gt;
+            &lt;type&gt;pom&lt;/type&gt;
+            &lt;scope&gt;import&lt;/scope&gt;
+        &lt;/dependency&gt;
+    &lt;/dependencies&gt;
+&lt;/dependencyManagement&gt;
+</code></pre>
+<h2 id="2-插件">2. 插件</h2>
+<h3 id="jdk编译插件">JDK编译插件</h3>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+            &lt;version&gt;3.8.0&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;source&gt;1.8&lt;/source&gt;
+                &lt;target&gt;1.8&lt;/target&gt;
+                &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+<h3 id="可执行文件插件">可执行文件插件</h3>
+<blockquote>
+<p>​	在 MainClass 这里放入你的主类的全限定名称.</p>
+</blockquote>
+<pre><code class="language-xml">&lt;plugin&gt;
+    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+    &lt;artifactId&gt;maven-shade-plugin&lt;/artifactId&gt;
+    &lt;version&gt;3.1.1&lt;/version&gt;
+    &lt;executions&gt;
+        &lt;execution&gt;
+            &lt;phase&gt;package&lt;/phase&gt;
+            &lt;goals&gt;
+                &lt;goal&gt;shade&lt;/goal&gt;
+            &lt;/goals&gt;
+            &lt;configuration&gt;
+                &lt;transformers&gt;
+                    &lt;transformer implementation=&quot;org.apache.maven.plugins.shade.resource.ManifestResourceTransformer&quot;&gt;
+                        &lt;mainClass&gt;com.test.Demo&lt;/mainClass&gt;
+                    &lt;/transformer&gt;
+                &lt;/transformers&gt;
+                &lt;artifactSet&gt;
+                &lt;/artifactSet&gt;
+            &lt;/configuration&gt;
+        &lt;/execution&gt;
+    &lt;/executions&gt;
+&lt;/plugin&gt;
+</code></pre>
+<h3 id="编译rt包">编译RT包</h3>
+<blockquote>
+<p>​	我们的编译插件额外加入编译目标.</p>
+</blockquote>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;plugins&gt;
+        &lt;plugin&gt;
+            &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+            &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+            &lt;version&gt;3.8.0&lt;/version&gt;
+            &lt;configuration&gt;
+                &lt;source&gt;1.8&lt;/source&gt;
+                &lt;target&gt;1.8&lt;/target&gt;
+                &lt;encoding&gt;UTF-8&lt;/encoding&gt;
+                &lt;compilerArguments&gt;
+                    &lt;bootclasspath&gt;${JAVA_HOME}/jre/lib/rt.jar&lt;/bootclasspath&gt;
+                &lt;/compilerArguments&gt;
+            &lt;/configuration&gt;
+        &lt;/plugin&gt;
+    &lt;/plugins&gt;
+&lt;/build&gt;
+</code></pre>
+<h2 id="3-多环境">3. 多环境</h2>
+<p>下面配置会说明一下当前的 环境. 默认是基于dev的 .</p>
+<pre><code class="language-xml">&lt;profiles&gt;
+    &lt;profile&gt;
+        &lt;id&gt;dev&lt;/id&gt;
+        &lt;activation&gt;
+            &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;
+        &lt;/activation&gt;
+        &lt;properties&gt;
+            &lt;!--这个是我们的定义的标签.下面这个deploy.type--&gt;
+            &lt;deploy.type&gt;dev&lt;/deploy.type&gt;
+        &lt;/properties&gt;
+    &lt;/profile&gt;
+
+    &lt;profile&gt;
+        &lt;id&gt;test&lt;/id&gt;
+        &lt;properties&gt;
+            &lt;deploy.type&gt;test&lt;/deploy.type&gt;
+        &lt;/properties&gt;
+    &lt;/profile&gt;
+&lt;/profiles&gt;
+</code></pre>
+<p>其次就是配置 resource , 这里代表你的resource目录位置 .  同时还可以添加多个resource.</p>
+<pre><code class="language-xml">&lt;build&gt;
+        &lt;resources&gt;
+            &lt;resource&gt;
+                &lt;!--这个其实就是你的 classpath 到 src/main/resources/dev 下面了--&gt;
+                &lt;directory&gt;src/main/resources/${deploy.type}&lt;/directory&gt;
+                &lt;!--关闭过滤功能, 开启后可以进行过滤.比如 &lt;includes&gt; 或者  &lt;excludes&gt;  --&gt;
+                &lt;filtering&gt;false&lt;/filtering&gt;
+            &lt;/resource&gt;
+        &lt;/resources&gt;
+&lt;/build&gt;
+</code></pre>
+<p>这个有啥用呢. 可以通过 <code>mvn clean package -P test</code>  可以通过 <code>-P</code> 指定一下环境. 这个命令是test .</p>
+<p>这个命令是 <code>mvn clean package -DprofileActive=prod</code> 的缩写.</p>
+<h2 id="4-build">4. build</h2>
+<pre><code class="language-xml">&lt;build&gt;
+    &lt;finalName&gt;${project.artifactId}&lt;/finalName&gt;
+&lt;/build&gt;
+</code></pre>
+<p>可以指定你的 build后面文件名</p>
+<p>mvn的命令 很简单.  clean 就是我们说的.</p>
+<h2 id="5命令">5.命令</h2>
+<h4 id="1-添加配置属性">1. 添加配置属性</h4>
+<p>首先 <code>mvn -Dxxx=xxx</code> , 其中<code>xxx</code> 代表的就是properties , 也就是属性, 这个可以设置多个属性.</p>
+<h4 id="2-跳过测试">2. 跳过测试</h4>
+<p>第二就是跳过测试 <code>mvn clean package -Dmaven.test.skip=true</code>  , 这个并没并不会去编译test目录下的文件.  而 <code>-DskipTests</code> 会编译测试文件, 所以很坑.</p>
+<h4 id="package-和-install-的区别">package 和 install 的区别</h4>
+<p>第一个 , 只是打包, 在你的target目录下.  但是install会发布到你本地的仓库.   如果使用命令打包 , 可以通过<code>mvn install:install-file -Dfile=D:\commons\target\commons-0.0.1-SNAPSHOT.jar -DgroupId=com.example -DartifactId=commons -Dversion=0.0.1-SNAPSHOT -Dpackaging=jar</code>  这个命令还是很简单的.</p>
+<p>所以通常打包的命令就是 <code>mvn clean package -Dmaven.test.skip=true</code></p>
+<h2 id="6-mvn镜像设置">6. mvn镜像设置</h2>
+<p>普通镜像.</p>
+<pre><code class="language-xml">&lt;repositories&gt;
+    &lt;repository&gt;
+        &lt;id&gt;public&lt;/id&gt;
+        &lt;name&gt;aliyun nexus&lt;/name&gt;
+        &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+        &lt;releases&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/releases&gt;
+    &lt;/repository&gt;
+&lt;/repositories&gt;
+</code></pre>
+<p>设置pluging 的source</p>
+<pre><code class="language-xml">&lt;pluginRepositories&gt;
+    &lt;pluginRepository&gt;
+        &lt;id&gt;public&lt;/id&gt;
+        &lt;name&gt;aliyun nexus&lt;/name&gt;
+        &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public/&lt;/url&gt;
+        &lt;releases&gt;
+            &lt;enabled&gt;true&lt;/enabled&gt;
+        &lt;/releases&gt;
+        &lt;snapshots&gt;
+            &lt;enabled&gt;false&lt;/enabled&gt;
+        &lt;/snapshots&gt;
+    &lt;/pluginRepository&gt;
+&lt;/pluginRepositories&gt;
+</code></pre>
+<p>比如maven仓库的设置镜像如下.  在setting.xml设置.</p>
+<pre><code class="language-xml">&lt;mirror&gt;
+    &lt;id&gt;nexus-aliyun&lt;/id&gt;
+    &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;
+    &lt;name&gt;Nexus aliyun&lt;/name&gt;
+    &lt;url&gt;http://maven.aliyun.com/nexus/content/groups/public&lt;/url&gt;
+&lt;/mirror&gt;/
+</code></pre>
+<h2 id="7-springboot的多环境配置">7. SpringBoot的多环境配置</h2>
+<p>SpringBoot配置文件, 如果不通过maven配置的话, 其实只要通过一个参数配置就行了.</p>
+<p><code>spring.profiles.active=dev</code></p>
+<p>我们可以通过.  命令行启动命令来设置, 区别于mvn的环境, 他那个是打包环境, 这个是运行时环境.</p>
+<p>这里可以通过三种方式配置 :</p>
+<p>第一种在classpath下面的<code>application.properties</code> 文件中加入你需要激活的环境</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-40-44/936c5210-2350-4281-9394-3e6ef06d3b78.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>第二种就是靠evn环境 , 可以通过 <code>System.setProperty(&quot;spring.profiles.active&quot; ,&quot;dev&quot;);</code></p>
+<p>第三站 : <code>java -jar -Dspring.profiles.active=dev</code></p>
+<p>第四种 : <code>java -jar --spring.profiles.active=dev</code></p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E4%BE%9D%E8%B5%96">1. 依赖</a>
+<ul>
+<li><a href="#1-properties">1. properties</a></li>
+<li><a href="#2-dependencies">2. dependencies</a></li>
+<li><a href="#dependencymanagement">dependencyManagement</a></li>
+</ul>
+</li>
+<li><a href="#2-%E6%8F%92%E4%BB%B6">2. 插件</a>
+<ul>
+<li><a href="#jdk%E7%BC%96%E8%AF%91%E6%8F%92%E4%BB%B6">JDK编译插件</a></li>
+<li><a href="#%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6%E6%8F%92%E4%BB%B6">可执行文件插件</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91rt%E5%8C%85">编译RT包</a></li>
+</ul>
+</li>
+<li><a href="#3-%E5%A4%9A%E7%8E%AF%E5%A2%83">3. 多环境</a></li>
+<li><a href="#4-build">4. build</a></li>
+<li><a href="#5%E5%91%BD%E4%BB%A4">5.命令</a><br>
+*
+<ul>
+<li><a href="#1-%E6%B7%BB%E5%8A%A0%E9%85%8D%E7%BD%AE%E5%B1%9E%E6%80%A7">1. 添加配置属性</a></li>
+<li><a href="#2-%E8%B7%B3%E8%BF%87%E6%B5%8B%E8%AF%95">2. 跳过测试</a></li>
+<li><a href="#package-%E5%92%8C-install-%E7%9A%84%E5%8C%BA%E5%88%AB">package 和 install 的区别</a></li>
+</ul>
+</li>
+<li><a href="#6-mvn%E9%95%9C%E5%83%8F%E8%AE%BE%E7%BD%AE">6. mvn镜像设置</a></li>
+<li><a href="#7-springboot%E7%9A%84%E5%A4%9A%E7%8E%AF%E5%A2%83%E9%85%8D%E7%BD%AE">7. SpringBoot的多环境配置</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Dubbo 与 他的 SPI | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/dubbo-yu-ta-de-spi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Dubbo 与 他的 SPI</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-02</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/dubbo-yu-ta-de-spi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Wo2jNti0O/"
+								class="tag">Dubbo</a> |
+							 <a
+								href="https://anthony-dong.github.io/tag/YhgvYPs6Is2/"
+								class="tag">SPI</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1252字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	SPI全称<code>Service Provider Interface</code>，是Java提供的一套用来被第三方实现或者扩展的API，它可以用来启用框架扩展和替换组件。但是如果你了解Dubbo , 那么 Dubbo的那套 SPI  , 可算是最强的 . 我们后面会介绍到</p>
+</blockquote>
+<p><strong>机构图 :</strong></p>
+<p>调用方 : 需要一个被实现的接口类 和 一个类加载器 ,</p>
+<p>服务接口 : 就是你所需要实现的服务</p>
+<p>服务提供方 ; 就是服务真正的实现类</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-11-07/1d0135ff-e16d-4588-9c6b-d44e2c74185a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="1-介绍">1. 介绍</h2>
+<p><a href="http://dubbo.apache.org/zh-cn/docs/source_code_guide/dubbo-spi.html">链接</a>   : Dubbo官网讲的 ,所以多看看官方文档 , Dubbo的SPI 更加成熟 , 是 Dubbo的核心 ,源码我就不展示了,官网有讲解 .. . .</p>
+<h2 id="2-快速开始">2. 快速开始</h2>
+<p>依赖</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;com.alibaba&lt;/groupId&gt;
+    &lt;artifactId&gt;dubbo&lt;/artifactId&gt;
+    &lt;version&gt;2.6.2&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<ol>
+<li><strong>接口</strong>   :  必须有 SPI 申明</li>
+</ol>
+<pre><code class="language-java">@SPI
+public interface Robot {
+    void sayHello();
+}
+</code></pre>
+<ol start="2">
+<li><strong>接口实现类</strong></li>
+</ol>
+<pre><code class="language-java">public class OptimusPrime implements Robot {
+    
+    @Override
+    public void sayHello() {
+        System.out.println(&quot;Hello, I am Optimus Prime.&quot;);
+    }
+}
+
+public class Bumblebee implements Robot {
+
+    @Override
+    public void sayHello() {
+        System.out.println(&quot;Hello, I am Bumblebee.&quot;);
+    }
+}
+</code></pre>
+<p>还需要申明一下接口文件 还有 实现类全限定类名</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-02/4c33852d-ba03-49cf-acb7-c9d4088a0e83.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>测试一下</p>
+<pre><code class="language-java">public class DubboSPITest {
+
+    @Test
+    public void sayHello() throws Exception {
+        // 启动一个 ExtensionLoader
+        ExtensionLoader&lt;Robot&gt; extensionLoader =
+                ExtensionLoader.getExtensionLoader(Robot.class);
+
+        // 根据key值获取
+        Robot optimusPrime = extensionLoader.getExtension(&quot;optimusPrime&quot;);
+        optimusPrime.sayHello();
+
+         // 根据key值获取
+        Robot bumblebee = extensionLoader.getExtension(&quot;bumblebee&quot;);
+        bumblebee.sayHello();
+    }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Hello, I am Optimus Prime.
+Hello, I am Bumblebee.
+</code></pre>
+<p>上诉只是Dubbo的一小部分 , 其中还有 IOC和AOP ,但是目前IOC只支持set方法注入</p>
+<h2 id="2-spi注解">2. @SPI注解</h2>
+<h3 id="1-快速开始">1. 快速开始</h3>
+<pre><code class="language-java">@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface SPI {
+
+    /**
+     * default extension name
+     */
+    String value() default &quot;&quot;;
+
+}
+</code></pre>
+<p>以我们上面的为例子 ,其他都不变 ,我们在<code>Robot</code>接口的<code>@SPI</code>注解中加入了 bumblebee</p>
+<pre><code class="language-java">@SPI(&quot;bumblebee&quot;)
+public interface Robot {
+    void sayHello();
+}
+</code></pre>
+<p>此时我们执行测试类 :  此时需要改为 <code>extensionLoader.getAdaptiveExtension();</code></p>
+<pre><code class="language-java">public class DubboSPITest {
+
+@Test
+public void sayHello() throws Exception {
+    ExtensionLoader&lt;Robot&gt; extensionLoader =
+            ExtensionLoader.getExtensionLoader(Robot.class);
+    
+    // 获取一个自适应类
+    Robot adaptiveRobot = extensionLoader.getAdaptiveExtension();
+    adaptiveRobot.sayHello();
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Hello, I am Bumblebee.
+</code></pre>
+<p>此时就引入了我们Dubbo最强大的功能 <code>Adaptive</code></p>
+<p>但是我们此时又改了 ,我们在<code>com.dubbo.spi.OptimusPrime</code> , 类上面加了一个 <code>@Adaptive</code> 注解 , 此时其他都不动继续执行 , 输出</p>
+<pre><code class="language-java">Hello, I am Optimus Prime.
+</code></pre>
+<h3 id="2-注意和结论">2. 注意和结论</h3>
+<p>所以结论就是 ,如果是自适应注入的话, <code>@Adaptive</code> 的优先级 高于 <code>@SPI(value=&quot;&quot;)</code> 显示声明高...</p>
+<p>但是如果是默认注入的话 , 那么 <code>@SPI(value=&quot;&quot;)</code>才有用</p>
+<pre><code class="language-java">1. com.dubbo.spi.Robot 类加入 @SPI(&quot;bumblebee&quot;)
+2. com.dubbo.spi.OptimusPrime 加入  @Adaptive
+3. com.dubbo.spi.Bumblebee 什么也不加    
+
+@Test
+public void testDefault(){
+    ExtensionLoader&lt;Robot&gt; loader = ExtensionLoader.getExtensionLoader(Robot.class);
+    Robot robot = loader.getDefaultExtension();
+    robot.sayHello();
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Hello, I am Bumblebee.
+</code></pre>
+<h2 id="3-ioc">3. IOC</h2>
+<h3 id="1-使用">1. 使用</h3>
+<p>其实IOC 依赖于 Adaptive的 , 因为注入就是要区分优先级的  ,举个例子</p>
+<p>我们有一个 <code>com.dubbo.spi.Store</code> 接口 ,</p>
+<pre><code class="language-java">@SPI
+public interface Store {
+    void sell(String name);
+}
+</code></pre>
+<p>还有一个实现类</p>
+<pre><code class="language-java">public class AliBaBaStore implements Store {
+
+    private Robot robot;
+
+    public void setRobot(Robot robot) {
+        this.robot = robot;
+    }
+
+    @Override
+    public void sell(String name) {
+        System.out.println(name+&quot; 卖了 : &quot; + robot);
+    }
+}
+</code></pre>
+<p>还需要在 <code>META-INF/dubbo/com.dubbo.spi.Store</code> 中添加<code>alibaba = com.dubbo.spi.AliBaBaStore</code> 这句话 ,</p>
+<p>启动测试类 ....</p>
+<pre><code class="language-java">public class DubboSPITest {
+    @Test
+    public void sayHello() throws Exception {
+        ExtensionLoader&lt;Store&gt; loader = ExtensionLoader.getExtensionLoader(Store.class);
+        Store ali = loader.getExtension(&quot;alibaba&quot;);
+        ali.sell(&quot;alibaba&quot;);
+    }
+}
+</code></pre>
+<p>输出 ....</p>
+<pre><code class="language-java">alibaba 卖了 : com.dubbo.spi.OptimusPrime@23223dd8
+</code></pre>
+<p>确实如此 , 我们的<code>com.dubbo.spi.OptimusPrime</code> 类上面申明了注解 <code>@Adaptive</code> ,优先级最高 , <strong>所以set注入是一种自适应注入 ,需要注意一下  , 而且Dubbo 会自动帮助我们实现加载的</strong></p>
+<p>我们可以在启动参数上加入 <code>-XX:+TraceClassLoading</code> 看一下</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-02/e725d75b-9ae9-48b1-b541-6786e3d5b798.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们发现确实都加载了 ...</p>
+<h3 id="2-注意点">2. 注意点</h3>
+<pre><code class="language-java">@Test
+public void testLoad(){
+    ExtensionLoader&lt;Robot&gt; loader = ExtensionLoader.getExtensionLoader(Robot.class);
+    Robot robot = loader.getAdaptiveExtension();
+
+    ExtensionLoader&lt;Store&gt; loader2 = ExtensionLoader.getExtensionLoader(Store.class);
+    Store store = loader2.getAdaptiveExtension();
+
+    // 这是因为确定是这个实现类 ....
+    AliBaBaStore baStore = (AliBaBaStore) store;
+    System.out.println(&quot;baStore.getRobot()==robot = &quot; + (baStore.getRobot() == robot));
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">baStore.getRobot()==robot = true
+</code></pre>
+<p>所以确实是单例 , 维护的很好</p>
+<h2 id="4-adaptive-注解">4. @Adaptive 注解</h2>
+<pre><code class="language-java">@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface Adaptive {
+    String[] value() default {};
+}
+</code></pre>
+<p>我们看一下官方解释</p>
+<blockquote>
+<p>​	Decide which target extension to be injected. The name of the target extension is decided by the parameter passed in the URL , and the parameter names are given by this method.</p>
+</blockquote>
+<p>其实<code>value()</code>  的作用就是决定哪个实现类可以被注入进去 , 这个实现类的名字通过参数<code>URL</code>决定 , 参数名称有<code>value()</code>方法给出</p>
+<h3 id="1-测试一下-其实主要决定因素在于-url">1. 测试一下 ,其实主要决定因素在于 URL</h3>
+<pre><code class="language-java">@Test
+public void testRobot(){
+    ExtensionLoader&lt;Robot&gt; extensionLoader = ExtensionLoader.getExtensionLoader(Robot.class);
+
+    List&lt;Robot&gt; load = extensionLoader.getActivateExtension(URL.valueOf(&quot;test://localhost/test?load=bumblebee&quot;), &quot;load&quot;);
+
+    for (Robot robot : load) {
+        robot.sayHello();
+    }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Hello, I am Bumblebee.
+</code></pre>
+<h3 id="2-骚操作">2. 骚操作</h3>
+<p>我们对项目加以改造 ...</p>
+<pre><code class="language-java">@SPI
+public interface Robot {
+    @Adaptive({&quot;load&quot;})
+    void sayHello(URL url);
+}
+</code></pre>
+<p>实现类 不变 ,只是参数添加一下就行</p>
+<p>测试类 :</p>
+<pre><code class="language-java">@Test
+public void testAdaptive(){
+    ExtensionLoader&lt;Robot&gt; loader = ExtensionLoader.getExtensionLoader(Robot.class);
+
+    Robot extension = loader.getAdaptiveExtension();
+
+    extension.sayHello(URL.valueOf(&quot;test://localhost/test?load=bumblebee&quot;));
+
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">Hello, I am Bumblebee.
+</code></pre>
+<p>结果还是对的 , 所以 , 这个自动注入蛮厉害的.</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E4%BB%8B%E7%BB%8D">1. 介绍</a></li>
+<li><a href="#2-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">2. 快速开始</a></li>
+<li><a href="#2-spi%E6%B3%A8%E8%A7%A3">2. @SPI注解</a>
+<ul>
+<li><a href="#1-%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B">1. 快速开始</a></li>
+<li><a href="#2-%E6%B3%A8%E6%84%8F%E5%92%8C%E7%BB%93%E8%AE%BA">2. 注意和结论</a></li>
+</ul>
+</li>
+<li><a href="#3-ioc">3. IOC</a>
+<ul>
+<li><a href="#1-%E4%BD%BF%E7%94%A8">1. 使用</a></li>
+<li><a href="#2-%E6%B3%A8%E6%84%8F%E7%82%B9">2. 注意点</a></li>
+</ul>
+</li>
+<li><a href="#4-adaptive-%E6%B3%A8%E8%A7%A3">4. @Adaptive 注解</a>
+<ul>
+<li><a href="#1-%E6%B5%8B%E8%AF%95%E4%B8%80%E4%B8%8B-%E5%85%B6%E5%AE%9E%E4%B8%BB%E8%A6%81%E5%86%B3%E5%AE%9A%E5%9B%A0%E7%B4%A0%E5%9C%A8%E4%BA%8E-url">1. 测试一下 ,其实主要决定因素在于 URL</a></li>
+<li><a href="#2-%E9%AA%9A%E6%93%8D%E4%BD%9C">2. 骚操作</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

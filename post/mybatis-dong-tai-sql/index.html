@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>MyBatis - 动态SQL | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/mybatis-dong-tai-sql/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>MyBatis - 动态SQL</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-14</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/mybatis-dong-tai-sql/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/3khXF681Z_v/"
+								class="tag">mybatis</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">969字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">5 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="if">if</h2>
+<p>​		动态 SQL 通常要做的事情是根据条件包含 where 子句的一部分。比如：注意一点, 你if 包含的字段传参时必须有,就算为null,不能用 java的多态,会报错例如</p>
+<pre><code class="language-java">List&lt;Emp&gt; selectEmpByNOAndSalary(@Param(&quot;deptno&quot;) Integer deptno, @Param(&quot;salary&quot;)Integer salary);
+
+// 这个会发生异常
+List&lt;Emp&gt; selectEmpByNOAndSalary(@Param(&quot;deptno&quot;) Integer deptno);
+</code></pre>
+<pre><code class="language-xml"> &lt;select id=&quot;selectEmpByNOAndSalary&quot; resultMap=&quot;BaseResultMap&quot;&gt;
+        SELECT
+            *
+        FROM
+            emp
+        WHERE
+            DEPTNO = #{deptno}
+        &lt;if test=&quot;null != salary&quot;&gt;
+            and  SAL &gt; #{salary}
+        &lt;/if&gt;
+&lt;/select&gt;
+</code></pre>
+<pre><code class="language-java">1.当不写 salary 时 ,记住 别用基本数据类型,用包装类
+empMapper.selectEmpByNOAndSalary(10,null);
+// 结果: 
+SELECT * FROM emp WHERE DEPTNO = ? 
+    
+2. 写了以后 
+empMapper.selectEmpByNOAndSalary(10, 2000);
+// 结果
+Preparing: SELECT * FROM emp WHERE DEPTNO = ? and SAL &gt; ? 
+</code></pre>
+<h2 id="choose-when-otherwise">choose, when, otherwise</h2>
+<p><code>choose</code>也就是 可选择的意思 ,类似与 switch ,<code>when</code>就是 case的意思 ,如果第一个条件符合 ,不会执行第二个 , 如果第一个第二个都不存在,就会走 <code>otherwise</code>  , 这个玩意还是上面那个问题,字段不能用方法重载,</p>
+<pre><code class="language-java">    &lt;select id=&quot;selectEmpByChose&quot; resultMap=&quot;BaseResultMap&quot;&gt;
+        SELECT
+            *
+        FROM
+            emp
+        WHERE
+            DEPTNO = #{deptno}
+        &lt;choose&gt;
+            &lt;when test=&quot;null != salary&quot;&gt;
+                AND SAL &gt; #{salary}
+            &lt;/when&gt;
+            &lt;when test=&quot;null != manager&quot;&gt;
+                AND MGR = #{manager}
+            &lt;/when&gt;
+            &lt;otherwise&gt;
+                AND 0=0
+            &lt;/otherwise&gt;
+        &lt;/choose&gt;
+    &lt;/select&gt;
+</code></pre>
+<p>例如</p>
+<pre><code class="language-java">方法 : 
+List&lt;Emp&gt; selectEmpByChose(@Param(&quot;deptno&quot;) Integer deptno,@Param(&quot;salary&quot;)  Integer salary, @Param(&quot;manager&quot;) String manager);
+
+1. 我们全部参数输入 : 
+empMapper.selectEmpByChose(20, 2000,&quot;7566&quot;);
+输出 sql 是 :   SELECT * FROM emp WHERE DEPTNO = ? AND SAL &gt; ?
+
+2. 当我们只输入 salary 时 
+empMapper.selectEmpByChose(20, 2000,null);
+结果 :  SELECT * FROM emp WHERE DEPTNO = ? AND SAL &gt; ? 
+
+3. 当我们输入 manager 时 
+empMapper.selectEmpByChose(20, null,&quot;7566&quot;);
+结果 :  SELECT * FROM emp WHERE DEPTNO = ? AND MGR = ? 
+ 
+4. 当我们啥也不输入是
+empMapper.selectEmpByChose(20, null,null);
+结果 : SELECT * FROM emp WHERE DEPTNO = ? AND 0=0 
+</code></pre>
+<h2 id="trim-where-set">trim, where, set</h2>
+<h3 id="where标签">where标签</h3>
+<p>where 问题 ,我们知道如果用if 第一个条件如果不满足, 那么 结果就成了 where and 显然语法错误 ,为了解决这样的问题 , 提供了<code>where 标签</code>  , <em>where</em> 元素只会在至少有一个子元素的条件返回 SQL 子句的情况下才去插入“WHERE”子句。而且，若语句的开头为“AND”或“OR”，<em>where</em> 元素也会将它们去除。</p>
+<pre><code class="language-xml">    &lt;select id=&quot;selectEmpByWhere&quot;
+            resultMap=&quot;BaseResultMap&quot;&gt;
+        SELECT
+        *
+        FROM
+        emp
+        &lt;where&gt;
+            &lt;if test=&quot;null != deptno&quot;&gt;
+                 DEPTNO = #{deptno}
+            &lt;/if&gt;
+            &lt;if test=&quot;null != salary&quot;&gt;
+                and  SAL &gt; #{salary}
+            &lt;/if&gt;
+            &lt;if test=&quot;null != manager&quot;&gt;
+                and  MGR = #{manager}
+            &lt;/if&gt;
+        &lt;/where&gt;
+    &lt;/select&gt;
+</code></pre>
+<p>使用效果 :</p>
+<pre><code class="language-java">empMapper.selectEmpByWhere(null, null, null);
+empMapper.selectEmpByWhere(null, 3000, null);
+empMapper.selectEmpByWhere(20, null, null);
+empMapper.selectEmpByWhere(20, null, &quot;7839&quot;);
+empMapper.selectEmpByWhere(20, 2000, &quot;7839&quot;);
+
+sql 语句对应的
+SELECT * FROM emp 
+SELECT * FROM emp WHERE SAL &gt; ? 
+SELECT * FROM emp WHERE DEPTNO = ? 
+SELECT * FROM emp WHERE DEPTNO = ? and MGR = ? 
+SELECT * FROM emp WHERE DEPTNO = ? and SAL &gt; ? and MGR = ?     
+</code></pre>
+<h3 id="trim-标签">trim 标签</h3>
+<p>如果 <em>where</em> 元素没有按正常套路出牌，我们可以通过自定义 trim 元素来定制 <em>where</em> 元素的功能。比如，和 <em>where</em> 元素等价的自定义 trim 元素为：</p>
+<p>有几个字段含义  prefix  prefixOverrides , 是指前缀是where , 会删除多余的前缀 <code>AND |OR</code> ,</p>
+<p>还有后缀  suffix suffixOverrides ,指后缀是啥  ?  , 会删除多余的后缀</p>
+<pre><code class="language-xml">这个等价于 上面的 where 查询
+    &lt;select id=&quot;selectEmpByWhere&quot;
+            resultMap=&quot;BaseResultMap&quot;&gt;
+        SELECT
+        *
+        FROM
+        emp
+        &lt;trim prefix=&quot;where&quot; prefixOverrides=&quot;AND |OR &quot;&gt;
+            &lt;if test=&quot;null != deptno&quot;&gt;
+                 DEPTNO = #{deptno}
+            &lt;/if&gt;
+            &lt;if test=&quot;null != salary&quot;&gt;
+                and  SAL &gt; #{salary}
+            &lt;/if&gt;
+            &lt;if test=&quot;null != manager&quot;&gt;
+                and  MGR = #{manager}
+            &lt;/if&gt;
+        &lt;/trim&gt;
+    &lt;/select&gt;
+
+</code></pre>
+<h3 id="set">set</h3>
+<p><em>set</em> 元素可以用于动态包含需要更新的列，而舍去其它的</p>
+<pre><code class="language-xml">  &lt;update id=&quot;updateRole&quot;&gt;
+    update role
+    &lt;set&gt;
+      &lt;if test=&quot;role.id != null&quot;&gt;id=#{role.id},&lt;/if&gt;
+      &lt;if test=&quot;role.role != null&quot;&gt;role=#{role.role},&lt;/if&gt;
+    &lt;/set&gt;
+    where id=#{id}
+  &lt;/update&gt;
+</code></pre>
+<pre><code class="language-java">void updateRole(@Param(&quot;id&quot;) Integer id, @Param(&quot;role&quot;) Role role);
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#if">if</a></li>
+<li><a href="#choose-when-otherwise">choose, when, otherwise</a></li>
+<li><a href="#trim-where-set">trim, where, set</a>
+<ul>
+<li><a href="#where%E6%A0%87%E7%AD%BE">where标签</a></li>
+<li><a href="#trim-%E6%A0%87%E7%AD%BE">trim 标签</a></li>
+<li><a href="#set">set</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JUC - CountDownLatch &amp; CyclicBarrier  线程计数器 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/countdownlatch/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JUC - CountDownLatch &amp; CyclicBarrier  线程计数器</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-23</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/countdownlatch/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1182字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="countdownlatch"><code>CountDownLatch</code></h2>
+<blockquote>
+<p>​	CountDownLatch是一个同步工具类，它允许一个或多个线程一直等待，直到其他线程执行完后再执行。例如，应用程序的主线程希望在负责启动框架服务的线程已经启动所有框架服务之后执行。</p>
+</blockquote>
+<p>其实这个玩意跟 <code>java.util.concurrent.Semaphore</code> 很相似 , 但是又不相似 , 他使用的是<code>AQS</code> , 一个多线程共享的状态量 .  如果你玩过 <code>Golang</code>的话, 和他的 <code>sync.waitgroup</code> 很相似近乎一模一样. 但是CountDownLatch少一个功能.</p>
+<h4 id="构造方法">构造方法</h4>
+<p><code>java.util.concurrent.CountDownLatch#CountDownLatch</code> 方法</p>
+<p>参数count 就是一个计数器 .  后续操作都是基于这个计数器的 .</p>
+<pre><code class="language-java">public CountDownLatch(int count) {
+        if (count &lt; 0) throw new IllegalArgumentException(&quot;count &lt; 0&quot;);
+        this.sync = new Sync(count);
+}
+</code></pre>
+<h4 id="核心方法">核心方法</h4>
+<p><code>CountDownLatch</code>就俩方法指的我们注意 , 一个是<code>await</code>, 一个是<code>countDown</code>  ,</p>
+<p><code>await</code>是等到计数器为0时候才能向下执行 (就是当前线程阻塞了) , <code>countDown</code>是每次减一</p>
+<ul>
+<li>等待计数器到0 才能停止等待</li>
+</ul>
+<pre><code class="language-java">public void await() throws InterruptedException{...}
+</code></pre>
+<ul>
+<li>等待超时, 如果还没有计数器到0 , 就自动放弃等待.</li>
+</ul>
+<pre><code class="language-java">public boolean await(long timeout, TimeUnit unit){...}
+</code></pre>
+<ul>
+<li>计数器减一操作</li>
+</ul>
+<pre><code class="language-java">public void countDown() {...}
+</code></pre>
+<h2 id="为啥叫他为启动器">为啥叫他为启动器 ?</h2>
+<h3 id="例子一">例子一</h3>
+<blockquote>
+<p>​	简单来个例子 , 我们现在有一个任务, 需要等待初始化完成 , 才能继续启动 .  这时候就是需要启动器</p>
+</blockquote>
+<pre><code class="language-java">public class TestCountdownLatch {
+    public static void main(String[] args) throws InterruptedException {
+        CountDownLatch Launcher = new CountDownLatch(1);
+        long start = System.currentTimeMillis();
+        new Thread(() -&gt; {
+            try {
+                Launcher.await();
+            } catch (InterruptedException e) {
+                //
+            }
+            System.out.println(&quot;启动成功 : &quot; + (System.currentTimeMillis() - start));
+        }).start();
+
+        TimeUnit.SECONDS.sleep(2);
+        Launcher.countDown();
+    }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">启动成功 : 2064
+</code></pre>
+<h3 id="例子二">例子二</h3>
+<pre><code class="language-java">public class TestDemo {
+
+    public static void main(String[] args) throws InterruptedException {
+        // 为何1把锁, 因为我们只需要一扇门就可以堵住线程执行
+        CountDownLatch startSignal = new CountDownLatch(1);
+        
+        // 为何5把锁, 因为我们需要让5个Worker全部工作完,才能说全部工作完成
+        CountDownLatch doneSignal = new CountDownLatch(5);
+
+        // 依次创建并启动5个worker线程
+        IntStream.range(0,5).forEach(e-&gt; new Thread(new Worker(startSignal, doneSignal)).start());
+
+        System.out.println(&quot;Driver is doing something...&quot;);
+        System.out.println(&quot;Driver is Finished, start all workers ...&quot;);
+        
+        startSignal.countDown(); // Driver执行完毕，发出开始信号，使所有的worker线程开始执行
+        
+        doneSignal.await(); // 等待所有的worker线程执行结束
+        
+        System.out.println(&quot;Finished.&quot;);
+    }
+
+
+}
+
+// 简单的接口
+class Worker implements Runnable{
+    private final CountDownLatch startSignal;
+    private final CountDownLatch doneSignal;
+    Worker(CountDownLatch startSignal, CountDownLatch doneSignal) {
+        this.startSignal = startSignal;
+        this.doneSignal = doneSignal;
+    }
+    public void run() {
+        try {
+            startSignal.await(); // 等待Driver线程执行完毕，获得开始信号
+            System.out.println(&quot;Working now ...&quot;+Thread.currentThread().getName());
+            doneSignal.countDown(); // 当前worker执行完毕，释放一个完成信号
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Driver is doing something...
+Driver is Finished, start all workers ...
+Working now ...Thread-1
+Working now ...Thread-0
+Working now ...Thread-2
+Working now ...Thread-3
+Working now ...Thread-4
+Finished.
+</code></pre>
+<h2 id="做一个线程状态管理器">做一个线程状态管理器</h2>
+<p>现在我们对 X, Y 进行累加10万次, 但是我们不知道这俩线程啥时候结束.</p>
+<pre><code class="language-java">private static int x = 0;
+private static int y = 0;
+
+public static void main(String[] args) throws InterruptedException {
+    new Thread(() -&gt; {
+        while (x &lt; 100000) {
+            x++;
+        }
+    }).start();
+
+    new Thread(() -&gt; {
+        while (y &lt; 100000) {
+            y++;
+        }
+    }).start();
+
+    System.out.println(String.format(&quot;terminal  x : %d ,y : %d.&quot;, x, y));
+}
+</code></pre>
+<p>我们就这么执行 , 会发现什么  输出可能每个人不一致,主线程是不会等待 , 那俩子线程执行完毕的, 所以需要.</p>
+<pre><code class="language-java">terminal  x : 5190 ,y : 0.
+</code></pre>
+<p>但是我们加以修饰 .</p>
+<pre><code class="language-java">private static int x = 0;
+private static int y = 0;
+
+public static void main(String[] args) throws InterruptedException {
+    CountDownLatch BOOT = new CountDownLatch(2);
+
+    new Thread(() -&gt; {
+        while (x &lt; 100000) {
+            x++;
+        }
+        BOOT.countDown();
+    }).start();
+
+    new Thread(() -&gt; {
+        while (y &lt; 100000) {
+            y++;
+        }
+        BOOT.countDown();
+    }).start();
+
+    BOOT.await();
+    System.out.println(String.format(&quot;terminal  x : %d ,y : %d.&quot;, x, y));
+}
+</code></pre>
+<p>输出呢 :  所以满足我们的预期.</p>
+<pre><code class="language-java">terminal  x : 100000 ,y : 100000.
+</code></pre>
+<h2 id="cyclicbarrier"><code>CyclicBarrier</code></h2>
+<p><code>Cyclic</code> 是循环的意思 , 意思就是循环呗.  <code>barrier</code> 是屏障的意思.</p>
+<p>构造器 :</p>
+<pre><code class="language-java">CyclicBarrier barrier = new CyclicBarrier(2, new Runnable() {
+            @Override
+            public void run() {
+               // todo
+            }
+        });
+</code></pre>
+<p>就俩参数, 第一个参数意思就是 <code>parties</code> 指的是成员数量.  第二个参数指的是成员数如果达到了2 , 就触发这个runnable .</p>
+<p>成员数 : 其实是指的 waiting中的线程,  所以他就是这个这意思. 当waiting中的线程到达了2 , 就触发runnable . 到了就触发 . 循环往复</p>
+<pre><code class="language-java">public class TestCyclicBarrier {
+
+    public static void main(String[] args) {
+        CyclicBarrier barrier = new CyclicBarrier(2, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(&quot;你俩过去吧&quot;);
+            }
+        });
+
+        IntStream.range(0, 4).forEach(e -&gt; new Thread(() -&gt; {
+            try {
+                ThreadLocalRandom random = ThreadLocalRandom.current();
+                int x = random.nextInt(1000);
+                TimeUnit.MILLISECONDS.sleep(random.nextInt(x));
+                barrier.await();
+                System.out.println(Thread.currentThread().getName() + &quot; : 等待&quot; + x + &quot;ms&quot;);
+            } catch (InterruptedException | BrokenBarrierException e1) {
+                e1.printStackTrace();
+            }
+        }).start());
+    }
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">你俩过去吧
+Thread-2 : 等待16ms
+Thread-3 : 等待69ms
+你俩过去吧
+Thread-1 : 等待574ms
+Thread-0 : 等待259ms
+</code></pre>
+<p>基本就这个用法,  <code>barrier.getNumberWaiting()</code> 返回当前等待中的线程数 , 那个reset最好别用/</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#countdownlatch"><code>CountDownLatch</code></a><br>
+*
+<ul>
+<li><a href="#%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">构造方法</a></li>
+<li><a href="#%E6%A0%B8%E5%BF%83%E6%96%B9%E6%B3%95">核心方法</a></li>
+</ul>
+</li>
+<li><a href="#%E4%B8%BA%E5%95%A5%E5%8F%AB%E4%BB%96%E4%B8%BA%E5%90%AF%E5%8A%A8%E5%99%A8">为啥叫他为启动器 ?</a>
+<ul>
+<li><a href="#%E4%BE%8B%E5%AD%90%E4%B8%80">例子一</a></li>
+<li><a href="#%E4%BE%8B%E5%AD%90%E4%BA%8C">例子二</a></li>
+</ul>
+</li>
+<li><a href="#%E5%81%9A%E4%B8%80%E4%B8%AA%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%99%A8">做一个线程状态管理器</a></li>
+<li><a href="#cyclicbarrier"><code>CyclicBarrier</code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

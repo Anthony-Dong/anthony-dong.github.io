@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Golang - 指针类型(难道是引用类型吗?) | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/golang-zhi-zhen/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Golang - 指针类型(难道是引用类型吗?)</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-09</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/golang-zhi-zhen/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1507字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<pre><code> Golang有指针(这里指针不完全等价于C语言的指针) , 但是有些人生下来就是指针类型哇 , 跟Java的对象一样, 天生他就是一个指针类型(可以理解为引用类型,类似于Java的引用.).  但是Golang有些人不是哇, 他生下来不是指针类型.  好多人对于引用类型和指针类型分不清, 什么对象需要加`&amp;`和`*` ,  请看我下面这段话. 
+</code></pre>
+<p>​	**关于引用类型的实现 : **</p>
+<ul>
+<li>第一种就是句柄访问(类似于一种映射关系),通过访问句柄指针来操作原数据  ,</li>
+<li>第二种就是直接指针类型. 直接就是指向原数据的地址的指针类型.   所以引用类型==指针类型 , 这个看情况 . 所以你拿到只是一个壳子. 要么你就去造壳子去吧.</li>
+</ul>
+<p>当你阅读完上诉两段话, 我觉得你并不会纠结什么是引用类型和什么是指针类型了. 因为实现方式不同罢了.</p>
+<h3 id="小技巧">小技巧</h3>
+<p><strong>记住用伟大的Jetbrains的编译器Goland, 可以提示代码错误奥 !</strong></p>
+<pre><code class="language-go">package main
+
+import &quot;fmt&quot;
+
+func main() {
+	// 生下来一个ch
+	ch := make(chan int)
+	
+	// ch如果是指针类型就可以和nil比较了,或者直接打印也可以
+	fmt.Println(ch==nil)
+}
+</code></pre>
+<p>​	<strong>就上诉一段代码 , 让你明白啥对象生下来我就是指针类型(引用类型).  啥对象生下来他不是指针类型 , 如果你掌握了,我觉得那些书你不用看了.</strong></p>
+<blockquote>
+<p>​	**对于Golang也是一种内存管理的一种编程语言, 他编程方式和C++和C很相似, 但是思想上和Java却很相似. 所以你拿到的对象并不是一个C定义的struct  , 而是另一层封装. 因为Golang帮助我们管理内存了,他需要分配内存和回收呢 **</p>
+</blockquote>
+<blockquote>
+<p>​	<strong>我给大家列出来 , 哪些对象哇 , 他生下来就是指针类型.  都是靠我上面的小技巧获取的,还有自己的一些经验. 所有这些都需要多练习, 多补充.</strong></p>
+</blockquote>
+<h3 id="生下来就是指针类型-引用类型">生下来就是指针类型 (引用类型)</h3>
+<ul>
+<li>
+<p>chan , 是一个阻塞队列,你可以这么理解, 后期学习吧, 类似于Java的BlockingQueue .</p>
+</li>
+<li>
+<p>map , 伟大的map , 其实就是Java的HashMap.(所以不安全)</p>
+</li>
+<li>
+<p>切片(slice)  , 就是没有指定长度的数组 ,类似于Java的ArrayList,会自动扩容.</p>
+</li>
+<li>
+<p>函数 , 比如 <code>fun := func(s string) string { return &quot;modify&quot; + s }</code></p>
+</li>
+<li>
+<p><strong>interface</strong> :  <strong>一个类型为<code>interface{} 或者 interface接口</code> 的变量可能是指针变量 , 也可能是普通变量 .</strong></p>
+<pre><code class="language-go">// 定义一个接口
+type UserService interface {
+}
+// str可以是指针类型变量也可以是普通变量 , fun5也是
+func fun4(str interface{}) {
+}
+func fun5(str UserService) {
+}
+
+func main() {
+	// u 代表是一个指针类型变量或一个普通变量 ,同理 var x interface{} 也是代表一个指针类型变量或一个普通变量
+	var u UserService
+	// 调用
+	fun4(u)
+	fun5(u)
+}
+</code></pre>
+</li>
+<li>
+<p>function type.  比如 <code>type Func func(string)</code> , 这个 Func 就是一个function type.  还有func类型也是.</p>
+<pre><code class="language-go">type Func func(string)
+func main() {
+	fun := Func(func(s string) {})
+	fmt.Println(fun == nil) // false
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="生下来是值类型的">生下来是值类型的</h3>
+<ul>
+<li>
+<p>struct , 如果成员变量为基本数据类型就是初始化值, 如果成员变量的指针类型则是nil.(前提你不赋值的情况下)</p>
+</li>
+<li>
+<p>基本数据类型,初始化值如下</p>
+<pre><code class="language-go">bool //默认值为false
+string //默认值为空字符串,为&quot;&quot;
+int int8 int16 int32 int64 //默认值为0
+uint uint8 uint16 uint32 uint64 uintptr //默认值为0
+byte // uint8 的别名
+rune // int32 的别名
+float32 float64 //默认值为0
+complex64 complex128 //默认值为0
+</code></pre>
+</li>
+<li>
+<p>数组 , 数组是初始化就定义了大小的  , 记得与切片区分开.</p>
+</li>
+</ul>
+<h3 id="两大操作符">两大操作符</h3>
+<p>操作符&amp;(取址符) : 是返回该变量的内存地址。<br>
+操作符* (取值符) : 是返回该指针指向的变量的值, 同时也可以进行修改指针指向内存地址的值.</p>
+<h3 id="空指针">空指针</h3>
+<p>当一个指针类型的变量被定义后没有分配到任何变量时，它的值为 nil。空指针问题会有很多, 注意平时使用点.<br>
+nil 指针也称为空指针。<br>
+nil在概念上和其它语言的null、None、nil、NULL一样，都指代零值或空值.</p>
+<h3 id="占位符">占位符</h3>
+<pre><code class="language-go">%d										十进制整数
+%x,	%o,	%b								十六进制，八进制，二进制整数。
+%f,	%g,	%e								浮点数：	3.141593	3.141592653589793	3.141593e+00 
+%t										布尔：true或false 
+%c										字符（rune）	(Unicode码点) 
+%s										字符串 
+%q										带双引号的字符串&quot;abc&quot;或带单引号的字符'c'
+%v										变量的自然形式（natural	format） 
+%T										变量的类型 
+%%										字面上的百分号标志（无操作数）
+%p										打印指针类型的地址(十六进制)
+</code></pre>
+<h3 id="golang-的全部类型">Golang 的全部类型</h3>
+<blockquote>
+<p>​	这个是官方给的类型, 只有两种 一种是数值类型一种是派生类型.</p>
+</blockquote>
+<p><strong>数值类型</strong></p>
+<ul>
+<li>
+<p>布尔型</p>
+<p><code>bool</code> 布尔型的值只可以是常量 <code>true</code> 或者 <code>false</code>，默认值为 <code>false</code>。</p>
+</li>
+<li>
+<p>字符串类型</p>
+<p><code>string</code> 编码统一为 <code>UTF-8</code> 编码标识 <code>Unicode</code> 文本，默认值为空字符串。</p>
+</li>
+<li>
+<p>整型（默认值为 0）</p>
+<ul>
+<li><code>uint8</code>： 无符号 8 位整型（0 ~ 255）；</li>
+<li><code>uint16</code>：无符号 16 位整型（0 ~ 65535）；</li>
+<li><code>uint32</code>：无符号 32 位整型（0 ~ 4294967295）；</li>
+<li><code>uint64</code>：无符号 64 位整型（0 ~ 18446744073709551615）；</li>
+<li><code>int8</code>：有符号 8 位整型（-128 ~ 127）；</li>
+<li><code>int16</code>：有符号 16 位整型（-32768 ~ 32767）；</li>
+<li><code>int32</code>：有符号 32 位整型（-2147483648 ~ 2147483647）；</li>
+<li><code>int64</code>：有符号 64 位整型（-9223372036854775808 ~ 9223372036854775807）</li>
+</ul>
+</li>
+<li>
+<p>浮点型（默认值为 0）</p>
+<ul>
+<li><code>float32</code>：<code>IEEE-754</code> 32 位浮点数；</li>
+<li><code>float64</code>：<code>IEEE-754</code> 64 位浮点数；</li>
+<li><code>complex64</code>：32 位实数和虚数；</li>
+<li><code>complex128</code>：64 位实数和虚数；</li>
+</ul>
+</li>
+<li>
+<p>其他数值类型</p>
+<ul>
+<li><code>byte</code>：类似 <code>uint8</code>；</li>
+<li><code>rune</code>：类似 <code>int32</code>；</li>
+<li><code>uint</code>：32 或 64 位；</li>
+<li><code>int</code>：与 <code>uint</code> 一样大小；</li>
+<li><code>uintptr</code>：无符号整型，用于存放一个指针；</li>
+</ul>
+</li>
+</ul>
+<p><strong>派生类型</strong></p>
+<ul>
+<li>指针类型（Pointer）</li>
+<li>数组类型 ([len]byte)</li>
+<li>结构化类型（struct）</li>
+<li>Channel 类型（chan）</li>
+<li>函数类型（func）</li>
+<li>切片类型（slice）</li>
+<li>接口类型（interface）</li>
+<li>Map 类型（map）</li>
+</ul>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#%E5%B0%8F%E6%8A%80%E5%B7%A7">小技巧</a></li>
+<li><a href="#%E7%94%9F%E4%B8%8B%E6%9D%A5%E5%B0%B1%E6%98%AF%E6%8C%87%E9%92%88%E7%B1%BB%E5%9E%8B-%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B">生下来就是指针类型 (引用类型)</a></li>
+<li><a href="#%E7%94%9F%E4%B8%8B%E6%9D%A5%E6%98%AF%E5%80%BC%E7%B1%BB%E5%9E%8B%E7%9A%84">生下来是值类型的</a></li>
+<li><a href="#%E4%B8%A4%E5%A4%A7%E6%93%8D%E4%BD%9C%E7%AC%A6">两大操作符</a></li>
+<li><a href="#%E7%A9%BA%E6%8C%87%E9%92%88">空指针</a></li>
+<li><a href="#%E5%8D%A0%E4%BD%8D%E7%AC%A6">占位符</a></li>
+<li><a href="#golang-%E7%9A%84%E5%85%A8%E9%83%A8%E7%B1%BB%E5%9E%8B">Golang 的全部类型</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

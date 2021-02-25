@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Linux 开发学习 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/linux-jin-jie-ban-xue-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Linux 开发学习</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-14</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/linux-jin-jie-ban-xue-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/FDJxOVwJI_i/"
+								class="tag">linux</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2685字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">11 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-用户权限学习">1. 用户权限学习</h2>
+<p>​	为什么要用户,因为实际开发的时候你不可能是root用户,所以需要进行权限学习,不能执行就 sudo 哈哈哈</p>
+<ul>
+<li>
+<p>新建用户 <code>useradd testuser</code></p>
+</li>
+<li>
+<p>创建密码 <code>passwd testuser</code></p>
+</li>
+<li>
+<p>删除用户  <code>userdel testuser</code></p>
+</li>
+<li>
+<p>切换用户 <code>su - user</code></p>
+</li>
+<li>
+<p>高级版 <code>useradd -s /bin/sh -d /home/gem -g group –G adm,root gem</code></p>
+<p>​	此命令新建了一个用户gem，该用户的登录Shell是/bin/sh，他的用户主目录在 /home/gem,它属于group用户组，同时又属于adm和root用户组，其中group用户组是其主组,</p>
+</li>
+<li>
+<p>修改用户 <code>usermod -s /bin/ksh -d /home/z –g developer sam</code></p>
+<p>​	此命令将用户sam的登录Shell修改为ksh，主目录改为/home/z，用户组改为developer。</p>
+</li>
+<li>
+<p>增加组 <code>groupadd -g 101 group2</code></p>
+<p>​	此命令向系统中增加了一个新组group2，同时指定新组的组标识号是101。</p>
+</li>
+<li>
+<p>删除组 <code>groupdel group1</code></p>
+<p>​	此命令从系统中删除组group1.</p>
+</li>
+<li>
+<p>修改组 <code>groupmod -g 102 group2</code></p>
+<p>​	此命令将组group2的组标识号修改为102。</p>
+</li>
+<li>
+<p><strong>让普通用户拥有root的权限</strong>   <strong>修改/etc/passwd即可，把用户名的ID和ID组修改成0。</strong></p>
+<p>​</p>
+</li>
+</ul>
+<ol>
+<li>
+<p>给用户添加文件权限</p>
+<ul>
+<li>
+<pre><code class="language-shell">chown -R user /home/user/   		递归的方式给 /home/user 目录下的全部给 user用户
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>查看文件用户权限</p>
+<ul>
+<li>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz user]# ll
+total 28388
+drwxr-xr-x 9 user user     4096 Aug 27 15:26 elasticsearch
+-rw-r--r-- 1 user root 29056810 Aug 27 15:00 elasticsearch-6.2.4.tar.gz
+-rw-r--r-- 1 user root      291 Sep  1 17:57 null
+drwxr-xr-x 2 user root     4096 Sep  1 19:07 script
+
+–       rw-     r–    r–    9          user                user      4096   
+-文件 d目录 l软连接
+普通文件 用户权限 组权限 其他用户 表示文件个数 该文件或目录的拥有者  表示所属的组   文件大小 
+</code></pre>
+</li>
+</ul>
+</li>
+<li>
+<p>确定了一个文件的访问权限后，用户可以利用Linux系统提供的chmod命令来重新设定不同的访问权限。也可以利用chown命令来更改某个文件或目录的所有者。利用chgrp命令来更改某个文件或目录的用户组。</p>
+<blockquote>
+<ol>
+<li>chmod命令是非常重要的，用于改变文件或目录的访问权限。用户用它控制文件或目录的访问权限。</li>
+</ol>
+<pre><code class="language-shell">chmod ［who］ ［+ | – | =］ ［mode］ 文件名
+
+mode 有 x w r 
+其中  x 对应的是 1
+	  w 对应的是 2
+	  r 对应的是 4
+	  
+所以  chmod 777 ./test.sh   就是 所有用户都可以进行读写操作
+  chmod 754 是 用户是 xwr ,组是 xr , 其他用户是 r
+  
+
+</code></pre>
+<ol start="2">
+<li>chown 命令  功能：更改某个文件或目录的属主和属组。</li>
+</ol>
+<pre><code class="language-shell">chown -R user：group  filename    -R是 递归处理 -v显示执行过程
+</code></pre>
+</blockquote>
+</li>
+</ol>
+<h2 id="2-top-命令学习">2. top 命令学习</h2>
+<ol>
+<li>
+<p>top 命令界面展示</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-03/50f47a7f-b4d8-4a28-84b3-2aab183bcf4e.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>界面 描述</p>
+<blockquote>
+<ol>
+<li>
+<p>task  是进程数</p>
+</li>
+<li>
+<p>total　　 　　 进程总数</p>
+</li>
+<li>
+<p>running 　　 正在运行的进程数</p>
+</li>
+<li>
+<p>sleeping 　　睡眠的进程数</p>
+</li>
+<li>
+<p>stopped 　　停止的进程数</p>
+</li>
+<li>
+<p>zombie 　　  僵尸进程数</p>
+</li>
+<li>
+<p>CPU 是 CPU 的使用情况</p>
+</li>
+<li>
+<p>id 是指 空闲的 内存百分比</p>
+</li>
+<li>
+<p>us 是指 用户百分比</p>
+</li>
+<li>
+<p>sy 是指 内核百分比</p>
+</li>
+<li>
+<p>Mem  是内存使用情况 比如说 1883724 可以以三位分隔开 1,883,724, 就是 1.8个G 最小单位是KB</p>
+</li>
+<li>
+<p>total 是全部 物理内存</p>
+</li>
+<li>
+<p>free 是空闲物理内存</p>
+</li>
+<li>
+<p>used 是指 使用的物理内存</p>
+</li>
+<li>
+<p>buffers：  用作内核缓存的内存量</p>
+</li>
+<li>
+<p>swap 是指的是一个交换分区或文件。在Linux上可以使用swapon -s命令查看当前系统上正在使用的交换空间</p>
+</li>
+<li>
+<p>我没搞清楚这个是啥</p>
+</li>
+</ol>
+<hr>
+<ol start="5">
+<li>
+<p>开始 进程 详情信息</p>
+</li>
+<li>
+<p>pid  指的是 进程id</p>
+</li>
+<li>
+<p>ppid 是 父进程id</p>
+</li>
+<li>
+<p>USER 进程所有者用户</p>
+</li>
+<li>
+<p>PR 指的是优先级</p>
+</li>
+<li>
+<p>NI 指的是 nice   负值表示高优先级，正值表示低优先级</p>
+</li>
+<li>
+<p>VIRT 进程使用的虚拟内存总量，单位kb。VIRT=SWAP+RES(其实就是占用地址空间的大小;就是数据大小)</p>
+<ol>
+<li>现代操作系统里面分配虚拟地址空间操作不同于分配物理内存。在64位操作系统上，可用的最大虚拟地址空间有16EB，即大概180亿GB。那么在一台只有16G的物理内存的机器上，我也能要求获得4TB的地址空间以备将来使用。</li>
+<li>VIRT高是因为分配了太多地址空间导致。一般来说不用太在意VIRT太高，因为你有16EB的空间可以使用。如果你实在需要控制VIRT的使用，设置环境变量MALLOC_ARENA_MAX，例如hadoop推荐值为4，因为YARN使用VIRT值监控资源使用。</li>
+</ol>
+</li>
+<li>
+<p>SWAP  进程使用的虚拟内存中，被换出的大小，单位kb</p>
+</li>
+<li>
+<p>RES  进程使用的、未被换出的物理内存大小，单位kb。RES=CODE+DATA  (其实就是 物理内存大小)  我们主要看这个</p>
+</li>
+<li>
+<p>COMMAND  命令名/命令行</p>
+</li>
+<li>
+<p>S  进程状态。D=不可中断的睡眠状态 R=运行 S=睡眠 T=跟踪/停止 Z=僵尸进程</p>
+</li>
+<li>
+<p>TIME+    进程使用的CPU时间总计，单位1/100秒</p>
+</li>
+<li>
+<p>相关 top 界面指令(在 top界面 敲 这些 字母就行)</p>
+</li>
+<li>
+<p>&quot;1&quot; 显示 每个 CPU 状况</p>
+</li>
+<li>
+<p>&quot;b&quot;  打开和关闭 高亮效果</p>
+</li>
+<li>
+<p>&quot;x&quot;  打开自己设定的排序 高亮显示 (或关闭)</p>
+</li>
+<li>
+<p>可以看到现在是按&quot;%MEM&quot;进行排序的，可以按”shift+&gt;”或者”shift+&lt;”左右改变排序序列。</p>
+</li>
+<li>
+<p>&quot;q&quot; 退出top程序</p>
+</li>
+<li>
+<p>M:根据驻留内存大小进行排序。</p>
+</li>
+<li>
+<p>P 根据 cpu排序 和 shift&gt; &lt; 一样</p>
+</li>
+<li>
+<p>T 根据 时间累加排序</p>
+</li>
+<li>
+<p>&quot;f&quot;  进入 另外一个界面</p>
+</li>
+<li>
+<p>&quot;k&quot; 终止一个进程。</p>
+</li>
+</ol>
+<hr>
+<ol start="7">
+<li>以及  top 的相关参数</li>
+</ol>
+<p>&quot;-d&quot;  更新周期  单位S  默认是5S刷新一次  例如 top -d 10  表示 10S刷新一次</p>
+<p>&quot;-n&quot;  表示更次次数  top -n 2 表示 只更新两次</p>
+<p>&quot;-p&quot;  通过指定监控进程ID来仅仅监控某个进程的状态。</p>
+<p>&quot;-c&quot;  显示整个命令行而不只是显示命令名   比如说我查看 top -p 6379 -c 就显示 了上面的cpu等信息</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>q  该选项将使top没有任何延迟的进行刷新。如果调用程序有超级用户权限，那么top将以尽可能高的优先级运行。</p>
+<p>S  指定累计模式</p>
+<p>s  使top命令在安全模式中运行。这将去除交互命令所带来的潜在危险。</p>
+<p>i  使top不显示任何闲置或者僵死进程。</p>
+</blockquote>
+<h2 id="3-free-命令学习">3. free 命令学习</h2>
+<ol>
+<li>
+<p>命令界面</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-03/60ff85ee-4785-491d-a2c3-a7dc7640cbb5.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+</li>
+<li>
+<p>命令参数</p>
+</li>
+<li>
+<p>很简单  只需要 记住</p>
+<ol>
+<li>&quot;-m&quot;  以 M 为单位显示</li>
+</ol>
+</li>
+<li>
+<p>&quot;-k&quot;  是以KB为单位显示  其他的  b  g 都是一样不展示了</p>
+<ol start="3">
+<li>&quot;-t&quot;  显示的更细</li>
+</ol>
+</li>
+<li>
+<p>&quot;-s &quot;  跟S</p>
+<ol start="5">
+<li>&quot;-h&quot; 显示 单位</li>
+</ol>
+</li>
+<li>
+<p>swap  就是 虚拟内存</p>
+<ol start="7">
+<li>men  是物理内存</li>
+</ol>
+</li>
+<li>
+<p>可用内存=used  +  free + buff/cache  这三个之和</p>
+</li>
+</ol>
+<h2 id="4ps命令与-ps-ef-以及-ps-aux-命令pstree-和-ps-axjf">4.ps命令与 ps -ef   以及 ps -aux 命令pstree 和 ps -axjf</h2>
+<ol>
+<li>
+<p>ps-ef  用标准的格式显示</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-03/3689d15b-e530-4bda-8268-3c7858e6777d.png?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<ol start="2">
+<li>
+<p>ps-aux 是用BSD的格式来显示</p>
+</li>
+<li>
+<p>我们只用关注的是 RSS  他是 比如说 2788 他其实是 2,788 单位为KB  实际大小是 2.7M</p>
+</li>
+<li>
+<p>以及  pid 进程号</p>
+</li>
+<li>
+<p>TTY ：该 process 是在那個终端上面运作</p>
+</li>
+</ol>
+<h2 id="5-netstat-学习-查看服务及监听端口">5. netstat 学习 查看服务及监听端口</h2>
+<blockquote>
+<pre><code class="language-shell">netstat命令各个参数说明如下：
+
+　　-t : 指明显示TCP端口
+
+　　-u : 指明显示UDP端口
+
+　　-l : 仅显示监听套接字(所谓套接字就是使应用程序能够读写与收发通讯协议(protocol)与资料的程序),仅列出有在 Listen (监听) 的服務状态
+
+　　-p : 显示进程标识符和程序名称，每一个套接字/端口都属于一个程序。
+
+　　-n : 不进行DNS轮询(可以加速操作)
+　　-a :(all)显示所有选项， netstat默认不显示LISTEN相关
+　
+</code></pre>
+</blockquote>
+<pre><code class="language-shell">
+netstat -nlp |grep LISTEN   //查看当前所有监听端口·(比较常用)
+
+netstat -nlp |grep 80   //查看所有80端口使用情况·
+
+netstat -an | grep 3306   //查看所有3306端口使用情况·
+
+netstat -apn | grep ssh   并不是所有的进程都能找到，没有权限的会不显示，使用 root 权限查看所有的信息。
+
+netstat -an | grep ':22'  找出运行在指定端口的进程
+
+netstat -ie  跟  ifconfig 效果相似
+
+
+windows的 查看进程 
+netstat -ano | findstr &quot;80&quot;
+</code></pre>
+</li>
+</ol>
+<h2 id="6-linux-查看-开放的端口号">6. linux 查看 开放的端口号</h2>
+<ul>
+<li>
+<pre><code>1.查看开放的端口号 
+firewall-cmd --zone=public --list-ports
+
+2.添加端口号
+firewall-cmd --zone=public --add-port=9876/tcp --permanent
+
+3.重新启动
+firewall-cmd --reload
+
+4.再次查看 ok了
+
+5. 阿里云上防火墙就是关闭的,需要我们手动去网站开启
+</code></pre>
+</li>
+</ul>
+<h2 id="7-linux-下-cache和buff-过高">7. linux 下 cache和buff 过高</h2>
+<ul>
+<li>
+<p>手动释放</p>
+<pre><code class="language-shell">echo 1 &gt; /proc/sys/vm/drop_caches;
+echo 2 &gt; /proc/sys/vm/drop_caches;
+echo 3 &gt; /proc/sys/vm/drop_caches;
+</code></pre>
+</li>
+<li>
+<p>如何查看 top 和 free都可以</p>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz shell]# free -m
+              total        used        free      shared  buff/cache   available
+Mem:           1839         783         966           8          89         928
+Swap:             0           0           0
+
+
+[root@iz2zegua78a74kqn8clokfz shell]# free -h
+              total        used        free      shared  buff/cache   available
+Mem:           1.8G        783M        966M        8.6M         90M        927M
+Swap:            0B          0B          0B
+</code></pre>
+</li>
+<li>
+<p>buff/cache是用于加速程序运行的，有一些硬盘/网络上的数据加载的速度比较慢，因此会被缓存到高速的内存中，以免去重复加载的时间消耗。buff/cache在内存占用过高的时候会被系统自动清理， 但是这种清缓存的工作也并不是没有成本。清缓存必须保证cache中的数据跟对应文件中的数据一致，所以伴随着cache清除的行为的，一般都是要做大量硬盘读写的。因为内核要对比cache中的数据和对应硬盘文件上的数据是否一致，如果不一致需要写回，之后才能回收。 硬盘读写就意味着高延迟，这个延迟通常会达到几毫秒到数秒。</p>
+</li>
+</ul>
+<h2 id="7-linux-添加定时任务">7. linux 添加定时任务</h2>
+<h3 id="1-使用">1. 使用</h3>
+<pre><code class="language-shell">crond status：查看crond服务状态
+crond start：启动crond服务
+crond stop：关闭crond服务
+crond restart：重启crond服务
+crontab -u：设定某个用户的crond服务
+crontab -l：列出某个用户的crond内容
+crontab -r：删除某个用户的crond服务
+crontab -e：编辑某个用户的crond服务内容
+*有时在启动crond时会出现crond: can't lock /var/run/crond.pid, otherpid may be 15340: Resource temporarily unavailable的提示，只需用killall crond结束所有crond服务再重新启动即可
+
+然后通过 pgrep crond 查看一下
+若没有 则启动  crond start  就 OK了
+
+</code></pre>
+<h3 id="2-例子">2. 例子</h3>
+<pre><code class="language-shell">vim clear.sh
+#!/bin/bash
+echo 1 &gt; /proc/sys/vm/drop_caches
+echo 2 &gt; /proc/sys/vm/drop_caches
+echo 3 &gt; /proc/sys/vm/drop_caches
+
+crontab -e
+0 1 * * * /home/admin/shell/clear.sh
+
+crontab -l  查看有 就OK了 ,然后每天凌晨1点自动清理缓存
+
+
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E7%94%A8%E6%88%B7%E6%9D%83%E9%99%90%E5%AD%A6%E4%B9%A0">1. 用户权限学习</a></li>
+<li><a href="#2-top-%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0">2. top 命令学习</a></li>
+<li><a href="#3-free-%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0">3. free 命令学习</a></li>
+<li><a href="#4ps%E5%91%BD%E4%BB%A4%E4%B8%8E-ps-ef-%E4%BB%A5%E5%8F%8A-ps-aux-%E5%91%BD%E4%BB%A4pstree-%E5%92%8C-ps-axjf">4.ps命令与 ps -ef   以及 ps -aux 命令pstree 和 ps -axjf</a></li>
+<li><a href="#5-netstat-%E5%AD%A6%E4%B9%A0-%E6%9F%A5%E7%9C%8B%E6%9C%8D%E5%8A%A1%E5%8F%8A%E7%9B%91%E5%90%AC%E7%AB%AF%E5%8F%A3">5. netstat 学习 查看服务及监听端口</a></li>
+<li><a href="#6-linux-%E6%9F%A5%E7%9C%8B-%E5%BC%80%E6%94%BE%E7%9A%84%E7%AB%AF%E5%8F%A3%E5%8F%B7">6. linux 查看 开放的端口号</a></li>
+<li><a href="#7-linux-%E4%B8%8B-cache%E5%92%8Cbuff-%E8%BF%87%E9%AB%98">7. linux 下 cache和buff 过高</a></li>
+<li><a href="#7-linux-%E6%B7%BB%E5%8A%A0%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1">7. linux 添加定时任务</a>
+<ul>
+<li><a href="#1-%E4%BD%BF%E7%94%A8">1. 使用</a></li>
+<li><a href="#2-%E4%BE%8B%E5%AD%90">2. 例子</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

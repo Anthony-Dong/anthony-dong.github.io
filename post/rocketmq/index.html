@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Rocket-MQ | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/rocketmq/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Rocket-MQ</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-09-14</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/rocketmq/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/VGFs7LxPgW/"
+								class="tag">中间件</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">3507字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">15 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="为什么选择消息队列">为什么选择消息队列</h2>
+<ul>
+<li>原因只有一个 解耦写入和处理能力的差异,避免写入太多,处理不过来</li>
+<li>异步处理给我带来什么好处
+<ul>
+<li>写入操作和后续处理进行解耦,异步处理,此时用户只用点击一下请求,后续的记录日志,统计用户行为,以及写入用户信息等,操作都不需要用户进行等待,这时候用消息队列就很好</li>
+</ul>
+</li>
+<li>解耦
+<ul>
+<li>当我们的业务进行拓展时,不用修改原来模块的代码,如果原来是 操作A模块,需要调用B,C模块 , 如果我又增加一个模块怎么办,所以使用mq,只需要保证消息的可靠性</li>
+</ul>
+</li>
+<li>我们不能盲目的使用mq,需要想到 幂等操作 和 消息的可靠性保证,有些业务就是强耦合,</li>
+</ul>
+<h2 id="1配置环境">1.配置环境</h2>
+<ul>
+<li>
+<p>去官网下载 <a href="https://rocketmq.apache.org/release_notes/release-notes-4.5.2/">下载地址</a></p>
+</li>
+<li>
+<p>环境搭建</p>
+</li>
+<li>
+<pre><code class="language-shell"># 上传安装包
+# unzip rocketmq-all-4.4.0-bin-release.zip
+# mv rocketmq-all-4.4.0-bin-release rocketmq
+# 这时进去bin 目录跟着 demo 走一遍就行了,已经OK 了
+</code></pre>
+</li>
+<li>
+<p>快速开始(官网demo自己跟着敲)     <a href="https://rocketmq.apache.org/docs/quick-start/">测试demo</a></p>
+</li>
+</ul>
+<h2 id="2-搭建服务">2. 搭建服务</h2>
+<ul>
+<li>
+<p>修改 conf/2m-2s-sync/broker-a.properties 文件 (文章最后有配置文件详情)</p>
+</li>
+<li>
+<p>修改 conf/2m-2s-sync/broker-b-s.properties 文件</p>
+</li>
+<li>
+<p>注意 集群至少两台机器,否者无法启动 (人家已经写了 2m-2s了 )</p>
+</li>
+<li>
+<p>新建目录</p>
+</li>
+<li>
+<pre><code class="language-shell">[root@iz2zegua78a74kqn8clokfz rocketmq]# mkdir store
+[root@iz2zegua78a74kqn8clokfz rocketmq]# cd store/
+[root@iz2zegua78a74kqn8clokfz store]# ll
+total 0
+[root@iz2zegua78a74kqn8clokfz store]# mkdir commitlog
+[root@iz2zegua78a74kqn8clokfz store]# mkdir consumequeue
+[root@iz2zegua78a74kqn8clokfz store]# mkdir index
+[root@iz2zegua78a74kqn8clokfz store]# mkdir checkpoint
+[root@iz2zegua78a74kqn8clokfz store]# mkdir abort
+</code></pre>
+</li>
+<li>
+<p>进入conf目录执行 <code>sed -i 's#${user.home}#/opt/rocketmq#g' *.xml</code> 修改logback的日志文件位置</p>
+</li>
+<li>
+<p>进入 /bin目录下  修改 <code>runbroker.sh</code> 和 <code>runserver.sh</code> 文件的 jvm内存大小,根据电脑内存大小分配</p>
+</li>
+<li>
+<p>建立mqshutdown 软链接 <code>ln -s /opt/rocketmq/bin/mqshutdown /usr/local/bin/mqshutdown</code></p>
+</li>
+<li>
+<p>单机启动时就直接这样子就行</p>
+<ul>
+<li><code>nohup sh mqnamesrv &amp;</code></li>
+<li><code>nohup sh mqbroker -c ../conf/broker.conf -n 47.94.234.232:9876 &amp;</code></li>
+<li><code>jps</code> 查看进程 ,有 两个  就 成功了 一个是 <strong>NamesrvStartup</strong> ,另外一个是 <strong>BrokerStartup</strong></li>
+<li>然后 用 <code>netstat -nlp |grep LISTEN</code>  查看端口,记得开放全部这些端口,不然无法运行</li>
+</ul>
+</li>
+<li>
+<p>关闭</p>
+<ul>
+<li>mqshutdown namesrv</li>
+<li>mqshutdown broker</li>
+</ul>
+</li>
+</ul>
+<h2 id="2-rocketmq-中-相关概念">2. rocketmq 中 相关概念</h2>
+<ul>
+<li>图</li>
+</ul>
+<h3 id="1name-server">1.Name Server</h3>
+<p>​		它是一个几乎无状态节点(各个nameserver都一样上面的信息)，可集群部署，节点之间无任何信息同步。是专为 RocketMQ设计的轻量级名称服务，代码小于1000行，具有简单、可集群横吐扩展、无状态等特点。将要支持的主备自动切换功能会强依赖 Name Server。所以他放弃了选择Zookeeper这个管理工具.</p>
+<p>​		Namesrv压力不会太大，平时主要开销是在<strong>维持心跳</strong>和提供<strong>Topic-Broker</strong>的关系数据。</p>
+<p>​		但有一点需要注意，Broker向Namesrv发心跳时， 会带上当前自己所负责的所有Topic信息，如果Topic个数太多（万级别），会导致一次心跳中，就Topic的数据就几十M，网络情况差的话， 网络传输失败，心跳失败，导致Namesrv误认为Broker心跳失败。</p>
+<h3 id="2-broker">2. Broker</h3>
+<p>​		Broker 部署相对复杂，Broker分为Master与Slave，一个Master可以对应多个Slave，但是一个Slave只能对应一个Master，Master与Slave的对应关系通过指定相同的BrokerName，不同的BrokerId来定义，BrokerId为0表示Master，非0表示Slave。</p>
+<p>​	 单个Broker跟所有Namesrv保持心跳请求，心跳间隔为30秒，心跳请求中包括当前Broker所有的Topic信息。Namesrv会反查Broer的心跳信息， 如果某个Broker在2分钟之内都没有心跳，则认为该Broker下线.</p>
+<p>​	同理 他们之间各种关系都是这种心跳检测机制,下面不描述了.</p>
+<h3 id="3producer">3.Producer</h3>
+<p>​		Producer 与Name Server集群中的其中一个节点（随机选择，但不同于上一次）建立<strong>长连接</strong>，每30秒从Namesrv获取Topic跟Broker的映射关系，更新到本地内存中。再跟Topic涉及的所有Broker建立长连接，每隔30秒发一次心跳。在Broker端也会每10秒扫描一次当前注册的Producer，如果发现某个Producer超过2分钟都没有发心跳，则断开连接。</p>
+<p>​		Producer 发送时，会<strong>自动轮询当前所有可发送的broker</strong>，一条消息发送成功，下次换另外一个broker发送，以达到消息平均落到所有的broker上。(这个类似与<strong>负载均衡</strong>)</p>
+<p>​		假如某个Broker宕机，意味生产者最长需要30秒才能感知到。在这期间会向宕机的Broker发送消息。当一条消息发送到某个Broker失败后，会往该broker自动再重发2次，假如还是发送失败，则抛出发送失败异常。业务捕获异常，重新发送即可。客户端里会自动轮询另外一个Broker重新发送，这个对于用户是透明的。</p>
+<h3 id="4consumer">4.consumer</h3>
+<p>​		Consumer 与 Name Server 集群中的其中一个节点（随机选择）建立长连接，定期从 Name Server 取 Topic 路由信息，并向提供 Topic 服务的 Master、Slave 建立长连接，且定时向 Master、Slave 发送心跳。Consumer既可以从 Master 订阅消息，也可以从 Slave 订阅消息，订阅规则由 Broker 配置决定。</p>
+<ul>
+<li>
+<p>消费端 接收消息分为两种模式 :</p>
+<ul>
+<li><strong>广播模式</strong>  (rocketmq会将<strong>消息发送给group中的每一个消费者</strong>，如果这种模式在公司的项目中，会造成消息重复消费的问题，理论上会有N-1次重复消费，那么rocketmq为什么还会保留这种消费模式呢？存在必有它的道理，比方说，<strong>如果需要动态更细一些配置，我们需要在不重启服务的情况下，将新的配置推送给group中的每一个消费者，这时候广播消费就发挥它的独到之处了</strong>)</li>
+<li><strong>集群消费</strong>(默认方式)  集群消费是用的最广泛的一种消费模式，在集群消费模式下，同一条消息，<strong>只能被group中的任意一个消费者消费</strong>，这个概念很重要，这是与广播消费的最明显区别。</li>
+</ul>
+</li>
+<li>
+<p>RocketMQ中Consumer有两种实现：PushConsumer和PullConsumer。</p>
+<ul>
+<li>
+<p><strong>PushConsumer</strong>(由broker进行推送)</p>
+<p>推送模式（虽然RocketMQ使用的是长轮询）的消费者。消息的能及时被消费。使用非常简单，内部已处理如线程池消费、流控、负载均衡、异常处理等等的各种场景。</p>
+</li>
+<li>
+<p><strong>PullConsumer</strong>(自己拉去,需要手动处理)</p>
+</li>
+<li>
+<p>拉取模式的消费者。应用主动控制拉取的时机，怎么拉取，怎么消费等。主动权更高。但要自己处理各种场景。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="5group">5.Group</h3>
+<p>​	标识发送同一类消息的Producer，通常发送逻辑一致。发送普通消息的时候，仅标识使用，并无特别用处。</p>
+<p>​	 <strong>RocketMQ要求同一个Consumer Group的消费者必须要拥有相同的注册信息，即必须要听一样的topic(并且tag也一样)。</strong></p>
+<h3 id="6topic">6.Topic</h3>
+<p>​		每个主题可设置队列个数，自动创建主题时默认是4个多列. Broker上存Topic信息，Topic由多个队列组成，队列会平均分散在多个Broker上。</p>
+<h3 id="7-tag">7. tag</h3>
+<p>​		RocketMQ支持给在发送的时候给topic打tag，同一个topic的消息虽然逻辑管理是一样的。但是消费topic1的时候，如果你订阅的时候指定的是tagA，那么tagB的消息将不会投递。</p>
+<h3 id="8-message-queue">8. Message Queue</h3>
+<p>​		消息物理管理单位。一个Topic将有若干个Q(默认4条)。若Topic同时创建在不同的Broker，则不同的broker上都有若干Q，消息将物理地存储落在不同Broker结点上，具有水平扩展的能力。</p>
+<h3 id="9-offset">9. offset</h3>
+<h3 id="10-总结">10. 总结</h3>
+<p>​		RocketMQ的高性能在于顺序写盘(CommitLog)、零拷贝和跳跃读(尽量命中PageCache)，高可靠性在于刷盘和Master/Slave，另外NameServer 全部挂掉不影响已经运行的Broker,Producer,Consumer。</p>
+<p>​	最新版RocketMQ已经可以支持Protobuf协议，但本文只探究默认的基于JSON的协议。</p>
+<h2 id="3-rocketmq-的基本用法">3. rocketmq 的基本用法</h2>
+<ul>
+<li><a href="https://github.com/Anthony-Dong/rocketmq-practice">github项目地址,所有demo都在里面</a></li>
+</ul>
+<h3 id="1-导入maven坐标">1. 导入maven坐标</h3>
+<pre><code class="language-java">        &lt;dependency&gt;
+            &lt;groupId&gt;org.apache.rocketmq&lt;/groupId&gt;
+            &lt;artifactId&gt;rocketmq-client&lt;/artifactId&gt;
+            &lt;version&gt;4.4.0&lt;/version&gt;
+        &lt;/dependency&gt;
+        
+            最好和你的 rocketmq的版本一致
+</code></pre>
+<h3 id="2-提供方代码">2. 提供方代码</h3>
+<pre><code class="language-java">        // 1.创建生成者对象
+        DefaultMQProducer producer = new DefaultMQProducer(&quot;demo-produce&quot;);
+        producer.setVipChannelEnabled(false);
+        producer.setNamesrvAddr(&quot;192.168.58.129:9876&quot;);
+
+        //2. 开启produce
+        producer.start();
+
+        //3. 创建消息对象
+        Message message = new Message(&quot;SyncProducer&quot;,//主题
+                &quot;tag&quot;, //标签
+                &quot;keys&quot;, //key 消息唯一值
+                &quot;hello&quot;.getBytes(RemotingHelper.DEFAULT_CHARSET)//发送内容
+                );
+
+        //4. 发送同步消息消息
+        SendResult send = producer.send(message);
+
+        //5. 关闭连接(最好整一个连接池)
+        producer.shutdown();
+</code></pre>
+<h3 id="3-消费方代码">3. 消费方代码</h3>
+<pre><code class="language-java">
+        //1. 创建消费者对象
+        DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(&quot;demo-consumer&quot;);
+
+        // 2. 指定 nameserver 地址(地址也可以写多个,用';'隔开)
+        consumer.setNamesrvAddr(&quot;47.94.234.232:9876&quot;);
+
+        // 3. 设置主题,指定topic, tag(可以选多个 , 用 ' || ' 隔开)
+        consumer.subscribe(&quot;AsyncProducer&quot;, &quot;*&quot;);
+
+        //4. 开启消息监听,设置回调函数,处理消息 (这里不区分 异步,同步 ,单向发送)
+        consumer.registerMessageListener(new MessageListenerConcurrently() {
+            @Override
+            public ConsumeConcurrentlyStatus consumeMessage(List&lt;MessageExt&gt; list, 		ConsumeConcurrentlyContext consumeConcurrentlyContext) {
+
+                // MessageExt 返回的  body 是一个 byte[] 需要 做转换
+                list.forEach((e)-&gt;{
+                    String msg = new String(e.getBody());
+                    System.out.println(msg);
+                });
+                // 指定消费成功后的反馈状态
+                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+            }
+        });
+        // 5.开启消费
+        consumer.start();
+</code></pre>
+<blockquote>
+<p>我们发现代码都是模块化的,所以后面我选择只截取片段代码,整个demo会放到github上</p>
+</blockquote>
+<h2 id="4-rocketmq的三种消息发送方式">4. rocketmq的三种消息发送方式</h2>
+<h3 id="1发送同步消息">1.发送同步消息</h3>
+<pre><code>  		4. 发送同步消息消息
+        SendResult send = producer.send(message);
+        
+        同步发送是指消息发送方发出数据后，会在收到接收方发回响应之后才发下一个数据包的通讯方式。
+        此种方式应用场景非常广泛，例如重要通知邮件、报名短信通知、营销短信系统等。
+  		   
+</code></pre>
+<h3 id="2-发送异步消息">2. 发送异步消息</h3>
+<pre><code class="language-java">        //4. 发送异步消息
+        // SendCallback 是一个回调函数
+        producer.send(message, new SendCallback() {
+            @Override
+            public void onSuccess(SendResult sendResult) {
+                System.out.println(sendResult);
+            }
+            
+            @Override
+            public void onException(Throwable throwable) {
+                System.out.println(&quot;发送失败,出现异常&quot;);
+            }
+        });
+	异步发送是指发送方发出数据后，不等接收方发回响应，接着发送下个数据包的通讯方式。 	
+	 通常用于对发送消息响应时间要求更高/更快的场景：
+</code></pre>
+<h3 id="3-发送单向消息只负责发送不管是否收到无返回值">3. 发送单向消息(只负责发送,不管是否收到,无返回值)</h3>
+<pre><code class="language-java">producer.sendOneway(message);
+</code></pre>
+<h2 id="5-rocketmq-的发送方式">5. rocketmq 的发送方式</h2>
+<h3 id="1-延迟发送">1. 延迟发送</h3>
+<pre><code class="language-java">  message.setDelayTimeLevel(2);
+
+(messageDelayLevel = &quot;1s 5s 10s 30s 1m 2m 3m 4m 5m 6m 7m 8m 9m 10m 20m 30m 1h 2h&quot;)
+这个不可以自定义(custom) 只能从1开始选择对于的level
+</code></pre>
+<h3 id="2-发送批量消息注意发送的大小太大注意超时时间问题">2. 发送批量消息(注意发送的大小,太大注意超时时间问题)</h3>
+<pre><code class="language-java">   public SendResult send(Collection&lt;Message&gt; msgs)
+      
+    public SendResult send(Collection&lt;Message&gt; msgs, long timeout)   
+      
+	public SendResult send(Collection&lt;Message&gt; msgs, MessageQueue messageQueue,long timeout)  顺序发送就需要指定这个 MessageQueue
+    
+     //	sendCallback Callback to execute on sending completed, either successful or unsuccessful.
+     public void send(Message msg, SendCallback sendCallback)
+      
+      
+      太多了我就不举例子了大概这些 
+</code></pre>
+<h3 id="3过滤消息">3.过滤消息</h3>
+<pre><code class="language-java">        1. 消费方
+		// 3. 设置消息的描述,
+        // 指定topic, tag(可以选多个) ,这里执行过滤方法
+        // 3.1  || 表示选择
+        // 3.2  &quot;*&quot;  全部的tag
+        // 3.3  MessageSelector.bySql()  特殊选择 sql语法,可以去 官网去看
+        // consumer.subscribe(&quot;FilterTopic&quot;, &quot;tag || tag2&quot;);
+        // consumer.subscribe(&quot;FilterTopic&quot;, &quot;*&quot;);
+        // MessageSelector.bySql(&quot;key&gt;8&quot;)
+		consumer.subscribe(&quot;FilterTopic&quot;, &quot;*&quot;);
+
+		2. 提供方 
+		// 设置特殊属性
+        message.putUserProperty(&quot;key&quot;, &quot;10&quot;);
+</code></pre>
+<h3 id="4-顺序发送队列是多条消费是多线程并行接收如何保证">4. 顺序发送(队列是多条,消费是多线程并行接收,如何保证)</h3>
+<pre><code class="language-java"> 
+1. 提供方: 主要是依靠了只发送到一个队列中
+producer.send(message, new MessageQueueSelector() {
+                /**
+                 * 消息队列选择器 MessageQueueSelector
+                 *
+                 * @param list      消息队列集合(保证选择 一个消息队列)
+                 * @param message   所要发送的消息
+                 * @param o         key值(要保证你的顺序队列持有一个相同的key值,我这里选择的是订单对象的hash值)
+                 * @return
+                 */
+                @Override
+                public MessageQueue select(List&lt;MessageQueue&gt; list, Message message, Object o) {
+                    int size = list.size();
+                    Integer key = (Integer) o;
+                    MessageQueue messageQueue = list.get(key % size);
+                    return messageQueue;
+                }
+            }, list.hashCode());
+
+2.消费方 单线程消费 
+
+        consumer.registerMessageListener(new MessageListenerOrderly() {
+            @Override
+            public ConsumeOrderlyStatus consumeMessage(List&lt;MessageExt&gt; list, ConsumeOrderlyContext consumeOrderlyContext) {
+                list.forEach((e)-&gt;{
+                    System.out.println(&quot;线程名称: &quot;+Thread.currentThread().getName());
+                    System.out.println(&quot;消息&quot;+new String(e.getBody()));
+                });
+                System.out.println(&quot;发送成功&quot;);
+                return ConsumeOrderlyStatus.SUCCESS;
+            }
+        });
+
+</code></pre>
+<h3 id="5-事务控制">5. 事务控制</h3>
+<ul>
+<li><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-14/114f2cce-77f6-4c4b-9ca5-e1f228b20523.png?x-oss-process=style/template01" alt="" loading="lazy"></li>
+</ul>
+<pre><code class="language-java">这时候就需要TransactionMQProducer
+TransactionMQProducer producer = new TransactionMQProducer(&quot;demo-produce&quot;);
+
+
+
+        // 2. 设置 事务监听器(对事物的控制) 每当发送消息都会执行这一步
+        producer.setTransactionListener(new TransactionListener() {
+            /**
+             *  执行的 事务方法 ,如果 状态为 UNKNOW  会调用 checkLocalTransaction进行判断
+             * @param message  消息对象( Half(prepare) message)
+             * @param o        o 是 自定义的消息参数 ( Custom business parameter)
+             * @return  COMMIT_MESSAGE 提交
+             *          ROLLBACK_MESSAGE  回滚
+             *          UNKNOW  未处理的状态 , 等待checkLocalTransaction调用
+             */
+            @Override
+            public LocalTransactionState executeLocalTransaction(Message message, Object o) {
+                if (StringUtils.equals(message.getTags(), &quot;TAG1&quot;)) {
+                    System.out.println(message.getTags());
+                    return LocalTransactionState.COMMIT_MESSAGE;
+                }
+                if (StringUtils.equals(message.getTags(), &quot;TAG2&quot;)) {
+                    System.out.println(message.getTags());
+                    return LocalTransactionState.ROLLBACK_MESSAGE;
+                }
+                    System.out.println(message.getTags());
+                    return LocalTransactionState.UNKNOW;
+
+            }
+
+            /**
+             *
+             * 进行对UNKNOW状态的检测
+             * @param messageExt
+             * @return
+             */
+            @Override
+            public LocalTransactionState checkLocalTransaction(MessageExt messageExt) {
+                return LocalTransactionState.COMMIT_MESSAGE;
+            }
+        });
+
+</code></pre>
+<h3 id="6-springboot整合rocketmq">6. springboot整合rocketmq</h3>
+<ul>
+<li>
+<p>https://github.com/apache/rocketmq-spring  下载地址跟着跑一边</p>
+</li>
+<li>
+<p>如果大家不会整,我会把demo整个上传到github上</p>
+<pre><code class="language-shell">mvn clean
+
+mvn package -Dmaven.test.skip=true
+
+mvn install:install-file -Dfile=D:\代码库\alibaba-package\springboot-rocketmq\rocketmq-spring\rocketmq-spring-boot\target\rocketmq-spring-boot-2.0.4-SNAPSHOT.jar  -DgroupId=org.apache.rocketmq -DartifactId=rocketmq-spring-boot-starter  -Dversion=2.0.4-SNAPSHOT -Dpackaging=jar
+
+</code></pre>
+</li>
+<li>
+<p><a href="https://github.com/apache/rocketmq-spring">快速开始跟着</a>  跟着这个敲一边就行了 我的demo也是跟着这个走的</p>
+</li>
+<li>
+<p>关于<a href="https://blog.csdn.net/prestigeding/article/details/94317946">RocketMQ ACL的使用指南</a>  不懂的看一下其实就是一个权限控制(access control list),默认 密码是AK , AS</p>
+</li>
+</ul>
+<h2 id="qa">QA</h2>
+<p>大家可以去参考  <a href="https://zhuanlan.zhihu.com/rocketmq"> 这个链接  </a>  ,里面讲的相当详细</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%80%89%E6%8B%A9%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97">为什么选择消息队列</a></li>
+<li><a href="#1%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83">1.配置环境</a></li>
+<li><a href="#2-%E6%90%AD%E5%BB%BA%E6%9C%8D%E5%8A%A1">2. 搭建服务</a></li>
+<li><a href="#2-rocketmq-%E4%B8%AD-%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5">2. rocketmq 中 相关概念</a>
+<ul>
+<li><a href="#1name-server">1.Name Server</a></li>
+<li><a href="#2-broker">2. Broker</a></li>
+<li><a href="#3producer">3.Producer</a></li>
+<li><a href="#4consumer">4.consumer</a></li>
+<li><a href="#5group">5.Group</a></li>
+<li><a href="#6topic">6.Topic</a></li>
+<li><a href="#7-tag">7. tag</a></li>
+<li><a href="#8-message-queue">8. Message Queue</a></li>
+<li><a href="#9-offset">9. offset</a></li>
+<li><a href="#10-%E6%80%BB%E7%BB%93">10. 总结</a></li>
+</ul>
+</li>
+<li><a href="#3-rocketmq-%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95">3. rocketmq 的基本用法</a>
+<ul>
+<li><a href="#1-%E5%AF%BC%E5%85%A5maven%E5%9D%90%E6%A0%87">1. 导入maven坐标</a></li>
+<li><a href="#2-%E6%8F%90%E4%BE%9B%E6%96%B9%E4%BB%A3%E7%A0%81">2. 提供方代码</a></li>
+<li><a href="#3-%E6%B6%88%E8%B4%B9%E6%96%B9%E4%BB%A3%E7%A0%81">3. 消费方代码</a></li>
+</ul>
+</li>
+<li><a href="#4-rocketmq%E7%9A%84%E4%B8%89%E7%A7%8D%E6%B6%88%E6%81%AF%E5%8F%91%E9%80%81%E6%96%B9%E5%BC%8F">4. rocketmq的三种消息发送方式</a>
+<ul>
+<li><a href="#1%E5%8F%91%E9%80%81%E5%90%8C%E6%AD%A5%E6%B6%88%E6%81%AF">1.发送同步消息</a></li>
+<li><a href="#2-%E5%8F%91%E9%80%81%E5%BC%82%E6%AD%A5%E6%B6%88%E6%81%AF">2. 发送异步消息</a></li>
+<li><a href="#3-%E5%8F%91%E9%80%81%E5%8D%95%E5%90%91%E6%B6%88%E6%81%AF%E5%8F%AA%E8%B4%9F%E8%B4%A3%E5%8F%91%E9%80%81%E4%B8%8D%E7%AE%A1%E6%98%AF%E5%90%A6%E6%94%B6%E5%88%B0%E6%97%A0%E8%BF%94%E5%9B%9E%E5%80%BC">3. 发送单向消息(只负责发送,不管是否收到,无返回值)</a></li>
+</ul>
+</li>
+<li><a href="#5-rocketmq-%E7%9A%84%E5%8F%91%E9%80%81%E6%96%B9%E5%BC%8F">5. rocketmq 的发送方式</a>
+<ul>
+<li><a href="#1-%E5%BB%B6%E8%BF%9F%E5%8F%91%E9%80%81">1. 延迟发送</a></li>
+<li><a href="#2-%E5%8F%91%E9%80%81%E6%89%B9%E9%87%8F%E6%B6%88%E6%81%AF%E6%B3%A8%E6%84%8F%E5%8F%91%E9%80%81%E7%9A%84%E5%A4%A7%E5%B0%8F%E5%A4%AA%E5%A4%A7%E6%B3%A8%E6%84%8F%E8%B6%85%E6%97%B6%E6%97%B6%E9%97%B4%E9%97%AE%E9%A2%98">2. 发送批量消息(注意发送的大小,太大注意超时时间问题)</a></li>
+<li><a href="#3%E8%BF%87%E6%BB%A4%E6%B6%88%E6%81%AF">3.过滤消息</a></li>
+<li><a href="#4-%E9%A1%BA%E5%BA%8F%E5%8F%91%E9%80%81%E9%98%9F%E5%88%97%E6%98%AF%E5%A4%9A%E6%9D%A1%E6%B6%88%E8%B4%B9%E6%98%AF%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%B9%B6%E8%A1%8C%E6%8E%A5%E6%94%B6%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81">4. 顺序发送(队列是多条,消费是多线程并行接收,如何保证)</a></li>
+<li><a href="#5-%E4%BA%8B%E5%8A%A1%E6%8E%A7%E5%88%B6">5. 事务控制</a></li>
+<li><a href="#6-springboot%E6%95%B4%E5%90%88rocketmq">6. springboot整合rocketmq</a></li>
+</ul>
+</li>
+<li><a href="#qa">QA</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

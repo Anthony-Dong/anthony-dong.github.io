@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Spring-Boot 自动装配开始篇 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spring-boot-zi-dong-zhuang-pei/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Spring-Boot 自动装配开始篇</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-04</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spring-boot-zi-dong-zhuang-pei/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1162字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	我们在学习spring-boot的路上，是否看见一堆 <code>@Enable...</code>的注解类， 例如 <code>@EnableWebMvc</code> , <code>@EnableAutoConfiguration</code> , <code>@EnableDiscoveryClient</code>  ， 此时我们是否想过为什么 ？ 到底是做啥了？</p>
+</blockquote>
+<h2 id="1-体验自动装配">1. 体验自动装配</h2>
+<h3 id="1-第一种实现方式">1. 第一种实现方式</h3>
+<p>自定义一个Bean :</p>
+<pre><code class="language-java">@Configuration(&quot;myConfigBean&quot;)
+public class MyConfigBean {
+
+    @Override
+    public String toString() {
+        return &quot;This is MyConfigBean&quot;;
+    }
+}
+</code></pre>
+<p>自定义一个 @Enable 自动装配类 :</p>
+<pre><code class="language-java">@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+// 导入自己想要加载的类 : 
+@Import(MyConfigBean.class)
+public @interface EnableConfigBean {
+
+}
+</code></pre>
+<p>启动类 :  这里有些特殊 , 大家也可以学着点 .</p>
+<pre><code class="language-java">// 导入自动装配
+@EnableConfigBean
+public class ConditionSpringbootApplication{
+
+	public static void main(String[] args) {
+		SpringApplicationBuilder builder = new SpringApplicationBuilder();
+// 配置bean注入,此时就是ConditionSpringbootApplication,和原来spring的@Configuration类一样,叫配置Bean
+		ConfigurableApplicationContext context = builder.sources(ConditionSpringbootApplication.class)
+				.bannerMode(Banner.Mode.OFF)
+            // spring-boot 模式有三种,我们选择NONE
+				.web(WebApplicationType.NONE)
+            // 必须run 来启动spring-boot
+				.run(args);
+        
+        // 大家需要注意一下,如果是一个内部类注册Bean,获取bean的名字就不是首字母小写了.
+//例如 com.spring.conditionspringboot.import_example.boot.ConditionSpringbootApplication$MyBean
+//需要上面这种写法 . 
+		// 打印自己注入的bean
+		Object bean = context.getBean(&quot;myConfigBean&quot;);
+		System.out.println(bean);
+	}
+}
+</code></pre>
+<p>运行结果 :</p>
+<pre><code class="language-java">This is MyConfigBean
+// 其他日志忽略
+</code></pre>
+<p>通过上面的代码我们已经大致了解了 <code>@Enable</code> 做了什么 ,他的主要关键点在哪 <code>@Import</code> 注解这,会自动注入一个Bean.</p>
+<h3 id="2-第二种实现方式">2. 第二种实现方式</h3>
+<p>@Enable 实现类</p>
+<pre><code class="language-java">@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@Documented
+@Import({MyImportSelector.class})
+public @interface EnableConfigBean {
+
+}
+</code></pre>
+<p>MyImportSelector 实现 方式 ,可以看看 <code>@EnableAutoConfiguration</code>这个注解, 他就用到了一个 Selector .</p>
+<pre><code class="language-java">public class MyImportSelector implements ImportSelector {
+
+    // AnnotationMetadata 是一个 注解元信息 ,可以获取注解信息,以及注解所在类的其他信息
+    @Override
+    public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+        return new String[]{MyConfigBean.class.getName()};
+    }
+}
+</code></pre>
+<pre><code class="language-java">public class MyConfigBean {
+
+    @Bean
+    public String helloWorld(){
+        return &quot;Hello World&quot;;
+    }
+}
+</code></pre>
+<h2 id="2-条件装配">2. 条件装配</h2>
+<blockquote>
+<p>​	从spring Framework 3.1 开始的</p>
+</blockquote>
+<h3 id="profile">@Profile</h3>
+<p>接口类:</p>
+<pre><code class="language-java">public interface CalculateService {
+
+    Integer sum(Integer ...values);
+}
+</code></pre>
+<p>@Profile注解 标注的实现类第一个</p>
+<pre><code class="language-java">@Profile(&quot;Java7&quot;)
+@Service
+public class Java7CalculateService implements CalculateService{
+    
+    @Override
+    public Integer sum(Integer... values) {
+        Integer sum = 0;
+        for (Integer value : values) {
+            sum += value;
+        }
+        return sum;
+    }
+}
+</code></pre>
+<p>@Profile注解 标注的实现类第二个</p>
+<pre><code class="language-java">@Profile(&quot;Java8&quot;)
+@Service
+public class Java8CalculateService implements CalculateService{
+
+    @Override
+    public Integer sum(Integer... values) {
+
+        return Stream.of(values).reduce(Integer::sum).get();
+    }
+}
+</code></pre>
+<p>启动类 :</p>
+<pre><code class="language-java">@ComponentScan(&quot;com.spring.conditionspringboot.condition_example.bean&quot;)
+public class CalculateBootStrap {
+
+    public static void main(String[] args) {
+
+        SpringApplicationBuilder builder = new SpringApplicationBuilder();
+
+        ConfigurableApplicationContext context = builder.sources(CalculateBootStrap.class)
+                .bannerMode(Banner.Mode.OFF)
+                .web(WebApplicationType.NONE)
+           		// 这里需要指定profile ,不然会报错 ,
+                .profiles(&quot;Java7&quot;)
+                .run(args);
+
+
+        CalculateService service = context.getBean(CalculateService.class);
+
+        Integer sum = service.sum(1, 2, 3, 4);
+
+        System.out.println(service+&quot; : &quot;+sum);
+
+        context.close();
+    }
+
+}
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">com.spring.conditionspringboot.condition_example.bean.Java7CalculateService@3e6ef8ad : 10
+</code></pre>
+<h3 id="conditional">@Conditional</h3>
+<p>注解实现类  :  主要是实现一个 @Conditional 这个注解,指向一个Condition的实现类 .</p>
+<pre><code class="language-java">@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Conditional(ConditionProfile.class)
+public @interface MyConditional {
+
+
+    String key();
+
+    String value();
+
+}
+</code></pre>
+<p>ConditionProfile 实现类 :</p>
+<pre><code class="language-java">// 这个类可以获取所有被 @MyConditional 注解所标记类的 , 注解信息 . 判断是否可以注入bean
+public class ConditionProfile implements Condition {
+
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+
+        Map&lt;String, Object&gt; attributes = metadata.getAnnotationAttributes(MyConditional.class.getName());
+
+        Object key = attributes.get(&quot;key&quot;);
+
+        Object value = attributes.get(&quot;value&quot;);
+
+        if (key.equals(&quot;name&quot;)) {
+
+            return true;
+        }
+        return false;
+    }
+}
+</code></pre>
+<p>启动类 :</p>
+<pre><code class="language-java">public class ConditionBootstrap {
+
+    @MyConditional(key = &quot;name&quot;,value = &quot;sb&quot;)
+    @Bean
+    public String helloWorld(){
+        return &quot;Hello world&quot;;
+    }
+
+
+    public static void main(String[] args) {
+        SpringApplicationBuilder builder = new SpringApplicationBuilder();
+
+
+        ConfigurableApplicationContext context = builder.sources(ConditionBootstrap.class)
+                .bannerMode(Banner.Mode.OFF)
+                .web(WebApplicationType.NONE)
+                .run(args);
+
+
+        Object bean = context.getBean(&quot;helloWorld&quot;);
+
+        System.out.println(bean);
+    }
+
+}
+
+</code></pre>
+<p>输出结果 :</p>
+<pre><code class="language-java">Hello world
+</code></pre>
+<h2 id="3-走向-enableautoconfiguration">3. 走向 @EnableAutoConfiguration</h2>
+<p>首先实现一个 MyAutoConfiguration ,</p>
+<p>这个类需要实现你想加载的Bean ,我们注入了  @Enable 模块 和  @Conditional 模块 , 其实不用配置 @Configuration ,但是源码中好多都加了  , 可以去<code>spring-boot-autoconfigure-2.0.4.RELEASE.jar</code> 这个包中有大量的自动加载的类</p>
+<pre><code class="language-java">@Configuration
+@MyConditional(key = &quot;name&quot;,value = &quot;key&quot;)
+@EnableConfigBean
+public class MyAutoConfiguration {
+
+}
+</code></pre>
+<p>在resource /META-INF/spring.factories 中添加</p>
+<pre><code class="language-java"># Auto Configure  其中 \是换行符,不能有乱带空格之类的,
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.spring.conditionspringboot.autoconfiguration.bean.MyAutoConfiguration
+</code></pre>
+<p>我们的启动类 :  只要加上 @EnableAutoConfiguration 的注解轻轻松松 ,其实 @SpringBootApplication就是里面包含了@EnableAutoConfiguration  ,所以可以自动装配实现</p>
+<pre><code class="language-java">@EnableAutoConfiguration
+public class AutoBootStrap {
+
+    public static void main(String[] args) {
+
+        SpringApplicationBuilder builder = new SpringApplicationBuilder();
+
+        ConfigurableApplicationContext context = builder.sources(AutoBootStrap.class)
+                .bannerMode(Banner.Mode.OFF)
+                .web(WebApplicationType.NONE)
+                .run(args);
+
+        Object bean = context.getBean(&quot;helloWorld&quot;);
+
+        System.out.println(bean);
+
+        context.close();
+    }
+
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">Hello World
+</code></pre>
+<blockquote>
+<p>加载机制分析 :</p>
+<p>1  .  SpringApplication 启动的时候去找运行环境,此时就会去找SpringFactoriesLoader,  SpringFactoriesLoader 会加载 &quot;META-INF/spring.factories&quot; 下面的文件</p>
+<p>2 . org.springframework.boot.autoconfigure.EnableAutoConfiguration= 会自动加载你写的那些自动装配的自动装配类 ,例如本例子中的 com.spring.conditionspringboot.autoconfiguration.bean.MyAutoConfiguration 类 ,</p>
+<p>3 .  第一步 条件加载 @MyConditional</p>
+<p>4  . 第二步 模式注解 : 这个类须被 @Configuration 修饰 , 其实没必要</p>
+<p>5 .  @Enable 模块 :  @EnableConfigBean的自动装配的类</p>
+</blockquote>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E4%BD%93%E9%AA%8C%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D">1. 体验自动装配</a>
+<ul>
+<li><a href="#1-%E7%AC%AC%E4%B8%80%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F">1. 第一种实现方式</a></li>
+<li><a href="#2-%E7%AC%AC%E4%BA%8C%E7%A7%8D%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F">2. 第二种实现方式</a></li>
+</ul>
+</li>
+<li><a href="#2-%E6%9D%A1%E4%BB%B6%E8%A3%85%E9%85%8D">2. 条件装配</a>
+<ul>
+<li><a href="#profile">@Profile</a></li>
+<li><a href="#conditional">@Conditional</a></li>
+</ul>
+</li>
+<li><a href="#3-%E8%B5%B0%E5%90%91-enableautoconfiguration">3. 走向 @EnableAutoConfiguration</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JUC - Semaphore 与 Lock的区别 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/juc-semaphore-yu-lock-de-qu-bie/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JUC - Semaphore 与 Lock的区别</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-10-27</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/juc-semaphore-yu-lock-de-qu-bie/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/38zE8aaGQ3X/"
+								class="tag">JUC</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1288字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">6 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="介绍">介绍</h2>
+<blockquote>
+<p>​	A counting semaphore.  Conceptually, a semaphore maintains a set of permits.</p>
+<p>Semaphores are often used to restrict the number of threads than can access some (physical or logical) resource. For example, here is a class that uses a semaphore to control access to a pool of items:</p>
+<p>​	一个计数信号量.概念上将,信号量维护了一系列的许可证 . 文档里还说了semaphore 通常被用来限制访问一些资源的线程数量. 例如 这里有一个类,它使用<code>semaphore</code> 去控制访问items的池子</p>
+</blockquote>
+<h2 id="semaphore-使用">Semaphore  使用</h2>
+<h3 id="简单看看使用情况">简单看看使用情况</h3>
+<pre><code class="language-java">public class TestSemaphore {
+
+    public static void main(String[] args) {
+        final Semaphore semaphore = new Semaphore(2);
+        System.out.println(&quot;----------Semaphore-----------&quot;);
+        IntStream.range(0, 4).forEach(i -&gt; new Thread(() -&gt; {
+            System.out.println(Thread.currentThread().getName() + &quot;  开始&quot;);
+            try {
+                semaphore.acquire(); // 获取所有许可证，抽干
+
+                System.out.println(Thread.currentThread().getName() + &quot;  获取许可证&quot;);
+                TimeUnit.SECONDS.sleep(3);
+                System.out.println(Thread.currentThread().getName() + &quot;  等待完毕&quot;);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } finally {
+                System.out.println(Thread.currentThread().getName() + &quot;  释放许可证&quot;);
+                semaphore.release(1);
+            }
+            System.out.println(Thread.currentThread().getName() + &quot; 结束&quot;);
+        }, &quot;thread&quot; + (i + 1)).start());
+    }
+
+}
+</code></pre>
+<p><strong>执行结果</strong></p>
+<pre><code class="language-java">----------Semaphore-----------
+thread1  开始
+thread1  获取许可证
+thread2  开始
+thread2  获取许可证
+thread3  开始
+thread4  开始
+thread1  等待完毕
+thread1  释放许可证
+thread3  获取许可证
+thread1  结束
+thread2  等待完毕
+thread2  释放许可证
+thread4  获取许可证
+thread2  结束
+thread3  等待完毕
+thread3  释放许可证
+thread3  结束
+thread4  等待完毕
+thread4  释放许可证
+thread4  结束
+</code></pre>
+<p>我们发现只有获取许可证的线程才可以去执行线程任务,当释放许可证的时候,其他线程可以去获取这个许可证</p>
+<h3 id="semaphore-的构造方法">Semaphore  的构造方法</h3>
+<pre><code>Semaphore semaphore = new Semaphore(2,false);
+</code></pre>
+<p>我们发现他是可以穿两个参数的 ,第一个是许可证的数量,第二个是 是否公平, false是不公平</p>
+<h3 id="semaphore-的常用方法">Semaphore  的常用方法</h3>
+<ul>
+<li>semaphore.acquire()</li>
+</ul>
+<pre><code class="language-java">// Acquires a permit from this semaphore, blocking until one is available, or the thread is {@linkplain Thread#interrupt interrupted}.
+semaphore.acquire(); 
+</code></pre>
+<p><code>semaphore.acquire()</code>这个方法主要是用来获取一个permit , 直到等到一个可用的permit,才会阻塞结束,或者这个线程被打断.</p>
+<ul>
+<li>semaphore.release(1);</li>
+</ul>
+<pre><code class="language-java">// Releases the given number of permits, returning them to the semaphore.
+semaphore.release(1);
+semaphore.release();  // 不传参数默认是1 
+</code></pre>
+<p><code>semaphore.release(1);</code>  这个方法可以指定一permit的大小, 释放给定数量的permit,返回给 smaphore</p>
+<ul>
+<li>semaphore.drainPermits()</li>
+</ul>
+<pre><code class="language-java">// Acquires and returns all permits that are immediately available.
+semaphore.drainPermits();
+</code></pre>
+<p><code>semaphore.drainPermits()</code> 这个方法就是 获取并且并且立马返回所以可用的permit . 所以这个方法不需要release</p>
+<ul>
+<li>semaphore.acquireUninterruptibly(5)</li>
+</ul>
+<pre><code class="language-java">// Acquires the given number of permits from this semaphore,blocking until all are available.
+semaphore.acquireUninterruptibly(5);
+</code></pre>
+<p><code>semaphore.acquireUninterruptibly(5)</code> 这个方法的字面意思就是获取不间断的 <code>Uninterruptibly</code>是不间断的意思. 所以解释就是 需要获取给定数量的permit,止到这些permit都是可用的才阻塞结束.</p>
+<ul>
+<li>semaphore.availablePermits()</li>
+</ul>
+<pre><code>// Returns the current number of permits available in this semaphore.
+semaphore.availablePermits()
+</code></pre>
+<p><code>semaphore.availablePermits()</code> 这个方法会立刻返回所有可用的permit</p>
+<h3 id="上面讲的的permit-对象是什么呢">上面讲的的<code>permit</code> 对象是什么呢 ?</h3>
+<p>我翻阅 源码发现</p>
+<pre><code class="language-java"> 	/**
+     * The synchronization state.
+     */
+    private volatile int state;
+	/**
+     * Returns the current value of synchronization state.
+     * This operation has memory semantics of a {@code volatile} read.
+     * @return current state value
+     */
+    protected final int getState() {
+        return state;
+    }
+</code></pre>
+<p>这状态 表示 当前permit的数量 ,他用<code>volatile</code> 修饰的目的就是为了 让多线程之间可以去共享这个变量 , 保证其可见性 . 根据数量进行 reduce 和 increase ,</p>
+<h2 id="对比一下-lock">对比一下 lock</h2>
+<pre><code class="language-java">public class TestLock {
+
+    public static void main(String[] args) {
+
+        final ReentrantLock lock = new ReentrantLock();
+
+        System.out.println(&quot;--------ReentrantLock-----------&quot;);
+
+        IntStream.range(0, 4).forEach(e-&gt;{
+            new Thread(()-&gt;{
+                System.out.println(Thread.currentThread().getName() + &quot;  开始&quot;);
+                lock.lock(); // 一次拿一把锁
+                try {
+                    System.out.println(Thread.currentThread().getName() + &quot;  拿到锁&quot;);
+                    TimeUnit.SECONDS.sleep(3);
+                    System.out.println(Thread.currentThread().getName() + &quot;  等待完毕&quot;);
+                } catch (InterruptedException ex) {
+                    ex.printStackTrace();
+                } finally {
+                    System.out.println(Thread.currentThread().getName() + &quot;  释放锁&quot;);
+                    lock.unlock();
+                }
+                System.out.println(Thread.currentThread().getName() + &quot;  结束&quot;);
+            }, &quot;thread&quot; + (e + 1)
+            ).start();
+        });
+    }
+}
+</code></pre>
+<p><strong>执行结果</strong></p>
+<pre><code class="language-java">--------ReentrantLock-----------
+thread1  开始
+thread2  开始
+thread1  拿到锁
+thread3  开始
+thread4  开始
+thread1  等待完毕
+thread1  释放锁
+thread1  结束
+thread2  拿到锁
+thread2  等待完毕
+thread2  释放锁
+thread2  结束
+thread3  拿到锁
+thread3  等待完毕
+thread3  释放锁
+thread3  结束
+thread4  拿到锁
+thread4  等待完毕
+thread4  释放锁
+thread4  结束
+</code></pre>
+<p>我们不难发现  lock , 当线程执行lock() 方法时, 只能有一个线程执行.</p>
+<pre><code class="language-java">1. Acquires the lock if it is not held by another thread and returns immediately, setting the lock hold count to one.
+2. If the current thread already holds the lock then the hold count is incremented by one and the method returns immediately.
+3. If the lock is held by another thread then the current thread becomes disabled for thread scheduling purposes and lies dormant until the lock has been acquired, at which time the lock hold count is set to one.    
+</code></pre>
+<p>源码中 lock 方法 有三种情况</p>
+<ol>
+<li>如果需求的锁没有被其他线程所持有,那么久立刻返回并且设置持有锁的数量为1</li>
+<li>如果当前线程已经持有锁,那么持有的数量加一,然后返回,  就是一个多次执行 lock 方法()</li>
+<li>如果这个锁 被其他线程持有,那么当前线程则不能调度线程,然后休眠,止到有可用的锁,同时将锁的持有数量设置为1.</li>
+</ol>
+<p>所以呢,只能有一个线程获取锁,达到同步执行的效果</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E4%BB%8B%E7%BB%8D">介绍</a></li>
+<li><a href="#semaphore-%E4%BD%BF%E7%94%A8">Semaphore  使用</a>
+<ul>
+<li><a href="#%E7%AE%80%E5%8D%95%E7%9C%8B%E7%9C%8B%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5">简单看看使用情况</a></li>
+<li><a href="#semaphore-%E7%9A%84%E6%9E%84%E9%80%A0%E6%96%B9%E6%B3%95">Semaphore  的构造方法</a></li>
+<li><a href="#semaphore-%E7%9A%84%E5%B8%B8%E7%94%A8%E6%96%B9%E6%B3%95">Semaphore  的常用方法</a></li>
+<li><a href="#%E4%B8%8A%E9%9D%A2%E8%AE%B2%E7%9A%84%E7%9A%84permit-%E5%AF%B9%E8%B1%A1%E6%98%AF%E4%BB%80%E4%B9%88%E5%91%A2">上面讲的的<code>permit</code> 对象是什么呢 ?</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AF%B9%E6%AF%94%E4%B8%80%E4%B8%8B-lock">对比一下 lock</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

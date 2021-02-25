@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>SpringBoot - Endpoint开发 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/spring-endpoint-kai-fa/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>SpringBoot - Endpoint开发</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-18</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/spring-endpoint-kai-fa/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/30KjDURvPf/"
+								class="tag">spring</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1208字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Identifies a type as being an actuator endpoint that provides information about the running application. Endpoints can be exposed over a variety of technologies including JMX and HTTP.</p>
+<p>​	Endpoint可以给提供一些信息关于running application, Endpoint可以通过JMX 和HTTP技术来暴露 ,</p>
+<p>​	重点就是一个是JMX 和HTPP技术, 还有他可以提供一些信息关于JAVA进程, 所以可以称作为运维工具</p>
+</blockquote>
+<h2 id="1-spring-自定义-endpoint">1. Spring 自定义 Endpoint</h2>
+<p>申明一个Endpoint需要Bean上注入<code>org.springframework.boot.actuate.endpoint.annotation.Endpoint</code> 这个注解, 其实还有一个 <code>JmxEndpoint</code></p>
+<blockquote>
+<p>​	Most @Endpoint classes will declare one or more @ReadOperation, @WriteOperation, @DeleteOperation annotated methods which will be automatically adapted to the exposing technology (JMX, Spring MVC, Spring WebFlux, Jersey etc.).</p>
+<p>​	@Endpoint represents the lowest common denominator for endpoints and intentionally limits the sorts of operation methods that may be defined in order to support the broadest possible range of exposure technologies. If you need deeper support for a specific technology you can either write an endpoint that is filtered to a certain technology, or provide extension for the broader endpoint.</p>
+</blockquote>
+<p>首先需要加入依赖</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;
+    &lt;artifactId&gt;spring-boot-starter-actuator&lt;/artifactId&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p>其次配置加入</p>
+<pre><code class="language-properties">management.endpoints.web.exposure.include=*
+management.endpoint.health.show-details=always
+</code></pre>
+<p>Endpoint 类 :</p>
+<pre><code class="language-java">@Endpoint(id = &quot;nacos-config&quot;)
+public class NacosConfigEndpoint {
+
+    private static final Map&lt;String, Object&gt; MAP = new HashMap&lt;&gt;();
+
+	// 对应着 GET 方法 , 注意方法名别重复,会抛出异常
+    @ReadOperation
+    public Map&lt;String, Object&gt; get() {
+        MAP.clear();
+        MAP.put(&quot;GET&quot;, &quot;hello world&quot;);
+        return MAP;
+
+    }
+
+    // 对应着 POST 方法
+    // @Selector 相当于 @PathVariable
+    @WriteOperation
+    public Map&lt;String, Object&gt; post(@Selector String name) {
+        MAP.clear();
+        MAP.put(&quot;POST&quot;,name);
+        return MAP;
+    }
+
+    // 对应着 DELETE 方法
+    @DeleteOperation
+    public Map&lt;String, Object&gt; delete(@Selector String name) {
+        MAP.clear();
+        MAP.put(&quot;DELETE&quot;,name);
+        return MAP;
+    }
+}
+</code></pre>
+<p>配置类 :</p>
+<pre><code class="language-java">@Configuration
+public class NacosConfigEndpointAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnEnabledEndpoint
+    public NacosConfigEndpoint nacosEndpoint() {
+        return new NacosConfigEndpoint();
+    }
+}
+</code></pre>
+<p>启动 日志会发现注册进去了,</p>
+<pre><code class="language-java">2019-12-18 17:19:25.497  INFO 5572 --- [           main] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped &quot;{[/actuator/nacos-config],methods=[GET],produces=[application/vnd.spring-boot.actuator.v2+json || application/json]}&quot; onto public java.lang.Object org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping$OperationHandler.handle(javax.servlet.http.HttpServletRequest,java.util.Map&lt;java.lang.String, java.lang.String&gt;)
+2019-12-18 17:19:25.497  INFO 5572 --- [           main] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped &quot;{[/actuator/nacos-config/{name}],methods=[DELETE],produces=[application/vnd.spring-boot.actuator.v2+json || application/json]}&quot; onto public java.lang.Object org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping$OperationHandler.handle(javax.servlet.http.HttpServletRequest,java.util.Map&lt;java.lang.String, java.lang.String&gt;)
+2019-12-18 17:19:25.498  INFO 5572 --- [           main] s.b.a.e.w.s.WebMvcEndpointHandlerMapping : Mapped &quot;{[/actuator/nacos-config/{name}],methods=[POST],produces=[application/vnd.spring-boot.actuator.v2+json || application/json]}&quot; onto public java.lang.Object org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping$OperationHandler.handle(javax.servlet.http.HttpServletRequest,java.util.Map&lt;java.lang.String, java.lang.String&gt;)
+
+</code></pre>
+<p>然后测试接口</p>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-18/240db8b8-e606-49cd-96d2-b7ee3e6a47cf.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>测试结果 很显然是匹配的</p>
+<p>最后一个问题 ,什么是JMX哇 , 我们上面用的是HTTP请求哇, 下面这个就是 ,可以通过jconsole工具打开可以看到.</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-18/fef92706-1dc8-42a6-b277-c0770eb6cee5.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h2 id="2-controllerendpoint-更加方便">2. ControllerEndpoint 更加方便</h2>
+<p><code>org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpoint</code> 我们上述的都是使用我们不认识的注解, 开发不友好, 这个提供了 , 但是这个不会提供JMX , 所以不能使用jconsole 管理</p>
+<blockquote>
+<p>​	Identifies a type as being an endpoint that is only exposed over Spring MVC or Spring WebFlux. Mapped methods must be annotated with @GetMapping, @PostMapping, @DeleteMapping, etc annotations rather than @ReadOperation, @WriteOperation, @DeleteOperation.</p>
+</blockquote>
+<p>测试类</p>
+<pre><code class="language-java">@ControllerEndpoint(id = &quot;web-mvc&quot;, enableByDefault = true)
+public class WebMVCControllerEndpoint {
+
+    @ResponseBody
+    @GetMapping(&quot;/get/{id}&quot;)
+    public List&lt;String&gt; get(@PathVariable(&quot;id&quot;) String id) {
+        return Arrays.asList(&quot;hello &quot;, id, &quot; !&quot;);
+    }
+}
+</code></pre>
+<p>加入配置</p>
+<pre><code class="language-java">@Configuration
+public class NacosConfigEndpointAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnEnabledEndpoint
+    public NacosConfigEndpoint nacosEndpoint() {
+        return new NacosConfigEndpoint();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnEnabledEndpoint
+    public WebMVCControllerEndpoint webMVCControllerEndpoint() {
+        return new WebMVCControllerEndpoint();
+    }
+
+}
+</code></pre>
+<p>再次启动</p>
+<h2 id="2-java-自定义-jmx">2. Java 自定义 JMX</h2>
+<blockquote>
+<p>​	JMX（Java Management Extensions，即Java管理扩展）是一个为应用程序、设备、系统等<a href="https://baike.baidu.com/item/%E6%A4%8D%E5%85%A5/7958584">植入</a>管理功能的框架。JMX可以跨越一系列异构操作系统平台、<a href="https://baike.baidu.com/item/%E7%B3%BB%E7%BB%9F%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/6842760">系统体系结构</a>和<a href="https://baike.baidu.com/item/%E7%BD%91%E7%BB%9C%E4%BC%A0%E8%BE%93%E5%8D%8F%E8%AE%AE/332131">网络传输协议</a>，灵活的开发无缝集成的系统、网络和服务管理应用。</p>
+</blockquote>
+<p>我简单copy了一份demo</p>
+<pre><code class="language-java">public interface HelloMBean {
+
+    void echo(String msg);
+
+    String getName();
+
+    void setName(String name);
+}
+</code></pre>
+<pre><code class="language-java">/*
+ * 该类名称必须与实现的接口的前缀保持一致（即MBean前面的名称
+ */
+public class Hello implements HelloMBean {
+
+    private String name;
+
+    @Override
+    public void echo(String msg) {
+        System.out.println(&quot;name : &quot; + name + &quot; , echo : &quot; + msg);
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+</code></pre>
+<p>启动类</p>
+<pre><code class="language-java">public class HelloAgent {
+    public static void main(String[] args) throws JMException, Exception {
+
+        // 1. 通过工厂类获取Mbean Server，用来做Mbean的容器
+        MBeanServer server = ManagementFactory.getPlatformMBeanServer();
+
+        // 2. 域名:name=Mbean名称
+        ObjectName helloName = new ObjectName(&quot;jmxBean:name=hello&quot;);
+
+        //2. 最后将Hello这个类注册到MbeanServer中，注入需要创建一个ObjectName类
+        server.registerMBean(new Hello(), helloName);
+
+        System.in.read();
+    }
+}
+</code></pre>
+<p>最后用CMD执行一下 , jconsole , 然后由于我们上面提供了 getName和setName方法所以, 此时是可以输入值的,你接口中没有提供,是不可以展示值的.或修改值的</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-18/b228821d-4bce-4a75-9dfc-600457b4d7c6.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>我们调用 echo方法, 可以往方法中输入参数</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-18/c156edb6-2f97-41fd-b9d1-1abb57d01c8a.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>此时我们看我们的输出结果 :</p>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-18/6fc4c382-b736-40e7-a255-16ecccae33fa.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>是不是成功调用成功了 , 这就是 JMX ,其他的详细使用就百度吧, 基本流程就是这个</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-spring-%E8%87%AA%E5%AE%9A%E4%B9%89-endpoint">1. Spring 自定义 Endpoint</a></li>
+<li><a href="#2-controllerendpoint-%E6%9B%B4%E5%8A%A0%E6%96%B9%E4%BE%BF">2. ControllerEndpoint 更加方便</a></li>
+<li><a href="#2-java-%E8%87%AA%E5%AE%9A%E4%B9%89-jmx">2. Java 自定义 JMX</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

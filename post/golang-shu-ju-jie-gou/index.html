@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Golang - 数据结构 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/golang-shu-ju-jie-gou/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Golang - 数据结构</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-09</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/golang-shu-ju-jie-gou/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/QVXCurowLbk/"
+								class="tag">Golang</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2097字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">10 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-数组">1. 数组</h2>
+<blockquote>
+<p>​	数组是一个由固定长度的特定类型元素组成的序列，一个数组可以由零个或多个元素组成。 因为数组的长度是固定的，因此在Go语言中很少直接使用数组。和数组对应的类型是 Slice（切片），它是可以增长和收缩动态序列，slice功能也更灵活，但是要理解slice工作原 理的话需要先理解数组。</p>
+</blockquote>
+<p>数组申明的写法和Java正好相反 , 其实写Java的知道, 如果你写反了申明虽然不操作,但是Idea也会提示的.</p>
+<p>在 Java中<code>int[] arr=new int[2]{1,2}</code>  , 而Golang中 <code>var arr [3]int=[3]int{1,2,3}</code></p>
+<p>还有就是 Golang中 <code>var arr1 []int=[]int{1,2}</code> 和 <code>var arr2 [2]int=[2]int{1,2}</code>  这俩数组类型是不同的, 因为一个是 <code>[]int</code> (切片类型, 引用传递)一个是 <code>[2]int</code> (值传递) ,</p>
+<p>数组的每个元素可以通过索引下标来访问，索引下标的范围是从0开始到数组长度减1的位 置。内置的len函数将返回数组中元素的个数。</p>
+<blockquote>
+<p>​	默认情况下，数组的每个元素都被初始化为元素类型对应的零值，对于数字类型来说就是0。</p>
+</blockquote>
+<pre><code class="language-go">func main() {
+
+	// 申明类型 ,初始值为 [0,0,0]
+	var arr [3]int
+
+	// 必须大于4  , [len] 是len长度, 如果小于len的则补充为0
+	var arr1 [5]int = [5] int{1, 2, 3, 4}
+	
+	// 简写
+	var arr2= [5] int{1, 2, 3, 4}
+	
+	// 变量语法糖申明
+	arr3:=[3]int{1,2,3}
+
+	// 编译时确定数组长度
+	arr4 :=	[...]int{1,	2,	3}
+
+	// 赋值
+	arr[1] = 1
+
+	// 遍历1
+	for index, value := range arr {
+		fmt.Printf(&quot;index %d , value %d \n&quot;, index, value)
+	}
+
+	// 遍历2
+	for _, value := range arr {
+		fmt.Printf(&quot;value %d \n&quot;, value)
+	}
+
+	// 遍历3
+	for value := range arr {
+		fmt.Printf(&quot;value %d \n&quot;, value)
+	}
+}
+</code></pre>
+<p>常量</p>
+<pre><code class="language-go">const (
+	// 初始化0 , 后面叠加
+	USD = iota
+	EUR
+	RMB
+)
+
+func main() {
+	fmt.Println(EUR) //1
+    
+	// 类型
+	fmt.Println(reflect.TypeOf(USD)) // int
+    
+    // string数组
+    symbol := [...]string{USD: &quot;$&quot;, EUR: &quot;€&quot;, RMB: &quot;￥&quot;}
+
+	fmt.Println(symbol) // [$ € ￥]
+    
+    // 数组写法  {索引:value} , 由最大索引值决定大小 , 没有初始化的都为0
+    arr:=[...]string{1:&quot;1&quot;,0:&quot;0&quot;}
+	fmt.Println(arr)  // [0 1]
+}
+</code></pre>
+<p>数组比较</p>
+<pre><code class="language-java">func main(){
+    
+    arr1 := [3]int{1, 2, 3}
+
+	arr2 := [...]int{1, 2, 3}
+
+	arr3 := [3]int{1, 2, 4}
+
+	fmt.Println(arr1 == arr2)
+	fmt.Println(arr1 == arr3)
+}
+</code></pre>
+<p>切记不可以这么写 , 因为他要求类型一致 , 比如 <code>[3]int</code> 和 <code>[4]int</code> 类型其实是不一致的 , 其实<code>[] int</code> 可以称之为切片</p>
+<pre><code class="language-go">arr1 := [3]int{1, 2, 4}
+
+arr4:=[]int{1,2,3}
+
+fmt.Println(arr1==arr4) // Invalid operation: arr1==arr4 (mismatched types [3]int and []int)
+</code></pre>
+<h2 id="2-slice-切片">2. Slice 切片</h2>
+<p>切记 Slice是引用类型. 所以不需要指针.</p>
+<p>是 Java中的ArrayList , 你可以这么理解, 因为数组是定长 ,所以添加不方便, 所以需要变长, 就是 Slice , 其实怎么说就是个数组 ,只不过数组长度通过他的特定方法可以扩容</p>
+<blockquote>
+<p>​	Slice（切片）代表变长的序列，序列中每个元素都有相同的类型。一个slice类型一般写作 []T，其中T代表slice中元素的类型；slice的语法和数组很像，只是没有固定长度而已。</p>
+</blockquote>
+<blockquote>
+<p>​	数组和slice之间有着紧密的联系。一个slice是一个轻量级的数据结构，提供了访问数组子序 列（或者全部）元素的功能，而且slice的底层确实引用一个数组对象。一个slice由三个部分 构成：指针、长度和容量。指针指向第一个slice元素对应的底层数组元素的地址，要注意的 是slice的第一个元素并不一定就是数组的第一个元素。长度对应slice中元素的数目；长度不 能超过容量，容量一般是从slice的开始位置到底层数据的结尾位置。内置的len和cap函数分 别返回slice的长度和容量。</p>
+</blockquote>
+<p>slice的切片操作<code>s[ i : j ]</code>， i 和 j 可以省略一个  , 左开右闭, 从索引0开始计算</p>
+<p>其实吧 是 i决定 capacity,其实i可以改变 数组指针位置  , i和j共同决定length .</p>
+<pre><code class="language-go">func main() {
+
+	// 申明
+	arr := []int{0, 1, 2, 3, 4, 5}
+
+	fmt.Printf(&quot;原数据地址 : %p \n&quot;, &amp;arr)
+
+	//// make 申明
+	//arr1 := make([]int, 3)
+	printSlice(arr)
+
+	arr1 := arr[:1]
+	printSlice(arr1)
+
+	arr2 := arr[1:4]
+	printSlice(arr2)
+
+	arr3 := arr[1:]
+	printSlice(arr3)
+
+	arr4 := arr[2:]
+	printSlice(arr4)
+
+	reserve(arr)
+
+	printSlice(arr)
+
+}
+
+func printSlice(arr []int) {
+	fmt.Printf(&quot;len : %d , cap : %d , value : %v , type : %T , 地址 : %p.\n&quot;, len(arr), cap(arr), arr, arr, &amp;arr)
+}
+
+func reserve(arr []int) {
+	for x, y := 0, len(arr)-1; x &lt; y; x, y = x+1, y-1 {
+		arr[x], arr[y] = arr[y], arr[x]
+	}
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">原数据地址 : 0xc00004a420 
+len : 6 , cap : 6 , value : [0 1 2 3 4 5] , type : []int , 地址 : 0xc00004a460.
+len : 1 , cap : 6 , value : [0] , type : []int , 地址 : 0xc00004a4c0.
+len : 3 , cap : 5 , value : [1 2 3] , type : []int , 地址 : 0xc00004a520.
+len : 5 , cap : 5 , value : [1 2 3 4 5] , type : []int , 地址 : 0xc00004a580.
+len : 4 , cap : 4 , value : [2 3 4 5] , type : []int , 地址 : 0xc00004a5e0.
+len : 6 , cap : 6 , value : [5 4 3 2 1 0] , type : []int , 地址 : 0xc00004a640.
+</code></pre>
+<p>其实对于 切片来说 , 他走的就是引用传递 ,所以其实你写 <code>reserve(arr []int)</code> ,底层其实就是 <code>reserve(arr *[]int)</code>  , 目的是为了什么呢 ,减少内存使用量. 所以不安全</p>
+<h4 id="append">append</h4>
+<pre><code class="language-go">func main() {
+
+	arr := []int{1, 2, 3, 4}
+
+	ints := append(arr, 5)
+
+	fmt.Printf(&quot;len:%d\tcap:%d\tvalue:%v\n&quot;, len(arr), cap(arr), arr)
+	fmt.Printf(&quot;len:%d\tcap:%d\tvalue:%v\n&quot;, len(ints), cap(ints), ints)
+}
+</code></pre>
+<p>输出 :</p>
+<pre><code class="language-java">len:4	cap:4	value:[1 2 3 4]
+len:5	cap:8	value:[1 2 3 4 5]
+</code></pre>
+<p>我们发现哇他每次扩容一倍的数据量. Java是原数组的1/2长度, Golang呢是原数组的1倍长度</p>
+<h4 id="copy">copy</h4>
+<p><code>func copy(dst, src []Type) int</code></p>
+<pre><code class="language-go">
+arr := []int{1, 2, 3, 4, 5, 6}
+arr1 := []int{5, 6}
+copy(arr1, arr)
+
+
+fmt.Printf(&quot;len:%d\tcap:%d\tvalue:%v\n&quot;, len(arr1), cap(arr1), arr1)
+fmt.Printf(&quot;len:%d\tcap:%d\tvalue:%v\n&quot;, len(arr), cap(arr), arr)
+</code></pre>
+<p>输出</p>
+<pre><code class="language-go">len:2	cap:2	value:[1 2]
+len:6	cap:6	value:[1 2 3 4 5 6]
+</code></pre>
+<h2 id="3map">3.Map</h2>
+<p>哈希表是一种巧妙并且实用的数据结构。它是一个无序的key/value对的集合，其中所有的key 都是不同的，然后通过给定的key可以在常数时间复杂度内检索、更新或删除对应的value。  跟Java的HashMap 一样</p>
+<h4 id="实例化">实例化</h4>
+<p>构造方法</p>
+<pre><code class="language-go">func main() {
+
+	// 重写构造方法
+	smap := map[string]int{
+		&quot;a&quot;: 1,
+		&quot;b&quot;: 2,
+	}
+
+    // 普通方法
+	smap[&quot;A&quot;]=3
+    
+    // delete方法
+    delete(smap,&quot;a&quot;)
+	fmt.Println(smap)  //输出 map[A:3  b:2]   , hashmap是无序的
+}
+</code></pre>
+<p>make 方法</p>
+<pre><code class="language-go">makem := make(map[string]int,1)
+fmt.Println(makem)
+makem[&quot;A&quot;] = 3
+makem[&quot;B&quot;] = 3
+makem[&quot;A&quot;] = 3
+fmt.Println(makem)
+// 输出
+map[]
+map[A:3 B:3]
+</code></pre>
+<p>禁止对map元素取址的原因是map可能随着元素数量的增长而重新分配更大的内存空间，从而 可能导致之前的地址无效。</p>
+<h4 id="高级语法">高级语法</h4>
+<p>其实也不是高级 , 就是他的的默认行为 , 取出空值,根据基本类型会有默认值的,</p>
+<pre><code class="language-java">smap := map[string]int{
+    &quot;a&quot;: 1,
+    &quot;b&quot;: 2,
+}
+
+fmt.Println(smap[&quot;c&quot;]) // 0
+smap[&quot;c&quot;]=smap[&quot;c&quot;]+1
+smap[&quot;c&quot;]++
+fmt.Println(smap[&quot;c&quot;]) // 2
+</code></pre>
+<h4 id="遍历">遍历</h4>
+<pre><code class="language-java">for key, value := range smap {
+	fmt.Printf(&quot;key %s : value %d\n&quot;, key, value)
+}
+</code></pre>
+<h4 id="空值">空值</h4>
+<pre><code class="language-map">var ages  map[string]int
+
+ages[&quot;tom&quot;]=1 // 运行错误
+
+fmt.Println(ages)
+</code></pre>
+<p>map上的大部分操作，包括查找、删除、len和range循环都可以安全工作在nil值的map上，它 们的行为和一个空的map类似。但是向一个nil值的map存入元素将导致一个panic异常</p>
+<h4 id="技巧">技巧</h4>
+<pre><code class="language-go">var ages map[string]int = map[string]int{}
+
+age, ok := ages[&quot;tony&quot;]
+
+fmt.Println(age, ok) // 0 false
+</code></pre>
+<h2 id="4-结构体">4. 结构体</h2>
+<pre><code class="language-go">type Point struct{ X, Y int }
+
+//	&quot;false&quot; fmt.Println(p	==	q)																			//	&quot;false&quot;
+func main() {
+	p := Point{2, 1}
+	q := Point{2, 1}
+	fmt.Println(p == q)  //true
+}
+</code></pre>
+<pre><code class="language-go">type Singer struct {
+	name string
+}
+
+func (s *Singer) setName(name string) {
+	s.name = name
+}
+
+func (s Singer) setName1(name string) {
+	s.name = name
+}
+</code></pre>
+<p>写这俩方法的目的就是指针的作用</p>
+<pre><code class="language-go">singer := Singer{name: &quot;张靓颖&quot;}
+
+fmt.Println(singer) // {张靓颖}
+
+singer.setName(&quot;A&quot;)
+
+fmt.Println(singer) // {A}
+
+singer.setName1(&quot;B&quot;)
+
+fmt.Println(singer) // {A}
+</code></pre>
+<p>对于类型 , 他会自动转换.</p>
+<h2 id="5-json">5. Json</h2>
+<pre><code class="language-go">type Child struct {
+	Name  string   `json:&quot;username&quot;`
+	Hobby []string `json:&quot;hobby&quot;`
+}
+
+func main() {
+
+	arr := Child{Name: &quot;tony&quot;, Hobby: []string{&quot;basketball&quot;, &quot;football&quot;}}
+
+	arr.Hobby = append(arr.Hobby, &quot;swing&quot;)
+
+	data, _ := json.Marshal(arr)
+
+	fmt.Printf(&quot;%s\n&quot;, data)
+
+	var c = Child{}
+
+	json.Unmarshal(data, &amp;c)
+
+	fmt.Println(c)
+}
+</code></pre>
+<pre><code class="language-go">{&quot;username&quot;:&quot;tony&quot;,&quot;hobby&quot;:[&quot;basketball&quot;,&quot;football&quot;,&quot;swing&quot;]}
+{tony [basketball football swing]}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E6%95%B0%E7%BB%84">1. 数组</a></li>
+<li><a href="#2-slice-%E5%88%87%E7%89%87">2. Slice 切片</a><br>
+*
+<ul>
+<li><a href="#append">append</a></li>
+<li><a href="#copy">copy</a></li>
+</ul>
+</li>
+<li><a href="#3map">3.Map</a><br>
+*
+<ul>
+<li><a href="#%E5%AE%9E%E4%BE%8B%E5%8C%96">实例化</a></li>
+<li><a href="#%E9%AB%98%E7%BA%A7%E8%AF%AD%E6%B3%95">高级语法</a></li>
+<li><a href="#%E9%81%8D%E5%8E%86">遍历</a></li>
+<li><a href="#%E7%A9%BA%E5%80%BC">空值</a></li>
+<li><a href="#%E6%8A%80%E5%B7%A7">技巧</a></li>
+</ul>
+</li>
+<li><a href="#4-%E7%BB%93%E6%9E%84%E4%BD%93">4. 结构体</a></li>
+<li><a href="#5-json">5. Json</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

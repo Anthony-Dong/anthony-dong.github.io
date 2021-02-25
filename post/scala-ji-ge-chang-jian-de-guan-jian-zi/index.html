@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Scala - 几个常见的关键字 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/scala-ji-ge-chang-jian-de-guan-jian-zi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Scala - 几个常见的关键字</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-12-10</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/scala-ji-ge-chang-jian-de-guan-jian-zi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Af7c3Ltc0ra/"
+								class="tag">Scala</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1229字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<h2 id="1-class">1. class</h2>
+<blockquote>
+<p>​	最基本的类</p>
+</blockquote>
+<pre><code class="language-java">class Test(x:Int,var y:Int,val z:String,private var w:String,protected val a:Long) {
+  private var b:Int=_
+
+  protected var c:String=_
+
+  var d:String=_
+
+  private[this] var e: String = _
+
+  @BeanProperty var f: String = _
+
+}
+</code></pre>
+<p>上面的换成java代码</p>
+<pre><code class="language-java">public class com.link_node.demo.Test {
+  private int y;
+  private final java.lang.String z;
+  private java.lang.String w;
+  private final long a;
+  private int b;
+  private java.lang.String c;
+  private java.lang.String d;
+  private java.lang.String e;
+  private java.lang.String f;
+  public int y();
+  public void y_$eq(int);
+  public java.lang.String z();
+  private java.lang.String w();
+  private void w_$eq(java.lang.String);
+  public long a();
+  private int b();
+  private void b_$eq(int);
+  public java.lang.String c();
+  public void c_$eq(java.lang.String);
+  public java.lang.String d();
+  public void d_$eq(java.lang.String);
+  public java.lang.String f();
+  public void f_$eq(java.lang.String);
+  public java.lang.String getF();
+  public void setF(java.lang.String);
+  public com.link_node.demo.Test(int, int, java.lang.String, java.lang.String, long);
+}
+</code></pre>
+<p>当不加类型修饰<code>var</code>或者<code>val</code>的时候,<code>x</code>成员变量么啥用 ,不会生成getset方法 ,</p>
+<p>当你用private修饰一个变量是同时<code>b</code>变量也没啥用,他的方法全是<code>私有</code>的,</p>
+<p>当你用<code>private[this]</code> 修饰一个变量时 ,他<strong>不会生成getset方法</strong> ,</p>
+<p>当你用 <code>var</code>修饰一个变量时,此时不被任何限定词修饰时 , 他默认getset方法是公有的, 当你用<code>val</code>修饰是<code>final</code></p>
+<p>当你用 <code>@BeanProperty</code>修饰变量时 , 他会生成java的getset方法</p>
+<h2 id="2-object">2. object</h2>
+<blockquote>
+<p>​	一种派生类</p>
+</blockquote>
+<pre><code class="language-java">object Test2 {
+
+  def main(args: Array[String]): Unit = {
+    
+  }
+}
+</code></pre>
+<p>编译后</p>
+<pre><code class="language-java">D:\代码库\javase学习\DevelopmentJAVA\java-arithmetic\target\classes\com\link_node\demo&gt;javap -p Test2$.class
+Compiled from &quot;Test2.scala&quot;
+public final class com.link_node.demo.Test2$ {
+  public static final com.link_node.demo.Test2$ MODULE$;
+  public static {};
+  public void main(java.lang.String[]);
+  private com.link_node.demo.Test2$();
+}
+
+D:\代码库\javase学习\DevelopmentJAVA\java-arithmetic\target\classes\com\link_node\demo&gt;javap -p Test2.class
+Compiled from &quot;Test2.scala&quot;
+public final class com.link_node.demo.Test2 {
+  public static void main(java.lang.String[]);
+}
+</code></pre>
+<p>我们发现object修饰的类 , 他会被<code>final</code>修饰 , 同时会额外生成一个 <code>ClassName$.class</code>的对象 ,都被final修饰</p>
+<h2 id="3-case">3. case</h2>
+<blockquote>
+<p>​	案例类,会生成两个类, 原来的类就是个普通类 , 还有一个 <code>ClassName.class</code> 的final修饰的类</p>
+</blockquote>
+<h3 id="1-基本使用">1. 基本使用</h3>
+<pre><code class="language-scala">case class Test3(var a:Int,val b: String,c:String,private var name:String) {
+
+}
+</code></pre>
+<p>你什么也不修饰 <code>c:String</code> , 他默认是被<code>val</code>修饰的</p>
+<p>你比如加了 <code>private</code> 修饰, 此时就是啥用也没有</p>
+<h3 id="字段类型">字段类型</h3>
+<pre><code class="language-scala">object Main3 extends App {
+
+  case class Message(sender: String, recipient: String, body: String)
+
+  val message1 = Message(&quot;guillaume@quebec.ca&quot;, &quot;jorge@catalonia.es&quot;, &quot;Ça va ?&quot;)
+
+  println(message1.sender) // prints guillaume@quebec.ca
+  
+  //  message1.sender = &quot;travis@washington.us&quot;  // this line does not compile
+
+  class Mes(sender: String, recipient: String)
+
+   val mes = new Mes(&quot;&quot;, &quot;&quot;)
+
+}
+</code></pre>
+<p>案例类  默认的参数是 val修饰的</p>
+<p>普通类  如果就写我上面的 , 此时这个类只有一个构造函数就是 俩参数的其他都没有  , 但是加了var ,修饰就会自带get和set方法 ,同时成员变量被private修饰... , 如果换做是val , 成员变量被private final修饰 , 所以无法修改</p>
+<h3 id="对象一致">对象一致</h3>
+<pre><code class="language-scala">case class Per2()
+
+object Main {
+
+  def main(args: Array[String]): Unit = {
+    val per1 = Per2
+    val per2 = Per2
+    val per3 = per2.apply()
+
+    println(per1==per2)
+    println(per1==per3)
+  }
+}
+</code></pre>
+<p>输出</p>
+<pre><code class="language-java">true
+false
+</code></pre>
+<h3 id="match-case">match ... case</h3>
+<pre><code class="language-scala">abstract class Notification
+
+case class Email(sender: String, title: String, body: String) extends Notification
+
+case class SMS(caller: String, message: String) extends Notification
+
+case class VoiceRecording(contactName: String, link: String) extends Notification
+
+
+case class SendSMS(caller: String, message: String) extends Notification
+
+object Main4 extends App {
+  def showNotification(notification: Notification): String = {
+    notification match {
+      case Email(sender, title, _) =&gt;
+        s&quot;You got an email from $sender with title: $title&quot;
+      case SMS(number, message) =&gt;
+        s&quot;You got an SMS from $number! Message: $message&quot;
+      case VoiceRecording(name, link) =&gt;
+        s&quot;you received a Voice Recording from $name! Click the link to hear it: $link&quot;
+      case SendSMS(number, message) =&gt;
+        s&quot;You got an SendSMS from $number! Message: $message&quot;
+    }
+  }
+
+  val mS = SendSMS(&quot;123&quot;, &quot;Are you OK&quot;)
+  val someSms = SMS(&quot;12345&quot;, &quot;Are you there?&quot;)
+  val someVoiceRecording = VoiceRecording(&quot;Tom&quot;, &quot;voicerecording.org/id/123&quot;)
+
+
+  println(showNotification(mS))  //You got an SendSMS from 123! Message: Are you OK
+
+  println(showNotification(someSms)) // prints You got an SMS from 12345! Message: Are you there?
+
+  println(showNotification(someVoiceRecording)) // you received a Voice Recording from Tom! Click the link to hear it: voicerecording.org/id/123
+}
+</code></pre>
+<pre><code class="language-scala">object Main10 extends App {
+  abstract class Device
+  case class Phone(model: String) extends Device {
+    def screenOff = &quot;Turning screen off&quot;
+  }
+  case class Computer(model: String) extends Device {
+    def screenSaverOn = &quot;Turning screen saver on...&quot;
+  }
+  def goIdle(device: Device):String = device match {
+    case p: Phone =&gt; p.screenOff
+    case c: Computer =&gt; c.screenSaverOn
+  }
+  println(goIdle(Computer(&quot;conputer&quot;)))
+}
+</code></pre>
+<h2 id="4-trait">4. trait</h2>
+<blockquote>
+<p>​	class : public class TestClass {}</p>
+<p>​	abstract class : public abstract class TestAba {}</p>
+<p>​	trait :   public abstract interface TestTra {}</p>
+<p>​	object  : public final class TestObj {}</p>
+<p>​	class TestExt extends TestAba with TestTra :    public class TestExt extends TestAba implements TestTra {}</p>
+<p>​	class TestExtend extends TestTra :   public class TestExtend implements TestTra</p>
+<p>​</p>
+</blockquote>
+<h2 id="var-val-private-修饰的作用">var val private 修饰的作用</h2>
+<pre><code class="language-scala">// 什么也不修饰的 get set方法都是public的
+class Person(var name: String, val age: Int, private var sex: String) {
+
+  // 这个修饰的不会生成get , set方法 
+  private[this] var gender: String = _
+
+  //被 private修饰的,get,set方法是私有的
+  private var birthday: Date = _
+}
+</code></pre>
+<pre><code class="language-java">public class com.spark.test2.Person {
+  private java.lang.String name;
+  private final int age;
+  private java.lang.String sex;
+  private java.lang.String gender;
+  private java.util.Date birthday;
+  public java.lang.String name();
+  public void name_$eq(java.lang.String);
+  public int age();
+  private java.lang.String sex();
+  private void sex_$eq(java.lang.String);
+  private java.util.Date birthday();
+  private void birthday_$eq(java.util.Date);
+  public com.spark.test2.Person(java.lang.String, int, java.lang.String);
+}    
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-class">1. class</a></li>
+<li><a href="#2-object">2. object</a></li>
+<li><a href="#3-case">3. case</a>
+<ul>
+<li><a href="#1-%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8">1. 基本使用</a></li>
+<li><a href="#%E5%AD%97%E6%AE%B5%E7%B1%BB%E5%9E%8B">字段类型</a></li>
+<li><a href="#%E5%AF%B9%E8%B1%A1%E4%B8%80%E8%87%B4">对象一致</a></li>
+<li><a href="#match-case">match ... case</a></li>
+</ul>
+</li>
+<li><a href="#4-trait">4. trait</a></li>
+<li><a href="#var-val-private-%E4%BF%AE%E9%A5%B0%E7%9A%84%E4%BD%9C%E7%94%A8">var val private 修饰的作用</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

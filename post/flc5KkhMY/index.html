@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title> Java - I/O体系从原理到应用 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/flc5KkhMY/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a> Java - I/O体系从原理到应用</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2020-01-30</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/flc5KkhMY/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Vyew36Twpl/"
+								class="tag">Java基础</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">6378字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">25 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	本文介绍<code>操作系统I/O工作原理</code>，<code>零拷贝的原理</code>,<code>Java I/O设计</code>，<code>基本使用</code>，<code>开源项目(Kafka,RocketMQ,Netty)中实现高性能I/O常见方法和实现</code>，深入理解Java的IO体系</p>
+</blockquote>
+<h2 id="基础概念">基础概念</h2>
+<p>在介绍I/O原理之前，先重温几个基础概念：</p>
+<ul>
+<li><strong>(1) 操作系统与内核</strong></li>
+</ul>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/d0b4ce09-7277-4f94-9736-003271ffd4fb.webp" alt="img" loading="lazy"></figure>
+<p><strong>操作系统</strong>：管理计算机硬件与软件资源的系统软件<br>
+<strong>内核</strong>：操作系统的核心软件，负责管理系统的进程、内存、设备驱动程序、文件和网络系统等等，为应用程序提供对计算机硬件的安全访问服务</p>
+<ul>
+<li><strong>2 内核空间和用户空间</strong></li>
+</ul>
+<p>为了避免用户进程直接操作内核，保证内核安全，操作系统将内存寻址空间划分为两部分：<br>
+<strong>内核空间（Kernel-space）</strong>，供内核程序使用<br>
+<strong>用户空间（User-space）</strong>，供用户进程使用<br>
+为了安全，内核空间和用户空间是隔离的，即使用户的程序崩溃了，内核也不受影响</p>
+<ul>
+<li><strong>3 数据流</strong></li>
+</ul>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/e8859932-7711-4e13-be74-bbdb283f63c6.webp" alt="img" loading="lazy"></figure>
+<p>计算机中的数据是基于随着时间变换高低电压信号传输的，这些数据信号连续不断，有着固定的传输方向，类似水管中水的流动，因此抽象数据流(I/O流)的概念：<strong>指一组有顺序的、有起点和终点的字节集合</strong>，</p>
+<p>抽象出数据流的作用：<strong>实现程序逻辑与底层硬件解耦</strong>，通过引入数据流作为程序与硬件设备之间的抽象层，面向通用的数据流输入输出接口编程，而不是具体硬件特性，程序和底层硬件可以独立灵活替换和扩展</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/a14c8889-89f0-4537-ba38-5c417684a735.webp" alt="img" loading="lazy"></figure>
+<h2 id="io-工作原理">I/O 工作原理</h2>
+<h3 id="1-磁盘io">1. 磁盘I/O</h3>
+<p>典型I/O读写磁盘工作原理如下：</p>
+<figure data-type="image" tabindex="4"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/6834f5a6-015b-4cbc-8bd1-82113a41d4d6.webp" alt="img" loading="lazy"></figure>
+<blockquote>
+<p><strong>tips</strong>: DMA：全称叫直接内存存取（Direct Memory Access），是一种允许外围设备（硬件子系统）直接访问系统主内存的机制。基于 DMA 访问方式，系统主内存与硬件设备的数据传输可以省去CPU 的全程调度</p>
+</blockquote>
+<p>值得注意的是：</p>
+<ul>
+<li>读写操作基于系统调用实现</li>
+<li>读写操作经过用户缓冲区，内核缓冲区，应用进程并不能直接操作磁盘</li>
+<li>应用进程读操作时需阻塞直到读取到数据</li>
+</ul>
+<h3 id="2-网络io">2. 网络I/O</h3>
+<p>这里先以最经典的阻塞式I/O模型介绍：</p>
+<figure data-type="image" tabindex="5"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/4a53b71d-4f00-427b-ae51-c52fcfb7d810.webp" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="6"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/15659eb4-51ef-4384-b590-86bd3f4cf0c4.webp" alt="img" loading="lazy"></figure>
+<blockquote>
+<p><strong>tips</strong>:recvfrom，经socket接收数据的函数</p>
+</blockquote>
+<p>值得注意的是：</p>
+<ul>
+<li>网络I/O读写操作经过用户缓冲区，Sokcet缓冲区</li>
+<li>服务端线程在从调用recvfrom开始到它返回有数据报准备好这段时间是阻塞的，recvfrom返回成功后，线程开始处理数据报</li>
+</ul>
+<h2 id="java-io设计">Java I/O设计</h2>
+<h3 id="1-io分类">1. I/O分类</h3>
+<p>Java中对数据流进行具体化和实现，关于Java数据流一般关注以下几个点：</p>
+<ul>
+<li><strong>(1) 流的方向</strong><br>
+从外部到程序，称为<strong>输入流</strong>；从程序到外部，称为<strong>输出流</strong></li>
+<li><strong>(2) 流的数据单位</strong><br>
+程序以字节作为最小读写数据单元，称为<strong>字节流</strong>，以字符作为最小读写数据单元，称为<strong>字符流</strong></li>
+<li><strong>(3) 流的功能角色</strong></li>
+</ul>
+<figure data-type="image" tabindex="7"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/00e34c2d-e7e5-44b2-8b31-109d3ecd183c.webp" alt="img" loading="lazy"></figure>
+<p>从/向一个特定的IO设备（如磁盘，网络）或者存储对象(如内存数组)读/写数据的流，称为<strong>节点流</strong>；<br>
+对一个已有流进行连接和封装，通过封装后的流来实现数据的读/写功能，称为<strong>处理流</strong>(或称为过滤流)；</p>
+<h3 id="2-io操作接口">2. I/O操作接口</h3>
+<p>java.io包下有一堆I/O操作类，初学时看了容易搞不懂，其实仔细观察其中还是有规律：<br>
+这些I/O操作类都是在<strong>继承4个基本抽象流的基础上，要么是节点流，要么是处理流</strong></p>
+<h4 id="21-四个基本抽象流">2.1 四个基本抽象流</h4>
+<p>java.io包中包含了流式I/O所需要的所有类，java.io包中有四个基本抽象流，分别处理字节流和字符流：</p>
+<ul>
+<li>InputStream</li>
+<li>OutputStream</li>
+<li>Reader</li>
+<li>Writer</li>
+</ul>
+<figure data-type="image" tabindex="8"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/229edfae-716a-4966-b47c-eebe90c26c12.webp" alt="img" loading="lazy"></figure>
+<h4 id="22-节点流">2.2 节点流</h4>
+<figure data-type="image" tabindex="9"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/380a7b24-92ca-4009-9ff1-610fa45792de.webp" alt="img" loading="lazy"></figure>
+<p>节点流I/O类名由节点流类型 + 抽象流类型组成，常见节点类型有：</p>
+<ul>
+<li>File文件</li>
+<li>Piped 进程内线程通信管道</li>
+<li>ByteArray / CharArray (字节数组 / 字符数组)</li>
+<li>StringBuffer / String (字符串缓冲区 / 字符串)</li>
+</ul>
+<p>节点流的创建通常是在构造函数传入数据源，例如：</p>
+<pre><code class="language-cpp">FileReader reader = new FileReader(new File(&quot;file.txt&quot;));
+FileWriter writer = new FileWriter(new File(&quot;file.txt&quot;));
+</code></pre>
+<h4 id="23-处理流">2.3 处理流</h4>
+<figure data-type="image" tabindex="10"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/a187b032-9e71-4931-9c26-29d9d2233cf3.webp" alt="img" loading="lazy"></figure>
+<p>处理流I/O类名由对已有流封装的功能 + 抽象流类型组成，常见功能有：</p>
+<ul>
+<li><strong>缓冲</strong>：对节点流读写的数据提供了缓冲的功能，数据可以基于缓冲批量读写，提高效率。常见有BufferedInputStream、BufferedOutputStream</li>
+<li><strong>字节流转换为字符流</strong>：由InputStreamReader、OutputStreamWriter实现</li>
+<li><strong>字节流与基本类型数据相互转换</strong>：这里基本数据类型数据如int、long、short，由DataInputStream、DataOutputStream实现</li>
+<li><strong>字节流与对象实例相互转换</strong>：用于实现对象序列化，由ObjectInputStream、ObjectOutputStream实现</li>
+</ul>
+<p>处理流的应用了适配器/装饰模式，转换/扩展已有流，处理流的创建通常是在构造函数传入已有的节点流或处理流：</p>
+<pre><code class="language-csharp">FileOutputStream fileOutputStream = new FileOutputStream(&quot;file.txt&quot;);
+// 扩展提供缓冲写
+BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(fileOutputStream);
+ // 扩展提供提供基本数据类型写
+DataOutputStream out = new DataOutputStream(bufferedOutputStream);
+</code></pre>
+<h3 id="3-java-nio">3. Java NIO</h3>
+<h4 id="31-标准io存在问题">3.1 标准I/O存在问题</h4>
+<p>Java NIO(New I/O)是一个可以替代标准Java I/O API的IO API(从Java 1.4开始)，Java NIO提供了与标准I/O不同的I/O工作方式，目的是为了解决标准 I/O存在的以下问题：</p>
+<ul>
+<li><strong>(1) 数据多次拷贝</strong></li>
+</ul>
+<p>标准I/O处理，完成一次完整的数据读写，至少需要从底层硬件读到内核空间，再读到用户文件，又从用户空间写入内核空间，再写入底层硬件</p>
+<p>此外，底层通过write、read等函数进行I/O系统调用时，需要传入数据所在缓冲区<strong>起始地址和长度</strong><br>
+由于JVM GC的存在，导致对象在堆中的位置往往会发生移动，移动后传入系统函数的地址参数就不是真正的缓冲区地址了</p>
+<p>可能导致读写出错，为了解决上面的问题，使用标准I/O进行系统调用时，还会额外导致一次数据拷贝：把数据从JVM的堆内拷贝到堆外的连续空间内存(堆外内存)</p>
+<p>所以总共经历6次数据拷贝，执行效率较低</p>
+<figure data-type="image" tabindex="11"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/cfd1dc3a-fb0d-4b06-b3d9-c8ad3ee812ce.webp" alt="img" loading="lazy"></figure>
+<ul>
+<li><strong>(2) 操作阻塞</strong></li>
+</ul>
+<p>传统的网络I/O处理中，由于请求建立连接(connect)，读取网络I/O数据(read)，发送数据(send)等操作是线程阻塞的</p>
+<pre><code class="language-java">// 等待连接
+Socket socket = serverSocket.accept();
+
+// 连接已建立，读取请求消息
+StringBuilder req = new StringBuilder();
+byte[] recvByteBuf = new byte[1024];
+int len;
+while ((len = socket.getInputStream().read(recvByteBuf)) != -1) {
+    req.append(new String(recvByteBuf, 0, len, StandardCharsets.UTF_8));
+}
+
+// 写入返回消息
+socket.getOutputStream().write((&quot;server response msg&quot;.getBytes()));
+socket.shutdownOutput();
+</code></pre>
+<p>以上面服务端程序为例，当请求连接已建立，读取请求消息，服务端调用read方法时，客户端数据可能还没就绪(例如客户端数据还在写入中或者传输中)，线程需要在read方法阻塞等待直到数据就绪</p>
+<p>为了实现服务端并发响应，每个连接需要独立的线程单独处理，当并发请求量大时为了维护连接，内存、线程切换开销过大</p>
+<figure data-type="image" tabindex="12"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/bc81146e-0032-4f8b-8cfc-87ba734ecfdd.webp" alt="img" loading="lazy"></figure>
+<h4 id="32-buffer">3.2 Buffer</h4>
+<p><strong>Java NIO核心三大核心组件是Buffer(缓冲区)、Channel(通道)、Selector</strong></p>
+<p>Buffer提供了常用于I/O操作的字节缓冲区，常见的缓存区有ByteBuffer, CharBuffer, DoubleBuffer, FloatBuffer, IntBuffer, LongBuffer, ShortBuffer，分别对应基本数据类型: byte, char, double, float, int, long, short，下面介绍主要以最常用的ByteBuffer为例，Buffer底层支持Java堆内(HeapByteBuffer)或堆外内存(DirectByteBuffer)</p>
+<p><strong>堆外内存</strong>是指与堆内存相对应的，把内存对象分配在JVM堆以外的内存，这些内存直接受操作系统管理（而不是虚拟机)，相比堆内内存，I/O操作中使用堆外内存的优势在于：</p>
+<ul>
+<li>不用被JVM GC线回收，减少GC线程资源占有</li>
+<li>在I/O系统调用时，直接操作堆外内存，可以节省堆外内存和堆内内存的复制成本</li>
+</ul>
+<p>ByteBuffer底层堆外内存的分配和释放基于malloc和free函数，对外allocateDirect方法可以申请分配堆外内存，并返回继承ByteBuffer类的DirectByteBuffer对象：</p>
+<pre><code class="language-cpp">public static ByteBuffer allocateDirect(int capacity) {
+    return new DirectByteBuffer(capacity);
+}
+</code></pre>
+<p>堆外内存的回收基于DirectByteBuffer的成员变量Cleaner类，提供clean方法可以用于主动回收，Netty中大部分堆外内存通过记录定位Cleaner的存在，主动调用clean方法来回收；<br>
+另外，当DirectByteBuffer对象被GC时，关联的堆外内存也会被回收</p>
+<blockquote>
+<p><strong>tips</strong>: JVM参数不建议设置-XX:+DisableExplicitGC，因为部分依赖Java NIO的框架(例如Netty)在内存异常耗尽时，会主动调用System.gc()，触发Full GC，回收DirectByteBuffer对象，作为回收堆外内存的最后保障机制，设置该参数之后会导致在该情况下堆外内存得不到清理</p>
+</blockquote>
+<p>堆外内存基于基础ByteBuffer类的DirectByteBuffer类成员变量：Cleaner对象，这个Cleaner对象会在合适的时候执行unsafe.freeMemory(address)，从而回收这块堆外内存</p>
+<p>Buffer可以见到理解为一组基本数据类型，存储地址连续的的数组，支持读写操作，对应读模式和写模式，通过几个变量来保存这个数据的当前位置状态：capacity、 position、 limit：</p>
+<ul>
+<li>capacity 缓冲区数组的总长度</li>
+<li>position 下一个要操作的数据元素的位置</li>
+<li>limit 缓冲区数组中不可操作的下一个元素的位置：limit &lt;= capacity</li>
+</ul>
+<figure data-type="image" tabindex="13"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/2f1dcb23-0d96-4296-9fcf-5ea24573e5c1.webp" alt="img" loading="lazy"></figure>
+<h4 id="33-channel">3.3 Channel</h4>
+<p>Channel(通道)的概念可以类比I/O流对象，NIO中I/O操作主要基于Channel：<br>
+从Channel进行数据读取 ：创建一个缓冲区，然后请求Channel读取数据<br>
+从Channel进行数据写入 ：创建一个缓冲区，填充数据，请求Channel写入数据</p>
+<p>Channel和流非常相似，主要有以下几点区别：</p>
+<ul>
+<li>Channel可以读和写，而标准I/O流是单向的</li>
+<li>Channel可以异步读写，标准I/O流需要线程阻塞等待直到读写操作完成</li>
+<li>Channel总是基于缓冲区Buffer读写</li>
+</ul>
+<p>Java NIO中最重要的几个Channel的实现：</p>
+<ul>
+<li>FileChannel： 用于文件的数据读写，基于FileChannel提供的方法能减少读写文件数据拷贝次数，后面会介绍</li>
+<li>DatagramChannel： 用于UDP的数据读写</li>
+<li>SocketChannel： 用于TCP的数据读写，代表客户端连接</li>
+<li>ServerSocketChannel: 监听TCP连接请求，每个请求会创建会一个SocketChannel，一般用于服务端</li>
+</ul>
+<p>基于标准I/O中，我们第一步可能要像下面这样获取输入流，按字节把磁盘上的数据读取到程序中，再进行下一步操作，而在NIO编程中，需要先获取Channel，再进行读写</p>
+<pre><code class="language-java">FileInputStream fileInputStream = new FileInputStream(&quot;test.txt&quot;);
+FileChannel channel = fileInputStream.channel();
+</code></pre>
+<blockquote>
+<p><strong>tips</strong>: FileChannel仅能运行在阻塞模式下，文件异步处理的 I/O 是在JDK 1.7 才被加入的 java.nio.channels.AsynchronousFileChannel</p>
+</blockquote>
+<p>一下代码是一段NIO的代码. 传统的NIO涉及到大量的空转问题. 如果不设置为nio, 那么和bio又有啥区别呢. 所以需要引入后续的selector模型.</p>
+<pre><code class="language-java">public static void main(String[] args) throws IOException {
+    // 1. 初始化
+    ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+    serverSocketChannel.bind(new InetSocketAddress(10086));
+    // 2. NIO么. 必须设置为非阻塞. 也就是accept方法不会阻塞. 如果不设置,默认是 accept方法会一直阻塞到有数据返回.
+    serverSocketChannel.configureBlocking(false);
+    while (true) {
+        // 3. 去监听连接时间.
+        SocketChannel socketChannel = serverSocketChannel.accept();
+        if (socketChannel != null) {
+            // 4.设置读写非阻塞.  如果不设置. read方法就是阻塞的.会一直等待到读取到数据.
+            socketChannel.configureBlocking(false);
+
+            // 5. 那后去读取.显然这个是读取不到的.因为非阻塞下,不可能这么快操作,连接建立好,你就可以发送消息了.
+            ByteBuffer buffer = ByteBuffer.allocate(20);
+            int n = socketChannel.read(buffer);
+            System.out.printf(&quot;receive : %s\n&quot;, new String(buffer.array(), 0, n, StandardCharsets.UTF_8));
+
+            // 6. 发送消息
+            buffer.clear();
+            buffer.put(String.format(&quot;当前时间:%s.&quot;, new Date()).getBytes());
+            buffer.flip();
+            socketChannel.write(buffer);
+
+            // 7. 关闭连接
+            socketChannel.close();
+        }
+    }
+}
+</code></pre>
+<h4 id="34-selector">3.4 Selector</h4>
+<p>Selector(选择器) ，它是Java NIO核心组件中的一个，用于检查一个或多个NIO Channel（通道）的状态是否处于可读、可写。实现单线程管理多个Channel，也就是可以管理多个网络连接</p>
+<p>Selector核心在于基于操作系统提供的I/O复用功能，单个线程可以同时监视多个连接描述符，一旦某个连接就绪（一般是读就绪或者写就绪），能够通知程序进行相应的读写操作，常见有select、poll、epoll等不同实现</p>
+<figure data-type="image" tabindex="14"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/adad4e2b-d453-4d57-98ee-370ec773569c.webp" alt="img" loading="lazy"></figure>
+<figure data-type="image" tabindex="15"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/ca8290f3-1c83-444a-be48-6eebacfbc0ca.webp" alt="img" loading="lazy"></figure>
+<p>Java NIO Selector基本工作原理如下：</p>
+<ul>
+<li>(1) 初始化Selector对象，服务端ServerSocketChannel对象</li>
+<li>(2) 向Selector注册ServerSocketChannel的socket-accept事件</li>
+<li>(3) 线程阻塞于selector.select()，当有客户端请求服务端，线程退出阻塞</li>
+<li>(4) 基于selector获取所有就绪事件，此时先获取到socket-accept事件，向Selector注册客户端SocketChannel的数据就绪可读事件事件</li>
+<li>(5) 线程再次阻塞于selector.select()，当有客户端连接数据就绪，可读</li>
+<li>(6) 基于ByteBuffer读取客户端请求数据，然后写入响应数据，关闭channel</li>
+</ul>
+<p>示例如下，这个就是一个NIO编程模型的模板. 一般都是 . 上诉那段代码虽然是NIO但是, 他依然是阻塞</p>
+<pre><code class="language-java">// 开启一个selector
+Selector selector = Selector.open();
+
+// 开启一个ServerSocketChannel
+ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+serverSocketChannel.bind(new InetSocketAddress(10086));
+// 配置通道为非阻塞模式,也就是accept方法不阻塞了. 
+serverSocketChannel.configureBlocking(false);
+
+// 注册服务端的socket-accept事件 , 代表的意思就是监听ServerSocketChannel的accept事件
+serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+// 死循环,不断轮询
+while (true) {
+    // 这个地方是一个网络模型, 有select,poll,epoll.默认并不是epoll,而是selector,需要引入epoll看我下面图片有. selector模型其实是一种 reactor模型. 对于操作系统来说, 他作为一个发布者. 而我们作为一个订阅者. 去订阅相关的事件. 当我们调用 select方法会返回给我们具体相应的事件.这种模式其实也并不是传统的reactor模型.可以避免reactor模型中的背压现象(有点像生产者,消费者模型).
+    // selector.select()会一直阻塞，直到有channel相关操作就绪 .同时可能出现NIO的BUG.自行百度. 解决方案有很多.
+    selector.select();
+    
+    // SelectionKey关联的channel都有就绪事件
+    Iterator&lt;SelectionKey&gt; keyIterator = selector.selectedKeys().iterator();
+
+    // 遍历.
+    while (keyIterator.hasNext()) {
+        SelectionKey key = keyIterator.next();
+        // 服务端socket-accept, 这里如果通过, 那么accept一定拿到了对象.不会出现空指针.
+        if (key.isAcceptable()) {
+            // 获取客户端连接的channel,由于此时已经监听到连接事件,所以不会阻塞
+            SocketChannel clientSocketChannel = serverSocketChannel.accept();
+            // 设置为非阻塞模式,这里的意思是读写操作不阻塞,无论有没有数据.比如可以防止上诉例子代码中问题(2)
+            clientSocketChannel.configureBlocking(false);
+            // 注册监听该客户端channel可读事件，并为channel关联新分配的buffer,这个buffer可以通过`key.attachment()`获取 attachment是附件的意思
+            clientSocketChannel.register(selector, SelectionKey.OP_READ, ByteBuffer.allocateDirect(1024));
+        }
+
+        // channel可读
+        if (key.isReadable()) {
+            SocketChannel socketChannel = (SocketChannel) key.channel();
+            ByteBuffer buf = (ByteBuffer) key.attachment();
+
+            int bytesRead;
+            StringBuilder reqMsg = new StringBuilder();
+            while ((bytesRead = socketChannel.read(buf)) &gt; 0) {
+                // 从buf写模式切换为读模式
+                buf.flip();
+                int bufRemain = buf.remaining();
+                byte[] bytes = new byte[bufRemain];
+                buf.get(bytes, 0, bytesRead);
+                // 这里当数据包大于byteBuffer长度，有可能有粘包/拆包问题
+                reqMsg.append(new String(bytes, StandardCharsets.UTF_8));
+                buf.clear();
+            }
+            System.out.println(&quot;服务端收到报文：&quot; + reqMsg.toString());
+            if (bytesRead == -1) {
+                byte[] bytes = &quot;[这是服务回的报文的报文]&quot;.getBytes(StandardCharsets.UTF_8);
+
+                int length;
+                for (int offset = 0; offset &lt; bytes.length; offset += length) {
+                    length = Math.min(buf.capacity(), bytes.length - offset);
+                    buf.clear();
+                    buf.put(bytes, offset, length);
+                    buf.flip();
+                    socketChannel.write(buf);
+                }
+                socketChannel.close();
+            }
+        }
+        // Selector不会自己从已selectedKeys中移除SelectionKey实例
+        // 必须在处理完通道时自己移除,其实就是释放内存.
+        keyIterator.remove();
+    }
+}
+</code></pre>
+<blockquote>
+<p><strong>tips</strong>: Java NIO基于Selector实现高性能网络I/O这块使用起来比较繁琐，使用不友好，一般业界使用基于Java NIO进行封装优化，扩展丰富功能的Netty框架来优雅实现</p>
+</blockquote>
+<p>关于引入epoll 多路复用模型  , 就是一下参数了.</p>
+<figure data-type="image" tabindex="16"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-20-22/594b080f-b042-4756-a362-b7120ff0436d.png" alt="" loading="lazy"></figure>
+<p>关于NIO的BUG , 我<a href="https://anthony-dong.gitee.io/post/y9LbqHqhJ/">这篇文章</a>里写了, 如何解决此问题 :  <a href="https://anthony-dong.gitee.io/post/y9LbqHqhJ/">https://anthony-dong.gitee.io/post/y9LbqHqhJ/</a></p>
+<p>深入理解上诉的两段代码 ,对你的NIO模型的理解有很大的帮助.</p>
+<h2 id="高性能io优化">高性能I/O优化</h2>
+<p>下面结合业界热门开源项目介绍高性能I/O的优化</p>
+<h3 id="1-零拷贝">1. 零拷贝</h3>
+<p>零拷贝(zero copy)技术，用于在数据读写中减少甚至完全避免不必要的CPU拷贝，减少内存带宽的占用，提高执行效率，零拷贝有几种不同的实现原理，下面介绍常见开源项目中零拷贝实现</p>
+<h4 id="11-kafka零拷贝">1.1 Kafka零拷贝</h4>
+<p>Kafka基于Linux 2.1内核提供，并在2.4 内核改进的的sendfile函数 + 硬件提供的DMA Gather Copy实现零拷贝，将文件通过socket传送</p>
+<p>函数通过一次系统调用完成了文件的传送，减少了原来read/write方式的模式切换。同时减少了数据的copy, sendfile的详细过程如下：</p>
+<figure data-type="image" tabindex="17"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/9e1195b6-14af-4067-a576-777ccad5a1e2.webp" alt="img" loading="lazy"></figure>
+<p>基本流程如下：</p>
+<ul>
+<li>(1) 用户进程发起sendfile系统调用</li>
+<li>(2) 内核基于DMA Copy将文件数据从磁盘拷贝到内核缓冲区</li>
+<li>(3) 内核将内核缓冲区中的文件描述信息(文件描述符，数据长度)拷贝到Socket缓冲区</li>
+<li>(4) 内核基于Socket缓冲区中的文件描述信息和DMA硬件提供的Gather Copy功能将内核缓冲区数据复制到网卡</li>
+<li>(5) 用户进程sendfile系统调用完成并返回</li>
+</ul>
+<p>相比传统的I/O方式，sendfile + DMA Gather Copy方式实现的零拷贝，数据拷贝次数从4次降为2次，系统调用从2次降为1次，用户进程上下文切换次数从4次变成2次DMA Copy，大大提高处理效率</p>
+<p>Kafka底层基于java.nio包下的FileChannel的transferTo：</p>
+<pre><code class="language-csharp">public abstract long transferTo(long position, long count, WritableByteChannel target)
+</code></pre>
+<p>transferTo将FileChannel关联的文件发送到指定channel，当Comsumer消费数据，Kafka Server基于FileChannel将文件中的消息数据发送到SocketChannel</p>
+<h4 id="12-rocketmq零拷贝">1.2 RocketMQ零拷贝</h4>
+<p>RocketMQ基于mmap + write的方式实现零拷贝：<br>
+mmap() 可以将内核中缓冲区的地址与用户空间的缓冲区进行映射，实现数据共享，省去了将数据从内核缓冲区拷贝到用户缓冲区</p>
+<pre><code class="language-c">tmp_buf = mmap(file, len); 
+write(socket, tmp_buf, len);
+</code></pre>
+<figure data-type="image" tabindex="18"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/d24d6c6a-147f-43d9-8b29-f652a395eb4c.png" alt="img" loading="lazy"></figure>
+<p>mmap + write 实现零拷贝的基本流程如下：</p>
+<ul>
+<li>(1) 用户进程向内核发起系统mmap调用</li>
+<li>(2) 将用户进程的内核空间的读缓冲区与用户空间的缓存区进行内存地址映射</li>
+<li>(3) 内核基于DMA Copy将文件数据从磁盘复制到内核缓冲区</li>
+<li>(4) 用户进程mmap系统调用完成并返回</li>
+<li>(5) 用户进程向内核发起write系统调用</li>
+<li>(6) 内核基于CPU Copy将数据从内核缓冲区拷贝到Socket缓冲区</li>
+<li>(7) 内核基于DMA Copy将数据从Socket缓冲区拷贝到网卡</li>
+<li>(8) 用户进程write系统调用完成并返回</li>
+</ul>
+<p>RocketMQ中消息基于mmap实现存储和加载的逻辑写在org.apache.rocketmq.store.MappedFile中，内部实现基于nio提供的java.nio.MappedByteBuffer，基于FileChannel的map方法得到mmap的缓冲区：</p>
+<pre><code class="language-java">// 初始化
+this.fileChannel = new RandomAccessFile(this.file, &quot;rw&quot;).getChannel();
+this.mappedByteBuffer = this.fileChannel.map(MapMode.READ_WRITE, 0, fileSize);
+</code></pre>
+<p>查询CommitLog的消息时，基于mappedByteBuffer偏移量pos，数据大小size查询：</p>
+<pre><code class="language-cpp">public SelectMappedBufferResult selectMappedBuffer(int pos, int size) {
+    int readPosition = getReadPosition();
+    // ...各种安全校验
+    
+    // 返回mappedByteBuffer视图
+    ByteBuffer byteBuffer = this.mappedByteBuffer.slice();
+    byteBuffer.position(pos);
+    ByteBuffer byteBufferNew = byteBuffer.slice();
+    byteBufferNew.limit(size);
+    return new SelectMappedBufferResult(this.fileFromOffset + pos, byteBufferNew, size, this);
+}
+</code></pre>
+<blockquote>
+<p><strong>tips: transientStorePoolEnable机制</strong><br>
+Java NIO mmap的部分内存并不是常驻内存，可以被置换到交换内存(虚拟内存)，RocketMQ为了提高消息发送的性能，引入了内存锁定机制，即将最近需要操作的CommitLog文件映射到内存，并提供内存锁定功能，确保这些文件始终存在内存中，该机制的控制参数就是transientStorePoolEnable</p>
+</blockquote>
+<p>因此，MappedFile数据保存CommitLog刷盘有2种方式：</p>
+<ul>
+<li>1 开启transientStorePoolEnable：写入内存字节缓冲区(writeBuffer)  -&gt; 从内存字节缓冲区(writeBuffer)提交(commit)到文件通道(fileChannel)  -&gt; 文件通道(fileChannel) -&gt; flush到磁盘</li>
+<li>2 未开启transientStorePoolEnable：写入映射文件字节缓冲区(mappedByteBuffer) -&gt; 映射文件字节缓冲区(mappedByteBuffer) -&gt; flush到磁盘</li>
+</ul>
+<p>RocketMQ 基于 mmap+write 实现零拷贝，适用于业务级消息这种小块文件的数据持久化和传输<br>
+Kafka 基于 sendfile 这种零拷贝方式，适用于系统日志消息这种高吞吐量的大块文件的数据持久化和传输</p>
+<blockquote>
+<p><strong>tips:</strong> Kafka 的索引文件使用的是 mmap+write 方式，数据文件发送网络使用的是 sendfile 方式</p>
+</blockquote>
+<h4 id="13-netty零拷贝">1.3 Netty零拷贝</h4>
+<p>Netty 的零拷贝分为两种：</p>
+<ul>
+<li>1 基于操作系统实现的零拷贝，底层基于FileChannel的transferTo方法</li>
+<li>2 基于Java 层操作优化，对数组缓存对象(ByteBuf )进行封装优化，通过对ByteBuf数据建立数据视图，支持ByteBuf 对象合并，切分，当底层仅保留一份数据存储，减少不必要拷贝</li>
+</ul>
+<h3 id="2-多路复用">2. 多路复用</h3>
+<p>Netty中对Java NIO功能封装优化之后，实现I/O多路复用代码优雅了很多：</p>
+<pre><code class="language-java">// 创建mainReactor
+NioEventLoopGroup boosGroup = new NioEventLoopGroup();
+// 创建工作线程组
+NioEventLoopGroup workerGroup = new NioEventLoopGroup();
+
+final ServerBootstrap serverBootstrap = new ServerBootstrap();
+serverBootstrap 
+     // 组装NioEventLoopGroup 
+    .group(boosGroup, workerGroup)
+     // 设置channel类型为NIO类型
+    .channel(NioServerSocketChannel.class)
+    // 设置连接配置参数
+    .option(ChannelOption.SO_BACKLOG, 1024)
+    .childOption(ChannelOption.SO_KEEPALIVE, true)
+    .childOption(ChannelOption.TCP_NODELAY, true)
+    // 配置入站、出站事件handler
+    .childHandler(new ChannelInitializer&lt;NioSocketChannel&gt;() {
+        @Override
+        protected void initChannel(NioSocketChannel ch) {
+            // 配置入站、出站事件channel
+            ch.pipeline().addLast(...);
+            ch.pipeline().addLast(...);
+        }
+    });
+
+// 绑定端口
+int port = 8080;
+serverBootstrap.bind(port).addListener(future -&gt; {
+    if (future.isSuccess()) {
+        System.out.println(new Date() + &quot;: 端口[&quot; + port + &quot;]绑定成功!&quot;);
+    } else {
+        System.err.println(&quot;端口[&quot; + port + &quot;]绑定失败!&quot;);
+    }
+});
+</code></pre>
+<h3 id="3-页缓存pagecache">3. 页缓存(PageCache)</h3>
+<p>页缓存（PageCache)是操作系统对文件的缓存，用来减少对磁盘的 I/O 操作，以页为单位的，内容就是磁盘上的物理块，页缓存能帮助<strong>程序对文件进行顺序读写的速度几乎接近于内存的读写速度</strong>，主要原因就是由于OS使用PageCache机制对读写访问操作进行了性能优化：</p>
+<p><strong>页缓存读取策略</strong>：当进程发起一个读操作 （比如，进程发起一个 read() 系统调用），它首先会检查需要的数据是否在页缓存中：</p>
+<ul>
+<li>如果在，则放弃访问磁盘，而直接从页缓存中读取</li>
+<li>如果不在，则内核调度块 I/O 操作从磁盘去读取数据，并读入紧随其后的少数几个页面（不少于一个页面，通常是三个页面），然后将数据放入页缓存中</li>
+</ul>
+<figure data-type="image" tabindex="19"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020-10-11/8cfc5ede-d467-4a9c-bcf2-4be0a9a0f4cf.webp" alt="img" loading="lazy"></figure>
+<p><strong>页缓存写策略</strong>：当进程发起write系统调用写数据到文件中，先写到页缓存，然后方法返回。此时数据还没有真正的保存到文件中去，Linux 仅仅将页缓存中的这一页数据标记为“脏”，并且被加入到脏页链表中</p>
+<p>然后，由flusher 回写线程周期性将脏页链表中的页写到磁盘，让磁盘中的数据和内存中保持一致，最后清理“脏”标识。在以下三种情况下，脏页会被写回磁盘:</p>
+<ul>
+<li>空闲内存低于一个特定阈值</li>
+<li>脏页在内存中驻留超过一个特定的阈值时</li>
+<li>当用户进程调用 sync() 和 fsync() 系统调用时</li>
+</ul>
+<p>RocketMQ中，ConsumeQueue逻辑消费队列存储的数据较少，并且是顺序读取，在page cache机制的预读取作用下，Consume Queue文件的读性能几乎接近读内存，即使在有消息堆积情况下也不会影响性能，提供了2种消息刷盘策略：</p>
+<ul>
+<li>同步刷盘：在消息真正持久化至磁盘后RocketMQ的Broker端才会真正返回给Producer端一个成功的ACK响应</li>
+<li>异步刷盘，能充分利用操作系统的PageCache的优势，只要消息写入PageCache即可将成功的ACK返回给Producer端。消息刷盘采用后台异步线程提交的方式进行，降低了读写延迟，提高了MQ的性能和吞吐量</li>
+</ul>
+<p>Kafka实现消息高性能读写也利用了页缓存，这里不再展开</p>
+<h2 id="参考">参考</h2>
+<p>《深入理解Linux内核 —— Daniel P.Bovet》</p>
+<p><a href="https://links.jianshu.com/go?to=http%3A%2F%2Fcalvin1978.blogcn.com%2Farticles%2Fdirectbytebuffer.html">Netty之Java堆外内存扫盲贴 ——江南白衣</a></p>
+<p><a href="https://links.jianshu.com/go?to=https%3A%2F%2Fmp.weixin.qq.com%2Fs%2Fc9tkrokcDQR375kiwCeV9w">Java NIO？看这一篇就够了！ ——朱小厮 </a></p>
+<p><a href="https://links.jianshu.com/go?to=https%3A%2F%2Fwww.kunzhao.org%2Fblog%2F2018%2F03%2F12%2Frocketmq-message-store-flow">RocketMQ 消息存储流程 ——  Zhao Kun(赵坤)</a></p>
+<p><a href="https://www.jianshu.com/p/6681bfa36c4f">一文理解Netty模型架构 ——caison</a></p>
+<h2 id="文章引用">文章引用</h2>
+<p><a href="https://www.jianshu.com/p/27466ac569d2">引用自-文章链接</a>  https://www.jianshu.com/p/27466ac569d2 是个大佬 , 值得关注</p>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5">基础概念</a></li>
+<li><a href="#io-%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86">I/O 工作原理</a>
+<ul>
+<li><a href="#1-%E7%A3%81%E7%9B%98io">1. 磁盘I/O</a></li>
+<li><a href="#2-%E7%BD%91%E7%BB%9Cio">2. 网络I/O</a></li>
+</ul>
+</li>
+<li><a href="#java-io%E8%AE%BE%E8%AE%A1">Java I/O设计</a>
+<ul>
+<li><a href="#1-io%E5%88%86%E7%B1%BB">1. I/O分类</a></li>
+<li><a href="#2-io%E6%93%8D%E4%BD%9C%E6%8E%A5%E5%8F%A3">2. I/O操作接口</a>
+<ul>
+<li><a href="#21-%E5%9B%9B%E4%B8%AA%E5%9F%BA%E6%9C%AC%E6%8A%BD%E8%B1%A1%E6%B5%81">2.1 四个基本抽象流</a></li>
+<li><a href="#22-%E8%8A%82%E7%82%B9%E6%B5%81">2.2 节点流</a></li>
+<li><a href="#23-%E5%A4%84%E7%90%86%E6%B5%81">2.3 处理流</a></li>
+</ul>
+</li>
+<li><a href="#3-java-nio">3. Java NIO</a>
+<ul>
+<li><a href="#31-%E6%A0%87%E5%87%86io%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98">3.1 标准I/O存在问题</a></li>
+<li><a href="#32-buffer">3.2 Buffer</a></li>
+<li><a href="#33-channel">3.3 Channel</a></li>
+<li><a href="#34-selector">3.4 Selector</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E9%AB%98%E6%80%A7%E8%83%BDio%E4%BC%98%E5%8C%96">高性能I/O优化</a>
+<ul>
+<li><a href="#1-%E9%9B%B6%E6%8B%B7%E8%B4%9D">1. 零拷贝</a>
+<ul>
+<li><a href="#11-kafka%E9%9B%B6%E6%8B%B7%E8%B4%9D">1.1 Kafka零拷贝</a></li>
+<li><a href="#12-rocketmq%E9%9B%B6%E6%8B%B7%E8%B4%9D">1.2 RocketMQ零拷贝</a></li>
+<li><a href="#13-netty%E9%9B%B6%E6%8B%B7%E8%B4%9D">1.3 Netty零拷贝</a></li>
+</ul>
+</li>
+<li><a href="#2-%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8">2. 多路复用</a></li>
+<li><a href="#3-%E9%A1%B5%E7%BC%93%E5%AD%98pagecache">3. 页缓存(PageCache)</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8F%82%E8%80%83">参考</a></li>
+<li><a href="#%E6%96%87%E7%AB%A0%E5%BC%95%E7%94%A8">文章引用</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

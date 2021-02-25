@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Netty - 入门学习 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/netty-xi-tong-xue-xi/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Netty - 入门学习</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-05</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/netty-xi-tong-xue-xi/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/fn4lTiaKxHO/"
+								class="tag">netty</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">2847字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">13 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	Netty 给Java开发者编写客户端或者服务器端提供了很好的API编程方式,用户只需要关注两个对象, 一个是事件一个是数据包, 所以开发起来还是相当轻松的, 他已经将事件封装好了 , 对于数据包提供了很多的编解码器 ,值得我们深度学习</p>
+<p>​	像主流的Dubbo这种RPC框架也是基于Netty做的CS端, 像WebFlux也是Netty做的Http服务器 ,所以学习还是很有必要的,</p>
+</blockquote>
+<blockquote>
+<p>​		其中快速入门可以看一下<a href="https://netty.io/wiki/user-guide-for-4.x.html">官网</a>:  https://netty.io/wiki/user-guide-for-4.x.html ,所以流程编写自己看文档吧</p>
+</blockquote>
+<h2 id="1-前期准备">1. 前期准备</h2>
+<p>就是依赖 ,和日志配置</p>
+<pre><code class="language-xml">&lt;!-- netty jar 包--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;io.netty&lt;/groupId&gt;
+    &lt;artifactId&gt;netty-all&lt;/artifactId&gt;
+    &lt;version&gt;4.1.36.Final&lt;/version&gt;
+&lt;/dependency&gt;
+
+
+&lt;!--log4j 日志 , 记得加入 log4j.properties--&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-log4j12&lt;/artifactId&gt;
+    &lt;version&gt;1.7.21&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.slf4j&lt;/groupId&gt;
+    &lt;artifactId&gt;slf4j-api&lt;/artifactId&gt;
+    &lt;version&gt;1.7.21&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<p><code>log4j.properties</code> 放到 classPath 目录下面  , maven的话就是 resources 目录下面</p>
+<pre><code class="language-properties"># 可以设置level INFO ERROR DEBUG 之类
+log4j.rootCategory=INFO,CONSOLE,LOGFILE
+
+log4j.logger.org.apache.axis.enterprise=FATAL,CONSOLE
+log4j.appender.CONSOLE=org.apache.log4j.ConsoleAppender
+log4j.appender.CONSOLE.layout=org.apache.log4j.PatternLayout
+log4j.appender.CONSOLE.layout.ConversionPattern=%d{ISO8601} %-6r [%6.6t] %-5p %30.30c %x - %m\n
+
+
+##输出到文件(这里默认为追加方式)
+log4j.appender.LOGFILE=org.apache.log4j.FileAppender
+## 设置文件输出路径 ,文本文件 , 注意是 usr.dir , 不是user.dir
+log4j.appender.LOGFILE.File=${usr.dir}\log4J.log
+log4j.appender.LOGFILE.Append=true
+log4j.appender.LOGFILE.layout=org.apache.log4j.PatternLayout
+log4j.appender.LOGFILE.layout.ConversionPattern=%d{ISO8601} %-6r [%6.6t] %-5p %30.30c %x - %m\n
+</code></pre>
+<h2 id="2-netty-服务端实现">2. Netty 服务端实现</h2>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-25/6fa70a06-5229-4881-903f-65cc85d10775.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<blockquote>
+<p>​	实现代码 , 这是最基本的实现流程, 细节化后续讨论</p>
+</blockquote>
+<pre><code class="language-java">public class NettyServer {
+    private static final Logger logger = LoggerFactory.getLogger(NettyServer.class);
+
+    public static void ruu() throws Exception {
+
+        // 这个只需要一个线程
+        final NioEventLoopGroup master = new NioEventLoopGroup(1);
+
+        // 一般根据系统有core来设置
+        final NioEventLoopGroup worker = new NioEventLoopGroup(Runtime.getRuntime().availableProcessors());
+
+        // ServerBootstrap
+        final ServerBootstrap serverBootstrap = new ServerBootstrap();
+		// handler
+        final ServerHandler serverHandler = new ServerHandler();
+
+        // configuration
+        serverBootstrap.group(master, worker)
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer&lt;Channel&gt;() {
+                    @Override
+                    protected void initChannel(Channel ch) throws Exception {
+                        //注意 :  这个会在每一次客户端连接都会初始化一次 , 后续我会讲Sharable的作用
+                        ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(&quot;serverHandler&quot;, serverHandler);
+                    }
+                })
+                .childOption(ChannelOption.TCP_NODELAY, true)
+                .childOption(ChannelOption.SO_KEEPALIVE, true);
+
+        final String host = &quot;127.0.0.1&quot;;
+        final int port = 8888;
+
+        try {
+            // bind  and connect
+            ChannelFuture channelFuture = serverBootstrap.bind(host, port).addListener(future -&gt; {
+                if (future.isSuccess()) {
+                    logger.info(&quot;[服务器] 启动成功 host: {} port :{} &quot;, host, port);
+                } else {
+                    logger.error(&quot;[服务器] 启动失败 exception : {} &quot;, future.cause().getMessage());
+                }
+            });
+            // Wait until the server socket is closed.
+            channelFuture.channel().closeFuture().sync();
+        } finally {
+            // shut down your server.
+            master.shutdownGracefully();
+            worker.shutdownGracefully();
+            logger.info(&quot;[服务器] 成功关闭&quot;);
+        }
+    }
+    @ChannelHandler.Sharable
+    private static class ServerHandler extends ChannelInboundHandlerAdapter {
+
+        // 计数器
+        private AtomicInteger counter = new AtomicInteger();
+
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            logger.info(&quot;[服务器] 客户端注册成功 : {}&quot;, ctx.channel().remoteAddress().toString());
+            ctx.writeAndFlush(Unpooled.copiedBuffer(&quot;欢迎你 , 注册成功&quot;, CharsetUtil.UTF_8));
+        }
+
+        @Override
+        public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+            // 客户端,服务器端正常关闭会执行这个
+            ctx.close();
+            logger.info(&quot;[服务器] 客户端移除成功 : {}&quot;, ctx.channel().remoteAddress().toString());
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            if (cause instanceof IOException) {
+                // 客户端异常关闭
+                ctx.close();
+            } else {
+                ctx.fireExceptionCaught(cause);
+            }
+        }
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            if (msg instanceof ByteBuf) {
+                ByteBuf buf = (ByteBuf) msg;
+                String info = Util.byteBufToString(buf);
+                logger.info(&quot;[服务器] 接收到信息 : {} ,  count : {} .&quot;, info, counter.incrementAndGet());
+            }
+        }
+    }
+}
+</code></pre>
+<h2 id="3-netty-客户端流程">3. Netty 客户端流程</h2>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-09-25/ab0f4efe-df85-4e75-9b36-6e0043865fc6.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>这个是最基本的实现代码 ,</p>
+<pre><code class="language-java">public class NettyClient {
+    private static final Logger logger = LoggerFactory.getLogger(NettyClient.class);
+
+    public static void run() throws Exception {
+
+        final NioEventLoopGroup worker = new NioEventLoopGroup(1);
+
+        final Bootstrap bootstrap = new Bootstrap();
+
+        final ClientHandler clientHandler = new ClientHandler();
+
+        bootstrap.group(worker)
+                .channel(NioSocketChannel.class)
+                .handler(new ChannelInitializer&lt;Channel&gt;() {
+                    @Override
+                    protected void initChannel(Channel ch) throws Exception {
+                        ch.pipeline().addLast(&quot;clientHandler&quot;, clientHandler);
+                    }
+                });
+
+
+        final String host = &quot;127.0.0.1&quot;;
+        final int port = 8888;
+
+
+        try {
+            // 这个 ChannelFuture 对象可以像服务器端传输数据
+            final ChannelFuture channelFuture = bootstrap.connect(host, port).addListener(new GenericFutureListener&lt;Future&lt;? super Void&gt;&gt;() {
+                @Override
+                public void operationComplete(Future&lt;? super Void&gt; future) throws Exception {
+                    if (future.isSuccess()) {
+                        logger.info(&quot;[客户端] 启动成功  host : {} port : {}. &quot;, host, port);
+                    } else {
+                        logger.info(&quot;[客户端] 启动失败 exception : {}&quot;, future.cause().getMessage());
+                    }
+                }
+            });
+            // 阻塞的下面
+            channelFuture.channel().closeFuture().sync();
+        } finally {
+            worker.shutdownGracefully();
+            logger.info(&quot;[客户端] 关闭成功&quot;);
+        }
+
+    }
+
+
+    private static class ClientHandler extends ChannelInboundHandlerAdapter {
+
+        // 无所谓其实, 因为他只能是一个人用一个
+        @Override
+        public boolean isSharable() {
+            return true;
+        }
+
+        @Override
+        public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
+            logger.info(&quot;[客户端] 开始注册&quot;);
+        }
+
+        @Override
+        public void channelActive(ChannelHandlerContext ctx) throws Exception {
+            logger.info(&quot;[客户端] 注册成功 IP : {}&quot;, ctx.channel().remoteAddress().toString());
+        }
+
+        @Override
+        public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+            if (cause instanceof IOException) {
+                ctx.close();
+            }
+        }
+
+        @Override
+        public void handlerRemoved(ChannelHandlerContext ctx) throws Exception {
+            if (ctx.channel().remoteAddress() != null) {
+                logger.info(&quot;[客户端] 关闭连接  IP : {}&quot;, ctx.channel().remoteAddress().toString());
+            }
+        }
+
+
+        @Override
+        public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            if (msg instanceof ByteBuf) {
+                ByteBuf buf = (ByteBuf) msg;
+                String info = Util.byteBufToString(buf);
+                logger.info(&quot;[客户端] 接收到服务器信息 : {}.&quot;, info);
+            } else {
+                super.channelRead(ctx, msg);
+            }
+        }
+    }
+}
+</code></pre>
+<h2 id="4-测试启动">4. 测试启动</h2>
+<h3 id="1-工具类">1. 工具类</h3>
+<p>就是将<code>ByteBuf</code> 反序列化成 <code>String</code> , 注意需要release , 同时最好将bytes数组释放 , 细节</p>
+<pre><code class="language-java">public class Util {
+    // ByteBuf -&gt; String
+    public static String byteBufToString(@NotNull ByteBuf buf) {
+        byte[] bytes = new byte[buf.readableBytes()];
+        buf.readBytes(bytes);
+        String info = new String(bytes, CharsetUtil.UTF_8);
+        // 这里需要释放
+        buf.release();
+        bytes = null;
+        return info;
+    }
+}
+</code></pre>
+<h3 id="2-启动类">2. 启动类</h3>
+<pre><code class="language-java">public class ServerBoot {
+    public static void main(String[] args) {
+        NettyServer.ruu();
+    }
+}
+
+public class ClientBoot {
+    public static void main(String[] args) {
+        NettyClient.run();
+    }
+}
+</code></pre>
+<h3 id="3-telnet-测试">3. telnet 测试</h3>
+<p>启动 服务器端 , 然后 telnet测试  , 我们这里连接了两个</p>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-12-19/5acd4a4f-dc41-447b-8124-7847e1499587.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<h3 id="4-客户端测试">4. 客户端测试</h3>
+<p>客户端启动</p>
+<pre><code class="language-java">2019-12-19 15:23:41,990 0      [up-2-1] INFO  ut.encoder_decoder.NettyClient  - [客户端] 开始注册
+2019-12-19 15:23:41,997 7      [up-2-1] INFO  ut.encoder_decoder.NettyClient  - [客户端] 启动成功  host : 127.0.0.1 port : 8888. 
+2019-12-19 15:23:41,997 7      [up-2-1] INFO  ut.encoder_decoder.NettyClient  - [客户端] 注册成功 IP : /127.0.0.1:8888
+2019-12-19 15:23:42,020 30     [up-2-1] INFO  ut.encoder_decoder.NettyClient  - [客户端] 接收到服务器信息 : 欢迎你 , 注册成功.
+</code></pre>
+<p>发现OK  ,这就是一个简单的Java程序 , 是不是很简单</p>
+<h2 id="5-nioeventloopgroup">5. NioEventLoopGroup</h2>
+<blockquote>
+<p>​	事件循环组, 其实就是一个线程, 去监听端口, 其中注意 worker线程数一般设置为 当前计算机CPU的1倍数量或者两倍</p>
+</blockquote>
+<h2 id="6-serverbootstrap-bootstrap">6. ServerBootstrap / Bootstrap</h2>
+<blockquote>
+<p>​	启动器 , Netty对外暴露的接口 , 需要启动器中配置各种参数</p>
+</blockquote>
+<h2 id="7-channelfuture">7. ChannelFuture</h2>
+<blockquote>
+<p>​	其实基本拿到这个对象就可以进行写操作了 , 可以通过 <code>ChannelFuture.channel()</code> 方法获取管道对象进行读写操作 , 一般客户端使用</p>
+</blockquote>
+<p>下面是几个回调状态</p>
+<blockquote>
+<p>​	The result of an asynchronous operation.  异步操作的返回结果. 就是一个线程操作的回调结果 <a href="https://anthony-dong.github.io/post/executor-xian-cheng-chi/">future链接</a></p>
+<p>​	public interface Future<V> extends java.util.concurrent.Future<V> {}</p>
+<ul>
+<li>我们发现他是继承 juc中的future 的 , juc的future 可以看我的这个 文章 <a href="https://anthony-dong.github.io/post/executor-xian-cheng-chi/">连接</a></li>
+<li>同时 future 也拓展了一些方法 (这里我就大致的去描述,因为源码文档真的很详细)
+<ul>
+<li>boolean isSuccess();   返回trur,只有当io操作成功时</li>
+<li>boolean isCancellable();    取消</li>
+<li>Future<V> addListener(GenericFutureListener&lt;? extends Future&lt;? super V&gt;&gt; listener);   添加监听器,这个很重要的,当这个io操作完成时,会立刻通知,</li>
+<li>Future<V> sync() throws InterruptedException;    Waits for this future until it is done, 等待这个结果知道这个结果已经完成</li>
+<li>Future<V> await()  等待future完成 .线程阻塞,可能发生死锁 ,不建议使用</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>我们看看 他的接口 <strong>ChannelFuture</strong></p>
+<p>下面这个文档描述的是 future已经完成状态返回结果 和 未完成的结果,很详细</p>
+<pre><code class="language-java"> *                                      +---------------------------+
+ *                                      | Completed successfully    |
+ *                                      +---------------------------+
+ *                                 +----&gt;      isDone() = true      |
+ * +--------------------------+    |    |   isSuccess() = true      |
+ * |        Uncompleted       |    |    +===========================+
+ * +--------------------------+    |    | Completed with failure    |
+ * |      isDone() = false    |    |    +---------------------------+
+ * |   isSuccess() = false    |----+----&gt;      isDone() = true      |
+ * | isCancelled() = false    |    |    |       cause() = non-null  |
+ * |       cause() = null     |    |    +===========================+
+ * +--------------------------+    |    | Completed by cancellation |
+ *                                 |    +---------------------------+
+ *                                 +----&gt;      isDone() = true      |
+ *                                      | isCancelled() = true      |
+ *                                      +---------------------------+
+     
+</code></pre>
+<h2 id="8-bytebuf">8. Bytebuf</h2>
+<blockquote>
+<p>​	数据传输对象, 默认的是 , 我们需要对他进行加工修饰 , 可以认为他是一个底层的数据包</p>
+<p>​	后期我会详细解释</p>
+</blockquote>
+<h2 id="9-channelhandler">9. ChannelHandler</h2>
+<blockquote>
+<p>​	 可以认为是ByteBuf的处理器, 对数据包的处理器 , 后续会详细介绍</p>
+</blockquote>
+<blockquote>
+<p>​	主要分为两个大的实现类</p>
+<ul>
+<li>
+<p>ChannelInboundHandler</p>
+</li>
+<li>
+<p>ChannelOutboundHandler</p>
+</li>
+</ul>
+</blockquote>
+<h2 id="10-netty-中常规option配置总结">10. Netty 中常规Option配置总结</h2>
+<pre><code class="language-java">1. 官方配置 :  一个是请求连接数 一个是心跳检测
+.option(ChannelOption.SO_BACKLOG, 128)   // (5)
+.childOption(ChannelOption.SO_KEEPALIVE, true) // (6)
+
+ServerBootstrap serverBootstrap = new ServerBootstrap();
+1.配置一 
+serverBootstrap.option(ChannelOption.SO_BACKLOG, 1024);
+
+2. 配置二
+ serverBootstrap.option(ChannelOption.SO_REUSEADDR, true);
+
+3. 配置三
+ serverBootstrap.option(ChannelOption.TCP_NODELAY, true);
+
+4. 配置四
+  serverBootstrap.option(ChannelOption.SO_KEEPALIVE, false);
+
+5. 配置五
+  serverBootstrap.option(ChannelOption.SO_RCVBUF,1024*8);
+  serverBootstrap.option(ChannelOption.SO_SNDBUF,1024*8);
+</code></pre>
+<ul>
+<li>
+<p>配置一(<strong>ChannelOption.SO_BACKLOG</strong>) 就是三次握手</p>
+<blockquote>
+<p>​	服务器端TCP内核模块维护有2个队列，我们称之为A，B吧，客户端向服务端connect的时候，发送带有SYN标志的包（<strong>第一次握手</strong>），服务端收到客户端发来的SYN时，向客户端发送SYN ACK 确认(<strong>第二次握手</strong>)，此时TCP内核模块把客户端连接加入到A队列中，然后服务器收到客户端发来的ACK时（<strong>第三次握手</strong>）TCP把客户端连接从A队列移到B队列，连接完成，<strong>应用程序的accept会返回</strong>，也就是说<strong>accept从B队列中取出完成三次握手的连接，A队列和B队列的长度之和是backlog</strong>,当A，B队列的长之和大于backlog时，新连接将会被TCP内核拒绝，所以，如果backlog过小，可能会出现accept速度跟不上，A.B 队列满了，导致新客户端无法连接，要注意的是，backlog对程序支持的连接数并无影响，backlog影响的只是还没有被accept 取出的连接</p>
+</blockquote>
+</li>
+<li>
+<p>配置二(<strong>ChannelOption.SO_REUSEADDR</strong>)  reused address  重复使用地址</p>
+<blockquote>
+<p>​	<strong>参数表示允许重复使用本地地址和端口， 比如，某个服务器进程占用了TCP的80端口进行监听，此时再次监听该端口就会返回错误，</strong><br>
+​	使用该参数就可以解决问题，该参数允许共用该端口，这个在服务器程序中比较常使用，比如某个进程非正常退出，该程序占用的端口可能要被占用一段时间才能允许其他进程使用，而且程序死掉以后，内核一需要一定的时间才能够释放此端口，不设置SO_REUSEADDR 就无法正常使用该端口</p>
+</blockquote>
+</li>
+<li>
+<p>配置三(<strong>ChannelOption.TCP_NODELAY</strong>)</p>
+<blockquote>
+<p>解释：<strong>是否启用Nagle算法，该算法将小的碎片数据连接成更大的报文来最小化所发送的报文的数量。</strong></p>
+<p>使用建议：如果需要发送一些较小的报文，则需要禁用该算法，从而最小化报文传输延时。只有在网络通信非常大时（通常指已经到100k+/秒了），设置为false会有些许优势，因此建议大部分情况下均应设置为true。</p>
+</blockquote>
+</li>
+<li>
+<p>配置四(<strong>SO_KEEPALIVE</strong>)</p>
+<blockquote>
+<p>**解释：**是否使用TCP的心跳机制；<br>
+<strong>使用建议：</strong> 心跳机制由应用层自己实现；</p>
+</blockquote>
+</li>
+<li>
+<p>配置五 (<strong>SO_SNDBUF</strong>) 同 (<strong>SO_RCVBUF</strong>)</p>
+<blockquote>
+<p>​		<strong>解释</strong>： Socket参数，TCP数据发送缓冲区大小，即TCP发送滑动窗口，linux操作系统可使用命令：cat /proc/sys/net/ipv4/tcp_smem查询其大小。缓冲区的大小决定了网络通信的吞吐量（网络吞吐量=缓冲区大小/网络时延）。</p>
+<p><strong>使用建议</strong>： 缓冲区大小设为网络吞吐量达到带宽上限时的值，即缓冲区大小=网络带宽*网络时延。以千兆网卡为例进行计算，假设网络时延为1ms，缓冲区大小=1000Mb/s * 1ms = 128KB。</p>
+</blockquote>
+</li>
+<li>
+<p>还有很多, 不过多解释了</p>
+</li>
+</ul>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87">1. 前期准备</a></li>
+<li><a href="#2-netty-%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%AE%9E%E7%8E%B0">2. Netty 服务端实现</a></li>
+<li><a href="#3-netty-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B5%81%E7%A8%8B">3. Netty 客户端流程</a></li>
+<li><a href="#4-%E6%B5%8B%E8%AF%95%E5%90%AF%E5%8A%A8">4. 测试启动</a>
+<ul>
+<li><a href="#1-%E5%B7%A5%E5%85%B7%E7%B1%BB">1. 工具类</a></li>
+<li><a href="#2-%E5%90%AF%E5%8A%A8%E7%B1%BB">2. 启动类</a></li>
+<li><a href="#3-telnet-%E6%B5%8B%E8%AF%95">3. telnet 测试</a></li>
+<li><a href="#4-%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%B5%8B%E8%AF%95">4. 客户端测试</a></li>
+</ul>
+</li>
+<li><a href="#5-nioeventloopgroup">5. NioEventLoopGroup</a></li>
+<li><a href="#6-serverbootstrap-bootstrap">6. ServerBootstrap / Bootstrap</a></li>
+<li><a href="#7-channelfuture">7. ChannelFuture</a></li>
+<li><a href="#8-bytebuf">8. Bytebuf</a></li>
+<li><a href="#9-channelhandler">9. ChannelHandler</a></li>
+<li><a href="#10-netty-%E4%B8%AD%E5%B8%B8%E8%A7%84option%E9%85%8D%E7%BD%AE%E6%80%BB%E7%BB%93">10. Netty 中常规Option配置总结</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

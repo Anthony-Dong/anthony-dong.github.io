@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>JVM - 基本结构 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/jvm-ji-ben-jie-gou/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>JVM - 基本结构</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-02</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/jvm-ji-ben-jie-gou/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/eZB86V-Dzpp/"
+								class="tag">jvm</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1862字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	首先申明一下我看的参考的书是 ： 《实战Java虚拟机》 作者: <a href="https://book.douban.com/search/%E8%91%9B%E4%B8%80%E9%B8%A3">葛一鸣</a>  ，第二版 。我的开发环境是 JDK1.8 ，使用的IDE是 ： IntelliJ IDEA 2018.3.4  ， 后续几篇文章都是一样的 。</p>
+</blockquote>
+<h2 id="1-main函数入口">1. main函数入口</h2>
+<pre><code class="language-java">package com.jvm.system_properties;
+
+public class TestSystemProperties {
+
+    public static void main(String[] args) {
+        System.out.println(&quot;参数 : &quot;+args[0]);
+        System.out.println(&quot;堆内存 : &quot;+Runtime.getRuntime().maxMemory()/1000/1000+&quot;M&quot;);
+    }
+}
+</code></pre>
+<p>如果我们没有ide 怎么配置这两个属性, 生产环境是没有ide的, 所以我们需要</p>
+<pre><code class="language-java">找到他的目录文件,输入这个就行了 ,记住是一个配置
+java -Xmx32m com.jvm.system_properties.TestSystemProperties a
+
+如果是一个jar包 ,那么 直接跟参数就行了
+java -jar spring-packing-0.0.1-SNAPSHOT.jar arg 
+
+自定义参数后面跟 -Dspring.name=springboot  就行了
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-11-02/d1f0f760-b37b-43cf-8914-540071a690db.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>​															<strong>JVM内存模型</strong></p>
+<h2 id="2-认识堆">2. 认识堆</h2>
+<p>​		java 的堆和java应用程序最为密切的内存空间 , 几乎所有的对象都存放在堆中 . 并且java的堆是完全自动化管理的 , 通过垃圾回收机制,垃圾对象会被自动的清理 , 而不需要手动的释放 .</p>
+<p>​		根据回收机制的不同 , java的堆可能拥有不同的结构 . 最常见的就是将整个 Java 堆划分为 新生代和老年代 . 其中新生代存放新生的对象或者年龄不大的对象,老年代则存放老年对象.</p>
+<p>​		在绝大多数情况下,对象首先会被分配到 <code>eden space</code>  区 , 在一次新生代回收后 , 如果对象还存活着 .那么会进入s0 或者 s1 (survive) 区域 , 每次存活年龄+1 , 当到达一定条件后,会被放入老年对象 , 进入老年区 <code>Old Gen</code> .</p>
+<p>​		初始化一个实例化对象 :</p>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-11-02/a7e47296-93ed-4090-be6b-af3eb937d7d2.png" alt="" loading="lazy"></figure>
+<h2 id="3-认识-stack">3. 认识  Stack</h2>
+<blockquote>
+<p>​	Java 的栈是一块线程私有的内存空间, 如果说java堆和程序密切相关 ,那么 java栈就和线程密切相关.线程的执行基本行为都是函数的调用,每次函数调用的数据都是通过java的栈来传递的.</p>
+<p>​	当一个函数返回时, 栈帧从java栈中弹出, 其中返回有两种方式,一直正常return ,一直是抛出异常 .</p>
+</blockquote>
+<figure data-type="image" tabindex="3"><img src="https://tyut.oss-cn-beijing.aliyuncs.com/image/2019-11-02/cdf616e0-7f0d-4a96-9b61-857a2e9e016b.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<p>​															<strong>虚拟机栈的组成</strong></p>
+<h3 id="1-stack-包含什么">1. stack 包含什么</h3>
+<blockquote>
+<p>​		每一个栈 包含 : <strong>局部变量 , 操作数栈 , 帧数据区</strong> , 由于每次调用函数都会产生对应的栈帧,从而占用一定的栈空间,当达到上限时 ,就会抛出 <code>java.lang.StackOverflowError</code> 的异常 .</p>
+</blockquote>
+<p>​		看一下我这个例子 :  我的电脑内存是 20G内存. 可能下面数据有其他偏差,请见谅</p>
+<pre><code class="language-java">public class TestStackMemory {
+    static int count = 0;
+    static void test(){
+        count++;
+        test();
+    }
+    public static void main(String[] args) {
+        try {
+            test();
+        } catch (Throwable e) {
+            System.out.println(&quot;recursive count : &quot; + count);
+            e.printStackTrace();
+        }
+    }
+}
+
+// 最后输出 : 
+recursive count : 24600
+java.lang.StackOverflowError
+</code></pre>
+<p>大约调用了 24600 次</p>
+<p>我们试着调试他的大小 , 可以用 <code>-Xss128K</code> JVM参数设置栈空间大小,发现结果明显变少了好多次</p>
+<pre><code class="language-java">recursive count : 1918
+java.lang.StackOverflowError
+
+这次执行结果就成了1918次 .  我们做一下运算 大约我默认的是 1,641k ,我的电脑内存是20G ,
+</code></pre>
+<h3 id="2-局部变量的影响">2. 局部变量的影响</h3>
+<pre><code class="language-java">public class TestStackMemory {
+    static int count = 0;
+    static void test(){
+        long a=100,s=100,d=10,f=100,g=100,h=10;
+        count++;
+        test();
+    }
+    public static void main(String[] args) {
+        try {
+            test();
+        } catch (Throwable e) {
+            System.out.println(&quot;recursive count : &quot; + count);
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre>
+<p>内存此时还是 128k ,那么此次执行结果是 :</p>
+<pre><code class="language-java">recursive count : 491
+java.lang.StackOverflowError
+</code></pre>
+<p>我们发现 相比 1918次 少了很多 , 因为 方法栈包含局部变量的大小 ,  我们比较一下<code>1918/491=</code></p>
+<p>这里需要安装一下 <code>jclasslib</code> 插件 ,idea 可以直接去 pluging里面下载使用就行了. 可以看到变量大小 .</p>
+<p>局部变量表中直接或间接引用的对象,都不会被回收 ,</p>
+<h3 id="3-栈上分配思想">3. 栈上分配思想</h3>
+<blockquote>
+<p>​	证明Java不会逃逸到其他方法中，该对象分配内存空间时，可直接进行“栈上分配”(不需要GC，自动销毁)，栈上分配可以提升代码性能，降低在多线程情况下的锁使用，但是会受限于其空间的大小.JDK1.8默认开启的.</p>
+</blockquote>
+<p>在JDK 6之后支持对象的栈上分析和逃逸分析，在JDK 7中完全支持栈上分配对象。 JDK7,默认开启了逃逸分析 . 其是否打开逃逸分析依赖于以下JVM的设置：</p>
+<pre><code class="language-java">public class TestAllocateStack {
+    static class User{
+        String name;
+    }
+
+    private static User user;
+
+    static void allocUser1(){
+        user = new User();
+        user.name = &quot;name&quot;;
+    }
+
+    static void allocUser(){
+        User user = new User();
+        user.name = &quot;name&quot;;
+    }
+
+    public static void main(String[] args) {
+        long b = System.currentTimeMillis();
+        for(int i = 0;i&lt; 200000000;i++){
+            allocUser();
+            //allocUser1();
+        }
+        long e = System.currentTimeMillis();
+        System.out.println(&quot;main进程 结束 ：&quot;+ (e-b));
+        System.out.println(&quot;堆内存大小 : &quot;+Runtime.getRuntime().maxMemory() / 1000 / 1000+&quot;M&quot;);
+    }
+}
+</code></pre>
+<p>我们就啥参数也不设置 , 直接运行 两个方法</p>
+<pre><code class="language-java">allocUser(); 运行结果
+main进程 结束 ：8
+堆内存大小 : 4725M
+
+allocUser1(); 运行结果 : 
+main进程 结束 ：1233
+堆内存大小 : 4725M
+
+我们发现差距还是很大的,计算结果可能有偏差,所以颠覆了我们的传统思想,如果一个对象的作用域只有一个方法,不需要return,而且对象大小很小,可以使用栈上内存分配. jdk1.8 默认是开启的
+</code></pre>
+<p>参数分析 :</p>
+<pre><code class="language-java">-server -Xmx10m -Xms10m -XX:+DoEscapeAnalysis -XX:+PrintGC -XX:-UseTLAB -XX:+EliminateAllocations 
+</code></pre>
+<pre><code class="language-java">-server  编译器模式 ，我的下一篇文章会讲到
+-Xms10m   初始堆大小
+-Xmx10m   最大堆大小 
+-XX:+DoEscapeAnalysis  开启逃逸分析  -XX:-DoEscapeAnalysis  关闭逃逸分析
+-XX:+PrintGC  将GC回收的日志 打印在 console栏中
+-XX:+EliminateAllocations  开启标量替换（jdk1.8默认开启，其它版本未测试）,比如user有两个属性name , gender,那么这两个字段会被视为两个独立的局部变量进行分配. 
+-XX:UseTLAB  : TLAB 全称 ThreadLocalAllocBuffer,线程私有内存,在线程初始化时，同时也会申请一块指定大小的内存，只给当前线程使用，这样每个线程都单独拥有一个Buffer，如果需要分配内存，就在自己的Buffer上分配，这样就不存在竞争的情况，可以大大提升分配效率，当Buffer容量不够的时候，再重新从Eden区域申请一块继续使用，这个申请动作还是需要原子操作的。
+</code></pre>
+<p>更多 关于 TLAB的讲解 可以看这个<a href="https://www.jianshu.com/p/cd85098cca39">链接</a>  : https://www.jianshu.com/p/cd85098cca39</p>
+<h2 id="4-认识方法区">4. 认识方法区</h2>
+<blockquote>
+<p>​		方法区是所有线程共享的内存区域, 他主要是用来保存系统的类信息 , 比如 类的字段 ,方法 , 常量池 ,这些都可以被称之为 元数据 . 方法区的大小决定了系统可以保存多少个类 , 如果系统定义太多,则会导致方法区溢出, 虚拟机会抛出内存溢出的错误 .</p>
+<p>​		在JDK 1.6 和 1.7 中, 方法区可以理解为永久区(permanent) . 永久区 可以使用 <code>-XX:PermSize</code> 和 <code>-XX:MaxPermSize</code> 指定 ,默认情况下是 <code>-XX:MaxPermSize=64M</code> .</p>
+<p>​		如果你是 JDK 1.8 的,元数据区取代了永久代 , 并且元数据不在虚拟机内部, 而是直接使用的堆外的直接内存(其实就是系统内存), 所以设置参数也有所改变 <code>-XX:MetaspaceSize=8m</code>, <code>-XX:MaxMetaspaceSize=20m</code>   .</p>
+<p>​		JDK1.8后，运行时常量池（String、Integer 等等）从永久代中剥离出来，存放在堆中。</p>
+</blockquote>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-main%E5%87%BD%E6%95%B0%E5%85%A5%E5%8F%A3">1. main函数入口</a></li>
+<li><a href="#2-%E8%AE%A4%E8%AF%86%E5%A0%86">2. 认识堆</a></li>
+<li><a href="#3-%E8%AE%A4%E8%AF%86-stack">3. 认识  Stack</a>
+<ul>
+<li><a href="#1-stack-%E5%8C%85%E5%90%AB%E4%BB%80%E4%B9%88">1. stack 包含什么</a></li>
+<li><a href="#2-%E5%B1%80%E9%83%A8%E5%8F%98%E9%87%8F%E7%9A%84%E5%BD%B1%E5%93%8D">2. 局部变量的影响</a></li>
+<li><a href="#3-%E6%A0%88%E4%B8%8A%E5%88%86%E9%85%8D%E6%80%9D%E6%83%B3">3. 栈上分配思想</a></li>
+</ul>
+</li>
+<li><a href="#4-%E8%AE%A4%E8%AF%86%E6%96%B9%E6%B3%95%E5%8C%BA">4. 认识方法区</a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

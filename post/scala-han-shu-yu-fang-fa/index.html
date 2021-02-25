@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Scala - 函数与方法 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/scala-han-shu-yu-fang-fa/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Scala - 函数与方法</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-28</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/scala-han-shu-yu-fang-fa/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/Af7c3Ltc0ra/"
+								class="tag">Scala</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1470字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">7 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	官方定义的函数是 : 函数是带有参数的表达式。其实函数我自我感觉就是<code>Function&lt;N&gt;</code>的实例,自我感觉</p>
+<p>​	方法是 : 方法的表现和行为和函数非常类似，但是它们之间有一些关键的差别。方法由<code>def</code>关键字定义。<code>def</code>后面跟着一个名字、参数列表、返回类型和方法体。大致形式就是这样子 <code>def functionName ([list of parameters]) : [return type]</code> , 同时方法可以接收多个参数,同时也可以没有参数</p>
+</blockquote>
+<blockquote>
+<p>​</p>
+</blockquote>
+<h2 id="1-函数">1. 函数</h2>
+<p>简单的函数就是下面的形式 , 它是一个常量/变量(常量准确一点) , scala其实可以告诉你什么可以是常量,什么可以使变量 , 在我们Java开发中我觉得我们很少对于一个变量加final修饰 , 其实final修饰可以帮助系统执行程序时提供很好地提示,同时可以提高程序性能, 和C++的const很相似.... 跑题了 ......</p>
+<pre><code class="language-scala">scala&gt; val fun=(num:Int)=&gt;num+1
+fun: Int =&gt; Int = $$Lambda$751/1164934558@75d366c2
+
+scala&gt; fun(1)
+res0: Int = 2
+</code></pre>
+<h2 id="2-方法">2. 方法</h2>
+<h3 id="1无参数函数">1.无参数函数</h3>
+<pre><code class="language-scala">scala&gt; def echo:Unit={
+     | println(&quot;Hello Scala&quot;)
+     | }
+echo: Unit
+
+// 此时调用的时候不需要 写成 `echo()`
+scala&gt; echo
+Hello Scala
+</code></pre>
+<h3 id="2单一参数函数">2.单一参数函数</h3>
+<blockquote>
+<p>​	<strong>scala的参数对应的java中是一个被final修饰的 ,所以在函数体中是无法对参数重新赋值的,</strong></p>
+</blockquote>
+<h4 id="1-参数类型是基本类型-或者引用类型">1. 参数类型是基本类型 , 或者引用类型</h4>
+<pre><code class="language-java">scala&gt; def fun(num: Int): Int = {
+     |     num + 1
+     |   }
+fun: (num: Int)Int
+
+scala&gt; fun(1)
+res1: Int = 2
+</code></pre>
+<h3 id="2-返回类型是一个函数">2. 返回类型是一个函数</h3>
+<pre><code class="language-scala">// 函数名 urlBuilder , 参数 ssl ,domainName , 返回类型 是一个 匿名函数 , 匿名函数的返回类型时一个string
+def urlBuilder(ssl: Boolean, domainName: String): (String, String) =&gt; String = {
+    val schema = if (ssl) &quot;https://&quot; else &quot;http://&quot;
+    (endpoint: String, query: String) =&gt; s&quot;$schema$domainName/$endpoint?$query&quot;
+}
+urlBuilder(true, &quot;www.baidu.com&quot;)(&quot;user&quot;, &quot;id=1&quot;)  //https://www.baidu.com/user?id=1
+
+// 其实他是分了两步执行 .... 
+// 第一步
+urlBuilder(true, &quot;www.baidu.com&quot;)返回一个函数 , 假设fn
+// 第二步调用fn的方法
+fn(&quot;user&quot;, &quot;id=1&quot;)
+</code></pre>
+<h3 id="3-多参数">3. 多参数</h3>
+<pre><code class="language-scala">def add(x1: Int, x2: Int)(f: Function2[Int, Int, Int]): Int = {
+  f.apply(x1, x2)
+}
+
+println(add(1, 2)(_ + _))  // 输出3
+</code></pre>
+<h3 id="3-可变参数">3. 可变参数</h3>
+<p>基本用法</p>
+<pre><code class="language-scala"> def calcSumWithQueue(numbers: Int*):Int = {
+    var sum = 0
+    for (element &lt;- numbers){
+      sum+= element
+    }
+    sum
+}
+或者我们可以加一个注
+</code></pre>
+<p>或者我们如果希望Java代码可以调用,此时可以添加 <code>@varargs</code> 注解</p>
+<pre><code class="language-scala">@varargs def calcSumWithQueue(numbers: Int*): Int = {
+var sum = 0
+for (element &lt;- numbers) {
+  sum += element
+}
+sum
+}
+</code></pre>
+<p>可变参数的使用条件 ....</p>
+<pre><code class="language-scala">object MultipleArguments {
+ 
+  //这种写法没毛病
+  def foo(arg1: Int,arg2: Double*):Unit = { }
+ 
+  //可变参数后面不能再出现其他参数
+  //def foo2(arg1: Double*,arg2: Int):Unit = { }
+ 
+  //不允许出现多个类型的可变参数
+  //def foo3(arg1: Double*,arg2: Int*):Unit = { }
+ 
+  //总结：一个函数中只能有一个可变参数，并且只能放在参数列表最后
+}
+</code></pre>
+<p>可变参数传参时, 如果是一个 <code>Range</code> 或者是一个 <code>Array</code> 时需要进行类型转换</p>
+<pre><code class="language-scala">def main(args: Array[String]): Unit = {
+//可变参数的实参为Range的时候，需要添加:_*来进行数据的转换
+println(&quot;sum = &quot; + calcSumWithQueue(1 to 10: _*))
+//可变参数的实参为Array时，需要添加:_*来进行数据的转换
+val arr = Array(&quot;Hadoop&quot;, &quot;Spark&quot;, &quot;Storm&quot;)
+printArr(arr: _*)
+}
+</code></pre>
+<h2 id="3-scala自带函数">3. Scala自带函数</h2>
+<blockquote>
+<p>​	其实 Scala约定了很多函数 , 比如 <code>Function0</code>,<code>Function1</code> ,<code>Function2</code> ,这些都是我们可以直接使用的, 其中 0 1 2的意思是参数的个数,返回类型都是一个 , 如果无返回值,返回值为 <code>Unit</code></p>
+</blockquote>
+<h3 id="1-function1">1. Function1</h3>
+<p>以<code>Array.map()</code> 方法为例子</p>
+<pre><code class="language-scala">def map[B](f : scala.Function1[A, B])(implicit ct : scala.reflect.ClassTag[B]) : scala.Array[B] = { /* compiled code */ }
+</code></pre>
+<blockquote>
+<p>​	implicit , 隐式转换 ,他会自动检测你的上下文找到匹配的隐式值</p>
+</blockquote>
+<p>其中它需要传入一个参数 , 此时参数类型时一个 <code>scala.Function1[A, B]</code> 最终返回类型时 <code>scala.Array[B]</code> , 那么我们需要了解一下<code>scala.Function1[A, B]</code>是什么</p>
+<p>举个简单的例子, 我们以一个<code>wordcount</code>为例子 , 当我们拿到数据后, 此时需要将他转成一个map , 类似于 k-v结构</p>
+<pre><code class="language-scala">val arr = Array(&quot;hello&quot;, &quot;hello&quot;, &quot;hello&quot;, &quot;hello&quot;)
+
+val tuples = arr.map(new Function1[String, Tuple2[String, Int]] {
+  override def apply(v1: String): (String, Int) = {
+    Tuple2(v1, 1)
+  }
+})
+// (hello,1)	(world,1)	(java,1)	(scala,1)	
+</code></pre>
+<p>这就是一个 <code>Function1</code>函数 , 他需要两个泛型 和一个要求重写的方法<code>apply</code> , 但是由于<code>scala强大的模式匹配</code> ,我们上诉的 三行代码可以一行解决 ,所以这就是scala最强大的地方.</p>
+<pre><code class="language-scala">val tuples = arr.map((_, 1))
+</code></pre>
+<h4 id="1-compose方法">1. compose方法</h4>
+<h4 id="2-andthen-方法">2. andThen  方法</h4>
+<pre><code class="language-scala">val fun1 = new Function1[Int, Int] {
+  def apply(x: Int) = {
+    println(&quot;第一步:&quot; + x)
+    x + 1
+  }
+}
+val fun2 = (x: Int) =&gt; {
+  println(&quot;第二步:&quot; + x)
+  x + 3
+}
+
+
+println(fun2.andThen(fun1).apply(5)) // fun2先执行 , fun1 后执行
+println(fun2.compose(fun1).apply(5)) // fun1休闲执行, fun2 后执行
+</code></pre>
+<pre><code class="language-scala">第二步:5
+第一步:8
+9
+第一步:5
+第二步:6
+9
+</code></pre>
+<h3 id="2-function2-函数">2.  Function2 函数</h3>
+<blockquote>
+<p>​	和 <code>Function1</code>类似 ,只是他只是需要传入的参数是两个, 返回类型是一个 ,这里我们以 <code>Array.reduce()</code> 方法为例子</p>
+</blockquote>
+<pre><code class="language-scala">def reduce[B &gt;: A](op : scala.Function2[B, B, B]) : B = { /* compiled code */ }
+</code></pre>
+<p>简单使用...</p>
+<pre><code class="language-scala">val function = new Function2[Int, Int, Int] {
+  override def apply(v1: Int, v2: Int): Int = {
+    v1 + v2
+  }
+}
+
+val array = Array(1, 2, 3, 4)
+val i = array.reduce(function)  // i=10
+</code></pre>
+<p>完全符合我们的预期</p>
+<p>但是依靠<code>scala的模式匹配</code> ,还可以优化</p>
+<pre><code class="language-scala">val array = Array(1, 2, 3, 4)
+val i = array.reduce(_+_)  // i=10
+</code></pre>
+<p>... 后面还有很多 . 不一一介绍了 . . .</p>
+<h2 id="4-与">4. : =&gt; 与() : =&gt;</h2>
+<h3 id="1-表示一个函数">1. () : =&gt;  表示一个函数</h3>
+<pre><code class="language-scala">def fun1(fun: () =&gt; String): Unit = {
+    println(fun)
+    val str: String = fun()
+    println(str)
+}
+</code></pre>
+<pre><code class="language-scala">def main(args: Array[String]): Unit = {
+    fun1(()=&gt;&quot;hello world&quot;)
+}
+
+输出 : 
+// com.tree.TreeNode$$$Lambda$1/1996181658@2a18f23c
+// hello world
+</code></pre>
+<h3 id="2-不严谨">2. : =&gt;  不严谨</h3>
+<pre><code class="language-scala">def fun2(fun: =&gt; Unit): Unit = {
+    println(&quot;start&quot;)
+    fun
+}
+
+输出  : 
+// start
+// hello world
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-%E5%87%BD%E6%95%B0">1. 函数</a></li>
+<li><a href="#2-%E6%96%B9%E6%B3%95">2. 方法</a>
+<ul>
+<li><a href="#1%E6%97%A0%E5%8F%82%E6%95%B0%E5%87%BD%E6%95%B0">1.无参数函数</a></li>
+<li><a href="#2%E5%8D%95%E4%B8%80%E5%8F%82%E6%95%B0%E5%87%BD%E6%95%B0">2.单一参数函数</a>
+<ul>
+<li><a href="#1-%E5%8F%82%E6%95%B0%E7%B1%BB%E5%9E%8B%E6%98%AF%E5%9F%BA%E6%9C%AC%E7%B1%BB%E5%9E%8B-%E6%88%96%E8%80%85%E5%BC%95%E7%94%A8%E7%B1%BB%E5%9E%8B">1. 参数类型是基本类型 , 或者引用类型</a></li>
+</ul>
+</li>
+<li><a href="#2-%E8%BF%94%E5%9B%9E%E7%B1%BB%E5%9E%8B%E6%98%AF%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0">2. 返回类型是一个函数</a></li>
+<li><a href="#3-%E5%A4%9A%E5%8F%82%E6%95%B0">3. 多参数</a></li>
+<li><a href="#3-%E5%8F%AF%E5%8F%98%E5%8F%82%E6%95%B0">3. 可变参数</a></li>
+</ul>
+</li>
+<li><a href="#3-scala%E8%87%AA%E5%B8%A6%E5%87%BD%E6%95%B0">3. Scala自带函数</a>
+<ul>
+<li><a href="#1-function1">1. Function1</a>
+<ul>
+<li><a href="#1-compose%E6%96%B9%E6%B3%95">1. compose方法</a></li>
+<li><a href="#2-andthen-%E6%96%B9%E6%B3%95">2. andThen  方法</a></li>
+</ul>
+</li>
+<li><a href="#2-function2-%E5%87%BD%E6%95%B0">2.  Function2 函数</a></li>
+</ul>
+</li>
+<li><a href="#4-%E4%B8%8E">4. : =&gt; 与() : =&gt;</a>
+<ul>
+<li><a href="#1-%E8%A1%A8%E7%A4%BA%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0">1. () : =&gt;  表示一个函数</a></li>
+<li><a href="#2-%E4%B8%8D%E4%B8%A5%E8%B0%A8">2. : =&gt;  不严谨</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>

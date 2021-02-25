@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="shortcut icon"href="https://anthony-dong.github.io/favicon.ico"type="image/x-icon"/><meta name="viewport"content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/><meta name="apple-mobile-web-app-capable"content="yes"/><meta name="apple-mobile-web-app-status-bar-style"content="black"/><meta name="format-detection"content="telephone=no"/><meta name="renderer"content="webkit"/><meta name="description"content="Anthony-Dong的个人博客"/><meta charset="UTF-8"/><title>Netty - 核心编解码器 | Anthony-Dong</title><link href="https://anthony-dong.github.io/styles/main.css"type="text/css"rel="stylesheet"/><script src="https://anthony-dong.github.io/media/js/magnify.min.js"></script>
+	<link rel="canonical" href="https://anthony-dong.github.io/post/netty-core-handler/" />
+</head>
+<body>
+	<div class="progress"></div><style>.progress{background:linear-gradient(to right,#87ceeb var(--scroll),transparent 0);background-repeat:no-repeat;position:fixed;width:100%;height:4px;z-index:1}</style><div class="darkmode-background"></div><div class="darkmode-layer"></div>
+<noscript><p class="warn" >本页面需要浏览器支持（启用）JavaScript</p></noscript><div class="header"><div class="logo_title"><div class="title animated fadeInDown"><a href="https://anthony-dong.github.io"><img alt="logo" style="display:inline-block;" src="https://anthony-dong.github.io/images/avatar.png"/></a><h1 title="Anthony-Dong" class="weaklink shift"><a  href="/">Anthony-Dong</a></h1>
+
+<div class="navbar weaklink">
+<div class="normal_nav">
+<div class="bitcron_nav_container"><div class="bitcron_nav"><div class="bitcron_nav"><div style="display:flex;justify-content:center;"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul></nav>
+<div style="float:right;margin-top:1em"><form id="gridea-search-form" data-update="1578893743252" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q" placeholder="Search..."></form></div>
+<div style="margin-left:0.5em;margin-top:1.2em"><input id="switch_default" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+<div class="clear clear_nav_inline_end"></div></div></div><div class="clear clear_nav_end"></div></div></div><div class="hamberger" href="javascript:void(0)" onclick="btn_toggle();"><i class="iconfont icon-category"></i></div></div></div></div>
+<div id="hn" class="no-js hidden_nav animated fadeInDown"><div class="bitcron_nav_container"><div class="bitcron_nav"><nav class="mixed_site_nav_wrap site_nav_wrap"><ul class="mixed_site_nav site_nav sm sm-base">	<li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/" class="selected active current nav__item" >首页</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/archives" class="selected active current nav__item" >归档</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/tags" class="selected active current nav__item" >标签</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/about" class="selected active current nav__item" >关于</a></li><li><a id="d2ef19af68cc211e98f8a0242ac110003" href="/post/link" class="selected active current nav__item" >友链</a></li></ul><div class="clear clear_nav_inline_end"></div></nav></div><div class="clear clear_nav_end"></div></div>
+<div style="display:flex;justify-content:center;inline-block;text-align:center;margin-top:7%"><div><form id="gridea-search-form-1" data-update="1614223299317" action="/search/index.html"><input class="search-input" autocomplete="off" spellcheck="false" name="q"  placeholder="Search..." /></form></div><div style="margin-left:0.5em"><input id="switch_default_h" onclick="mobileBtn()" type="checkbox" class="switch_default"><label for="switch_default" class="toggleBtn"></label></div></div>
+</div></div>
+<script>function enableDarkmode(){document.body.classList.add("darkmode"),document.getElementById("switch_default").checked=1,document.getElementById("switch_default_h").checked=1}function removeDarkmode(){document.body.classList.remove("darkmode"),document.getElementById("switch_default").checked=0,document.getElementById("switch_default_h").checked=0}function getCookie(a){var b,c=new RegExp("(^| )"+a+"=([^;]*)(;|$)");return(b=document.cookie.match(c))?unescape(b[2]):null}cookie=getCookie("darkmode"),"enable"==cookie&&enableDarkmode(),window.matchMedia("(prefers-color-scheme: dark)").matches&&"disable"!==cookie&&(enableDarkmode(),document.cookie="darkmode=enable; path=/");var mobileBtn=function(){1==document.getElementById("switch_default").checked?(enableDarkmode(),document.cookie="darkmode=enable; path=/"):(removeDarkmode(),document.cookie="darkmode=disable; path=/")};</script>
+
+	<div class="main">
+		<div class="main-inner">
+			<div class="content">
+				<article class="post">
+					<script src='https://anthony-dong.github.io/media/js/Valine.min.js'></script><style>.v .vlist .vcard .vh .vmeta .vat{font-size:.8125em;color:#9d7873;cursor:pointer;float:right}.v .vlist .vcard .vhead .vsys{display:none}</style ><script type="text/javascript">new Valine(ValineInfo)</script>
+					<h2 class="post_title sm_margin"><a>Netty - 核心编解码器</a></h2>
+					<script>
+						function lan() {
+							if (document.getElementById("lan").innerText == "繁") {
+								var s = document.getElementById("tongwenlet_cn");
+								if (s != null) {
+									document.body.removeChild(s)
+								}
+								var s = document.createElement("script");
+								s.language = "javascript";
+								s.type = "text/javascript";
+								s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_tw.js";
+								s.id = "tongwenlet_cn";
+								document.body.appendChild(s);
+								document.getElementById("lan").innerHTML = "简"
+							} else {
+								if (document.getElementById("lan").innerText == "簡") {
+									var s = document.getElementById("tongwenlet_cn");
+									if (s != null) {
+										document.body.removeChild(s)
+									}
+									var s = document.createElement("script");
+									s.language = "javascript";
+									s.type = "text/javascript";
+									s.src = "https://cdn.jsdelivr.net/gh/qyxtim/Static@1.1/bookmarklet_cn.js";
+									s.id = "tongwenlet_cn";
+									document.body.appendChild(s);
+									document.getElementById("lan").innerHTML = "繁"
+								}
+							}
+						};
+					</script>
+					<section class="post_details"><i class="iconfont icon-calendar"></i><span style="margin-right:15px">
+							2019-11-15</span><i class="iconfont icon-browse"></i>
+							<span class="leancloud_visitors" style="margin-right:15px" id="/post/netty-core-handler/">views <i class="leancloud-visitors-count" style="font-style: normal"></i></span>
+							<span class="weaklink" style="margin-right:15px"><i class="iconfont icon-category"></i> <a
+								href="https://anthony-dong.github.io/tag/fn4lTiaKxHO/"
+								class="tag">netty</a></span><i class="iconfont icon-caret-down"></i><span
+							style="margin-right:15px">1757字</span><i
+							class="iconfont icon-naozhong"></i><span
+							style="margin-right:15px">8 min read</span><a id="lan"
+							href="javascript:void(0);" onclick="lan();" title="调整简繁体" style="margin-right:15px;">繁</a>
+						</section>
+
+						<div style="display:flex">
+							<div class="md_block" id="md_block">
+								<div class="round-shape-one"></div>
+								<blockquote>
+<p>​	netty 最核心的部分就是掌握 ByteBuf 的用法原理, 业务逻辑主要是写ChannelHandler , 以及各种编解码器</p>
+</blockquote>
+<h2 id="1-channelinboundhandleradapter-channeloutboundhandleradapter-核心实现类">1. ChannelInboundHandlerAdapter &amp; ChannelOutboundHandlerAdapter  - 核心实现类</h2>
+<blockquote>
+<p>​	这俩实现类都是继承了 <code>io.netty.channel.ChannelHandlerAdapter</code> 类 , 基本实现都需要用户去实现, 所以他基本上对于用户来说是透明的, 我们开发可以控制我们全部的输入输出, 对对象进行释放等等</p>
+</blockquote>
+<h3 id="1-api-方法">1. API 方法</h3>
+<figure data-type="image" tabindex="1"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-18/94ac8bd7-5765-4c47-9b91-7b2abff8f4fd.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<figure data-type="image" tabindex="2"><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2019-11-18/51866bd2-59f8-432c-9598-8822e7e0de53.jpg?x-oss-process=style/template01" alt="" loading="lazy"></figure>
+<pre><code class="language-java">// 判断是否和其他管道共享数据 ,每一个客户端连接会申请一个管道, 就和和别人共享
+isSharable
+// 每一个客户端只会注册一次handler
+handlerAdded
+// 每一个客户端只会一次注册
+channelRegistered
+// 活跃
+channelActive
+
+// 接收客户端信息
+channelRead -&gt; write/flush操作
+
+// out输出流处理
+out : write
+out : flush   
+
+// 已经写出去了 ....
+channelReadComplete
+
+// 断开 ....
+channelInactive
+channelUnregistered
+handlerRemoved
+</code></pre>
+<h3 id="1-exceptioncaught-和-handlerremoved-事件何时触发">1. exceptionCaught() 和  handlerRemoved()  事件何时触发</h3>
+<p>1 . <strong>exceptionCaught()</strong> : 异常关闭,比如关闭客户端或者服务器端 : 手动关闭</p>
+<p>2 . <strong>handlerRemoved()</strong> :  正常关闭执行 , 比如执行 <code>ctx.close()</code></p>
+<p>所以一般场景是 :</p>
+<ol>
+<li>
+<p>服务器端执行了<code>ctx.close()</code> , 此时客户端应当在 <code>handlerRemoved()</code>中执行被关闭的业务逻辑,同时服务器端也是 ,  当服务器异常关闭的时候 , 客户端的<code>exceptionCaught()</code>事件会触发</p>
+</li>
+<li>
+<p>当客户端执行了<code>ctx.close()</code>  , 服务器端的<code>handlerRemoved()</code>事件就会触发,  当客户端异常关闭,服务器端的<code>exceptionCaught()</code>事件会触发</p>
+</li>
+</ol>
+<p>所以异常关闭事件时 <code>exceptionCaught()</code> , 正常关闭事件时 <code>handlerRemoved()</code></p>
+<h3 id="2-ctxwriteandflushmsg-与-ctxchannelwriteandflushmsg-区别">2. ctx.writeAndFlush(msg)  与 ctx.channel().writeAndFlush(msg) 区别</h3>
+<ol>
+<li><code>ChannelHandlerContext.writeAndFlush(msg);</code></li>
+</ol>
+<p>​	他的意思就是比如我的<code>pipeline.addlast(out1,in,out2)</code> ,此时比如in执行了<code>ChannelHandlerContext.writeAndFlush(msg);</code> ,此时解码器只会走out1 , 就是从开头到in, 也就是执行 <code>out1.write -&gt; ou1.flush</code></p>
+<ol start="2">
+<li><code>ChannelHandlerContext.channel().writeAndFlush(msg);</code></li>
+</ol>
+<p>​	而这个呢, 还是上面种情况 , 此时我in输出改成了 <code>ChannelHandlerContext.channel().writeAndFlush(msg);</code> 此时会从开头到最后走一遍 , 也就是会从 <code>out1.write -&gt; out2.write -&gt; ou1.flush -&gt; ou2.flush</code></p>
+<h3 id="3-ctxwrite-和-ctxflush-和-ctxwriteandflush">3.  ctx.write() 和 ctx.flush() 和 ctx.writeAndFlush()</h3>
+<p>write就是写 ,flush就是推到缓冲区发出去</p>
+<p><code>ctx.write()</code> 会调用输出流的 <code>write</code>方法  , 同时 flush也是 , 然后 <code>writeAndFlush</code>是两者的结合体,俩都执行</p>
+<h2 id="2-messagetobyteencodert-与-bytetomessagedecoder-编解码器">2. MessageToByteEncoder<T> 与 ByteToMessageDecoder 编解码器</h2>
+<p>这俩类实现了上面我们刚刚提到的俩编解码器的实现, 所以他基本上封装了他主要的方法 , 所以我们主要关注<code>io.netty.handler.codec.ByteToMessageDecoder#channelRead</code> 这个方法</p>
+<h3 id="1-messagetobyteencodert-编码器">1. MessageToByteEncoder<T> 编码器</h3>
+<blockquote>
+<p>​	ChannelOutboundHandlerAdapter which encodes message in a stream-like fashion from one message to an ByteBuf.</p>
+<p>看名字我们就知道他是将 发送出去的信息 转换成 <code>ByteBuf</code> 对象</p>
+</blockquote>
+<p>由于我们执行写出操作 , 比如 ctx.write() 或者 writeAndFlush操作, 会调用输出流的write方法</p>
+<pre><code class="language-java">@Override
+    public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+        ByteBuf buf = null;
+        try {
+            if (acceptOutboundMessage(msg)) {
+                @SuppressWarnings(&quot;unchecked&quot;)
+                // 我们发送的消息
+                I cast = (I) msg;
+                // 分配内存
+                buf = allocateBuffer(ctx, cast, preferDirect);
+                try {
+                    // 解码-&gt; 交给我们去写
+                    encode(ctx, cast, buf);
+                } finally {
+                    ReferenceCountUtil.release(cast);
+                }
+
+                if (buf.isReadable()) {
+                    ctx.write(buf, promise);
+                } else {
+                    buf.release();
+                    ctx.write(Unpooled.EMPTY_BUFFER, promise);
+                }
+                buf = null;
+            } else {
+                //ChannelOutboundInvoker 处理链
+                ctx.write(msg, promise);
+            }
+        } catch (EncoderException e) {
+            throw e;
+        } catch (Throwable e) {
+            throw new EncoderException(e);
+        } finally {
+            // 他会帮助我们释放一次,所以不需要我们手动释放我们输出的对象
+            if (buf != null) {
+                buf.release();
+            }
+        }
+    }
+
+public class IntegerEncoder extends MessageToByteEncoder&lt;Integer&gt; {
+    @Override
+   public void encode(ChannelHandlerContext ctx, Integer msg, ByteBuf out)
+           throws Exception {
+       out.writeInt(msg);
+   }
+}
+</code></pre>
+<h3 id="2-bytetomessagedecoder-解码器-重点">2. ByteToMessageDecoder  解码器 (重点)</h3>
+<p>他重写了 <code>ChannelInboundHandlerAdapter</code>  类 , 重写了父类好多方法 ,我们主要关注 <code>io.netty.handler.codec.ByteToMessageDecoder#channelRead</code> 这个方法</p>
+<p>基本核心的文档内容在下面 :</p>
+<blockquote>
+<p>​	ChannelInboundHandlerAdapter which decodes bytes in a stream-like fashion from one ByteBuf to an other Message type.</p>
+<p>就是将输入进来的<code>ByteBuff</code>转换成我们想要的数据类型对象 , 添加到他的集合中</p>
+</blockquote>
+<blockquote>
+<p>​	Generally frame detection should be handled earlier in the pipeline by adding a DelimiterBasedFrameDecoder, FixedLengthFrameDecoder, LengthFieldBasedFrameDecoder, or LineBasedFrameDecoder.</p>
+<p>通常，通过添加<strong>DelimiterBasedFrameDecoder</strong>、<strong>FixedLengthFrameDecoder</strong>、<strong>LengthFieldBasedFrameDecoder</strong>或<strong>LineBasedFrameDecoder</strong>，可以在管道中更早地处理帧检测。</p>
+</blockquote>
+<p><code>io.netty.handler.codec.ByteToMessageDecoder#channelRead</code></p>
+<pre><code class="language-java">@Override
+public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    // 判断 , 他是不是ByteBuf 类型
+    if (msg instanceof ByteBuf) {
+        CodecOutputList out = CodecOutputList.newInstance();
+        try {
+            // 转换一下
+            ByteBuf data = (ByteBuf) msg;
+            first = cumulation == null;
+            if (first) {
+                // 第一次就是我们的输入对象 , cumulation是一个ByteBuf对象
+                cumulation = data;
+            } else {
+                // 以后就是在原来基础上的ByteBuf,处理未消费的可能
+                cumulation = cumulator.cumulate(ctx.alloc(), cumulation, data);
+            }
+            // 调用解码方法
+            callDecode(ctx, cumulation, out);
+        } catch (DecoderException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DecoderException(e);
+        } finally {
+            // 读完就要释放 ,所以一般不需要我们手动释放
+            if (cumulation != null &amp;&amp; !cumulation.isReadable()) {
+                numReads = 0;
+                cumulation.release();
+                cumulation = null;
+            } else if (++ numReads &gt;= discardAfterReads) {
+               ...
+            }
+            ...
+        }
+    } else {
+        // 传递给下一个
+        ctx.fireChannelRead(msg);
+    }
+}
+</code></pre>
+<p><code>io.netty.handler.codec.ByteToMessageDecoder#callDecode</code>  方法 , 其中<code>....</code>代表忽略,太简单了</p>
+<pre><code class="language-java">protected void callDecode(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out) {
+    try {
+        // 当可读一直执行 , 就是读指针&lt;写指针
+        while (in.isReadable()) {
+            // 一直观察out数组是否有数据
+            int outSize = out.size();
+            if (outSize &gt; 0) {
+                // 有就传递给下一个处理器
+                fireChannelRead(ctx, out, outSize);
+                // 清空out数组
+                out.clear();
+               	... 
+                //顺便设置一下
+                outSize = 0;
+            }
+
+            int oldInputLength = in.readableBytes();
+            
+            // 调用方法
+            decodeRemovalReentryProtection(ctx, in, out);
+          
+           	...
+        }
+    } catch (Exception cause) {
+        ....
+    }
+}
+</code></pre>
+<p><code>io.netty.handler.codec.ByteToMessageDecoder#decodeRemovalReentryProtection</code> 方法</p>
+<pre><code class="language-java">final void decodeRemovalReentryProtection(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out){
+        decodeState = STATE_CALLING_CHILD_DECODE;
+        try {
+            // 执行解码过程 , 就是我们重写的方法
+            decode(ctx, in, out);
+        } finally {
+          ....
+        }
+    }
+</code></pre>
+<p><code>io.netty.handler.codec.ByteToMessageDecoder#decode</code> 抽象方法需要我们去实现</p>
+<pre><code class="language-java">protected abstract void decode(ChannelHandlerContext ctx, ByteBuf in, List&lt;Object&gt; out) throws Exception;
+</code></pre>
+<h2 id="3-messagetomessagedecodert-和-messagetomessageencodert-编解码器">3. MessageToMessageDecoder<T> 和 MessageToMessageEncoder<T> 编解码器</h2>
+<h3 id="1-messagetomessageencodert-编码器">1. MessageToMessageEncoder<T>  编码器</h3>
+<blockquote>
+<p>​	ChannelOutboundHandlerAdapter which encodes from one message to an other message For example here is an implementation which decodes an Integer to an String.</p>
+<p>​	他继承了 <code>ChannelOutboundHandlerAdapter</code> 类 , 所以是一个输出流  , 编码器 ,</p>
+<p>​	这里的泛型指的是输入端  , out里添加输出 , 这个不管你是啥, 一般情况都是ByteBuf对象</p>
+</blockquote>
+<pre><code class="language-java">public class IntegerToStringEncoder extends
+       MessageToMessageEncoder&lt;Integer&gt; {
+
+    // 差不多,很简单
+   @Override
+   public void encode(ChannelHandlerContext ctx, Integer message, List&lt;Object&gt; out)
+           throws Exception {
+       out.add(message.toString());
+   }
+}
+</code></pre>
+<h3 id="2-messagetomessagedecodert-解码器">2. MessageToMessageDecoder<T>  解码器</h3>
+<blockquote>
+<p>​	这里的泛型指的是输入端 , 输出中添加你想添加的对象</p>
+</blockquote>
+<p>重写下面的方法就行 ,下面这个例子表示的是输入是String, 输出是Int 类型</p>
+<pre><code class="language-java">public class StringToIntegerDecoder extends
+       MessageToMessageDecoder&lt;String&gt; {
+
+    @Override
+   public void decode(ChannelHandlerContext ctx, String message,
+                      List&lt;Object&gt; out) throws Exception {
+       out.add(message.length());
+   }
+}
+</code></pre>
+<h2 id="4-simplechannelinboundhandlert">4 . SimpleChannelInboundHandler<T></h2>
+<p>T是我们已经解码后的类型 , 他会将解码后的类型传递给我们 ,</p>
+<p>同时他并不需要我们手动释放, 他实现了<code>ChannelInboundHandlerAdapter</code> 类 ,</p>
+<p>基本上他是不需要我们做类型转换的 ,专注于实现我们的方法<code>channelRead0</code></p>
+<pre><code class="language-java">@Override0
+public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+	// 每次都会release初始化为true
+    boolean release = true;
+    try {
+        // 判断类型,因为SimpleChannelInboundHandler有一个泛型T, 就是判断和他记录的类型是否相同
+        if (acceptInboundMessage(msg)) {
+            I imsg = (I) msg;
+            // 这个就是我们写的业务逻辑
+            channelRead0(ctx, imsg);
+        } else {
+            release = false;
+            // 不是类型就传递给下一个
+            ctx.fireChannelRead(msg);
+        }
+    } finally {
+    	// 最后会手动给我们释放 ,所以我们不需要人工去释放,会造成不必要的浪费
+        if (autoRelease &amp;&amp; release) {
+            ReferenceCountUtil.release(msg);
+        }
+    }
+}
+</code></pre>
+
+								<span id="footnote"></span>
+								<div id="warn"></div>
+							</div>
+							<div class="toc-container"><ul class="markdownIt-TOC">
+<li>
+<ul>
+<li><a href="#1-channelinboundhandleradapter-channeloutboundhandleradapter-%E6%A0%B8%E5%BF%83%E5%AE%9E%E7%8E%B0%E7%B1%BB">1. ChannelInboundHandlerAdapter &amp; ChannelOutboundHandlerAdapter  - 核心实现类</a>
+<ul>
+<li><a href="#1-api-%E6%96%B9%E6%B3%95">1. API 方法</a></li>
+<li><a href="#1-exceptioncaught-%E5%92%8C-handlerremoved-%E4%BA%8B%E4%BB%B6%E4%BD%95%E6%97%B6%E8%A7%A6%E5%8F%91">1. exceptionCaught() 和  handlerRemoved()  事件何时触发</a></li>
+<li><a href="#2-ctxwriteandflushmsg-%E4%B8%8E-ctxchannelwriteandflushmsg-%E5%8C%BA%E5%88%AB">2. ctx.writeAndFlush(msg)  与 ctx.channel().writeAndFlush(msg) 区别</a></li>
+<li><a href="#3-ctxwrite-%E5%92%8C-ctxflush-%E5%92%8C-ctxwriteandflush">3.  ctx.write() 和 ctx.flush() 和 ctx.writeAndFlush()</a></li>
+</ul>
+</li>
+<li><a href="#2-messagetobyteencodert-%E4%B8%8E-bytetomessagedecoder-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8">2. MessageToByteEncoder<T> 与 ByteToMessageDecoder 编解码器</a>
+<ul>
+<li><a href="#1-messagetobyteencodert-%E7%BC%96%E7%A0%81%E5%99%A8">1. MessageToByteEncoder<T> 编码器</a></li>
+<li><a href="#2-bytetomessagedecoder-%E8%A7%A3%E7%A0%81%E5%99%A8-%E9%87%8D%E7%82%B9">2. ByteToMessageDecoder  解码器 (重点)</a></li>
+</ul>
+</li>
+<li><a href="#3-messagetomessagedecodert-%E5%92%8C-messagetomessageencodert-%E7%BC%96%E8%A7%A3%E7%A0%81%E5%99%A8">3. MessageToMessageDecoder<T> 和 MessageToMessageEncoder<T> 编解码器</a>
+<ul>
+<li><a href="#1-messagetomessageencodert-%E7%BC%96%E7%A0%81%E5%99%A8">1. MessageToMessageEncoder<T>  编码器</a></li>
+<li><a href="#2-messagetomessagedecodert-%E8%A7%A3%E7%A0%81%E5%99%A8">2. MessageToMessageDecoder<T>  解码器</a></li>
+</ul>
+</li>
+<li><a href="#4-simplechannelinboundhandlert">4 . SimpleChannelInboundHandler<T></a></li>
+</ul>
+</li>
+</ul>
+</div>
+						</div>
+						<div id="fullPage"><canvas id="canvas"></canvas></div>
+				</article>
+				<div id="eof"><span>EOF</span></div>
+				<div class="round-shape-one"></div>
+				<section>
+					<div class="doc_comments">
+							<div id="valine-container"></div>
+					</div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<script>
+		"use strict";
+		! function () {
+			for (var n = document.getElementsByTagName("pre"), e = n.length, s = 0; s < e; s++) {
+				n[s].innerHTML = '<span class="line-number"></span>' + n[s].innerHTML + '<span class="cl"></span>';
+				for (var a = n[s].innerHTML.split(/\n/).length, r = 0; r < a - 1; r++) {
+					n[s].getElementsByTagName("span")[0].innerHTML += "<span>" + (r + 1) + "</span>"
+				}
+			}
+		}();
+		let mainNavLinks = document.querySelectorAll(".markdownIt-TOC a");
+		window.addEventListener("scroll", event => {
+			let fromTop = window.scrollY;
+			mainNavLinks.forEach((link, index) => {
+				let section = document.getElementById(decodeURI(link.hash).substring(1));
+				let nextSection = null
+				if (mainNavLinks[index + 1]) {
+					nextSection = document.getElementById(decodeURI(mainNavLinks[index + 1].hash).substring(
+						1));
+				}
+				if (section.offsetTop <= fromTop) {
+					if (nextSection) {
+						if (nextSection.offsetTop > fromTop) {
+							link.classList.add("currentToc");
+						} else {
+							link.classList.remove("currentToc");
+						}
+					} else {
+						link.classList.add("currentToc");
+					}
+				} else {
+					link.classList.remove("currentToc");
+				}
+			});
+		});
+		var list = document.querySelectorAll(".katex");
+		for (var i = 0; i < list.length; i++) {
+			list[i].style.display = "unset"
+		};
+		var h = document.documentElement,
+			b = document.body,
+			st = "scrollTop",
+			sh = "scrollHeight",
+			progress = document.querySelector(".progress"),
+			scroll;
+		document.addEventListener("scroll", function () {
+			scroll = (h[st] || b[st]) / ((h[sh] || b[sh]) - h.clientHeight) * 100;
+			progress.style.setProperty("--scroll", scroll + "%")
+		});
+		var wxScale = new WxScale({
+			fullPage: document.querySelector("#fullPage"),
+			canvas: document.querySelector("#canvas")
+		});
+		var imgBox = document.querySelectorAll("#md_block img");
+		for (var i = 0; i < imgBox.length; i++) {
+			imgBox[i].onclick = function (e) {
+				wxScale.start(this)
+			}
+		};
+	</script>
+	<style>
+		#magnifyImg {
+			position: fixed;
+			left: 0;
+			top: 0;
+			text-align: center;
+			width: 100%;
+			display: none;
+			z-index: 9999
+		}
+
+		#magnifyImg img {
+			object-fit: contain;
+			background: #eaecef;
+			padding: 15px;
+			border-radius: 10px;
+			height: auto;
+			width: auto;
+			vertical-align: middle
+		}
+	</style>
+	<a id="scrollUp"href="#top"style="position: fixed; z-index: 2147483647; display: block;"></a><div class="footer animated fadeInDown"><div class="site_footer"><div class="mysocials"><div class="my_socials"><a href="https://github.com/Anthony-Dong"title="github"><i class="iconfont icon-github"></i></a><a href="fanhaodong516@gmail.com"title="envelope"><i class="iconfont icon-envelope"></i></a></div></div><div class="copyright"id="copyright">You Are My Everything. <a href="mailto:574986060@qq.com" target="blank">Send Email</a>Copyright©2018-2020<a href="https://anthony-dong.github.io"style="margin:0;">Serence</a>.</div><span style="display: inline;margin-right:15px;">👁<strong><span id="count-page">168271</span></strong></span><span id="busuanzi_container_page_pv"style="display: inline;"><span>📚<strong>186</strong>posts</span></div></div><script>console.log("\n %c \u26a1Anthony-Dong's Blog:https://anthony-dong.gitee.io ,Github:https://github.com/Anthony-Dong ,Email:574986060@qq.com ,有事情欢迎联系. \n\n","color: #ffffff; background: rgba(49, 49, 49, 0.85); padding:5px 0;border-radius:5px;",);</script>
+	<script type="text/javascript" async src="https://anthony-dong.github.io/media/js/prism.js"></script>
+</body>
+</html>
