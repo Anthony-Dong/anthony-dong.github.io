@@ -1,6 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>关于容器化的思考</title>
+    <url>/2021/02/28/hello-world/</url>
+    <content><![CDATA[<p>​    我最近半个月内一直在看docker，但是看完后发现，它只是个cli的工具，cli提供了build，push，pull，run等功能，包含了构建镜像，打包发布，拉取，运行。其实不考虑这些，对于公司级别的cicd工具来说，也是这几个流程，比如说我一个git仓库地址，再通过Jenkins等ci工具构建，构建完成后发布到发布机器上，等我们去发布的时候，就是拉取这个zip包/或者镜像，解压/运行，程序去启动后不在考虑范围内，这个过程是最简单最常见的。</p>
+<span id="more"></span>
+<p>所以docker只是提供了一个工具进行这个流程。换了一种承载方式。换句话说它确定了<strong>软件究竟应该通过什么样的方式进行交付</strong>。docker的创新就是将交付转变为容器/镜像，解决了开发人员的痛点。</p>
+<p>本篇不讨论，定义和管理容器技术的OpenStack &amp; kubernetes &amp; Docker Swarm等！</p>
+<p>ps：学习这些只是看看自己适不适合学习容器化方向的技术，每一个技术背后的技术都很多，如果只是使用，那么了解即可，正如<a href="https://mobyproject.org/">moby</a>官网上说的一样。为啥要学习容器化技术呢，虽然作为一个后端开发，不需要掌握容器化技术，但是了解只是为了思考和成长！云原生开发工程师需要掌握的太多了，所以切记不能随大流。</p>
+<h2 id="1、什么是容器化"><a href="#1、什么是容器化" class="headerlink" title="1、什么是容器化"></a>1、什么是容器化</h2><p>容器化是应用程序级别的<a href="https://www.alibabacloud.com/zh/knowledge/what-is-virtualization">虚拟化</a>，允许单个内核上有多个独立的用户空间实例（它是一个进程，但是进程内部确实一个完整的运行环境）。这些实例称为容器。</p>
+<p>那么虚拟化是什么？虚拟化是指硬件虚拟化，也就是在操作系统（OS）中创建虚拟机。</p>
+<p>虚拟化：<strong>虚拟机监视器（Hypervisor）</strong>是安装在物理硬件上的软件层，可以将物理机通过<a href="https://www.alibabacloud.com/zh/knowledge/what-is-virtualization">虚拟化</a>分成许多虚拟机。这样多个操作系统可以在一个物理硬件上同时运行。安装在虚拟机上的操作系统称为虚拟操作系统，也称为实例。有虚拟机监视器运行的硬件称为主机。虚拟机管理控制台（也称为虚拟机管理员（VMM））是一种计算机软件，可以轻松管理虚拟机。关于虚拟机的分类：<a href="https://www.alibabacloud.com/zh/knowledge/what-is-hypervisor">https://www.alibabacloud.com/zh/knowledge/what-is-hypervisor</a></p>
+<p>关于虚拟机的实现，相关讨论：<a href="https://www.zhihu.com/question/20848931">https://www.zhihu.com/question/20848931</a> </p>
+<p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/72b1b7a471434772b16648798ce625f8.png" alt="image-20201006111014758"></p>
+<p>上图是虚拟机与容器的区别！，详细可以看：<a href="https://www.alibabacloud.com/zh/knowledge/difference-between-container-and-virtual-machine">https://www.alibabacloud.com/zh/knowledge/difference-between-container-and-virtual-machine</a> ， 可以发现每个虚拟机都有单独的操作系统，而容器是不需要的。但是容器真的不需要单独的操作系统吗，你还记得dockerfile中每一个镜像都需要制定一个运行环境。那么上面这个图是错误的吗？？？</p>
+<p>其实很多人应该注意到，这个链接有解释：<a href="https://stackoverflow.com/questions/32841982/how-can-docker-run-distros-with-different-kernels">https://stackoverflow.com/questions/32841982/how-can-docker-run-distros-with-different-kernels</a></p>
+<blockquote>
+<p>There’s no kernel inside a container. Even if you install a kernel, it won’t be loaded when the container starts. The very purpose of a container is to isolate processes without the need to run a new kernel.</p>
+</blockquote>
+<p>容器内没有内核。即使您安装了内核，在容器启动时也不会加载该内核。容器的真正目的是在不运行新内核的情况下隔离进程。</p>
+<p>那么容器实现的技术，这里也不详细展开了，主要是依赖于linux系统本身自带的隔离功能！</p>
+<img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/1e9e938081f44249b55427da8a9c5626.png" alt="image-20201006121328495" style="zoom:50%;" />
+
+<p>主要核心就是资源隔离(做到容器互不影响很关键)，使用技术就是 cgroup 对于cpu、memory的限制，以及namespace等，其实这些技术都是操作系统提供的，对于docker的作者也是基于这些进行实现的，所以docker的成功是可能就是机遇吧，而不是docker的技术！！docker公司前身就是个云服务提供商！</p>
+<p>有兴趣可以看看这篇文章：<a href="http://dockone.io/article/8832">容器发展简史</a> 以及 <a href="https://zhuanlan.zhihu.com/p/85528062">容器的隔离与限制</a>， <a href="https://tech.meituan.com/2015/03/31/cgroups.html">Cgroup介绍</a></p>
+<p>做云原生开发工程师，需要掌握Kubernetes，Docker，Service Mesh等领域相关的知识，并且有实践，交付经验，道阻且长，本人也是兴趣。</p>
+<h2 id="2、容器化发展历史"><a href="#2、容器化发展历史" class="headerlink" title="2、容器化发展历史"></a>2、容器化发展历史</h2><blockquote>
+<p>​    这一篇主要是介绍，容器化走过这么多年，难道真的是因为docker出生才火的吗，还是时代的趋势！虽然 docker 把容器技术推向了巅峰，但容器技术却不是从 docker 诞生的。</p>
+</blockquote>
+<h3 id="1、容器化发展历史"><a href="#1、容器化发展历史" class="headerlink" title="1、容器化发展历史"></a>1、容器化发展历史</h3><p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/62aecfeb27d44087ad54c7565808b883.png" alt="image-20201006115550572"></p>
+<p><strong>1、Chroot Jail</strong><br>就是我们常见的 chroot 命令的用法。它在 1979 年的时候就出现了，被认为是最早的容器化技术之一。它可以把一个进程的文件系统隔离起来。</p>
+<p><strong>2、The FreeBSD Jail</strong><br>Freebsd Jail 实现了操作系统级别的虚拟化，它是操作系统级别虚拟化技术的先驱之一。</p>
+<p><strong>3、Linux VServer</strong><br>使用添加到 Linux 内核的系统级别的虚拟化功能实现的专用虚拟服务器。</p>
+<p><strong>4、Solaris Containers</strong><br>它也是操作系统级别的虚拟化技术，专为 X86 和 SPARC 系统设计。Solaris 容器是系统资源控制和通过 “区域” 提供边界隔离的组合。</p>
+<p><strong>5、OpenVZ</strong><br>OpenVZ 是一种 Linux 中操作系统级别的虚拟化技术。 它允许创建多个安全隔离的 Linux 容器，即 VPS。</p>
+<p><strong>6、Process Containers</strong><br>Process 容器由 Google 的工程师开发，一般被称为 cgroups。</p>
+<p><strong>7、LXC</strong><br>2008年，通过将 Cgroups 的资源管理能力和 Linux Namespace 的视图隔离能力组合在一起，LXC（Linux Container）这样的完整的容器技术出现在了 Linux 内核当中。（0.9一下的低版本的docker就是利用的这个技术！！）</p>
+<p><strong>8、Warden</strong><br>在最初阶段，Warden 使用 LXC 作为容器运行时。 如今已被 CloudFoundy （ VMware 公司于 2011 年宣布了这个项目的开源，第一次对 PaaS 的概念完成了清晰而完整的定义，PaaS 项目通过对应用的直接管理、编排和调度让开发者专注于业务逻辑而非基础设施）取代。</p>
+<p><strong>9、LMCTFY</strong><br>LMCTY 是 Let me contain that for you 的缩写。它是 Google 的容器技术栈的开源版本。<br>Google 的工程师一直在与 docker 的 libertainer 团队合作，并将 libertainer 的核心概念进行抽象并移植到此项目中。该项目的进展不明，估计会被 libcontainer 取代。（0.9以上的高版本的docker就是利用的libcontainer，其实就是对于lxc的封装，用go写的，开发起来比较方便）</p>
+<p><strong>10、Docker</strong></p>
+<p>Docker 是一个可以将应用程序及其依赖打包到几乎可以在任何服务器上运行的容器的工具。（<strong>dotCloud</strong>公司开源的自己的容器化技术，最后公司直接改名字叫为docker了）</p>
+<p><strong>11、Docker-Swarm</strong></p>
+<p>Docker公司在2014年12月的DockerCon上发布Swarm的举动，你可以很轻松的一个命令，就可以将容器调度在任意一台Swarm集群的机器上。docker的衰败也是因为在容器编排技术之争中跌落神坛的。</p>
+<p><strong>12、Fig</strong></p>
+<p>docker的大紫大红，后来收购了Fig项目，他可以解决容器之间依赖的问题，也就是当前的docker-compose项目，前身就是Fig。</p>
+<p>docker成功后，收购了很多好的项目，专门负责处理容器网络的SocketPlane项目，专门负责处理容器存储的Flocker项目，专门给Docker集群做图形化管理界面和对外提供云服务的Tutum项目。</p>
+<p><strong>13、RKT</strong><br>RKT 是 Rocket 的缩写，它是一个专注于安全和开放标准的应用程序容器引擎。（原来docker的合作伙伴CoreOS公司，CoreOS公司自己研发的容器化工具）</p>
+<p><strong>13、终结者Kubernetes</strong></p>
+<p>​    2017年,  基础设施领域的翘楚Google公司突然发力，正式宣告了一个名叫Kubernetes项目的诞生。这个项目，不仅挽救了当时的CoreOS和RedHat，还如同当年Docker项目的横空出世一样，再一次改变了整个容器市场的格局。并将 CNCF 这个以“云原生”为关键词的组织和生态推向了巅峰。</p>
+<h3 id="2、容器化的一些名词"><a href="#2、容器化的一些名词" class="headerlink" title="2、容器化的一些名词"></a>2、容器化的一些名词</h3><p>其实看到这里，我们发现容器化技术发展了这么多年，技术变更这么快的年代，最可怕的是，我学了一门技术，立马被淘汰了，所以docker也是，为了保障docker的标准化，做出了一系列的努力。</p>
+<p><strong>1、Docker &amp; LXC</strong><br>Docker 的第一个执行环境是 LXC，但从版本 0.9 开始 LXC 被 libcontainer 取代。</p>
+<p><strong>2、Docker &amp; libcontainer</strong><br>Libcontainer 为 docker 封装了 Linux 提供的基础功能，如 cgroups，namespaces，netlink 和 netfilter 等</p>
+<p><strong>3、2015 - Docker ＆ runC</strong></p>
+<p>2015 年，docker 发布了 runC，一个轻量级的跨平台的容器运行时。 这基本上就是一个命令行小工具，可以直接利用 libcontainer 运行容器，而无需通过 docker engine。runC 的目标是使标准容器在任何地方都可用。</p>
+<p><strong>4、Docker &amp; The Open Containers Initiative(OCI)</strong><br>OCI 是一个轻量级的开放式管理架构，由 docker，CoreOS 和容器行业的其他领导厂商于 2015 年建立。它维护一些项目，如 runC ，还有容器运行时规范和镜像规范。OCI 的目的是围绕容器行业制定标准，比如使用 docker 创建的容器可以在任何其他容器引擎上运行。</p>
+<p><strong>5、2016 - Docker &amp; containerd</strong></p>
+<p>2016年，Docker 分拆了 containerd，并将其捐赠给了社区。将这个组件分解为一个单独的项目，使得 docker 将容器的管理功能移出 docker 的核心引擎并移入一个单独的守护进程(即 containerd)。</p>
+<p><strong>6、Docker Components</strong><br>分拆完 containerd 后，docker 各组件的关系如下图所示：</p>
+<p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/de0fb51068364f6181c014235defe9bd.png" alt="img"></p>
+<p><strong>7、Docker 如何运行一个容器？</strong></p>
+<ol>
+<li>Docker 引擎创建容器镜像(oci规范)</li>
+<li>将容器映像传递给 containerd</li>
+<li>containerd 调用 containerd-shim</li>
+<li>containerd-shim 使用 runC 来运行容器</li>
+<li>containerd-shim 允许运行时(本例中为 runC)在启动容器后退出</li>
+</ol>
+<p>该模型带来的最大好处是在升级 docker 引擎时不会中断容器的运行。</p>
+<p><strong>8、2017 - 容器成为主流</strong></p>
+<p>2017 年是容器成为主流技术的一年，这就是为什么 docker 在 Linux 之外支持众多平台的原因（Docker for Mac，Docker for Windows，Docker for AWS，GCP 等）。</p>
+<p>当容器技术被大众接受后，Docker 公司意识到需要新的生产模型，这就是为什么它开始 Moby 项目。最为go语言开源项目的top3的项目，一开始我也不知道moby项目是做啥了。。。</p>
+<p>其实可以发现，在这个百花齐放的操作系统平台上，如何不进行case by case，重复造轮子，就是拆分，通用组件，现成的直接使用就行了。moby就是这个</p>
+<h3 id="3、容器化做的一些转变"><a href="#3、容器化做的一些转变" class="headerlink" title="3、容器化做的一些转变"></a>3、容器化做的一些转变</h3><p>主要还是开源出moby项目，<a href="https://github.com/moby/moby">https://github.com/moby/moby</a></p>
+<p><strong>（1）Containerd</strong><br>Containerd 是 docker 基于行业标准创建的核心容器运行时。它可以用作 Linux 和 Windows 的守护进程，并管理整个容器生命周期。</p>
+<p><strong>（2）Linuxkit</strong><br>Linuxkit 是 Moby 项目中的另一个组件，它是为容器构建安全、跨平台、精简系统的工具。目前已经支持的本地 hypervisor 有 hyper-v 和 vmware。支持的云平台有 AWS、Azure 等。</p>
+<p><strong>（3）Infrakit</strong><br>Infrakit 也是 Moby 项目的一部分。它是创建和管理声明式、不可变和自我修复基础架构的工具包。<br>Infrakit 旨在自动化基础架构的设置和管理，以支持分布式系统和更高级别的容器编排系统。Infrakit 对于像 Docker Swarm 和 Kubernetes 这样的编排工具或跨越 AWS 等公共云创建自动缩放群集的用例很有用。</p>
+<p><strong>（4）Libnetwork</strong><br>Libnetwork 是用 Go 语言实现的容器网络管理项目。它的目标是定义一个容器网络模型(CNM)，<br>并为应用程序提供一致的编程接口以及网络抽象。这样就可以满足容器网络的 “可组合” 需求。</p>
+<p><strong>（5）Docker &amp; Docker Swarm</strong><br>Docker Swarm 是一个在 docker 引擎中构建的编排工具。从 docker 1.12 开始它就作为一个独立的工具被原生包含在 docker engine 中。我们可以使用 docker cli 通过 docker swarm 创建群集，并部署和管理应用程序和服务。下图描述了 docker swarm 在 docker 体系中的作用(此图来自互联网)：</p>
+<p><strong>（6）Docker＆Kubernetes</strong><br>在 docker swarm 与 kubernetes 的竞争中，显然是 kubernetes 占据了优势。所以 docker 紧急掉头，开始原生的支持与 kubernetes 的集成。这可是 2017 年容器界的一大新闻啊！至此，docker 用户和开发人员可以自由地选择使用 kubernetes 或是 swarm 执行容器的编排工作。我们可以认为 docker 与 kubernetes 联姻了。</p>
+<p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/5e856640bcb343b6aa8e6dc1326988d2.png" alt="img"></p>
+<p>文章参考： <a href="https://www.cnblogs.com/along21/p/9183609.html">https://www.cnblogs.com/along21/p/9183609.html</a></p>
+<p>茫茫的容器化技术，不是一篇文章能说清楚的，理解其本质也不知是说，我了解namespcae和cgropus就能说了解的。</p>
+<h2 id="3、容器化技术解决了什么"><a href="#3、容器化技术解决了什么" class="headerlink" title="3、容器化技术解决了什么"></a>3、容器化技术解决了什么</h2><p>我想很多公司都在使用云服务商提供的虚拟机，其中资源浪费简直是不能看，基本资源利用率在80-90%之间，所以急需一个轻量级的运行时。<strong>容器</strong>提供了将应用程序的代码、运行时、系统工具、系统库和配置打包到一个<strong>实例</strong>中的标准方法。容器共享一个<strong>内核</strong>（操作系统），它安装在硬件上。</p>
+<h3 id="好处：（我觉得很多人都知道）"><a href="#好处：（我觉得很多人都知道）" class="headerlink" title="好处：（我觉得很多人都知道）"></a>好处：（我觉得很多人都知道）</h3><ul>
+<li><p><strong>轻便</strong><br>容器占用的服务器空间比虚拟机少，通常只需几秒钟即可启动。</p>
+</li>
+<li><p><strong>弹性</strong><br>容器具有高弹性，不需要分配给定数量的资源。这意味着容器能够更有效地动态使用服务器中的资源。当一个容器上的需求减少时，释放额外的资源供其他容器使用。</p>
+</li>
+<li><p><strong>密度</strong><br>密度是指一次可以运行单个物理服务器的对象数。容器化允许创建密集的环境，其中主机服务器的资源被充分利用但不被过度利用。与传统虚拟化相比，容器化允许更密集的环境容器不需要托管自己的操作系统。</p>
+</li>
+<li><p><strong>性能</strong><br>当资源压力很大时，应用程序的性能远远高于使用虚拟机管理程序的容器。因为使用传统的虚拟化，客户操作系统还必须满足其自身的内存需求，从主机上获取宝贵的RAM。</p>
+</li>
+<li><p><strong>维护效率</strong><br>只有一个操作系统内核，操作系统级别的更新或补丁只需要执行一次，以使更改在所有容器中生效。这使得服务器的操作和维护更加高效。</p>
+</li>
+<li><p><strong>方便应用程序管理</strong></p>
+<p>容器受益者，主要还是环境隔离，比如一个应用程序，1、需要supervise启动应用程序(守护程序)，2、需要logstash/Filebeat收集日志，3、需要nginx/其他Sadicar进行一些服务治理的功能，服务发现/限流/熔断等。4、还需要很多运行环境。所以对于快速发展的公司来说，sre如果还是手动的创建虚拟机，那么和容器带来的时间不是一个量级的。5、解决了开发人员不需要登陆到机子上查看物理机信息了。</p>
+</li>
+<li><p><strong>省钱，省机器</strong></p>
+<p>虚拟机资源利用率太低了，但是配合k8s编排工具，很好的解决了资源的浪费。但是k8s技术对于公司也是一个挑战，玩不好服务不稳定，带来的损失还是不如走物理机/虚拟机。</p>
+</li>
+</ul>
+<h2 id="4、容器化-云原生的技术"><a href="#4、容器化-云原生的技术" class="headerlink" title="4、容器化/云原生的技术"></a>4、容器化/云原生的技术</h2><p>1、OCI（Open Container Initiative） 标准，隔离了容器镜像与runtine的关系，提供的规范标准，</p>
+<p>2、CNCF全称Cloud Native Computing Foundation（云原生计算基金会），成立于 2015 年7月21日，组织内技术栈：<a href="https://www.cncf.io/projects/">https://www.cncf.io/projects/</a>，致力于：</p>
+<ul>
+<li>容器化包装。</li>
+<li>通过中心编排系统的动态资源管理。</li>
+<li>面向微服务。(核心还是切入到真实业务开发中)</li>
+</ul>
+<p>3、Linux资源隔离技术了解</p>
+<p>4、Kubernetes熟悉，有Operator扩展或相关产品研发经验优先</p>
+<p>5、 Docker的相关的网络和存储技术，有生产环境的实践</p>
+<p>6、云原生技术栈，Prometheus，Envoy等，更多的还是CNCF的毕业的项目的。</p>
+<p>7、更多的还是 Iass，Pass系统开发者经验，空谈技术不务实，就是最扯淡的。</p>
+<p>发现有些无缘！！</p>
+<h2 id="5、容器化技术面临的挑战"><a href="#5、容器化技术面临的挑战" class="headerlink" title="5、容器化技术面临的挑战"></a>5、容器化技术面临的挑战</h2><p>作为一种轻量级的虚拟化技术，容器使用方便、操作便捷，大大提高开发人员的工作效率，并得到业内的广泛使用。但与此同时，容器安全事故频发，包括不安全的镜像源、容器入侵事件、运行环境的安全问题等等。</p>
+<h3 id="1-不安全的镜像源"><a href="#1-不安全的镜像源" class="headerlink" title="1. 不安全的镜像源"></a>1. 不安全的镜像源</h3><p>开发者通常会在 Docker 官方的 Docker Hub 仓库下载镜像，这些镜像一部分来源于开发镜像内相应软件的官方组织，还有大量镜像来自第三方组织甚至个人。从这些镜像仓库中获取镜像的同时，也带来潜在的安全风险。例如，下载镜像内软件本身是否就包含漏洞，下载的镜像是否被恶意植入后门，镜像在传输过程中是否被篡改。</p>
+<h3 id="2-容器入侵事件"><a href="#2-容器入侵事件" class="headerlink" title="2. 容器入侵事件"></a>2. 容器入侵事件</h3><p>由 docker 本身的架构与机制可能产生的问题，这一攻击场景主要产生在黑客已经控制了宿主机上的一些容器（或者通过在公有云上建立容器的方式获得这个条件），然后对宿主机或其他容器发起攻击来产生影响。</p>
+<h3 id="3-运行环境的安全"><a href="#3-运行环境的安全" class="headerlink" title="3. 运行环境的安全"></a>3. 运行环境的安全</h3><p>除 docker 本身存在的问题外，docker 运行环境存在的问题同样给 docker 的使用带来风险。</p>
+<p>由于容器是介于基础设施和平台之间的虚拟化技术，因此面向基础设施虚拟化的传统云安全解决方案无法完全解决前述安全问题。如以容器为支撑技术构建 DevOps 环境，就需要设计涵盖从容器镜像的创建到投产上线的整个生命周期的容器安全方案。</p>
+<h2 id="6、总结"><a href="#6、总结" class="headerlink" title="6、总结"></a>6、总结</h2><p>最后记住，这些所有的一切，只是为了提高研发效率！！！没有价值的代码都是无用代码，没有给企业带来价值，只有淘汰。所有的一切都是为了驱动企业快速发展，主要还是💰 or 价值。</p>
+<p>可以看看这个PPT：<a href="https://docs.qq.com/pdf/DU290V1dSU2NMTHlw">https://docs.qq.com/pdf/DU290V1dSU2NMTHlw</a></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://cloud-atlas.readthedocs.io/zh_CN/latest/index.html">云计算图志</a></p>
+<p><a href="https://www.infoq.cn/article/SS6SItkLGoLExQP4uMr5">https://www.infoq.cn/article/SS6SItkLGoLExQP4uMr5</a></p>
+<p><a href="https://www.infoq.cn/article/R1p3H3_29f4TYImExsyw">https://www.infoq.cn/article/R1p3H3_29f4TYImExsyw</a></p>
+<p><a href="https://jimmysong.io/kubernetes-handbook/cloud-native/cncf.html">CNCF chinal</a></p>
+<p><a href="https://cloud.tencent.com/developer/article/1080886">命令式和声明式区别</a></p>
+]]></content>
+  </entry>
+  <entry>
     <title>docker</title>
     <url>/2021/02/28/docker/</url>
     <content><![CDATA[<blockquote>
@@ -283,133 +410,6 @@
 <figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">➜  ~ docker ps -a -l</span><br><span class="line">CONTAINER ID        IMAGE               COMMAND             CREATED             STATUS              PORTS               NAMES</span><br><span class="line">bcdaea8354a6        7e6257c9f8d8        &quot;/bin/bash&quot;         2 minutes ago       Up 2 minutes                            happy_liskov</span><br><span class="line">➜  ~ docker commit bcdaea8354a6  demo-2</span><br><span class="line">sha256:350fbf288cb1a47a29e3d8e441e2814726de6faf54d044a585fb80b7a1f38f83</span><br></pre></td></tr></table></figure>
 
 <p>这个镜像就OK了，就可以使用 <code>demo-2</code>的镜像了</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>关于容器化的思考</title>
-    <url>/2021/02/28/hello-world/</url>
-    <content><![CDATA[<p>​    我最近半个月内一直在看docker，但是看完后发现，它只是个cli的工具，cli提供了build，push，pull，run等功能，包含了构建镜像，打包发布，拉取，运行。其实不考虑这些，对于公司级别的cicd工具来说，也是这几个流程，比如说我一个git仓库地址，再通过Jenkins等ci工具构建，构建完成后发布到发布机器上，等我们去发布的时候，就是拉取这个zip包/或者镜像，解压/运行，程序去启动后不在考虑范围内，这个过程是最简单最常见的。</p>
-<span id="more"></span>
-<p>所以docker只是提供了一个工具进行这个流程。换了一种承载方式。换句话说它确定了<strong>软件究竟应该通过什么样的方式进行交付</strong>。docker的创新就是将交付转变为容器/镜像，解决了开发人员的痛点。</p>
-<p>本篇不讨论，定义和管理容器技术的OpenStack &amp; kubernetes &amp; Docker Swarm等！</p>
-<p>ps：学习这些只是看看自己适不适合学习容器化方向的技术，每一个技术背后的技术都很多，如果只是使用，那么了解即可，正如<a href="https://mobyproject.org/">moby</a>官网上说的一样。为啥要学习容器化技术呢，虽然作为一个后端开发，不需要掌握容器化技术，但是了解只是为了思考和成长！云原生开发工程师需要掌握的太多了，所以切记不能随大流。</p>
-<h2 id="1、什么是容器化"><a href="#1、什么是容器化" class="headerlink" title="1、什么是容器化"></a>1、什么是容器化</h2><p>容器化是应用程序级别的<a href="https://www.alibabacloud.com/zh/knowledge/what-is-virtualization">虚拟化</a>，允许单个内核上有多个独立的用户空间实例（它是一个进程，但是进程内部确实一个完整的运行环境）。这些实例称为容器。</p>
-<p>那么虚拟化是什么？虚拟化是指硬件虚拟化，也就是在操作系统（OS）中创建虚拟机。</p>
-<p>虚拟化：<strong>虚拟机监视器（Hypervisor）</strong>是安装在物理硬件上的软件层，可以将物理机通过<a href="https://www.alibabacloud.com/zh/knowledge/what-is-virtualization">虚拟化</a>分成许多虚拟机。这样多个操作系统可以在一个物理硬件上同时运行。安装在虚拟机上的操作系统称为虚拟操作系统，也称为实例。有虚拟机监视器运行的硬件称为主机。虚拟机管理控制台（也称为虚拟机管理员（VMM））是一种计算机软件，可以轻松管理虚拟机。关于虚拟机的分类：<a href="https://www.alibabacloud.com/zh/knowledge/what-is-hypervisor">https://www.alibabacloud.com/zh/knowledge/what-is-hypervisor</a></p>
-<p>关于虚拟机的实现，相关讨论：<a href="https://www.zhihu.com/question/20848931">https://www.zhihu.com/question/20848931</a> </p>
-<p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/72b1b7a471434772b16648798ce625f8.png" alt="image-20201006111014758"></p>
-<p>上图是虚拟机与容器的区别！，详细可以看：<a href="https://www.alibabacloud.com/zh/knowledge/difference-between-container-and-virtual-machine">https://www.alibabacloud.com/zh/knowledge/difference-between-container-and-virtual-machine</a> ， 可以发现每个虚拟机都有单独的操作系统，而容器是不需要的。但是容器真的不需要单独的操作系统吗，你还记得dockerfile中每一个镜像都需要制定一个运行环境。那么上面这个图是错误的吗？？？</p>
-<p>其实很多人应该注意到，这个链接有解释：<a href="https://stackoverflow.com/questions/32841982/how-can-docker-run-distros-with-different-kernels">https://stackoverflow.com/questions/32841982/how-can-docker-run-distros-with-different-kernels</a></p>
-<blockquote>
-<p>There’s no kernel inside a container. Even if you install a kernel, it won’t be loaded when the container starts. The very purpose of a container is to isolate processes without the need to run a new kernel.</p>
-</blockquote>
-<p>容器内没有内核。即使您安装了内核，在容器启动时也不会加载该内核。容器的真正目的是在不运行新内核的情况下隔离进程。</p>
-<p>那么容器实现的技术，这里也不详细展开了，主要是依赖于linux系统本身自带的隔离功能！</p>
-<img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/1e9e938081f44249b55427da8a9c5626.png" alt="image-20201006121328495" style="zoom:50%;" />
-
-<p>主要核心就是资源隔离(做到容器互不影响很关键)，使用技术就是 cgroup 对于cpu、memory的限制，以及namespace等，其实这些技术都是操作系统提供的，对于docker的作者也是基于这些进行实现的，所以docker的成功是可能就是机遇吧，而不是docker的技术！！docker公司前身就是个云服务提供商！</p>
-<p>有兴趣可以看看这篇文章：<a href="http://dockone.io/article/8832">容器发展简史</a> 以及 <a href="https://zhuanlan.zhihu.com/p/85528062">容器的隔离与限制</a>， <a href="https://tech.meituan.com/2015/03/31/cgroups.html">Cgroup介绍</a></p>
-<p>做云原生开发工程师，需要掌握Kubernetes，Docker，Service Mesh等领域相关的知识，并且有实践，交付经验，道阻且长，本人也是兴趣。</p>
-<h2 id="2、容器化发展历史"><a href="#2、容器化发展历史" class="headerlink" title="2、容器化发展历史"></a>2、容器化发展历史</h2><blockquote>
-<p>​    这一篇主要是介绍，容器化走过这么多年，难道真的是因为docker出生才火的吗，还是时代的趋势！虽然 docker 把容器技术推向了巅峰，但容器技术却不是从 docker 诞生的。</p>
-</blockquote>
-<h3 id="1、容器化发展历史"><a href="#1、容器化发展历史" class="headerlink" title="1、容器化发展历史"></a>1、容器化发展历史</h3><p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/62aecfeb27d44087ad54c7565808b883.png" alt="image-20201006115550572"></p>
-<p><strong>1、Chroot Jail</strong><br>就是我们常见的 chroot 命令的用法。它在 1979 年的时候就出现了，被认为是最早的容器化技术之一。它可以把一个进程的文件系统隔离起来。</p>
-<p><strong>2、The FreeBSD Jail</strong><br>Freebsd Jail 实现了操作系统级别的虚拟化，它是操作系统级别虚拟化技术的先驱之一。</p>
-<p><strong>3、Linux VServer</strong><br>使用添加到 Linux 内核的系统级别的虚拟化功能实现的专用虚拟服务器。</p>
-<p><strong>4、Solaris Containers</strong><br>它也是操作系统级别的虚拟化技术，专为 X86 和 SPARC 系统设计。Solaris 容器是系统资源控制和通过 “区域” 提供边界隔离的组合。</p>
-<p><strong>5、OpenVZ</strong><br>OpenVZ 是一种 Linux 中操作系统级别的虚拟化技术。 它允许创建多个安全隔离的 Linux 容器，即 VPS。</p>
-<p><strong>6、Process Containers</strong><br>Process 容器由 Google 的工程师开发，一般被称为 cgroups。</p>
-<p><strong>7、LXC</strong><br>2008年，通过将 Cgroups 的资源管理能力和 Linux Namespace 的视图隔离能力组合在一起，LXC（Linux Container）这样的完整的容器技术出现在了 Linux 内核当中。（0.9一下的低版本的docker就是利用的这个技术！！）</p>
-<p><strong>8、Warden</strong><br>在最初阶段，Warden 使用 LXC 作为容器运行时。 如今已被 CloudFoundy （ VMware 公司于 2011 年宣布了这个项目的开源，第一次对 PaaS 的概念完成了清晰而完整的定义，PaaS 项目通过对应用的直接管理、编排和调度让开发者专注于业务逻辑而非基础设施）取代。</p>
-<p><strong>9、LMCTFY</strong><br>LMCTY 是 Let me contain that for you 的缩写。它是 Google 的容器技术栈的开源版本。<br>Google 的工程师一直在与 docker 的 libertainer 团队合作，并将 libertainer 的核心概念进行抽象并移植到此项目中。该项目的进展不明，估计会被 libcontainer 取代。（0.9以上的高版本的docker就是利用的libcontainer，其实就是对于lxc的封装，用go写的，开发起来比较方便）</p>
-<p><strong>10、Docker</strong></p>
-<p>Docker 是一个可以将应用程序及其依赖打包到几乎可以在任何服务器上运行的容器的工具。（<strong>dotCloud</strong>公司开源的自己的容器化技术，最后公司直接改名字叫为docker了）</p>
-<p><strong>11、Docker-Swarm</strong></p>
-<p>Docker公司在2014年12月的DockerCon上发布Swarm的举动，你可以很轻松的一个命令，就可以将容器调度在任意一台Swarm集群的机器上。docker的衰败也是因为在容器编排技术之争中跌落神坛的。</p>
-<p><strong>12、Fig</strong></p>
-<p>docker的大紫大红，后来收购了Fig项目，他可以解决容器之间依赖的问题，也就是当前的docker-compose项目，前身就是Fig。</p>
-<p>docker成功后，收购了很多好的项目，专门负责处理容器网络的SocketPlane项目，专门负责处理容器存储的Flocker项目，专门给Docker集群做图形化管理界面和对外提供云服务的Tutum项目。</p>
-<p><strong>13、RKT</strong><br>RKT 是 Rocket 的缩写，它是一个专注于安全和开放标准的应用程序容器引擎。（原来docker的合作伙伴CoreOS公司，CoreOS公司自己研发的容器化工具）</p>
-<p><strong>13、终结者Kubernetes</strong></p>
-<p>​    2017年,  基础设施领域的翘楚Google公司突然发力，正式宣告了一个名叫Kubernetes项目的诞生。这个项目，不仅挽救了当时的CoreOS和RedHat，还如同当年Docker项目的横空出世一样，再一次改变了整个容器市场的格局。并将 CNCF 这个以“云原生”为关键词的组织和生态推向了巅峰。</p>
-<h3 id="2、容器化的一些名词"><a href="#2、容器化的一些名词" class="headerlink" title="2、容器化的一些名词"></a>2、容器化的一些名词</h3><p>其实看到这里，我们发现容器化技术发展了这么多年，技术变更这么快的年代，最可怕的是，我学了一门技术，立马被淘汰了，所以docker也是，为了保障docker的标准化，做出了一系列的努力。</p>
-<p><strong>1、Docker &amp; LXC</strong><br>Docker 的第一个执行环境是 LXC，但从版本 0.9 开始 LXC 被 libcontainer 取代。</p>
-<p><strong>2、Docker &amp; libcontainer</strong><br>Libcontainer 为 docker 封装了 Linux 提供的基础功能，如 cgroups，namespaces，netlink 和 netfilter 等</p>
-<p><strong>3、2015 - Docker ＆ runC</strong></p>
-<p>2015 年，docker 发布了 runC，一个轻量级的跨平台的容器运行时。 这基本上就是一个命令行小工具，可以直接利用 libcontainer 运行容器，而无需通过 docker engine。runC 的目标是使标准容器在任何地方都可用。</p>
-<p><strong>4、Docker &amp; The Open Containers Initiative(OCI)</strong><br>OCI 是一个轻量级的开放式管理架构，由 docker，CoreOS 和容器行业的其他领导厂商于 2015 年建立。它维护一些项目，如 runC ，还有容器运行时规范和镜像规范。OCI 的目的是围绕容器行业制定标准，比如使用 docker 创建的容器可以在任何其他容器引擎上运行。</p>
-<p><strong>5、2016 - Docker &amp; containerd</strong></p>
-<p>2016年，Docker 分拆了 containerd，并将其捐赠给了社区。将这个组件分解为一个单独的项目，使得 docker 将容器的管理功能移出 docker 的核心引擎并移入一个单独的守护进程(即 containerd)。</p>
-<p><strong>6、Docker Components</strong><br>分拆完 containerd 后，docker 各组件的关系如下图所示：</p>
-<p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/de0fb51068364f6181c014235defe9bd.png" alt="img"></p>
-<p><strong>7、Docker 如何运行一个容器？</strong></p>
-<ol>
-<li>Docker 引擎创建容器镜像(oci规范)</li>
-<li>将容器映像传递给 containerd</li>
-<li>containerd 调用 containerd-shim</li>
-<li>containerd-shim 使用 runC 来运行容器</li>
-<li>containerd-shim 允许运行时(本例中为 runC)在启动容器后退出</li>
-</ol>
-<p>该模型带来的最大好处是在升级 docker 引擎时不会中断容器的运行。</p>
-<p><strong>8、2017 - 容器成为主流</strong></p>
-<p>2017 年是容器成为主流技术的一年，这就是为什么 docker 在 Linux 之外支持众多平台的原因（Docker for Mac，Docker for Windows，Docker for AWS，GCP 等）。</p>
-<p>当容器技术被大众接受后，Docker 公司意识到需要新的生产模型，这就是为什么它开始 Moby 项目。最为go语言开源项目的top3的项目，一开始我也不知道moby项目是做啥了。。。</p>
-<p>其实可以发现，在这个百花齐放的操作系统平台上，如何不进行case by case，重复造轮子，就是拆分，通用组件，现成的直接使用就行了。moby就是这个</p>
-<h3 id="3、容器化做的一些转变"><a href="#3、容器化做的一些转变" class="headerlink" title="3、容器化做的一些转变"></a>3、容器化做的一些转变</h3><p>主要还是开源出moby项目，<a href="https://github.com/moby/moby">https://github.com/moby/moby</a></p>
-<p><strong>（1）Containerd</strong><br>Containerd 是 docker 基于行业标准创建的核心容器运行时。它可以用作 Linux 和 Windows 的守护进程，并管理整个容器生命周期。</p>
-<p><strong>（2）Linuxkit</strong><br>Linuxkit 是 Moby 项目中的另一个组件，它是为容器构建安全、跨平台、精简系统的工具。目前已经支持的本地 hypervisor 有 hyper-v 和 vmware。支持的云平台有 AWS、Azure 等。</p>
-<p><strong>（3）Infrakit</strong><br>Infrakit 也是 Moby 项目的一部分。它是创建和管理声明式、不可变和自我修复基础架构的工具包。<br>Infrakit 旨在自动化基础架构的设置和管理，以支持分布式系统和更高级别的容器编排系统。Infrakit 对于像 Docker Swarm 和 Kubernetes 这样的编排工具或跨越 AWS 等公共云创建自动缩放群集的用例很有用。</p>
-<p><strong>（4）Libnetwork</strong><br>Libnetwork 是用 Go 语言实现的容器网络管理项目。它的目标是定义一个容器网络模型(CNM)，<br>并为应用程序提供一致的编程接口以及网络抽象。这样就可以满足容器网络的 “可组合” 需求。</p>
-<p><strong>（5）Docker &amp; Docker Swarm</strong><br>Docker Swarm 是一个在 docker 引擎中构建的编排工具。从 docker 1.12 开始它就作为一个独立的工具被原生包含在 docker engine 中。我们可以使用 docker cli 通过 docker swarm 创建群集，并部署和管理应用程序和服务。下图描述了 docker swarm 在 docker 体系中的作用(此图来自互联网)：</p>
-<p><strong>（6）Docker＆Kubernetes</strong><br>在 docker swarm 与 kubernetes 的竞争中，显然是 kubernetes 占据了优势。所以 docker 紧急掉头，开始原生的支持与 kubernetes 的集成。这可是 2017 年容器界的一大新闻啊！至此，docker 用户和开发人员可以自由地选择使用 kubernetes 或是 swarm 执行容器的编排工作。我们可以认为 docker 与 kubernetes 联姻了。</p>
-<p><img src="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/5e856640bcb343b6aa8e6dc1326988d2.png" alt="img"></p>
-<p>文章参考： <a href="https://www.cnblogs.com/along21/p/9183609.html">https://www.cnblogs.com/along21/p/9183609.html</a></p>
-<p>茫茫的容器化技术，不是一篇文章能说清楚的，理解其本质也不知是说，我了解namespcae和cgropus就能说了解的。</p>
-<h2 id="3、容器化技术解决了什么"><a href="#3、容器化技术解决了什么" class="headerlink" title="3、容器化技术解决了什么"></a>3、容器化技术解决了什么</h2><p>我想很多公司都在使用云服务商提供的虚拟机，其中资源浪费简直是不能看，基本资源利用率在80-90%之间，所以急需一个轻量级的运行时。<strong>容器</strong>提供了将应用程序的代码、运行时、系统工具、系统库和配置打包到一个<strong>实例</strong>中的标准方法。容器共享一个<strong>内核</strong>（操作系统），它安装在硬件上。</p>
-<h3 id="好处：（我觉得很多人都知道）"><a href="#好处：（我觉得很多人都知道）" class="headerlink" title="好处：（我觉得很多人都知道）"></a>好处：（我觉得很多人都知道）</h3><ul>
-<li><p><strong>轻便</strong><br>容器占用的服务器空间比虚拟机少，通常只需几秒钟即可启动。</p>
-</li>
-<li><p><strong>弹性</strong><br>容器具有高弹性，不需要分配给定数量的资源。这意味着容器能够更有效地动态使用服务器中的资源。当一个容器上的需求减少时，释放额外的资源供其他容器使用。</p>
-</li>
-<li><p><strong>密度</strong><br>密度是指一次可以运行单个物理服务器的对象数。容器化允许创建密集的环境，其中主机服务器的资源被充分利用但不被过度利用。与传统虚拟化相比，容器化允许更密集的环境容器不需要托管自己的操作系统。</p>
-</li>
-<li><p><strong>性能</strong><br>当资源压力很大时，应用程序的性能远远高于使用虚拟机管理程序的容器。因为使用传统的虚拟化，客户操作系统还必须满足其自身的内存需求，从主机上获取宝贵的RAM。</p>
-</li>
-<li><p><strong>维护效率</strong><br>只有一个操作系统内核，操作系统级别的更新或补丁只需要执行一次，以使更改在所有容器中生效。这使得服务器的操作和维护更加高效。</p>
-</li>
-<li><p><strong>方便应用程序管理</strong></p>
-<p>容器受益者，主要还是环境隔离，比如一个应用程序，1、需要supervise启动应用程序(守护程序)，2、需要logstash/Filebeat收集日志，3、需要nginx/其他Sadicar进行一些服务治理的功能，服务发现/限流/熔断等。4、还需要很多运行环境。所以对于快速发展的公司来说，sre如果还是手动的创建虚拟机，那么和容器带来的时间不是一个量级的。5、解决了开发人员不需要登陆到机子上查看物理机信息了。</p>
-</li>
-<li><p><strong>省钱，省机器</strong></p>
-<p>虚拟机资源利用率太低了，但是配合k8s编排工具，很好的解决了资源的浪费。但是k8s技术对于公司也是一个挑战，玩不好服务不稳定，带来的损失还是不如走物理机/虚拟机。</p>
-</li>
-</ul>
-<h2 id="4、容器化-云原生的技术"><a href="#4、容器化-云原生的技术" class="headerlink" title="4、容器化/云原生的技术"></a>4、容器化/云原生的技术</h2><p>1、OCI（Open Container Initiative） 标准，隔离了容器镜像与runtine的关系，提供的规范标准，</p>
-<p>2、CNCF全称Cloud Native Computing Foundation（云原生计算基金会），成立于 2015 年7月21日，组织内技术栈：<a href="https://www.cncf.io/projects/">https://www.cncf.io/projects/</a>，致力于：</p>
-<ul>
-<li>容器化包装。</li>
-<li>通过中心编排系统的动态资源管理。</li>
-<li>面向微服务。(核心还是切入到真实业务开发中)</li>
-</ul>
-<p>3、Linux资源隔离技术了解</p>
-<p>4、Kubernetes熟悉，有Operator扩展或相关产品研发经验优先</p>
-<p>5、 Docker的相关的网络和存储技术，有生产环境的实践</p>
-<p>6、云原生技术栈，Prometheus，Envoy等，更多的还是CNCF的毕业的项目的。</p>
-<p>7、更多的还是 Iass，Pass系统开发者经验，空谈技术不务实，就是最扯淡的。</p>
-<p>发现有些无缘！！</p>
-<h2 id="5、容器化技术面临的挑战"><a href="#5、容器化技术面临的挑战" class="headerlink" title="5、容器化技术面临的挑战"></a>5、容器化技术面临的挑战</h2><p>作为一种轻量级的虚拟化技术，容器使用方便、操作便捷，大大提高开发人员的工作效率，并得到业内的广泛使用。但与此同时，容器安全事故频发，包括不安全的镜像源、容器入侵事件、运行环境的安全问题等等。</p>
-<h3 id="1-不安全的镜像源"><a href="#1-不安全的镜像源" class="headerlink" title="1. 不安全的镜像源"></a>1. 不安全的镜像源</h3><p>开发者通常会在 Docker 官方的 Docker Hub 仓库下载镜像，这些镜像一部分来源于开发镜像内相应软件的官方组织，还有大量镜像来自第三方组织甚至个人。从这些镜像仓库中获取镜像的同时，也带来潜在的安全风险。例如，下载镜像内软件本身是否就包含漏洞，下载的镜像是否被恶意植入后门，镜像在传输过程中是否被篡改。</p>
-<h3 id="2-容器入侵事件"><a href="#2-容器入侵事件" class="headerlink" title="2. 容器入侵事件"></a>2. 容器入侵事件</h3><p>由 docker 本身的架构与机制可能产生的问题，这一攻击场景主要产生在黑客已经控制了宿主机上的一些容器（或者通过在公有云上建立容器的方式获得这个条件），然后对宿主机或其他容器发起攻击来产生影响。</p>
-<h3 id="3-运行环境的安全"><a href="#3-运行环境的安全" class="headerlink" title="3. 运行环境的安全"></a>3. 运行环境的安全</h3><p>除 docker 本身存在的问题外，docker 运行环境存在的问题同样给 docker 的使用带来风险。</p>
-<p>由于容器是介于基础设施和平台之间的虚拟化技术，因此面向基础设施虚拟化的传统云安全解决方案无法完全解决前述安全问题。如以容器为支撑技术构建 DevOps 环境，就需要设计涵盖从容器镜像的创建到投产上线的整个生命周期的容器安全方案。</p>
-<h2 id="6、总结"><a href="#6、总结" class="headerlink" title="6、总结"></a>6、总结</h2><p>最后记住，这些所有的一切，只是为了提高研发效率！！！没有价值的代码都是无用代码，没有给企业带来价值，只有淘汰。所有的一切都是为了驱动企业快速发展，主要还是💰 or 价值。</p>
-<p>可以看看这个PPT：<a href="https://docs.qq.com/pdf/DU290V1dSU2NMTHlw">https://docs.qq.com/pdf/DU290V1dSU2NMTHlw</a></p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://cloud-atlas.readthedocs.io/zh_CN/latest/index.html">云计算图志</a></p>
-<p><a href="https://www.infoq.cn/article/SS6SItkLGoLExQP4uMr5">https://www.infoq.cn/article/SS6SItkLGoLExQP4uMr5</a></p>
-<p><a href="https://www.infoq.cn/article/R1p3H3_29f4TYImExsyw">https://www.infoq.cn/article/R1p3H3_29f4TYImExsyw</a></p>
-<p><a href="https://jimmysong.io/kubernetes-handbook/cloud-native/cncf.html">CNCF chinal</a></p>
-<p><a href="https://cloud.tencent.com/developer/article/1080886">命令式和声明式区别</a></p>
 ]]></content>
   </entry>
 </search>
