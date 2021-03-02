@@ -17,13 +17,13 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"anthony-dong.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"default"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"anthony-dong.github.io","root":"/","scheme":"Pisces","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":"mac"},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":true,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":false,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.json"};
   </script>
 
   <meta name="description" content="​    我最近半个月内一直在看docker，但是看完后发现，它只是个cli的工具，cli提供了build，push，pull，run等功能，包含了构建镜像，打包发布，拉取，运行。其实不考虑这些，对于公司级别的cicd工具来说，也是这几个流程，比如说我一个git仓库地址，再通过Jenkins等ci工具构建，构建完成后发布到发布机器上，等我们去发布的时候，就是拉取这个zip包&#x2F;或者镜像，解压&#x2F;运行，">
 <meta property="og:type" content="article">
-<meta property="og:title" content="关于容器化的思考">
-<meta property="og:url" content="https://anthony-dong.github.io/2021/02/28/hello-world/index.html">
+<meta property="og:title" content="关于容器的思考和学习">
+<meta property="og:url" content="https://anthony-dong.github.io/2021/03/01/%E5%85%B3%E4%BA%8E%E5%AE%B9%E5%99%A8%E7%9A%84%E6%80%9D%E8%80%83%E5%92%8C%E5%AD%A6%E4%B9%A0/index.html">
 <meta property="og:site_name" content="Anthony-Dong">
 <meta property="og:description" content="​    我最近半个月内一直在看docker，但是看完后发现，它只是个cli的工具，cli提供了build，push，pull，run等功能，包含了构建镜像，打包发布，拉取，运行。其实不考虑这些，对于公司级别的cicd工具来说，也是这几个流程，比如说我一个git仓库地址，再通过Jenkins等ci工具构建，构建完成后发布到发布机器上，等我们去发布的时候，就是拉取这个zip包&#x2F;或者镜像，解压&#x2F;运行，">
 <meta property="og:locale" content="zh_CN">
@@ -32,20 +32,15 @@
 <meta property="og:image" content="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/62aecfeb27d44087ad54c7565808b883.png">
 <meta property="og:image" content="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/de0fb51068364f6181c014235defe9bd.png">
 <meta property="og:image" content="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/5e856640bcb343b6aa8e6dc1326988d2.png">
-<meta property="article:published_time" content="2021-02-28T09:50:06.505Z">
-<meta property="article:modified_time" content="2021-02-28T11:12:55.214Z">
+<meta property="article:published_time" content="2021-03-01T02:43:13.000Z">
+<meta property="article:modified_time" content="2021-03-02T11:36:24.770Z">
 <meta property="article:author" content="Anthony-Dong">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="Golang">
-<meta property="article:tag" content="Linux">
-<meta property="article:tag" content="PHP">
-<meta property="article:tag" content="MQ">
-<meta property="article:tag" content="DB">
-<meta property="article:tag" content="Cache">
+<meta property="article:tag" content="docker">
+<meta property="article:tag" content="云原生">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="https://tyut.oss-accelerate.aliyuncs.com/image/2020/10-6/72b1b7a471434772b16648798ce625f8.png">
 
-<link rel="canonical" href="https://anthony-dong.github.io/2021/02/28/hello-world/">
+<link rel="canonical" href="https://anthony-dong.github.io/2021/03/01/%E5%85%B3%E4%BA%8E%E5%AE%B9%E5%99%A8%E7%9A%84%E6%80%9D%E8%80%83%E5%92%8C%E5%AD%A6%E4%B9%A0/">
 
 
 <script id="page-configurations">
@@ -58,7 +53,7 @@
   };
 </script>
 
-  <title>关于容器化的思考 | Anthony-Dong</title>
+  <title>关于容器的思考和学习 | Anthony-Dong</title>
   
 
 
@@ -209,12 +204,12 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://anthony-dong.github.io/2021/02/28/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://anthony-dong.github.io/2021/03/01/%E5%85%B3%E4%BA%8E%E5%AE%B9%E5%99%A8%E7%9A%84%E6%80%9D%E8%80%83%E5%92%8C%E5%AD%A6%E4%B9%A0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/images/favicon.ico">
       <meta itemprop="name" content="Anthony-Dong">
-      <meta itemprop="description" content="个人技术博客，主要记录个人每天的笔记">
+      <meta itemprop="description" content="追寻技术的本质！">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -222,7 +217,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          关于容器化的思考
+          关于容器的思考和学习
         </h1>
 
         <div class="post-meta">
@@ -231,9 +226,24 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2021-02-28 17:50:06 / 修改时间：19:12:55" itemprop="dateCreated datePublished" datetime="2021-02-28T17:50:06+08:00">2021-02-28</time>
+              <time title="创建时间：2021-03-01 10:43:13" itemprop="dateCreated datePublished" datetime="2021-03-01T10:43:13+08:00">2021-03-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-02 19:36:24" itemprop="dateModified" datetime="2021-03-02T19:36:24+08:00">2021-03-02</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Cloud-Native/" itemprop="url" rel="index"><span itemprop="name">Cloud Native</span></a>
+                </span>
             </span>
 
           <br>
@@ -398,7 +408,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://anthony-dong.github.io/2021/02/28/hello-world/" title="关于容器化的思考">https://anthony-dong.github.io/2021/02/28/hello-world/</a>
+    <a href="https://anthony-dong.github.io/2021/03/01/%E5%85%B3%E4%BA%8E%E5%AE%B9%E5%99%A8%E7%9A%84%E6%80%9D%E8%80%83%E5%92%8C%E5%AD%A6%E4%B9%A0/" title="关于容器的思考和学习">https://anthony-dong.github.io/2021/03/01/关于容器的思考和学习/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/zh-CN" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -408,6 +418,10 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/docker/" rel="tag"># docker</a>
+              <a href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/" rel="tag"># 云原生</a>
+          </div>
 
         
 
@@ -416,8 +430,8 @@
     <div class="post-nav">
       <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2021/02/28/docker/" rel="next" title="docker">
-      docker <i class="fa fa-chevron-right"></i>
+    <a href="/2021/03/01/shell%E8%84%9A%E6%9C%AC%E6%97%A5%E5%B8%B8%E5%AD%A6%E4%B9%A0/" rel="next" title="shell日常使用的小技巧">
+      shell日常使用的小技巧 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -483,8 +497,10 @@
 
       <div class="site-overview-wrap sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Anthony-Dong"
+      src="/images/favicon.ico">
   <p class="site-author-name" itemprop="name">Anthony-Dong</p>
-  <div class="site-description" itemprop="description">个人技术博客，主要记录个人每天的笔记</div>
+  <div class="site-description" itemprop="description">追寻技术的本质！</div>
 </div>
 <div class="site-state-wrap motion-element">
   <nav class="site-state">
@@ -495,11 +511,32 @@
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
   </nav>
 </div>
   <div class="links-of-author motion-element">
       <span class="links-of-author-item">
         <a href="https://github.com/anthony-dong" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;anthony-dong" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:fanhaodong516@gmail.com" title="E-Mail → mailto:fanhaodong516@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://juejin.cn/user/4248168663101320" title="掘金 → https:&#x2F;&#x2F;juejin.cn&#x2F;user&#x2F;4248168663101320" rel="noopener" target="_blank"><i class="fas fa-book fa-fw"></i>掘金</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:fanhaodong516@163.com" title="国内邮箱 → mailto:fanhaodong516@163.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>国内邮箱</a>
       </span>
   </div>
 
@@ -533,12 +570,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">23k</span>
+    <span title="站点总字数">11k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">21 分钟</span>
+    <span title="站点阅读时长">10 分钟</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://pisces.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Pisces</a> 强力驱动
   </div>
